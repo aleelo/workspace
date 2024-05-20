@@ -1,0 +1,9 @@
+{
+    "require": {
+        "phpoffice/phpword": "^1.1",
+        "chillerlan/php-qrcode": "^5.0",
+        "dompdf/dompdf": "^2.0",
+        "twilio/sdk": "^7.16",
+        "howtomakeaturn/pdfinfo": "^1.1"
+    }
+}
