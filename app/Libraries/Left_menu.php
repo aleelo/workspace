@@ -64,16 +64,16 @@ class Left_menu {
             
 
             if ($this->ci->login_user->is_admin || $access_visitor && ($role != "Employee")) {
-                $sidebar_menu["access_requests"] = array("name" => "access_requests", "url" => "#", "class" => "users");
-                $sidebar_menu["access_list"] = array("name" => "access_list", "url" => "visitors", "class" => "users");
-                $sidebar_menu["access_search"] = array("name" => "access_search", "url" => "visitors/access_search", "class" => "users");
+                // $sidebar_menu["access_requests"] = array("name" => "access_requests", "url" => "#", "class" => "users");
+                // $sidebar_menu["access_list"] = array("name" => "access_list", "url" => "visitors", "class" => "users");
+                // $sidebar_menu["access_search"] = array("name" => "access_search", "url" => "visitors/access_search", "class" => "users");
             }
 
             if ($this->ci->login_user->is_admin || $access_fuel) { //&& ($role != "Employee")
-                $sidebar_menu["fuel"] = array("name" => "fuel", "url" => "#", "class" => "droplet");
-                $sidebar_menu["fuel_order"] = array("name" => "fuel_order", "url" => "fuel/order", "class" => "users");
-                $sidebar_menu["fuel_receive"] = array("name" => "fuel_receive", "url" => "fuel", "class" => "users");
-                $sidebar_menu["fuel_request"] = array("name" => "fuel_request", "url" => "fuel/request", "class" => "users");
+                // $sidebar_menu["fuel"] = array("name" => "fuel", "url" => "#", "class" => "droplet");
+                // $sidebar_menu["fuel_order"] = array("name" => "fuel_order", "url" => "fuel/order", "class" => "users");
+                // $sidebar_menu["fuel_receive"] = array("name" => "fuel_receive", "url" => "fuel", "class" => "users");
+                // $sidebar_menu["fuel_request"] = array("name" => "fuel_request", "url" => "fuel/request", "class" => "users");
             }
 
             if ($this->ci->login_user->is_admin || !get_array_value($this->ci->login_user->permissions, "do_not_show_projects")) {
