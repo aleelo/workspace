@@ -11,7 +11,7 @@
             <?php if (get_setting("show_logo_in_signin_page") === "yes") {?>
                 <img class="p20 mw100p" src="<?php echo get_logo_url(); ?>" />
             <?php } else {?>
-                <img src="<?php echo base_url() . 'assets/images/sys-logo.png'; ?>" width="400">
+                <img src="<?php echo base_url() . 'assets/images/sys-logo.png'; ?>" width="300">
             <?php }?>
         </div>
         <div class="card-body p30 rounded-bottom">
