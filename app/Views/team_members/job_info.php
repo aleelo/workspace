@@ -111,6 +111,53 @@
                         </div>
                     </div>
                 </div>
+                 <!-- 
+                    age_level,	
+                    work_experience	,
+                    place_of_work,	
+                    faculty	,
+                    faculty2,		
+                    bachelor_degree,	
+                    master_degree,	
+                    highest_school,	
+                    relevant_document_url,
+                -->
+                 
+                <div class="form-group">
+                    <div class="row">
+                        <label for="work_experience" class=" col-md-3"><?php echo 'Work Experience'; ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_input(array(
+                                "id" => "work_experience",
+                                "name" => "work_experience",
+                                "class" => "form-control",
+                                'value'=> $job_info->work_experience,
+                                "placeholder" => 'Enter Work Experience',
+                                "autocomplete" => "off"
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="place_of_work" class=" col-md-3"><?php echo 'Place of Work'; ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_input(array(
+                                "id" => "place_of_work",
+                                "name" => "place_of_work",
+                                "class" => "form-control",
+                                'value'=> $job_info->place_of_work,
+                                "placeholder" => 'Enter Place of Work',
+                                "autocomplete" => "off"
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="date_of_hire" class=" col-md-3"><?php echo app_lang('date_of_hire'); ?></label>

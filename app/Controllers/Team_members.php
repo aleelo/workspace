@@ -162,7 +162,19 @@ class Team_members extends Security_Controller {
 
         $password = $this->request->getPost("password");
 
-        // new Data:  `marital_status`, `emergency_name`, `emergency_phone`, `birth_date`, `birth_place`, `education_level`, `education_field`, `education_school`
+        // new fields for emof: //
+            
+        // age_level,	
+        // work_experience	,	
+        // faculty	,
+        // faculty2,	
+        // place_of_work,	
+        // bachelor_degree,	
+        // master_degree,	
+        // highest_school,	
+        // relevant_document_url,
+
+        // new Data evilla:  `marital_status`, `emergency_name`, `emergency_phone`, `birth_date`, `birth_place`, `education_level`, `education_field`, `education_school`
         $user_data = array(
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             "email" => $this->request->getPost('email'),
@@ -183,7 +195,13 @@ class Team_members extends Security_Controller {
             "education_level" => $this->request->getPost('education_level'),
             "education_field" => $this->request->getPost('education_field'),
             "education_school" => $this->request->getPost('education_school'),
-            "passport_no" => $this->request->getPost('passport_no'),
+            "age_level" => $this->request->getPost('age_level'),
+            "faculty" => $this->request->getPost('faculty'),
+            "faculty2" => $this->request->getPost('faculty2'),
+            "bachelor_degree" => $this->request->getPost('bachelor_degree'),
+            "master_degree" => $this->request->getPost('master_degree'),
+            "highest_school" => $this->request->getPost('highest_school'),
+            "relevant_document_url" => $this->request->getPost('relevant_document_url'),
             "user_type" => "staff",
             "created_at" => get_current_utc_time()
         );
@@ -219,6 +237,8 @@ class Team_members extends Security_Controller {
                 "section_id" => 0,
                 "job_title_en" => $this->request->getPost('job_title_en'),
                 "job_title_so" => $this->request->getPost('job_title_so'),
+                "work_experience" => $this->request->getPost('work_experience'),
+                "place_of_work" => $this->request->getPost('place_of_work'),
                 "employee_type" => $this->request->getPost('employee_type'),
                 "employee_id" => $this->request->getPost('employee_id'),
             );
@@ -463,6 +483,17 @@ class Team_members extends Security_Controller {
             $user_info = $this->Users_model->get_details($options)->getRow();
            
 
+            $age_levels = [
+                '18 - 25' =>'18 - 25',
+                '26 - 35'=>'26 - 35',
+                '36 - 45'=>'36 - 45',
+                '46 -55'=>'46 -55',
+                '56 - 65'=>'56 - 65',
+                '66 ama kaweyn'=>'66 ama kaweyn'
+            ];
+    
+            $view_data['age_levels'] = $age_levels;
+            
             if ($user_info) {
 
                 // var_dump($user_info);
@@ -627,7 +658,9 @@ class Team_members extends Security_Controller {
             "job_title_en" => $this->request->getPost('job_title_en'),
             "job_title_so" => $this->request->getPost('job_title_so'),
             "employee_type" => $this->request->getPost('employee_type'),
-            "employee_id" => $this->request->getPost('employee_id')
+            "employee_id" => $this->request->getPost('employee_id'),
+            "work_experience" => $this->request->getPost('work_experience'),
+            "place_of_work" => $this->request->getPost('place_of_work'),
         );
 
        
@@ -693,6 +726,13 @@ class Team_members extends Security_Controller {
             "education_field" => $this->request->getPost('education_field'),
             "education_school" => $this->request->getPost('education_school'),
             "passport_no" => $this->request->getPost('passport_no'),
+            "age_level" => $this->request->getPost('age_level'),
+            "faculty" => $this->request->getPost('faculty'),
+            "faculty2" => $this->request->getPost('faculty2'),
+            "bachelor_degree" => $this->request->getPost('bachelor_degree'),
+            "master_degree" => $this->request->getPost('master_degree'),
+            "highest_school" => $this->request->getPost('highest_school'),
+            "relevant_document_url" => $this->request->getPost('relevant_document_url')
         );
 
         $user_data = clean_data($user_data);
