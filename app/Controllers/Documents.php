@@ -126,7 +126,7 @@ class Documents extends Security_Controller
             $temp_array = ['' => 'Choose Template'];
         }
 
-        $templates = $this->db->query("SELECT * FROM rise_templates where department like '$dept_id'")->getResult();
+        $templates = $this->db->query("SELECT * FROM rise_templates where department like '$dept_id' and destination_folder != 'Leave'")->getResult();
 
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
@@ -351,7 +351,8 @@ class Documents extends Security_Controller
         $template = new \PhpOffice\PhpWord\TemplateProcessor(APPPATH . 'Views/documents/' . $data['template']);
 
         $ext = pathinfo(APPPATH . 'Views/documents/' . $data['template'], PATHINFO_EXTENSION);
-        $save_as_name = $data['id'] . '_' . date('m') . '_' . date('Y') . '.' . $ext;
+        $document_title = $data['document_title'];
+        $save_as_name = toSnakeCase($document_title).'_('.$data['id'] . ')_' . date('d').'_' . date('m') . '_' . date('Y') . '.' . $ext;
 
         $path_absolute = APPPATH . 'Views/documents/' . $save_as_name;
         // var_dump($data);

@@ -468,8 +468,8 @@ class Leaves extends Security_Controller {
  
          // Decode the JSON response into an associative array
          $data = json_decode($response, true);
-         // var_dump($data);
-         // die();
+        //  var_dump($data);
+        //  die();
          // Get the web URL of the file from the array
          $accessToken = $data["access_token"];
  
@@ -489,7 +489,8 @@ class Leaves extends Security_Controller {
         $template = new TemplateProcessor(APPPATH . 'Views/documents/'.$data['template']);
 
         $ext = pathinfo(APPPATH.'Views/documents/'.$data['template'],PATHINFO_EXTENSION);
-        $save_as_name = $data['id'].'_'.date('m').'_'.date('Y').'.'.$ext;
+        $employee = $data['employee'];
+        $save_as_name = toSnakeCase($employee).'_'.$data['id'].'_'.date('m').'_'.date('Y').'.'.$ext;
         
 
         $path_absolute = APPPATH . 'Views/documents/'.$save_as_name;
@@ -602,7 +603,7 @@ class Leaves extends Security_Controller {
         // send whatsapp message:
         $id = $data['id'];
         $employee = $data['employee'];
-        $jobTitle = $data['jobTitle'];
+        $jobTitle = $data['jobtitle'];
 
         $baseUrl = getenv('WHATSAPP_BASE_URL');
         $phoneNumber = getenv('TO_WHATSAPP_PHONE_NUMBER');
@@ -615,7 +616,7 @@ class Leaves extends Security_Controller {
                 
         // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
         
-        $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+        // $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
 
         return $res;
@@ -1023,7 +1024,7 @@ class Leaves extends Security_Controller {
                             
                     // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
                     
-                    $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+                    // $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
                 }elseif($status === "rejected"){
 
@@ -1038,7 +1039,7 @@ class Leaves extends Security_Controller {
                             
                     // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
                     
-                    $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+                    // $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
                 }
 

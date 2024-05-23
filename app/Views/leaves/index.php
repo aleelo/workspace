@@ -17,8 +17,8 @@
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/pending_approval/"); ?>" data-bs-target="#leave-pending-approval"><?php echo app_lang("pending_approval"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/all_applications/"); ?>" data-bs-target="#leave-all-applications"><?php echo app_lang("all_applications"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php echo app_lang("summary"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php echo 'NOLO OSTO'; ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php echo 'PASSPORT CELIN'; ?></a></li>
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php echo 'NOLO OSTO'; ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php echo 'PASSPORT CELIN'; ?></a></li> -->
             
             <li class="d-flex align-items-center gap-4 ml30">
                 <span><i data-feather='info' class='icon-16 text-info'></i>  Status Description: </span> 
@@ -33,8 +33,8 @@
             <div role="tabpanel" class="tab-pane fade active" id="leave-pending-approval"></div>
             <div role="tabpanel" class="tab-pane fade" id="leave-all-applications"></div>
             <div role="tabpanel" class="tab-pane fade" id="leave-summary"></div>
-            <div role="tabpanel" class="tab-pane fade" id="leave-nolo"></div>
-            <div role="tabpanel" class="tab-pane fade" id="leave-return"></div>
+            <!-- <div role="tabpanel" class="tab-pane fade" id="leave-nolo"></div>
+            <div role="tabpanel" class="tab-pane fade" id="leave-return"></div> -->
         </div>
     </div>
 </div>

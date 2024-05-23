@@ -865,7 +865,7 @@ class Visitors extends Security_Controller
         $message.="\n https://localhost/evilla/visitors";
         
 
-        sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+        // sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
         
         return $res;
@@ -1029,7 +1029,7 @@ class Visitors extends Security_Controller
                        
             // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
             
-            $res = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+            // $res = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
         }elseif($status == 'show-pdf'){
             
@@ -1054,7 +1054,7 @@ class Visitors extends Security_Controller
                        
             // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
             
-            $res = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
+            // $res = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
 
         }
         else{
