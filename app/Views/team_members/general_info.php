@@ -164,20 +164,29 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="marital_status" class=" col-md-2"><?php echo 'Marital Status'; ?></label>
+                    <label for="marital_status_single" class=" col-md-2"><?php echo app_lang('marital_status'); ?></label>
                     <div class=" col-md-10">
                         <?php
-                        echo form_input(array(
-                            "id" => "marital_status",
+                        echo form_radio(array(
+                            "id" => "marital_status_single",
                             "name" => "marital_status",
-                            "value" => $user_info->marital_status,
-                            "class" => "form-control",
-                            "placeholder" => 'Marital Status'
-                        ));
+                            "class" => "form-check-input",
+                                ), "single", ($user_info->marital_status === "single") ? true : (empty($user_info->id) ? true : false), "class='form-check-input'");
                         ?>
+                        <label for="marital_status_maried" class="mr15 p0"><?php echo app_lang('single'); ?></label> 
+                        <?php
+                        echo form_radio(array(
+                            "id" => "marital_status_maried",
+                            "name" => "marital_status",
+                            "class" => "form-check-input",
+                                ), "maried", ($user_info->marital_status === "maried") ? true : false, "class='form-check-input'");
+                        ?>
+                        <label for="marital_status_maried" class="p0 mr15"><?php echo app_lang('maried'); ?></label>
+                       
                     </div>
                 </div>
             </div>
+            
             <div class="form-group">
                 <div class="row">
                     <label for="passport_no" class=" col-md-2"><?php echo 'Passport Number'; ?></label>
@@ -308,7 +317,7 @@
 
             <div class="form-group">
                     <div class="row">
-                        <label for="faculty" class=" col-md-3"><?php echo 'Faculty 1'; ?></label>
+                        <label for="faculty" class=" col-md-2"><?php echo 'Faculty 1'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -325,7 +334,7 @@
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <label for="faculty2" class=" col-md-3"><?php echo 'Faculty 2'; ?></label>
+                        <label for="faculty2" class=" col-md-2"><?php echo 'Faculty 2'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -343,7 +352,7 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="education_school" class=" col-md-3"><?php echo 'School of Study'; ?></label>
+                        <label for="education_school" class=" col-md-2"><?php echo 'School of Study'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -361,12 +370,12 @@
                   
                 <div class="form-group">
                     <div class="row">
-                        <label for="highest_school" class=" col-md-3"><?php echo 'Highest School of Education'; ?></label>
+                        <label for="highest_school" class=" col-md-2"><?php echo 'Highest School of Education'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
                                 "id" => "highest_school",
-                                "name" => "education_school",
+                                "name" => "highest_school",
                                 "value" => $user_info->highest_school,
                                 "class" => "form-control",
                                 "placeholder" => 'Highest School of Education',
@@ -378,7 +387,7 @@
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <label for="bachelor_degree" class=" col-md-3"><?php echo 'Bachelor Degree'; ?></label>
+                        <label for="bachelor_degree" class=" col-md-2"><?php echo 'Bachelor Degree'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -395,7 +404,7 @@
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <label for="master_degree" class=" col-md-3"><?php echo 'Master Degree'; ?></label>
+                        <label for="master_degree" class=" col-md-2"><?php echo 'Master Degree'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -412,7 +421,7 @@
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <label for="relevant_document_url" class=" col-md-3"><?php echo 'Relevant Document Url'; ?></label>
+                        <label for="relevant_document_url" class=" col-md-2"><?php echo 'Relevant Document Url'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(

@@ -123,10 +123,23 @@ class Team_members extends Security_Controller {
 
         $view_data['model_info'] = $this->Users_model->get_details($options)->getRow();
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        $view_data['education_levels'] = [''=>'Choose Education Level','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [''=>'-- Choose Education Level --','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
-        $education_fields = $this->db->query("select id,name from education_industry")->getResult();
+        $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from education_industry")->getResult();
 
+
+        $age_levels = [
+            ''=>'-- Choose Age Level --',
+            '18 - 25' =>'18 - 25',
+            '26 - 35'=>'26 - 35',
+            '36 - 45'=>'36 - 45',
+            '46 -55'=>'46 -55',
+            '56 - 65'=>'56 - 65',
+            '66 ama kaweyn'=>'66 ama kaweyn'
+        ];
+
+        $view_data['age_levels'] = $age_levels;
+        
         $array_fields=[];
         foreach($education_fields as $f){
             $array_fields[$f->id] = $f->name;

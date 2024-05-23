@@ -13,9 +13,12 @@ $lang["text_direction"] = "ltr"; //supported value ltr/rtl
 
 /* Documents */
 $lang["document_title"] = "Document Title";
+$lang["marital_status"] = "Marital Status";
 $lang["ref_number"] = "Reference No.";
 $lang["ref_prefix"] = "Document Reference";
 $lang["depertment"] = "Depertment";
+$lang["single"] = "Single";
+$lang["maried"] = "Maried";
 $lang["template"] = "Template";
 $lang["created_by"] = "Created By";
 $lang["item_id"] = "Item ID";

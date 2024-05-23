@@ -103,19 +103,28 @@
                             ?>
                         </div>
                     </div>
-                </div>
+                </div>                    
                 <div class="form-group">
                     <div class="row">
-                        <label for="marital_status" class=" col-md-3"><?php echo 'Marital Status'; ?></label>
+                        <label for="marital_status_single" class=" col-md-3"><?php echo app_lang('marital_status'); ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
-                                "id" => "marital_status",
+                            echo form_radio(array(
+                                "id" => "marital_status_single",
                                 "name" => "marital_status",
-                                "class" => "form-control",
-                                "placeholder" => 'Marital Status'
-                            ));
+                                "class" => "form-check-input",
+                                    ), "single", true, "class='form-check-input'");
                             ?>
+                            <label for="marital_status_maried" class="mr15 p0"><?php echo app_lang('single'); ?></label> 
+                            <?php
+                            echo form_radio(array(
+                                "id" => "marital_status_maried",
+                                "name" => "marital_status",
+                                "class" => "form-check-input",
+                                    ), "maried", false, "class='form-check-input'");
+                            ?>
+                            <label for="marital_status_maried" class="p0 mr15"><?php echo app_lang('maried'); ?></label>
+                        
                         </div>
                     </div>
                 </div>
@@ -337,7 +346,7 @@
                             <?php
                             echo form_input(array(
                                 "id" => "highest_school",
-                                "name" => "education_school",
+                                "name" => "highest_school",
                                 "class" => "form-control",
                                 "placeholder" => 'Highest School of Education',
                                 "autocomplete" => "off",
@@ -479,7 +488,6 @@
                                 "id" => "work_experience",
                                 "name" => "work_experience",
                                 "class" => "form-control",
-                                'value'=> $job_info->work_experience,
                                 "placeholder" => 'Enter Work Experience',
                                 "autocomplete" => "off"
                             ));
@@ -496,7 +504,6 @@
                                 "id" => "place_of_work",
                                 "name" => "place_of_work",
                                 "class" => "form-control",
-                                'value'=> $job_info->place_of_work,
                                 "placeholder" => 'Enter Place of Work',
                                 "autocomplete" => "off"
                             ));

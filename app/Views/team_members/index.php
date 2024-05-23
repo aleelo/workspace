@@ -50,7 +50,7 @@
                 {title: "<?php echo app_lang("job_title") ?>", "class": "w15p"},
                 {visible: visibleContact, title: "<?php echo app_lang("email") ?>", "class": "w20p"},
                 {visible: visibleContact, title: "<?php echo app_lang("phone") ?>", "class": "w15p"}
-<?php echo $custom_field_headers; ?>,
+                <?php echo $custom_field_headers; ?>,
                 {visible: visibleDelete, title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: combineCustomFieldsColumns([1, 2, 3, 4], '<?php echo $custom_field_headers; ?>'),
