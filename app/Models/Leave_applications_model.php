@@ -46,7 +46,7 @@ class Leave_applications_model extends Crud_model {
 
         // die($role);
         $d = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user->id")->getRow();
-        $department_id = $d->department_id;
+        $department_id = $d?->department_id;
         $created_by = $user->id;
 
         if($role == 'Employee'){
