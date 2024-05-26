@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use ParagonIE\Sodium\Core\Curve25519\H;
+
 class Signin extends App_Controller
 {
 
@@ -188,20 +190,25 @@ class Signin extends App_Controller
         $secret = getenv('AZURE_SECRET_ID'); //"e54c00ad-6cfd-4113-b46f-5a3de239d13b";
         $env = getenv('ENVIRONMENT'); //ENVIRONMENT
 
-        $login_url = "https://login.microsoftonline.com/" . $tennantid . "/oauth2/v2.0/authorize";
-
+        $login_url = "https://login.microsoftonline.com/" . $tennantid . "/oauth2/v2.0/authorize";//authorize
+        \Config\Services::session_destroy();
+           
         $session = \Config\Services::session();
+       
         $session->set('state', session_id());
 
         $params = array(
             'client_id' => $appid,
             'redirect_uri' => $env == 'development' ? 'https://localhost/emof/signin/aad_callback' : 'https://workspace.revenuedirectorate.gov.so/signin/aad_callback',
+            // 'response_type' => 'code',
             'response_type' => 'token',
+            // 'response_mode' => 'form_post',
             'login_hint' => $email, //'admin@presidency@gov.so',
             // 'prompt'=>'consent',
             'scope' => 'https://graph.microsoft.com/User.Read', //User.Read
 
             'state' => $session->get('state'));
+            // die( $login_url . '?' . http_build_query($params));
         // die($login_url . '?' . http_build_query($params));
         header('Location: ' . $login_url . '?' . http_build_query($params));
         exit();
@@ -211,7 +218,7 @@ class Signin extends App_Controller
     public function aad_callback()
     {
         // replace # with ?
-
+// die('hesre');
         echo '
             <script>
                         
