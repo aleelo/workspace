@@ -356,9 +356,9 @@ class Signin extends App_Controller
             }
         } else {
 
-            die();
+            // die();
             //AAD authentication failed
-            array_push($this->signin_validation_errors, app_lang("authentication_failed") . ', No access token');
+            array_push($this->signin_validation_errors, app_lang("authentication_failed") . ', No access token, contact your administrator');
             $this->session->setFlashdata("signin_validation_errors", $this->signin_validation_errors);
             app_redirect('signin');
         }
