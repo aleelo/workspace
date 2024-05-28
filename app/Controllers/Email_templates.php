@@ -110,7 +110,7 @@ class Email_templates extends Security_Controller {
         }
 
         $templates_array["employee"] = array(
-            "new_leave_request" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_REASON", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS")
+            "new_leave_request" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_REASON", "LEAVE_URL","LEAVE_DATE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS")
         );
 
         $tickets_template_variables = $this->Custom_fields_model->get_email_template_variables_array("tickets", 0, $this->login_user->is_admin, $this->login_user->user_type);
