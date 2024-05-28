@@ -114,6 +114,7 @@ class Leaves extends Security_Controller {
                         'LEAVE_ID'=>$save_id,
                         'LEAVE_TITLE' => $leave_info->title,
                         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                        'LEAVE_STATUS'=>$user_info->status,  
                         'EMAIL'=>$user_info->email,                 
                     ];
 
@@ -128,6 +129,7 @@ class Leaves extends Security_Controller {
                             'LEAVE_ID'=>$save_id,
                             'LEAVE_TITLE' => $leave_info->title,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                            'LEAVE_STATUS'=>$user_info->status,                 
                             'EMAIL'=>$user_info->email,                 
                         ];
     
@@ -174,8 +176,10 @@ class Leaves extends Security_Controller {
     }
 
     public function send_notify_leave_status_email($data = array()) {
+        
         $email = $data['EMAIL'];
         $status = $data['LEAVE_STATUS'];
+
         if($status == 'approved'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
         }else if($status == 'rejected'){
