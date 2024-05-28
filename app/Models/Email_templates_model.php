@@ -33,6 +33,9 @@ class Email_templates_model extends Crud_model {
         $sql = "SELECT $email_templates_table.*
         FROM $email_templates_table
         WHERE $email_templates_table.deleted=0 $where";
+        
+// var_dump( $this->db->query($sql)->getResult());
+// die;
         return $this->db->query($sql);
     }
 
@@ -50,6 +53,7 @@ class Email_templates_model extends Crud_model {
         FROM $email_templates_table
         LEFT JOIN $email_templates_table AS signature_template ON signature_template.template_name='signature' AND signature_template.language=$email_templates_table.language
         WHERE $email_templates_table.deleted=0 AND $email_templates_table.template_name='$template_name' $where ";
+
         $templates = $this->db->query($sql)->getResult();
 
         if ($return_all) {

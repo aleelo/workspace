@@ -47,6 +47,33 @@ class Leaves extends Security_Controller {
         return $this->template->rander("leaves/index", $view_data);
     }
 
+    public function send_leave_request_email($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
+        $email = $data['EMAIL'];
+
+        $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
+        $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
+        $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
+        $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
+        $parser_data["LEAVE_URL"] = get_uri('leaves');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if (send_app_mail($email, $subject, $message)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //load assign leave modal 
 
     function assign_leave_modal_form($applicant_id = 0) {
@@ -100,7 +127,7 @@ class Leaves extends Security_Controller {
         }
 
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
-        $leave_info = $this->db->query("SELECT t.*,l.id,l.uuid FROM rise_leave_applications l 
+        $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
         $template = $this->db->query("SELECT * FROM rise_templates where destination_folder = 'Leave'")->getRow();
@@ -110,6 +137,8 @@ class Leaves extends Security_Controller {
         // var_dump($leave_info);
         // var_dump($save_id);
         // die();
+
+        $duration = (int)$leave_info->total_days;
 
         $doc_leave_data = [
             'uuid' => $leave_info->uuid,
@@ -123,7 +152,7 @@ class Leaves extends Security_Controller {
             'folder' => $template->destination_folder,
             'date' => $leave_data['start_date'],
         ];
-
+        
         $doc_data = [
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             'document_title' =>'Leave - '.$user_info->first_name.' '.$user_info->last_name,
@@ -163,16 +192,29 @@ class Leaves extends Security_Controller {
             $itemId = $data["id"];
 
             $drive_ref = $data['parentReference'];
-            $driveId = $drive_ref['driveId'];
+            // $driveId = $drive_ref['driveId'];
 
             //update item id and web url for document
             $u_data= array('item_id' => $itemId,'webUrl' => $webUrl,'ref_number'=>$doc_leave_data['ref_number'],'drive_info'=>@serialize($drive_ref));
             
             $this->Documents_model->ci_save($u_data, $doc->id);
 
-            //convert doc to pdf using graph api:
+            //send email to the HRM for new leave notification:
+            $leave_email_data = [
+                'LEAVE_ID'=>$save_id,
+                'UUID' => $leave_info->uuid,
+                'LEAVE_REASON' => $leave_info->reason,
+                'LEAVE_TITLE' => $leave_info->title,
+                'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                'JOB_TITLE'=>$user_info->job_title_so,
+                'EMAIL'=>$user_info->email,
+                'PASSPORT'=>$user_info->passport_no,
+                'LEAVE_TYPE'=>$leave_info->title,            
+                'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+            ];
 
-            // $res = $this->saveAsPDF($driveId,$itemId);
+            $r = $this->send_leave_request_email($leave_email_data);
+
 
 
             // var_dump($res);
@@ -250,7 +292,7 @@ class Leaves extends Security_Controller {
 
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
 
-        $leave_info = $this->db->query("SELECT t.*,l.id,l.uuid FROM rise_leave_applications l 
+        $leave_info = $this->db->query("SELECT l.*,t.title FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
         $template = $this->db->query("SELECT * FROM rise_templates where destination_folder = 'Leave'")->getRow();
@@ -313,9 +355,25 @@ class Leaves extends Security_Controller {
             
             $this->Documents_model->ci_save($u_data, $doc->id);
 
-            // echo $webUrl;
-            // die();
-
+            $duration = (int)$leave_info->total_days;
+            
+            //send email to the HRM for new leave notification:
+                $leave_email_data = [
+                    'LEAVE_ID'=>$save_id,
+                    'UUID' => $leave_info->uuid,
+                    'LEAVE_REASON' => $leave_info->reason,
+                    'LEAVE_TITLE' => $leave_info->title,
+                    'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                    'JOB_TITLE'=>$user_info->job_title_so,
+                    'EMAIL'=>$user_info->email,
+                    'PASSPORT'=>$user_info->passport_no,
+                    'LEAVE_TYPE'=>$leave_info->title,            
+                    'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                ];
+    
+                $r = $this->send_leave_request_email($leave_email_data);
+    
+    
         }
 
 

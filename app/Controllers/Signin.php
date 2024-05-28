@@ -258,7 +258,7 @@ class Signin extends App_Controller
         // $refresh_token = $data["refresh_token"];
         
         $this->session->set('aad_token', $accessToken);
-        // $this->session->set('refresh_token', $refresh_token);
+        $this->session->set('auth_code', $code);
 
         curl_close($curl);
         return $accessToken;
