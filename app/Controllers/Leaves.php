@@ -50,7 +50,7 @@ class Leaves extends Security_Controller {
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
-        $email = 'alihaile2020@gmail.com';//$data['EMAIL'];
+        $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
@@ -211,6 +211,7 @@ class Leaves extends Security_Controller {
                 'EMAIL'=>$user_info->email,
                 'PASSPORT'=>$user_info->passport_no,
                 'LEAVE_TYPE'=>$leave_info->title,            
+                'TOTAL_DAYS'=>$leave_info->total_days,            
                 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
             ];
 
