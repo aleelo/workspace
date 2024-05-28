@@ -47,6 +47,104 @@ class Leaves extends Security_Controller {
         return $this->template->rander("leaves/index", $view_data);
     }
 
+     //update leave status
+     function update_status() {
+
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric",
+            "status" => "required"
+        ));
+
+        $applicaiton_id = $this->request->getPost('id');
+        $status = $this->request->getPost('status');
+        $now = get_current_utc_time();
+
+        $role = $this->get_user_role();
+        if($role === "HRM" && $status === "approved"){
+            $status = 'approved';
+        }elseif($role == "Director" && $status === "approved"){
+            $status = 'pending';
+        }
+
+        $leave_data = array(
+            "checked_by" => $this->login_user->id,
+            "checked_at" => $now,
+            "status" => $status
+        );
+
+        //only allow to updte the status = accept or reject for admin or specefic user
+        //otherwise user can cancel only his/her own application
+        $applicatoin_info = $this->Leave_applications_model->get_one($applicaiton_id);
+
+        if ($status === "approved" || $status === "rejected") {
+            $this->access_only_allowed_members($applicatoin_info->applicant_id);
+        } else if ($status === "canceled" && $applicatoin_info->applicant_id != $this->login_user->id) {
+            //any user can't cancel other user's leave application
+            app_redirect("forbidden");
+        }
+        
+        //user can update only the applications where status = pending
+        // if (($applicatoin_info->status != "pending" || $applicatoin_info->status != "active") || !($status === "approved" || $status === "rejected" || $status === "canceled")) {
+            //     app_redirect("forbidden");
+            // }
+            
+            $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
+            if ($save_id) {
+                
+                $notification_options = array("leave_id" => $applicaiton_id, "to_user_id" => $applicatoin_info->applicant_id);
+                
+                if ($status == "approved") {
+                    log_notification("leave_approved_HR", $notification_options);//leave_approved
+                } else if ($status == "pending") {
+                    log_notification("leave_approved_Director", $notification_options);
+                } else if ($status == "rejected") {
+                    log_notification("leave_rejected", $notification_options);
+                } else if ($status == "canceled") {
+                    log_notification("leave_canceled", $notification_options);
+                }                
+                        
+                $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
+                                left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
+
+                if ($status === "approved" ) {
+                    
+                     //send email to the user for leave status
+                    $leave_email_data = [
+                        'LEAVE_ID'=>$save_id,
+                        'LEAVE_TITLE' => $leave_info->title,
+                        'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                        'EMAIL'=>$user_info->email,                 
+                    ];
+
+                    $r = $this->send_notify_leave_status_email()($leave_email_data);
+
+
+                }elseif($status === "rejected"){
+
+                     //send email to the user for leave status:
+                         //send email to the user for leave status
+                         $leave_email_data = [
+                            'LEAVE_ID'=>$save_id,
+                            'LEAVE_TITLE' => $leave_info->title,
+                            'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                            'EMAIL'=>$user_info->email,                 
+                        ];
+    
+
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
+
+
+                }
+
+
+
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
@@ -57,6 +155,36 @@ class Leaves extends Security_Controller {
         $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
         $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
         $parser_data["LEAVE_DATE"] = $data['LEAVE_DATE'];
+        $parser_data["LEAVE_URL"] = get_uri('leaves');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if (send_app_mail($email, $subject, $message)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function send_notify_leave_status_email($data = array()) {
+        $email = $data['EMAIL'];
+        $status = $data['LEAVE_STATUS'];
+        if($status == 'approved'){
+            $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
+        }else if($status == 'rejected'){
+            $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
+        }
+
+        $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
+        $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
+        $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
@@ -120,14 +248,15 @@ class Leaves extends Security_Controller {
         //hasn't full access? allow to update only specific member's record, excluding loged in user's own record
         $this->access_only_allowed_members($leave_data['applicant_id']);
 
-        $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $applicant_id")->getRow();
-       
+        
         if(!$user_info){
             
             echo json_encode(array("success" => false, 'message' => 'Information is missing, Please fill your User & Job information'));
         }
-
+        
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
+
+        $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $applicant_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
@@ -1015,101 +1144,7 @@ class Leaves extends Security_Controller {
 
     }
 
-    //update leave status
-    function update_status() {
-
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric",
-            "status" => "required"
-        ));
-
-        $applicaiton_id = $this->request->getPost('id');
-        $status = $this->request->getPost('status');
-        $now = get_current_utc_time();
-
-        $role = $this->get_user_role();
-        if($role === "HRM" && $status === "approved"){
-            $status = 'approved';
-        }elseif($role == "Director" && $status === "approved"){
-            $status = 'pending';
-        }
-
-        $leave_data = array(
-            "checked_by" => $this->login_user->id,
-            "checked_at" => $now,
-            "status" => $status
-        );
-
-        //only allow to updte the status = accept or reject for admin or specefic user
-        //otherwise user can cancel only his/her own application
-        $applicatoin_info = $this->Leave_applications_model->get_one($applicaiton_id);
-
-        if ($status === "approved" || $status === "rejected") {
-            $this->access_only_allowed_members($applicatoin_info->applicant_id);
-        } else if ($status === "canceled" && $applicatoin_info->applicant_id != $this->login_user->id) {
-            //any user can't cancel other user's leave application
-            app_redirect("forbidden");
-        }
-        
-        //user can update only the applications where status = pending
-        // if (($applicatoin_info->status != "pending" || $applicatoin_info->status != "active") || !($status === "approved" || $status === "rejected" || $status === "canceled")) {
-            //     app_redirect("forbidden");
-            // }
-            
-            $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
-            if ($save_id) {
-                
-                $notification_options = array("leave_id" => $applicaiton_id, "to_user_id" => $applicatoin_info->applicant_id);
-                
-                if ($status == "approved") {
-                    log_notification("leave_approved_HR", $notification_options);//leave_approved
-                } else if ($status == "pending") {
-                    log_notification("leave_approved_Director", $notification_options);
-                } else if ($status == "rejected") {
-                    log_notification("leave_rejected", $notification_options);
-                } else if ($status == "canceled") {
-                    log_notification("leave_canceled", $notification_options);
-                }
-                
-                if ($status === "approved" ) {
-                    
-                    // send whatsapp message:
-                                      
-                    $baseUrl = getenv('WHATSAPP_BASE_URL');
-                    $phoneNumber = getenv('TO_WHATSAPP_PHONE_NUMBER');
-                    $message = "Your Leave Request Approved.\n";
-                    $message .= "\nLeave Number: #$save_id"; 
-                    $messageType = "text";
-                    $apiKey = getenv('WHATSAPP_API_KEY');
-                            
-                    // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
-                    
-                    // $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
-
-                }elseif($status === "rejected"){
-
-                    // send whatsapp message:
-                                      
-                    $baseUrl = getenv('WHATSAPP_BASE_URL');
-                    $phoneNumber = getenv('TO_WHATSAPP_PHONE_NUMBER');
-                    $message = "Your Leave Request Rejected.\n";
-                    $message .= "\nLeave Number: #$save_id"; 
-                    $messageType = "text";
-                    $apiKey = getenv('WHATSAPP_API_KEY');
-                            
-                    // $vdetails = $this->db->query("SELECT * FROM rise_visitors_detail WHERE visitor_id = $id")->getResult();
-                    
-                    // $resw = sendWhatsappMessage($baseUrl, $phoneNumber, $message,$messageType, $apiKey);
-
-                }
-
-
-
-            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
-        } else {
-            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
-        }
-    }
+   
 
     //    delete a leave application
 
