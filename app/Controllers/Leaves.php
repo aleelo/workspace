@@ -118,7 +118,7 @@ class Leaves extends Security_Controller {
                         'email'=>$user_info->email,                 
                     ];
 
-                    $r = $this->send_notify_leave_status_email()($leave_email_data);
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
 
 
                 }elseif($status === "rejected"){
