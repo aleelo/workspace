@@ -50,7 +50,7 @@ class Leaves extends Security_Controller {
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
-        $email = $data['EMAIL'];
+        $email = 'alihaile2020@gmail.com';//$data['EMAIL'];
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
