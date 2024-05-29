@@ -114,7 +114,7 @@ class Leaves extends Security_Controller {
                         'LEAVE_ID'=>$save_id,
                         'LEAVE_TITLE' => $leave_info->title,
                         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                        'LEAVE_STATUS'=>$leave_info->status,  
+                        'LEAVE_STATUS'=>$status,  
                         'email'=>$user_info->email,                 
                     ];
 
@@ -129,7 +129,7 @@ class Leaves extends Security_Controller {
                             'LEAVE_ID'=>$save_id,
                             'LEAVE_TITLE' => $leave_info->title,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                            'LEAVE_STATUS'=>$leave_info->status,                 
+                            'LEAVE_STATUS'=>$status,                 
                             'email'=>$user_info->email,                 
                         ];
     
