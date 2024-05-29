@@ -579,14 +579,34 @@
             <div role="tabpanel" class="tab-pane" id="account-info-tab">
                 <div class="form-group">
                     <div class="row">
-                        <label for="email" class=" col-md-3"><?php echo app_lang('email'); ?></label>
+                        <label for="email" class=" col-md-3"><?php echo app_lang('email').' (Will Login with this)'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
                                 "id" => "email",
                                 "name" => "email",
                                 "class" => "form-control",
-                                "placeholder" => app_lang('email').': Microsoft 365 email',
+                                "placeholder" => app_lang('email').': Microsoft 365 azure email',
+                                "autocomplete" => "off",
+                                "data-rule-email" => true,
+                                "data-msg-email" => app_lang("enter_valid_email"),
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required"),
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="private_email" class=" col-md-3"><?php echo app_lang('private_email'); ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_input(array(
+                                "id" => "private_email",
+                                "name" => "private_email",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('email').': your private email',
                                 "autocomplete" => "off",
                                 "data-rule-email" => true,
                                 "data-msg-email" => app_lang("enter_valid_email"),
@@ -636,10 +656,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group ">
+                <div class="form-group " style="display: none;">
                     <div class="col-md-12">  
                         <?php
-                        echo form_checkbox("email_login_details", "1", true, "id='email_login_details' class='form-check-input'");
+                        echo form_checkbox("email_login_details", "1", false, "id='email_login_details' class='form-check-input' style='display:none;'");
                         ?> <label for="email_login_details"><?php echo app_lang('email_login_details'); ?></label>
                     </div>
                 </div>

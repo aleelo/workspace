@@ -24,6 +24,7 @@ $lang["new_leave_request"] = "New Leave Request";
 $lang["leave_request_approved"] = "Leave Request Approved";
 $lang["leave_request_rejected"] = "Leave Request Rejected";
 $lang["template"] = "Template";
+$lang["private_email"] = "Private Email";
 $lang["created_by"] = "Created By";
 $lang["item_id"] = "Item ID";
 $lang["created_at"] = "Created At";

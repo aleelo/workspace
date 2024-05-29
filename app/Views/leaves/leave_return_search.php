@@ -40,9 +40,6 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
-.main {
-    background-color: rgba(128, 128, 128, 0.315);
-}
 
 .search-container .container {
     background-color: #e5e5e5;

@@ -270,6 +270,7 @@ class Users_model extends Crud_model {
             "company_name" => $clients_table . ".company_name",
             "job_title" => $users_table . ".job_title",
             "email" => $users_table . ".email",
+            "private_email" => $users_table . ".private_email",
             "phone" => $users_table . ".phone",
             "skype" => $users_table . ".skype",
         );
@@ -290,6 +291,7 @@ class Users_model extends Crud_model {
             $where .= " AND (";
             $where .= " $users_table.job_title LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.email LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $users_table.private_email LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.phone LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.skype LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $clients_table.company_name LIKE '%$search_by%' ESCAPE '!' ";

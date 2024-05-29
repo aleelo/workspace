@@ -165,6 +165,7 @@ class Team_members extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "email" => "required|valid_email",
+            "private_email" => "required|valid_email",
             "first_name" => "required",
             "last_name" => "required",
             "job_title_en" => "required",
@@ -191,6 +192,7 @@ class Team_members extends Security_Controller {
         $user_data = array(
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             "email" => $this->request->getPost('email'),
+            "private_email" => $this->request->getPost('private_email'),
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
             "is_admin" => $this->request->getPost('is_admin'),
@@ -495,7 +497,7 @@ class Team_members extends Security_Controller {
             $options = array("id" => $id, "user_type" => "staff");
             $user_info = $this->Users_model->get_details($options)->getRow();
            
-
+            // var_dump($user_info);die;
             $age_levels = [
                 '18 - 25' =>'18 - 25',
                 '26 - 35'=>'26 - 35',
@@ -896,6 +898,7 @@ class Team_members extends Security_Controller {
 
         $account_data = array(
             "email" => $this->request->getPost('email'),
+            "private_email" => $this->request->getPost('private_email'),
             "login_type" => $this->request->getPost('login_type')
         );
 
