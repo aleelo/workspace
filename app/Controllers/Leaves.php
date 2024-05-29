@@ -157,6 +157,7 @@ class Leaves extends Security_Controller {
         $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
         $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
         $parser_data["LEAVE_DATE"] = $data['LEAVE_DATE'];
+        $parser_data["TOTAL_DAYS"] = $data['TOTAL_DAYS'];
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
