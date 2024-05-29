@@ -5,18 +5,19 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+
 .main {
     background-color: rgba(128, 128, 128, 0.315);
 }
 
 .container {
-    background-color: #c8eaff;
+    background-color: #f0f8ff;
     width: 440px;
     margin: 20px auto;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
 }
 
 .ticket-header {
@@ -47,7 +48,7 @@
 
 .ticket-name p {
     font-size: 0.9rem;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
     font-weight: 300;
 }
 
@@ -90,8 +91,15 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
 }
 
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
+}
 .bording {
     margin-top: 10px;
     display: flex;
@@ -132,18 +140,28 @@ h2,h3,h4,h5,h6,p{
     width: 100px;
     height: 100px;
 }
+
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    margin: auto;
+}
+
 @media screen and (max-width: 414px) {
     
     
 .container {
-    background-color: #c8eaff;
+    background-color: #f0f8ff;
     width: 100%;
     margin: auto;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: midnightblue;
-    height: 100%;
+    color: rgb(19, 19, 65);
 }
  h2{
     font-size: 20px;
@@ -171,12 +189,12 @@ h2,h3,h4,h5,h6,p{
 }
 
 .ticket-body {
-    padding: 30px 15px;
+    padding: 20px 15px;
 }
 
 .ticket-name p {
     font-size: 0.9rem;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
     font-weight: 300;
 }
 
@@ -219,6 +237,14 @@ h2,h3,h4,h5,h6,p{
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
+}
+
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
 }
 
 .bording {
@@ -229,7 +255,7 @@ h2,h3,h4,h5,h6,p{
 
 .bording-content {
     border: 2px dashed #20a3f6;
-    padding: 10px 73px;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -247,6 +273,17 @@ h2,h3,h4,h5,h6,p{
 .code {
     height:200px;
     width: 200px;
+}
+
+
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    margin: auto;
 }
 
 }

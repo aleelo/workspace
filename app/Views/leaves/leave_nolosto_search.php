@@ -40,12 +40,12 @@
 
 
 #search-container1 .container {
-    background-color: #c8eaff;
+    background-color: #f0f8ff;
     width: 440px;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
 }
 
 #search-container1 .ticket-header {
@@ -59,6 +59,7 @@
     align-items: center;
     justify-content: center;
 }
+
 
 .ticket-header h2{
     font-size: 20px;
@@ -76,7 +77,7 @@
 
 #search-container1 .ticket-name p {
     font-size: 0.9rem;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
     font-weight: 300;
 }
 
@@ -136,6 +137,7 @@
     flex-direction: column;
 }
 
+
 .qrcode {
     margin-top: 20px;
     display: felx;
@@ -161,23 +163,44 @@ h2,h3,h4,h5,h6,p{
     width: 100px;
     height: 100px;
 }
-@media screen and (max-width: 414px) {
-    
-    
-#search-container1 .container {
-    background-color: #c8eaff;
-    width: 100%;
+
+
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
     margin: auto;
+}
+.ter-gat-set {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
+}
+
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
+}
+
+/* NEW STYLE */
+
+.container {
+    background-color: #f0f8ff;
+    width: 440px;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: midnightblue;
-    height: 100%;
+    color: rgb(19, 19, 65);
 }
- h2{
-    font-size: 20px;
-}
-#search-container1 .ticket-header {
+
+.ticket-header {
     background-color: #3cb4ff;
     color: white;
     border-top-left-radius:  7px;
@@ -200,16 +223,16 @@ h2,h3,h4,h5,h6,p{
 }
 
 .ticket-body {
-    padding: 30px 15px;
+    padding: 20px 15px;
 }
 
-#search-container1 .ticket-name p {
+.ticket-name p {
     font-size: 0.9rem;
-    color: midnightblue;
+    color: rgb(19, 19, 65);
     font-weight: 300;
 }
 
-#search-container1 .ruler {
+.ruler {
     margin: 1rem 0;
     height: 1px;
     background: #20a3f6;
@@ -218,7 +241,7 @@ h2,h3,h4,h5,h6,p{
 .ticket-number-date {
     display: flex;
     justify-content: space-between;
-    margin: 0 5%;
+    margin: 0 10%;
 }
 
 .ticket-from-and-to {
@@ -226,8 +249,8 @@ h2,h3,h4,h5,h6,p{
     justify-content: space-between;
     align-items: center;
     /* margin: 0 15%; */
-    /* border-bottom: 2.5px dashed #20a3f6; */
-    /* padding-bottom: 20px; */
+    /* border-bottom: 2.5px dashed #20a3f6;
+    padding-bottom: 20px; */
 }
 
 .plane-body {
@@ -248,15 +271,22 @@ h2,h3,h4,h5,h6,p{
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
 }
 
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
+}
 .bording {
     margin-top: 10px;
     display: flex;
     justify-content: center;
 }
 
-#search-container1 .bording-content {
+.bording-content {
     border: 2px dashed #20a3f6;
     padding: 10px 73px;
     display: flex;
@@ -278,9 +308,166 @@ h2,h3,h4,h5,h6,p{
     width: 200px;
 }
 
-#search-container1 {
+p{
+    font-weight: 500;
+}
+h2,h3,h4,h5,h6,p{
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.ticket-from-and-to .avatar{
+    width: 100px;
+    height: 100px;
+}
+
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    margin: auto;
+}
+/* END */
+@media screen and (max-width: 414px) {
+    
+        
+    #search-container1 .container {
+        background-color: #c8eaff;
         width: 100%;
+        margin: auto;
+        border-top-left-radius:  7px;
+        border-top-right-radius:  7px;
+        padding: 0px;
+        color: midnightblue;
+        height: 100%;
     }
+    h2{
+        font-size: 20px;
+    }
+    #search-container1 .ticket-header {
+        background-color: #3cb4ff;
+        color: white;
+        border-top-left-radius:  7px;
+        border-top-right-radius:  7px;
+        text-align: center;
+        padding: 15px 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ticket-header h2{
+        font-size: 20px;
+    }
+
+    #logo {
+        /* width: 45px; */
+        /* border: 2px solid white; */
+        /* border-radius: 100%; */
+    }
+
+    .ticket-body {
+        padding: 30px 15px;
+    }
+
+    #search-container1 .ticket-name p {
+        font-size: 0.9rem;
+        color: midnightblue;
+        font-weight: 300;
+    }
+
+    #search-container1 .ruler {
+        margin: 1rem 0;
+        height: 1px;
+        background: #20a3f6;
+    }
+
+    .ticket-number-date {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 5%;
+    }
+
+    .ticket-from-and-to {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* margin: 0 15%; */
+        /* border-bottom: 2.5px dashed #20a3f6; */
+        /* padding-bottom: 20px; */
+    }
+
+    .plane-body {
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        width: 250px;
+    }
+
+    .plane {
+        width: 50px;
+        margin-top: 15px;
+        /* display: flex; */
+    }
+
+    .circle-container img{
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        border-radius: 50%;
+        margin: auto;
+    }
+    .ter-gat-set {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 10px 0px;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .ter-gat-set  h2,h4{
+
+        font-size: 16px;
+    }
+
+    .bording {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #search-container1 .bording-content {
+        border: 2px dashed #20a3f6;
+        padding: 10px 73px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .qrcode {
+        margin-top: 20px;
+        display: felx;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .code {
+        height:200px;
+        width: 200px;
+    }
+
+    #search-container1 {
+            width: 100%;
+        }
 
 }
         </style>

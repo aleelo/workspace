@@ -33,25 +33,27 @@
                 width: 440px;
             }
 
-     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
     margin: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+.main {
+    background-color: rgba(128, 128, 128, 0.315);
+}
 
-
-.container {
-    background-color: #ffe2b3;
+.search-container .container {
+    background-color: #e5e5e5;
     width: 440px;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: #b55300;
+    color: #603007;
 }
 
-.ticket-header {
+.search-container  .ticket-header {
     background-color: #f4a82d;
     color: white;
     border-top-left-radius:  7px;
@@ -63,7 +65,7 @@
     justify-content: center;
 }
 
-.ticket-header h2{
+.search-container  .ticket-header h2{
     font-size: 20px;
 }
 
@@ -73,29 +75,29 @@
     /* border-radius: 100%; */
 }
 
-.ticket-body {
+.search-container   .ticket-body {
     padding: 20px 15px;
 }
 
-.ticket-name p {
+.search-container   .ticket-name p {
     font-size: 0.9rem;
     color: #b55334;
     font-weight: 300;
 }
 
-.ruler {
+.search-container   .ruler {
     margin: 1rem 0;
     height: 1px;
     background: #b36f00;
 }
 
-.ticket-number-date {
+.search-container  .ticket-number-date {
     display: flex;
     justify-content: space-between;
     margin: 0 10%;
 }
 
-.ticket-from-and-to {
+.search-container   .ticket-from-and-to {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -117,11 +119,20 @@
     /* display: flex; */
 }
 
+
 .ter-gat-set {
     margin-top: 10px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
+}
+
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
 }
 
 .bording {
@@ -130,8 +141,8 @@
     justify-content: center;
 }
 
-.bording-content {
-    border: 2px dashed #b36f00;
+.search-container   .bording-content {
+    border: 2px dashed #603007;
     padding: 10px 73px;
     display: flex;
     justify-content: center;
@@ -164,23 +175,33 @@ h2,h3,h4,h5,h6,p{
     width: 100px;
     height: 100px;
 }
+
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    margin: auto;
+}
+
 @media screen and (max-width: 414px) {
     
     
-.container {
-    background-color: #ffe2b3;
+    .search-container   .container {
+    background-color: #e5e5e5;
     width: 100%;
     margin: auto;
     border-top-left-radius:  7px;
     border-top-right-radius:  7px;
     padding: 0px;
-    color: #b55300;
-    height: 100%;
+    color: #603007;
 }
  h2{
     font-size: 20px;
 }
-.ticket-header {
+.search-container   .ticket-header {
     background-color: #f4a82d;
     color: white;
     border-top-left-radius:  7px;
@@ -192,7 +213,7 @@ h2,h3,h4,h5,h6,p{
     justify-content: center;
 }
 
-.ticket-header h2{
+.search-container  .ticket-header h2{
     font-size: 20px;
 }
 
@@ -206,13 +227,13 @@ h2,h3,h4,h5,h6,p{
     padding: 30px 15px;
 }
 
-.ticket-name p {
+.search-container  .ticket-name p {
     font-size: 0.9rem;
     color: #b55334;
     font-weight: 500;
 }
 
-.ruler {
+.search-container  .ruler {
     margin: 1rem 0;
     height: 1px;
     background: #b36f00;
@@ -246,12 +267,22 @@ h2,h3,h4,h5,h6,p{
     /* display: flex; */
 }
 
+
 .ter-gat-set {
     margin-top: 10px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin: 10px 0px;
+    gap: 10px;
+    text-align: center;
 }
+
+.ter-gat-set  h2,h4{
+
+    font-size: 16px;
+}
+
 
 .bording {
     margin-top: 10px;
@@ -259,8 +290,8 @@ h2,h3,h4,h5,h6,p{
     justify-content: center;
 }
 
-.bording-content {
-    border: 2px dashed #b36f00;
+.search-container   .bording-content {
+    border: 2px dashed #603007;
     padding: 10px 73px;
     display: flex;
     justify-content: center;
@@ -281,11 +312,15 @@ h2,h3,h4,h5,h6,p{
     width: 200px;
 }
 
-
-#search-container {
-    width: 100%;
+.circle-container img{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-radius: 50%;
+    margin: auto;
 }
-
 }
         </style>
 
