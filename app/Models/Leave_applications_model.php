@@ -64,7 +64,7 @@ class Leave_applications_model extends Crud_model {
       
         if($status ){
             if($view_type == 'pending_list'){
-                $where .= " AND $leave_applications_table.status IN('$status','active')";
+                $where .= " AND $leave_applications_table.status IN('pending','active')";
             }else{
                 $where .= " AND $leave_applications_table.status='$status'";
             }

@@ -176,6 +176,36 @@
                     </div>
                 </div>
             </div>
+         
+            <div class="form-group">
+                <div class="row">
+                    <label for="reason" class=" col-md-3"><?php echo app_lang('is_flight_included'); ?></label>
+                    <div class=" col-md-9">
+                    <?php
+                        echo form_radio(array(
+                            "id" => "flight_included_no",
+                            "class" => "duration form-check-input",
+                            "name" => "flight_included",
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                                ), "0", false);
+                        ?>
+                        <label for="flight_included_no" class="mr15" ><?php echo app_lang('no'); ?></label>
+
+                        <?php
+                        echo form_radio(array(
+                            "id" => "flight_included_yes",
+                            "class" => "duration form-check-input",
+                            "name" => "flight_included",
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                                ), "1", false);
+                        ?>
+                        <label for="flight_included_yes" class="mr15" ><?php echo app_lang('yes'); ?></label>
+
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="row">

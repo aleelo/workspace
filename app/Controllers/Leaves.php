@@ -345,7 +345,7 @@ class Leaves extends Security_Controller {
                 'EMAIL'=>$user_info->private_email,
                 'PASSPORT'=>$user_info->passport_no,
                 'LEAVE_TYPE'=>$leave_info->title,            
-                'TOTAL_DAYS'=>$leave_info->total_days,            
+                'TOTAL_DAYS'=>(int)$leave_info->total_days,            
                 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
             ];
 
@@ -503,7 +503,7 @@ class Leaves extends Security_Controller {
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'EMAIL'=>$user_info->private_email,
                     'PASSPORT'=>$user_info->passport_no,            
-                    'TOTAL_DAYS'=>$leave_info->total_days,
+                    'TOTAL_DAYS'=>$duration,
                     'LEAVE_TYPE'=>$leave_info->title,            
                     'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                 ];
@@ -920,6 +920,7 @@ class Leaves extends Security_Controller {
             "start_date" => $start_date,
             "end_date" => $end_date,
             "reason" => $this->request->getPost('reason'),
+            "flight_included" => $this->request->getPost('flight_included'),
             "created_by" => $this->login_user->id,
             "created_at" => $now,
             "department_id" => $this->get_user_department_id(),
