@@ -502,7 +502,8 @@ class Leaves extends Security_Controller {
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'EMAIL'=>$user_info->private_email,
-                    'PASSPORT'=>$user_info->passport_no,
+                    'PASSPORT'=>$user_info->passport_no,            
+                    'TOTAL_DAYS'=>$leave_info->total_days,
                     'LEAVE_TYPE'=>$leave_info->title,            
                     'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                 ];
