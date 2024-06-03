@@ -161,6 +161,8 @@ class Leaves extends Security_Controller {
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
         $message =  get_array_value($email_template, "message_default");
         $subject =  get_array_value($email_template, "subject_default");
@@ -193,6 +195,8 @@ class Leaves extends Security_Controller {
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
         $message =  get_array_value($email_template, "message_default");
         $subject =  get_array_value($email_template, "subject_default");
@@ -264,7 +268,7 @@ class Leaves extends Security_Controller {
             
             echo json_encode(array("success" => false, 'message' => 'Information is missing, Please fill your User & Job information'));
         }
-        
+
         $template = $this->db->query("SELECT * FROM rise_templates where destination_folder = 'Leave'")->getRow();
         $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template->id");
         $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template->id")->getRow()->sqn;
