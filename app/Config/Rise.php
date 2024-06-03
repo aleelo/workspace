@@ -11,7 +11,8 @@ class Rise extends BaseConfig {
     public $app_settings_array = array(
         "app_version" => "3.5.3",
         "app_update_url" => 'https://releases.fairsketch.com/rise/',
-        "updates_path" => './updates/',
+        "updates_path" => './updates/',        
+        // "email_sent_from_address" => "noreply@revenuedirectorate.gov.so",
     );
     public $app_csrf_exclude_uris = array(
         "notification_processor/create_notification",

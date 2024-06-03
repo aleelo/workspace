@@ -124,7 +124,6 @@ class Leaves extends Security_Controller {
                 }elseif($status === "rejected"){
 
                      //send email to the user for leave status:
-                         //send email to the user for leave status
                          $leave_email_data = [
                             'LEAVE_ID'=>$save_id,
                             'LEAVE_TITLE' => $leave_info->title,
@@ -254,10 +253,6 @@ class Leaves extends Security_Controller {
         $this->access_only_allowed_members($leave_data['applicant_id']);
 
         
-        if(!$user_info){
-            
-            echo json_encode(array("success" => false, 'message' => 'Information is missing, Please fill your User & Job information'));
-        }
         
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
 
@@ -265,6 +260,11 @@ class Leaves extends Security_Controller {
         $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
+        if(!$user_info){
+            
+            echo json_encode(array("success" => false, 'message' => 'Information is missing, Please fill your User & Job information'));
+        }
+        
         $template = $this->db->query("SELECT * FROM rise_templates where destination_folder = 'Leave'")->getRow();
         $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template->id");
         $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template->id")->getRow()->sqn;

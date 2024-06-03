@@ -179,12 +179,12 @@
          
             <div class="form-group">
                 <div class="row">
-                    <label for="reason" class=" col-md-3"><?php echo app_lang('is_flight_included'); ?></label>
+                    <label for="flight_included_no" class=" col-md-3"><?php echo app_lang('is_flight_included'); ?></label>
                     <div class=" col-md-9">
                     <?php
                         echo form_radio(array(
                             "id" => "flight_included_no",
-                            "class" => "duration form-check-input",
+                            "class" => "form-check-input",
                             "name" => "flight_included",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
@@ -195,7 +195,7 @@
                         <?php
                         echo form_radio(array(
                             "id" => "flight_included_yes",
-                            "class" => "duration form-check-input",
+                            "class" => "form-check-input",
                             "name" => "flight_included",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
