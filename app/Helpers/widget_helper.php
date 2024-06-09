@@ -1576,6 +1576,10 @@ if (!function_exists('team_members_overview_widget')) {
         $ci = new Security_Controller(false);
 
         $view_data["total_team_members"] = $ci->Users_model->count_total_users();
+        $res = $ci->Users_model->count_users_by_gender();
+    
+        $view_data["male_team_members"] = get_array_value($res,'male');
+        $view_data["female_team_members"] = get_array_value($res,'female');
 
         $leave_options = array(
             "login_user_id" => $ci->login_user->id,
@@ -1597,6 +1601,56 @@ if (!function_exists('team_members_overview_widget')) {
 
         $template = new Template();
         return $template->view("team_members/team_members_overview_widget", $view_data);
+    }
+
+}
+
+/**
+ * get team members age and education overview
+ * 
+ * @return html
+ */
+if (!function_exists('team_members_agegroup_education_widget')) {
+
+    function team_members_agegroup_education_widget($data = array()) {
+        $ci = new Security_Controller(false);
+
+        $education_data = $ci->Users_model->count_users_by_education_levels();
+        $agegroups_data = $ci->Users_model->count_users_by_age_groups();
+            
+        $view_data["total_1530"] = get_array_value($agegroups_data,'total_1530');
+        $view_data["total_3145"] = get_array_value($agegroups_data,'total_3145');
+        $view_data["total_4660"] = get_array_value($agegroups_data,'total_4660');
+        $view_data["total_6075"] = get_array_value($agegroups_data,'total_6075');
+        $view_data["total_76up"] = get_array_value($agegroups_data,'total_76up');
+      
+        $view_data["total_diploma"] = get_array_value($education_data,'total_diploma');
+        $view_data["total_graduate"] = get_array_value($education_data,'total_graduate');
+        $view_data["total_bachelor"] = get_array_value($education_data,'total_bachelor');
+        $view_data["total_master"] = get_array_value($education_data,'total_master');
+        $view_data["total_doctorate"] = get_array_value($education_data,'total_doctorate');
+        $view_data["total_other"] = get_array_value($education_data,'total_other');
+
+        $template = new Template();
+        return $template->view("team_members/team_members_agegroup_education_widget", $view_data);
+    }
+
+}
+
+/**
+ * get team members departments overview
+ * 
+ * @return html
+ */
+if (!function_exists('team_members_by_department_widget')) {
+
+    function team_members_by_department_widget($data = array()) {
+        $ci = new Security_Controller(false);
+
+        $view_data["departments"] = $ci->Users_model->count_users_by_department();
+                  
+        $template = new Template();
+        return $template->view("team_members/team_members_by_department_widget", $view_data);
     }
 
 }

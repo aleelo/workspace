@@ -1,10 +1,11 @@
+-- users table
 -- id,uuid,first_name,last_name,user_type,is_admin,role_id,login_type,email,password,
 -- image,status,message_checked_at,client_id,notification_checked_at,is_primary_contact,job_title,disable_login,note,address,alternative_address,phone,
 -- alternative_phone,dob,ssn,gender,passport_no,marital_status,emergency_name,emergency_phone,birth_date,birth_place,education_level,
-
 -- education_field,education_school,sticky_note,skype,language,enable_web_notification,enable_email_notification,created_at,last_online,requested_account_removal,
 -- deleted,department_id,job_title_en,job_title_so,employee_id
 
+-- new to emof:
 age_level,	
 work_experience	,	
 faculty	,

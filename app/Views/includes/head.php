@@ -94,5 +94,9 @@
         }
         
     }
+
+    .card {
+        margin-bottom: 15px;
+    }
 </style>
 </head>
