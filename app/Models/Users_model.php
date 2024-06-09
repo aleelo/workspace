@@ -294,6 +294,10 @@ class Users_model extends Crud_model {
             $where .= " OR $users_table.private_email LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.phone LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.skype LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $users_table.bachelor_degree LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $users_table.master_degree LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $users_table.employee_id LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $users_table.age_level LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $clients_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= $this->get_custom_field_search_query($users_table, "client_contacts", $search_by);
