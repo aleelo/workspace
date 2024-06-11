@@ -59,7 +59,7 @@
                         </svg>
                     </a>
                 </li>
-
+<!-- 
                 <li class="nav-item">
                     <a class="nav-link" href="https://tasks.office.com/presidency.gov.so/en-US/Home/Planner/" title="Planner" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48" style="width: 30px;height: 30px;">
@@ -106,26 +106,7 @@
                     </svg>
                     </a>
                 </li>
-                <?php if($dept_id == 199){?>
-                    <li class="nav-item">
-                        <a class="nav-link" title="Maaliyadda" href="https://sfmis.gov.so/Account/Login.aspx" target="_blank">
-                        <i data-feather="dollar-sign" class="icon"></i>
-
-                        </a>
-                    </li>
-                <?php }?>
-
-                <?php if($dept_id == 196){?>
-                    <li class="nav-item">
-                        <a class="nav-link" title="HR" href="https://ncsc-hr.com/" target="_blank">
-                        <i data-feather="user" class="icon"></i>
-
-                        </a>
-                    </li>
-                <?php }?>
-
-
-               
+                  -->
             </ul>
 
 
