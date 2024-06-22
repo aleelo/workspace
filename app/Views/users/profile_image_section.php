@@ -11,7 +11,7 @@
         }
         echo form_open(get_uri($url . "/save_profile_image/" . $user_info->id), array("id" => "profile-image-form", "class" => "general-form", "role" => "form"));
         ?>
-        <?php if ($login_user->is_admin || $user_info->id === $login_user->id) { ?>
+        <?php if ($login_user->is_admin || $login_user->role_id == 1 || $login_user->role_id == 2 || $login_user->role_id == 6 || $user_info->id === $login_user->id) { ?>
             <div class="file-upload btn mt0 p0 profile-image-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload_and_crop"); ?>" data-placement="right">
                 <span class="btn color-white"><i data-feather="camera" class="icon-16"></i></span> 
                 <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="200" data-width="200" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
