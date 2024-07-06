@@ -38,6 +38,7 @@ class App_Controller extends Controller {
     public $Purchase_Item_model;
     public $Purchase_Order_Items_model;
     public $Suppliers_model;
+    public $Company_model;
 
     public $Cardholders_model;
     public $Archives_model;
@@ -146,6 +147,7 @@ class App_Controller extends Controller {
 
     private function get_models_array() {
         return array(
+            'Company_model',
             'Settings_model',
             'Users_model',
             'Team_model',

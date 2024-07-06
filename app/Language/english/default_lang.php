@@ -68,6 +68,29 @@ $lang["team_members_educaction_age_overview"] = "Employee Education/Age Groups O
 $lang["team_members_agegroup_education_widget"] = "Employee Education/Age Groups Overview";
 $lang["total_team_members_overview"] = "Total Employee Overview";
 
+//Company:
+$lang["company_list"] = "Company List";
+$lang["add_company"] = "Add Company";
+$lang["registration_type"] = "Registration Type";
+$lang["contact_name"] = "Contact Name";
+$lang["phone_number"] = "Phone Number";
+$lang["tin"] = "TIN";
+$lang["date"] = "Date";
+$lang["end_date"] = "End Date";
+$lang["registration_no"] = "Registration NO.";
+$lang["email"] = "Email";
+$lang["large_medium"] = "Large / Medium";
+$lang["company_old"] = "Company Old";
+$lang["company_reg"] = "Company Reg";
+$lang["start_date"] = "Start Date";
+$lang["company_name"] = "Company Name";
+$lang["company_type"] = "Company Type";
+$lang["type"] = "Type";
+
+
+
+
+
 //templates:
 $lang["add_template"] = "Add Template";
 $lang["templates_list"] = "Templates List";

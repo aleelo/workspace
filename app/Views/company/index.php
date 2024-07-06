@@ -1,42 +1,45 @@
 <div id="page-content" class="page-wrapper clearfix">
-    <div class="row">
-        <div class="col-sm-3 col-lg-2">
-            <?php
-            $tab_view['active_tab'] = "company";
-            echo view("settings/tabs", $tab_view);
-            ?>
-        </div>
-
-        <div class="col-sm-9 col-lg-10">
-            <div class="card">
-                <div class="page-title clearfix">
-                    <h4> <?php echo app_lang('company_settings'); ?></h4>
-                    <div class="title-button-group">
-                        <?php echo modal_anchor(get_uri("company/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_company'), array("class" => "btn btn-default", "title" => app_lang('add_company'))); ?>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table id="company-table" class="display" cellspacing="0" width="100%">            
-                    </table>
+    <div class="clearfix grid-button">
+        <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
+            <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/clients_list/"); ?>" data-bs-target="#clients_list"><?php echo app_lang('company_list'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contacts/"); ?>" data-bs-target="#contacts"><?php echo app_lang('contacts'); ?></a></li>
+            <div class="tab-title clearfix no-border">
+                <div class="title-button-group">
+                    <?php
+                    if ($can_edit_clients) {
+                        echo modal_anchor(get_uri("company/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-outline-light", "title" => app_lang('manage_labels'), "data-post-type" => "client"));
+                        echo modal_anchor(get_uri("company/import_clients_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_clients'), array("class" => "btn btn-default", "title" => app_lang('import_clients')));
+                        echo modal_anchor(get_uri("company/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_company'), array("class" => "btn btn-default", "title" => app_lang('add_company')));
+                    }
+                    ?>
                 </div>
             </div>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade" id="overview">
+                <?php echo view("company/overview/index"); ?>
+            </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="clients_list"></div>
+            <div role="tabpanel" class="tab-pane fade" id="contacts"></div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#company-table").appTable({
-            source: ' <?php echo_uri("company/list_data") ?>',
-            columns: [
-                {title: '<?php echo app_lang("name"); ?>'},
-                {title: '<?php echo app_lang("address"); ?> '},
-                {title: '<?php echo app_lang("phone"); ?> '},
-                {title: '<?php echo app_lang("email"); ?> '},
-                {title: '<?php echo app_lang("website"); ?> '},
-                {title: '<?php echo app_lang("vat_number"); ?> '},
-                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
-            ]
-        });
+        setTimeout(function () {
+            var tab = "<?php echo $tab; ?>";
+            if (tab === "clients_list" || tab === "clients_list-has_open_projects") {
+                $("[data-bs-target='#clients_list']").trigger("click");
+
+                window.selectedClientQuickFilter = window.location.hash.substring(1);
+            } else if (tab === "contacts") {
+                $("[data-bs-target='#contacts']").trigger("click");
+
+                window.selectedContactQuickFilter = window.location.hash.substring(1);
+            }
+        }, 210);
     });
 </script>

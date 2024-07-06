@@ -56,7 +56,11 @@ class Left_menu {
 
 
             if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["clients"] = array("name" => "clients", "url" => "clients", "class" => "briefcase");
+                $sidebar_menu["company_Old"] = array("name" => "company_old", "url" => "company", "class" => "briefcase");
+            }
+
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["company_reg"] = array("name" => "company_reg", "url" => "clients", "class" => "briefcase");
             }
 
         
