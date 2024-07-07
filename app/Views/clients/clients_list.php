@@ -45,13 +45,13 @@
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
             {title: "<?php echo app_lang("name") ?>", "class": "all", order_by: "company_name"},
-            {title: "<?php echo app_lang("primary_contact") ?>", order_by: "primary_contact"},
-            {title: "<?php echo app_lang("client_groups") ?>", order_by: "client_groups"},
-            {title: "<?php echo app_lang("labels") ?>"},
-            {title: "<?php echo app_lang("projects") ?>"},
-            {visible: showInvoiceInfo, searchable: showInvoiceInfo, title: "<?php echo app_lang("total_invoiced") ?>"},
-            {visible: showInvoiceInfo, searchable: showInvoiceInfo, title: "<?php echo app_lang("payment_received") ?>"},
-            {visible: showInvoiceInfo, searchable: showInvoiceInfo, title: "<?php echo app_lang("due") ?>"}
+            {title: "<?php echo app_lang("reg_no") ?>", order_by: "Reg_NO"},
+            {title: "<?php echo app_lang("start_date") ?>", order_by: "Start_Date"},
+            {title: "<?php echo app_lang("end_date") ?>", order_by: "End_Date"},
+            {title: "<?php echo app_lang("large_medium") ?>", order_by: "LargeMedium"},
+            {title: "<?php echo app_lang("contact_name") ?>", order_by: "Contact_Name"}
+
+            
 <?php echo $custom_field_headers; ?>,
             {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100", visible: showOptions}
             ],

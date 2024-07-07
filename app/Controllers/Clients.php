@@ -43,26 +43,7 @@ class Clients extends Security_Controller {
         return $this->template->rander("clients/index", $view_data);
     }
 
-    private function can_view_files() {
-        if ($this->login_user->user_type == "staff") {
-            $this->access_only_allowed_members();
-        } else {
-            if (!get_setting("client_can_view_files")) {
-                app_redirect("forbidden");
-            }
-        }
-    }
-
-    private function can_add_files() {
-        if ($this->login_user->user_type == "staff") {
-            $this->access_only_allowed_members();
-        } else {
-            if (!get_setting("client_can_add_files")) {
-                app_redirect("forbidden");
-            }
-        }
-    }
-
+  
     /* load client add/edit modal */
 
     function modal_form() {
@@ -96,11 +77,13 @@ class Clients extends Security_Controller {
     }
 
     /* insert or update a client */
-
+    
     function save() {
+        
         $client_id = $this->request->getPost('id');
         $this->_validate_client_manage_access($client_id);
-
+        
+        /* Validation Impit */
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "company_name" => "required"
@@ -110,16 +93,17 @@ class Clients extends Security_Controller {
 
         $data = array(
             "company_name" => $company_name,
-            "type" => $this->request->getPost('account_type'),
+            "type" => $this->request->getPost('type'),
+            "LargeMedium" => $this->request->getPost('LargeMedium') ? 'TRUE' : 'FALSE',
+            "Reg_Type" => $this->request->getPost('Reg_Type'),
+            "Reg_NO" => $this->request->getPost('Reg_NO'),
+            "Start_Date" => $this->request->getPost('Start_Date'),
+            "End_Date" => $this->request->getPost('End_Date'),
+            "Contact_Name" => $this->request->getPost('Contact_Name'),
             "address" => $this->request->getPost('address'),
-            "city" => $this->request->getPost('city'),
-            "state" => $this->request->getPost('state'),
-            "zip" => $this->request->getPost('zip'),
-            "country" => $this->request->getPost('country'),
             "phone" => $this->request->getPost('phone'),
-            "website" => $this->request->getPost('website'),
-            "vat_number" => $this->request->getPost('vat_number'),
-            "gst_number" => $this->request->getPost('gst_number')
+            "email" => $this->request->getPost('email'),
+            "TIN" => $this->request->getPost('TIN')
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -204,7 +188,9 @@ class Clients extends Security_Controller {
     function list_data() {
 
         $this->access_only_allowed_members();
+
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
+        
         $options = array(
             "custom_fields" => $custom_fields,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("clients", $this->login_user->is_admin, $this->login_user->user_type),
@@ -256,7 +242,9 @@ class Clients extends Security_Controller {
 
 
         $image_url = get_avatar($data->contact_avatar);
+
         $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
+
         $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
 
         $group_list = "";
@@ -273,23 +261,31 @@ class Clients extends Security_Controller {
             $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
         }
 
+        $client_labels = make_labels_view_data($data->labels_list, true);
 
         $due = 0;
         if ($data->invoice_value) {
             $due = ignor_minor_value($data->invoice_value - $data->payment_received);
         }
 
-        $client_labels = make_labels_view_data($data->labels_list, true);
 
         $row_data = array($data->id,
+
             anchor(get_uri("clients/view/" . $data->id), $data->company_name),
-            $data->primary_contact ? $primary_contact : "",
-            $group_list,
-            $client_labels,
-            to_decimal_format($data->total_projects),
-            to_currency($data->invoice_value, $data->currency_symbol),
-            to_currency($data->payment_received, $data->currency_symbol),
-            to_currency($due, $data->currency_symbol)
+            $data->Reg_NO,
+            $data->Start_Date,
+            $data->End_Date,
+            $data->LargeMedium,
+            $data->Contact_Name,
+
+            // $data->primary_contact ? $primary_contact : "",
+            // $group_list,
+            // $client_labels,
+            // to_decimal_format($data->total_projects),
+            // to_currency($data->invoice_value, $data->currency_symbol),
+            // to_currency($data->payment_received, $data->currency_symbol),
+            // to_currency($due, $data->currency_symbol)
+            
         );
 
         foreach ($custom_fields as $field) {
@@ -301,6 +297,29 @@ class Clients extends Security_Controller {
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
+    }
+
+
+
+
+    private function can_view_files() {
+        if ($this->login_user->user_type == "staff") {
+            $this->access_only_allowed_members();
+        } else {
+            if (!get_setting("client_can_view_files")) {
+                app_redirect("forbidden");
+            }
+        }
+    }
+
+    private function can_add_files() {
+        if ($this->login_user->user_type == "staff") {
+            $this->access_only_allowed_members();
+        } else {
+            if (!get_setting("client_can_add_files")) {
+                app_redirect("forbidden");
+            }
+        }
     }
 
     /* load client details view */

@@ -76,16 +76,18 @@ $lang["contact_name"] = "Contact Name";
 $lang["phone_number"] = "Phone Number";
 $lang["tin"] = "TIN";
 $lang["date"] = "Date";
+$lang["start_date"] = "Start Date";
 $lang["end_date"] = "End Date";
 $lang["registration_no"] = "Registration NO.";
 $lang["email"] = "Email";
 $lang["large_medium"] = "Large / Medium";
 $lang["company_old"] = "Company Old";
 $lang["company_reg"] = "Company Reg";
-$lang["start_date"] = "Start Date";
 $lang["company_name"] = "Company Name";
 $lang["company_type"] = "Company Type";
 $lang["type"] = "Type";
+$lang["reg_no"] = "Reg NO";
+$lang["status"] = "Status";
 
 
 
