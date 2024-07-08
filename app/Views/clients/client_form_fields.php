@@ -49,7 +49,7 @@
 
 <!-----------------------------------------  Large / Medium  ------------------------------------>
 
-<?php if ($login_user->is_admin && get_setting("module_invoice")) { ?>
+<?php //if ($login_user->is_admin && get_setting("module_invoice")) { ?>
     <div class="form-group">
         <div class="row">
             <label for="LargeMedium" class="<?php echo $label_column; ?> col-xs-8 col-sm-6"><?php echo app_lang('large_medium'); ?></label>
@@ -60,7 +60,7 @@
             </div>
         </div>
     </div>
-<?php } ?>
+<?php //} ?>
 
 
 
