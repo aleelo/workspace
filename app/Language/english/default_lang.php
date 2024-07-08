@@ -108,6 +108,7 @@ $lang["company_type"] = "Company Type";
 $lang["type"] = "Type";
 $lang["reg_no"] = "Reg NO";
 $lang["status"] = "Status";
+$lang["save_submit"] = "Save & Submit";
 
 $lang["id"] = "ID";
 $lang["payer_id"] = "Payer ID";
