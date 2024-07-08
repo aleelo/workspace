@@ -64,7 +64,7 @@ class Left_menu {
             }
 
             if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["company"] = array("name" => "company", "url" => "clients", "class" => "briefcase");
+                $sidebar_menu["payers"] = array("name" => "payers", "url" => "clients", "class" => "briefcase");
             }
 
         
