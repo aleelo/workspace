@@ -20,6 +20,7 @@ class App_Controller extends Controller {
     protected $db;
     //creation of dynamic property is deprecated in php 8.2
     public $Settings_model;
+    public $Departments_model;
     public $Users_model;
     public $Team_model;
     public $Attendance_model;
@@ -148,6 +149,7 @@ class App_Controller extends Controller {
     private function get_models_array() {
         return array(
             'Company_model',
+            'Departments_model',
             'Settings_model',
             'Users_model',
             'Team_model',

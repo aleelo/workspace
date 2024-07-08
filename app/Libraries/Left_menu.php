@@ -60,7 +60,11 @@ class Left_menu {
             }
 
             if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["company_reg"] = array("name" => "company_reg", "url" => "clients", "class" => "briefcase");
+                $sidebar_menu["departments"] = array("name" => "departments", "url" => "departments", "class" => "briefcase");
+            }
+
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["company"] = array("name" => "company", "url" => "clients", "class" => "briefcase");
             }
 
         

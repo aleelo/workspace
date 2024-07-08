@@ -68,12 +68,32 @@ $lang["team_members_educaction_age_overview"] = "Employee Education/Age Groups O
 $lang["team_members_agegroup_education_widget"] = "Employee Education/Age Groups Overview";
 $lang["total_team_members_overview"] = "Total Employee Overview";
 
+//Departments:
+$lang["departments"] = "Departments";
+$lang["add_department"] = "Add Department";
+$lang["add_department"] = "Add Department";
+$lang["add_departments"] = "Add Department";
+$lang["edit_department"] = "Edit Department";
+$lang["departments_list"] = "Departments List";
+$lang["department_email"] = "Department Email";
+$lang["departments"] = "Departments";
+$lang["name_so"] = "Name Somali";
+$lang["name_en"] = "Name English";
+$lang["head"] = "Head";
+$lang["private_email"] = "Private Email";
+$lang["employee"] = "Employee";
+$lang["employees"] = "Employees";
+$lang["department_head"] = "Department Head";
+
+
 //Company:
+$lang["company"] = "Company";
 $lang["company_list"] = "Company List";
 $lang["add_company"] = "Add Company";
 $lang["registration_type"] = "Registration Type";
 $lang["contact_name"] = "Contact Name";
 $lang["phone_number"] = "Phone Number";
+$lang["address"] = "Address";
 $lang["tin"] = "TIN";
 $lang["date"] = "Date";
 $lang["start_date"] = "Start Date";
@@ -88,6 +108,21 @@ $lang["company_type"] = "Company Type";
 $lang["type"] = "Type";
 $lang["reg_no"] = "Reg NO";
 $lang["status"] = "Status";
+
+$lang["id"] = "ID";
+$lang["payer_id"] = "Payer ID";
+$lang["payer_name"] = "Payer Name";
+$lang["payer_type"] = "Payer Type";
+$lang["payer_address"] = "Payer Address";
+$lang["b_reg_type"] = "B. Reg. Type";
+$lang["b_reg_type_p"] = "B. Registration Type";
+$lang["b_reg_no"] = "B. Reg. NO";
+$lang["b_reg_no_p"] = "Business Registration NO";
+$lang["reg_start_date"] = "Reg. Start Date";
+$lang["reg_start_date_p"] = "Registration Start Date";
+$lang["reg_end_date"] = "Reg. End Date";
+$lang["reg_End_date_p"] = "Registration End Date";
+$lang["created_by"] = "Created By";
 
 
 

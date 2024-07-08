@@ -15,6 +15,8 @@ class Security_Controller extends App_Controller {
     protected $is_user_a_project_member = false;
     protected $is_clients_project = false; //check if loged in user's client's project
 
+    
+
     public function __construct($redirect = true) {
         parent::__construct();
 
@@ -49,6 +51,60 @@ class Security_Controller extends App_Controller {
             $this->login_user->permissions = array();
         }
     }
+
+    
+    public function get_employees_dropdown() {
+        $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'  and deleted=0")->getResult();
+        $temp_array = array('' => '---Choose Department Head---');
+
+        if(!$employees){
+            return null;
+        }
+  
+        foreach($employees as $e){
+            $temp_array[$e->id] = $e->name;
+        }
+
+        return $temp_array;
+    }
+    public function get_employees_dropdown_for_table() {
+        $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'  and deleted=0")->getResult();
+        $temp_array[] = array('id' => '', 'text' => '---Choose Employee---');
+  
+        foreach($employees as $e){
+            $temp_array[] = array('id' => $e->id, 'text' => $e->name);
+        }
+
+        return json_encode($temp_array);
+    }
+
+
+    function get_departments_for_select(){
+        
+        $dept_id = $this->get_user_department_id();
+        $role = $this->get_user_role();
+
+        if($role == 'admin' || $role == 'Administrator' || $role == 'HRM'){
+            $dept_id = '%';
+        }
+
+        $depts = $this->db->query("select id,nameSo from departments where id like '$dept_id' and deleted=0");
+        
+        $data = array('' => '---Choose Department---');
+
+        if(!$depts){
+            return [];
+        }else{
+            
+            $depts = $depts->getResult();
+            foreach($depts as $d){
+                $data[$d->id] = $d->nameSo;
+            }
+
+            return $data;
+        }
+    }
+
 
     //initialize the login user's permissions with readable format
     protected function init_permission_checker($module) {
@@ -1066,54 +1122,6 @@ class Security_Controller extends App_Controller {
             return $access_info->allowed_members; //permission: specific / specific_excluding_own
         } else {
             return $access_type; //permission: all / own_project_members / own_project_members_excluding_own
-        }
-    }
-
-    public function get_employees_dropdown() {
-        $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'")->getResult();
-        $temp_array =[];
-  
-        foreach($employees as $e){
-            $temp_array[$e->id] = $e->name;
-        }
-
-        return $temp_array;
-    }
-    public function get_employees_dropdown_for_table() {
-        $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'")->getResult();
-        $temp_array[] = array('id' => '', 'text' => 'Choose Employee');
-  
-        foreach($employees as $e){
-            $temp_array[] = array('id' => $e->id, 'text' => $e->name);
-        }
-
-        return json_encode($temp_array);
-    }
-
-
-    function get_departments_for_select(){
-        
-        $dept_id = $this->get_user_department_id();
-        $role = $this->get_user_role();
-
-        if($role == 'admin' || $role == 'Administrator' || $role == 'HRM'){
-            $dept_id = '%';
-        }
-
-        $depts = $this->db->query("select id,nameSo from departments where id like '$dept_id'");
-        
-        $data = array('' => 'Choose Department');
-
-        if(!$depts){
-            return [];
-        }else{
-            
-            $depts = $depts->getResult();
-            foreach($depts as $d){
-                $data[$d->id] = $d->nameSo;
-            }
-
-            return $data;
         }
     }
 

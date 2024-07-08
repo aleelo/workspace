@@ -1,60 +1,36 @@
+
 <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
 <input type="hidden" name="view" value="<?php echo isset($view) ? $view : ""; ?>" />
 
 
 <!-----------------------------------------  Company Name  ------------------------------------>
 
-<?php if ($model_info->id) { ?>
-    <div class="form-group">
-        <div class="row">
-            <?php if ($model_info->type == "person") { ?>
-                <label for="name" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('name'); ?></label>
-            <?php } else { ?>
-                <label for="company_name" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('company_name'); ?></label>
-            <?php } ?>
-            <div class="<?php echo $field_column; ?>">
-                <?php
-                echo form_input(array(
-                    "id" => ($model_info->type == "person") ? "name" : "company_name",
-                    "name" => "company_name",
-                    "value" => $model_info->company_name,
-                    "class" => "form-control company_name_input_section",
-                    "placeholder" => app_lang('company_name'),
-                    "autofocus" => true,
-                    "data-rule-required" => true,
-                    "data-msg-required" => app_lang("field_required"),
-                ));
-                ?>
-            </div>
+
+<div class="form-group">
+    <div class="row">
+        <label for="payer_name" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('payer_name'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "company_name",
+                "name" => "company_name",
+                "value" => $model_info->company_name,
+                "class" => "form-control company_name_input_section",
+                "placeholder" => app_lang('payer_name'),
+                "autofocus" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => app_lang("field_required"),
+            ));
+            ?>
         </div>
     </div>
-<?php } else { ?>
-    <div class="form-group">
-        <div class="row">
-            <label for="company_name" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('company_name'); ?></label>
-            <div class="<?php echo $field_column; ?>">
-                <?php
-                echo form_input(array(
-                    "id" => "company_name",
-                    "name" => "company_name",
-                    "value" => $model_info->company_name,
-                    "class" => "form-control company_name_input_section",
-                    "placeholder" => app_lang('company_name'),
-                    "autofocus" => true,
-                    "data-rule-required" => true,
-                    "data-msg-required" => app_lang("field_required"),
-                ));
-                ?>
-            </div>
-        </div>
-    </div>
-<?php } ?>
+</div>
 
 <!-----------------------------------------  Company Type  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="type" class="<?php echo $label_column; ?>"><?php echo app_lang('type'); ?></label>
+        <label for="type" class="<?php echo $label_column; ?>"><?php echo app_lang('payer_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
@@ -62,8 +38,8 @@
                 "name" => "type",
                 "value" => $model_info->type,
                 "class" => "form-control",
-                "placeholder" => app_lang('type')
-            ),['Company Type'=>'< Company Type >', 'Corporate'=>'Corporate','Limited Liability Company (LLC)'=>'Limited Liability Company (LLC)', 'Partnership'=>'Partnership', 'Non-Profit Organization'=>'Non-Profit Organization', 'Trust'=>'Trust', 
+                "placeholder" => app_lang('payer_type')
+            ),[''=>'', 'Corporate'=>'Corporate','Limited Liability Company (LLC)'=>'Limited Liability Company (LLC)', 'Partnership'=>'Partnership', 'Non-Profit Organization'=>'Non-Profit Organization', 'Trust'=>'Trust', 
             'Estate'=>'Estate', 'Public Limited Company (PLC)'=>'Public Limited Company (PLC)', 'Private Limited Company (Ltd)'=>'Private Limited Company (Ltd)', 'Cooperative (Co-op)'=>'Cooperative (Co-op)', 'Joint Venture (JV)'=>'Joint Venture (JV)',  ],[$model_info->type]
         );
             ?>
@@ -92,7 +68,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Reg_Type" class="<?php echo $label_column; ?>"><?php echo app_lang('registration_type'); ?></label>
+        <label for="Reg_Type" class="<?php echo $label_column; ?>"><?php echo app_lang('b_reg_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
@@ -100,8 +76,8 @@
                 "name" => "Reg_Type",
                 "value" => $model_info->Reg_Type,
                 "class" => "form-control",
-                "placeholder" => app_lang('registration_type')
-            ),['Registration Type'=>'< Registration Type >','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
+                "placeholder" => app_lang('b_reg_type_p')
+            ),[''=>'','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
         );
             ?>
         </div>
@@ -112,7 +88,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Reg_NO" class="<?php echo $label_column; ?>"><?php echo app_lang('registration_no'); ?></label>
+        <label for="Reg_NO" class="<?php echo $label_column; ?>"><?php echo app_lang('b_reg_no'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -120,7 +96,7 @@
                 "name" => "Reg_NO",
                 "value" => $model_info->Reg_NO,
                 "class" => "form-control",
-                "placeholder" => app_lang('registration_no')
+                "placeholder" => app_lang('b_reg_no_p')
             ));
             ?>
         </div>
@@ -132,7 +108,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Start_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('start_date'); ?></label>
+        <label for="Start_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('reg_start_date'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -140,7 +116,7 @@
                 "name" => "Start_Date",
                 "value" => $model_info->Start_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('start_date')
+                "placeholder" => app_lang('reg_start_date_p')
             ));
             ?>
         </div>
@@ -151,7 +127,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="End_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('end_date'); ?></label>
+        <label for="End_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('reg_end_date'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -159,7 +135,7 @@
                 "name" => "End_Date",
                 "value" => $model_info->End_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('end_date')
+                "placeholder" => app_lang('reg_End_date_p')
             ));
             ?>
         </div>
@@ -264,6 +240,14 @@
         </div>
     </div>
 </div>
+
+<!------------------------------------------------------------------------------------------>
+
+
+
+
+
+
 
 
 

@@ -268,6 +268,16 @@ class Clients extends Security_Controller {
             $due = ignor_minor_value($data->invoice_value - $data->payment_received);
         }
 
+        $owner = "-";
+        if ($data->created_by) {
+            // $owner_image_url = get_avatar($data->owner_avatar);
+            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
+            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
+            $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
+            // $data->user; //
+
+        }
+
 
         $row_data = array($data->id,
 
@@ -277,6 +287,8 @@ class Clients extends Security_Controller {
             $data->End_Date,
             $data->LargeMedium,
             $data->Contact_Name,
+            $owner?->first_name.' '.$owner?->last_name,
+            $data->Status,
 
             // $data->primary_contact ? $primary_contact : "",
             // $group_list,
