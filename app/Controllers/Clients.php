@@ -76,6 +76,42 @@ class Clients extends Security_Controller {
         return $this->template->view('clients/modal_form', $view_data);
     }
 
+    
+    public function send_new_payer_email($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
+        $email = $data['EMAIL'];
+        if(!$email){
+            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+
+        }
+
+        $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
+        $parser_data["PAYER_ID"] = $data['PAYER_ID'];
+        $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
+        $parser_data["REG_NO"] = $data['REG_NO'];
+        $parser_data["START_DATE"] = $data['START_DATE'];
+        $parser_data["END_DATE"] = $data['END_DATE'];
+        $parser_data["LEAVE_URL"] = get_uri('leaves');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if (send_app_mail($email, $subject, $message)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /* insert or update a client */
     
     function save() {
@@ -151,6 +187,44 @@ class Clients extends Security_Controller {
         $save_id = $this->Clients_model->ci_save($data, $client_id);
 
         if ($save_id) {
+
+            if(!$id){
+                    
+                $options = array('id'=>$save_id);
+                $payer = $this->Clients_model->get_details($options)->getRow();
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $payer?->created_by")->getRow();
+
+                    //send email to the administration
+                   $payer_email_data = [
+                       'PAYER_ID'=>$save_id,
+                       'PAYER_NAME' => $payer->company_name,
+                       'REG_NO'=>$payer->Reg_NO,
+                       'START_DATE'=>$payer->Start_Date,  
+                       'END_DATE'=>$payer->End_Date,  
+                    //    'email'=>$user_info->private_email,                 
+                   ];
+
+                   $r = $this->send_new_payer_email($payer_email_data);
+
+
+
+
+                    //send email to the user 
+                   $payer_email_data = [
+                       'PAYER_ID'=>$save_id,
+                       'PAYER_NAME' => $payer->company_name,
+                       'REG_NO'=>$payer->Reg_NO,
+                       'START_DATE'=>$payer->Start_Date,  
+                       'END_DATE'=>$payer->End_Date,  
+                       'email'=>$user_info->private_email,                 
+                   ];
+
+                   $r = $this->send_new_payer_email($payer_email_data);
+
+                   
+
+            }
+
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
 
             //save client id on the ticket if any ticket id exists

@@ -114,6 +114,10 @@ class Email_templates extends Security_Controller {
             "leave_request_approved" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
             "leave_request_rejected" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL")
         );
+        
+        $templates_array["payers"] = array(
+            "new_payer_registered" => array("PAYER_ID", "PAYER_NAME", "REG_NO", "START_DATE", "END_DATE", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
+          );
 
         $tickets_template_variables = $this->Custom_fields_model->get_email_template_variables_array("tickets", 0, $this->login_user->is_admin, $this->login_user->user_type);
         if ($tickets_template_variables) {
