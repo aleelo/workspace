@@ -188,7 +188,7 @@ class Clients extends Security_Controller {
 
         if ($save_id) {
 
-            if(!$id){
+            if(!$client_id){
                     
                 $options = array('id'=>$save_id);
                 $payer = $this->Clients_model->get_details($options)->getRow();
