@@ -201,7 +201,7 @@ class Clients extends Security_Controller {
                        'REG_NO'=>$payer->Reg_NO,
                        'START_DATE'=>$payer->Start_Date,  
                        'END_DATE'=>$payer->End_Date,  
-                    //    'email'=>$user_info->private_email,                 
+                       'email'=>'',                 
                    ];
 
                    $r = $this->send_new_payer_email($payer_email_data);
