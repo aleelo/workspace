@@ -86,13 +86,11 @@ class Clients extends Security_Controller {
 
         }
 
-        $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["PAYER_ID"] = $data['PAYER_ID'];
         $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
         $parser_data["REG_NO"] = $data['REG_NO'];
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
-        $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
