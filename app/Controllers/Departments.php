@@ -108,24 +108,38 @@ class Departments extends Security_Controller
         if ($save_id && $id) {
 
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
-            
-            
 
-                    //send email to the administration
-                   $department_email_data = [
-                       'DEP_ID'=>$save_id,
-                       'DEP_NAME_EN' => $data->nameEn,
-                       'DEP_NAME_SO'=>$data->nameSo,
-                       'DEP_CREATED_AT'=>$data->created_at,  
-                       'DEP_UPDATED_AT'=>$data->updated_at,  
-                       'email'=>'',                 
-                   ];
-
-                   $r = $this->send_new_department_email($department_email_data);
                    
             echo json_encode(array("success" => true, "id" => $save_id, "data" => $this->_make_department_row($data), 'message' => app_lang('record_updated')));
+            
         } elseif ($save_id) {
+
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
+
+                    //send email to the administration
+                    $department_email_data = [
+                        'DEP_ID'=>$save_id,
+                        'DEP_NAME_EN' => $data->nameEn,
+                        'DEP_NAME_SO'=>$data->nameSo,
+                        'DEP_CREATED_AT'=>$data->created_at,  
+                        'DEP_UPDATED_AT'=>$data->updated_at,  
+                        'email'=>'',                 
+                    ];
+ 
+                    $r = $this->send_new_department_email($department_email_data);
+ 
+                    //send email to the user
+                    $department_email_data = [
+                     'DEP_ID'=>$save_id,
+                     'DEP_NAME_EN' => $data->nameEn,
+                     'DEP_NAME_SO'=>$data->nameSo,
+                     'DEP_CREATED_AT'=>$data->created_at,  
+                     'DEP_UPDATED_AT'=>$data->updated_at,  
+                     'email'=>$user_info->private_email,                 
+                 ];
+ 
+                 $r = $this->send_new_department_email($department_email_data);
+
             echo json_encode(array("success" => true, "id" => $save_id, "data" => $this->_make_department_row($data), 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));

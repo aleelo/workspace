@@ -80,9 +80,7 @@ class Clients extends Security_Controller {
     public function send_new_payer_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
-
         $email = $data['email'];
-        
         if(!$email){
             $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
@@ -208,9 +206,6 @@ class Clients extends Security_Controller {
                    ];
 
                    $r = $this->send_new_payer_email($payer_email_data);
-
-
-
 
                     //send email to the user 
                    $payer_email_data = [
