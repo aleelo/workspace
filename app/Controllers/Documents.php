@@ -723,6 +723,9 @@ class Documents extends Security_Controller
 
         return $row_data;
     }
+
+
+    
     private function template_row_data($id)
     {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);

@@ -2,34 +2,27 @@
 
 namespace App\Controllers;
 
-class Departments extends Security_Controller {
+class Departments extends Security_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
- 
+
     //load items list view
-    function index() {
+    function index()
+    {
 
         return $this->template->rander("departments/index");
     }
 
-    //get categories dropdown
-    private function _get_categories_dropdown() {
-        $categories = $this->Item_categories_model->get_all_where(array("deleted" => 0), 0, 0, "title")->getResult();
-
-        $categories_dropdown = array(array("id" => "", "text" => "- " . app_lang("category") . " -"));
-        foreach ($categories as $category) {
-            $categories_dropdown[] = array("id" => $category->id, "text" => $category->title);
-        }
-
-        return json_encode($categories_dropdown);
-    }
 
     /* load item modal */
 
-    function modal_form($sid = 0) {
+    function modal_form($sid = 0)
+    {
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -38,10 +31,10 @@ class Departments extends Security_Controller {
 
         $id = $this->request->getPost('id');
 
-        if($id){
+        if ($id) {
             $options = ['id' => $id];
             $view_data['model_info'] = $this->Departments_model->get_details($options)->getRow();
-        }else{
+        } else {
             $view_data['model_info'] = null;
         }
 
@@ -53,7 +46,8 @@ class Departments extends Security_Controller {
 
     /* add or edit an item */
 
-    function save() {
+    function save()
+    {
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -61,37 +55,36 @@ class Departments extends Security_Controller {
 
         $id = $this->request->getPost('id');
 
-            $nameSo = $this->request->getPost('nameSo');
-            $nameEn = $this->request->getPost('nameEn');
-           $head_id = $this->request->getPost('head_id');
-            $email = $this->request->getPost('email');
-            $remarks = $this->request->getPost('remarks');
-       
+        $nameSo = $this->request->getPost('nameSo');
+        $nameEn = $this->request->getPost('nameEn');
+        $head_id = $this->request->getPost('head_id');
+        $email = $this->request->getPost('email');
+        $remarks = $this->request->getPost('remarks');
 
-            if($id){
-                $this->db->query("update departments set nameSo='$nameSo',nameEn='$nameEn',head_id=$head_id,email='$email',remarks='$remarks' where id=$id");
-                $save_id = $id;
-            }else{
 
-                $this->db->query("insert into departments (nameSo,nameEn,head_id,email,remarks) values('$nameSo','$nameEn',$head_id,'$email','$remarks')");
-                $save_id = $this->db->insertID();
-            }
+        if ($id) {
+            $this->db->query("update departments set nameSo='$nameSo',nameEn='$nameEn',head_id=$head_id,email='$email',remarks='$remarks' where id=$id");
+            $save_id = $id;
+        } else {
+            $this->db->query("insert into departments (nameSo,nameEn,head_id,email,remarks) values('$nameSo','$nameEn',$head_id,'$email','$remarks')");
+            $save_id = $this->db->insertID();
+        }
 
         if ($save_id && $id) {
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
             echo json_encode(array("success" => true, "id" => $save_id, "data" => $this->_make_department_row($data), 'message' => app_lang('record_updated')));
-        }elseif ($save_id) {
+        } elseif ($save_id) {
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
             echo json_encode(array("success" => true, "id" => $save_id, "data" => $this->_make_department_row($data), 'message' => app_lang('record_saved')));
-        } 
-         else {
+        } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
 
     /* delete or undo an item */
 
-    function delete() {
+    function delete()
+    {
         // $this->access_only_team_members();
 
         $this->validate_submitted_data(array(
@@ -99,18 +92,18 @@ class Departments extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
-    
+
         if ($this->db->query("delete from departments where id = $id")) {
             echo json_encode(array("success" => true, "id" => $id, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
         }
-        
     }
 
     /* list of items, prepared for datatable  */
 
-    function list_data() {
+    function list_data()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
@@ -126,7 +119,8 @@ class Departments extends Security_Controller {
 
     /* prepare a row of item list table */
 
-    private function _make_department_row($data) {
+    private function _make_department_row($data)
+    {
 
         return array(
             $data->id,
@@ -136,16 +130,31 @@ class Departments extends Security_Controller {
             $data->head,
             $data->remarks,
             modal_anchor(get_uri("departments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id))
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("departments/delete"), "data-action" => "delete"))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("departments/delete"), "data-action" => "delete"))
         );
     }
 
-    function upload_file() {
+    //get categories dropdown
+    private function _get_categories_dropdown()
+    {
+        $categories = $this->Item_categories_model->get_all_where(array("deleted" => 0), 0, 0, "title")->getResult();
+
+        $categories_dropdown = array(array("id" => "", "text" => "- " . app_lang("category") . " -"));
+        foreach ($categories as $category) {
+            $categories_dropdown[] = array("id" => $category->id, "text" => $category->title);
+        }
+
+        return json_encode($categories_dropdown);
+    }
+
+    function upload_file()
+    {
         $this->access_only_team_members();
         upload_file_to_temp();
     }
 
-    function validate_items_file() {
+    function validate_items_file()
+    {
         $this->access_only_team_members();
         $file_name = $this->request->getPost("file_name");
         if (!is_valid_file_to_upload($file_name)) {
@@ -160,7 +169,8 @@ class Departments extends Security_Controller {
         }
     }
 
-    function view() {
+    function view()
+    {
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
@@ -173,7 +183,8 @@ class Departments extends Security_Controller {
         return $this->template->view('departments/view', $view_data);
     }
 
-    function save_files_sort() {
+    function save_files_sort()
+    {
         $this->access_only_allowed_members();
         $id = $this->request->getPost("id");
         $sort_values = $this->request->getPost("sort_values");
@@ -193,27 +204,31 @@ class Departments extends Security_Controller {
         }
     }
 
-    function import_items_modal_form() {
+    function import_items_modal_form()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
         return $this->template->view("departments/import_items_modal_form");
     }
 
-    function download_sample_excel_file() {
+    function download_sample_excel_file()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-items-sample.xlsx"))));
     }
 
-    function upload_excel_file() {
+    function upload_excel_file()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
         upload_file_to_temp(true);
     }
 
-    function validate_import_items_file() {
+    function validate_import_items_file()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
@@ -231,7 +246,8 @@ class Departments extends Security_Controller {
         }
     }
 
-    function save_item_from_excel_file() {
+    function save_item_from_excel_file()
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
@@ -272,7 +288,8 @@ class Departments extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    private function _get_item_category_id($category = "") {
+    private function _get_item_category_id($category = "")
+    {
         if (!$category) {
             return false;
         }
@@ -288,7 +305,8 @@ class Departments extends Security_Controller {
         }
     }
 
-    private function _get_allowed_headers() {
+    private function _get_allowed_headers()
+    {
         return array(
             "title", //required
             "description",
@@ -299,7 +317,8 @@ class Departments extends Security_Controller {
         );
     }
 
-    private function _store_headers_position($headers_row = array()) {
+    private function _store_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
 
         //check if all headers are correct and on the right position
@@ -330,7 +349,8 @@ class Departments extends Security_Controller {
         return $final_headers;
     }
 
-    function validate_import_items_file_data($check_on_submit = false) {
+    function validate_import_items_file_data($check_on_submit = false)
+    {
         // $this->access_only_team_members();
         // $this->validate_access_to_items();
 
@@ -451,7 +471,8 @@ class Departments extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data) {
+    private function _row_data_validation_and_get_error_message($key, $data)
+    {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
@@ -461,7 +482,8 @@ class Departments extends Security_Controller {
         }
     }
 
-    private function _prepare_item_data($data_row, $allowed_headers) {
+    private function _prepare_item_data($data_row, $allowed_headers)
+    {
         //prepare item data
         $item_data = array();
 
@@ -486,7 +508,6 @@ class Departments extends Security_Controller {
             "item_data" => $item_data
         );
     }
-
 }
 
 /* End of file items.php */

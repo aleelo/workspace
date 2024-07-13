@@ -117,7 +117,7 @@ class Clients extends Security_Controller {
         $client_id = $this->request->getPost('id');
         $this->_validate_client_manage_access($client_id);
         
-        /* Validation Impit */
+        /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "company_name" => "required"

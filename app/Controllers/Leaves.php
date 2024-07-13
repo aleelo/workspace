@@ -136,6 +136,20 @@ class Leaves extends Security_Controller {
                     $r = $this->send_notify_leave_status_email($leave_email_data);
 
 
+                }elseif($status == 'verified'){
+                    
+                     //send email to the user for leave status:
+                        $leave_email_data = [
+                            'LEAVE_ID'=>$save_id,
+                            'LEAVE_TITLE' => $leave_info->title,
+                            'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                            'LEAVE_STATUS'=>$status,                 
+                            'email'=>$user_info->private_email,                 
+                        ];
+    
+
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
+
                 }
 
 
@@ -186,6 +200,9 @@ class Leaves extends Security_Controller {
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
+        }
+        }else if($status == 'verified'){
+            $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
         }
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
@@ -1120,6 +1137,7 @@ class Leaves extends Security_Controller {
         }
 
 
+
         //checking the user permissiton to show/hide reject and approve button
         $can_manage_application = false;
         if ($this->access_type === "all") {
@@ -1137,6 +1155,7 @@ class Leaves extends Security_Controller {
         }
 
         $view_data['leave_info'] = $this->_prepare_leave_info($info);
+        $view_data['role']=$role;
         return $this->template->view("leaves/application_details", $view_data);
     }
 

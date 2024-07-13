@@ -10,6 +10,7 @@ class Email_templates extends Security_Controller {
     }
 
     private function _templates() {
+        
         $templates_array["account"] = array(
             "login_info" => array("USER_FIRST_NAME", "USER_LAST_NAME", "DASHBOARD_URL", "USER_LOGIN_EMAIL", "USER_LOGIN_PASSWORD", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
             "reset_password" => array("ACCOUNT_HOLDER_NAME", "RESET_PASSWORD_URL", "SITE_URL", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
@@ -112,7 +113,8 @@ class Email_templates extends Security_Controller {
         $templates_array["employee"] = array(
             "new_leave_request" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_REASON", "LEAVE_URL","LEAVE_DATE","TOTAL_DAYS", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
             "leave_request_approved" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
-            "leave_request_rejected" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL")
+            "leave_request_rejected" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
+            "leave_request_verified" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL")
         );
         
         $templates_array["payers"] = array(

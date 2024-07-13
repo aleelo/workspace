@@ -51,13 +51,17 @@ class Visitors_info extends App_Controller
     /** QR Code for Access requests */
     public function show_visitor_qrcode($id = 0){
 
-        $view_data['visitor_info'] = $this->db->query("SELECT v.*,cb.image as created_avatar,ab.image as approved_avatar,rb.image as rejected_avatar,
+        $view_data['visitor_info'] = $this->db->query("SELECT v.*,cb.image as created_avatar,ab.image as approved_avatar,rb.image as rejected_avatar,as verified_avatar,
                                     concat(cb.first_name,' ',cb.last_name) as created_by,concat(rb.first_name,' ',rb.last_name) as rejected_by,
+                                    concat(ab.first_name,' ',ab.last_name) as verified_by,d.nameSo as department,rd.ref_number  FROM rise_visitors v 
+
                                     concat(ab.first_name,' ',ab.last_name) as approved_by,d.nameSo as department,rd.ref_number  FROM rise_visitors v 
 
                                     LEFT JOIN rise_visitors_detail vd on v.id = vd.visitor_id
                                     LEFT JOIN rise_users cb on v.created_by = cb.id
                                     LEFT JOIN rise_users ab on v.approved_by = ab.id
+                                    LEFT JOIN rise_users ab on v.verified_by = ab.id
+
                                     LEFT JOIN rise_users rb on v.rejected_by = rb.id                                                    
                                     LEFT JOIN departments d on d.id = v.department_id 
                                     LEFT JOIN rise_visitor_document dv on v.id = dv.visitor_id 
@@ -87,6 +91,7 @@ class Visitors_info extends App_Controller
 
 
     public function show_leave_qrcode($id=0) {
+        
         $leave_info = $this->db->query("SELECT t.title as leave_type,t.color,l.start_date,l.end_date,l.total_days as duration,l.id,l.uuid,CONCAT(a.first_name, ' ',a.last_name) as applicant_name ,e.job_title_so as job_title,
         a.image as applicant_avatar,CONCAT(cb.first_name, ' ',cb.last_name) AS checker_name,cb.image as checker_avatar,l.status,l.reason,a.passport_no FROM rise_leave_applications l 
         
@@ -102,6 +107,7 @@ class Visitors_info extends App_Controller
 
     
     public function show_leave_qrcode_return($id=0) {
+
         $leave_info = $this->db->query("SELECT t.title as leave_type,t.color,l.start_date,l.end_date,l.total_days as duration,l.id,l.uuid,CONCAT(a.first_name, ' ',a.last_name) as applicant_name ,e.job_title_so as job_title,
         a.image as applicant_avatar,CONCAT(cb.first_name, ' ',cb.last_name) AS checker_name,cb.image as checker_avatar,l.status,l.reason,a.passport_no FROM rise_leave_applications l 
         

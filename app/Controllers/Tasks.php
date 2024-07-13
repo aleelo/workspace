@@ -1068,6 +1068,7 @@ class Tasks extends Security_Controller {
         }
 
         $save_id = $this->Tasks_model->ci_save($data, $id);
+        
         if ($save_id) {
 
             if ($is_clone && $main_task_id) {

@@ -431,6 +431,7 @@ $lang["mulitple_days"] = "Multiple days";
 $lang["reason"] = "Reason";
 $lang["applicant"] = "Applicant";
 $lang["approved"] = "Approved";
+$lang["verified"] = "Verified";
 $lang["approve"] = "Approve";
 $lang["rejected"] = "Rejected";
 $lang["reject"] = "Reject";
@@ -444,8 +445,14 @@ $lang["hours"] = "Hours";
 $lang["application_details"] = "Application details";
 $lang["rejected_by"] = "Rejected by";
 $lang["approved_by"] = "Approved by";
+$lang["verified_by"] = "Verified by";
 $lang["start_date_to_end_date_format"] = "%s to %s";
 $lang["my_leave"] = "My leave";
+$lang["verify_sign"] = "Verify & Sign";
+$lang["approve_sign"] = "Approve & Sign";
+$lang["leave_request_verified"] = "Leave Request Verified";
+$lang["verified"] = "Verified";
+
 
 /* events */
 $lang["add_event"] = "Add event";
