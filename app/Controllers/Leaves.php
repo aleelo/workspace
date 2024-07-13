@@ -201,7 +201,7 @@ class Leaves extends Security_Controller {
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
         }
-        }else if($status == 'verified'){
+        }else($status == 'verified'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
         }
 
