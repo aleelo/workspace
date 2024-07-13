@@ -80,7 +80,9 @@ class Clients extends Security_Controller {
     public function send_new_payer_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
+
         $email = $data['email'];
+        
         if(!$email){
             $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
@@ -91,6 +93,7 @@ class Clients extends Security_Controller {
         $parser_data["REG_NO"] = $data['REG_NO'];
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
+
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
@@ -189,7 +192,9 @@ class Clients extends Security_Controller {
             if(!$client_id){
                     
                 $options = array('id'=>$save_id);
+
                 $payer = $this->Clients_model->get_details($options)->getRow();
+
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $payer?->created_by")->getRow();
 
                     //send email to the administration

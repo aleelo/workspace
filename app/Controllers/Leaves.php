@@ -26,6 +26,7 @@ class Leaves extends Security_Controller {
                 app_redirect("forbidden");
             }
         }
+
     }
 
     protected function can_delete_leave_application() {
@@ -60,6 +61,7 @@ class Leaves extends Security_Controller {
         $now = get_current_utc_time();
 
         $role = $this->get_user_role();
+        
         if($role === "HRM" && $status === "approved"){
             $status = 'approved';
         }elseif($role == "Director" && $status === "approved"){
@@ -89,6 +91,7 @@ class Leaves extends Security_Controller {
             // }
             
             $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
+            
             if ($save_id) {
                 
                 $notification_options = array("leave_id" => $applicaiton_id, "to_user_id" => $applicatoin_info->applicant_id);

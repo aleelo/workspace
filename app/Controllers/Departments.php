@@ -44,6 +44,41 @@ class Departments extends Security_Controller
         return $this->template->view('departments/modal_form', $view_data);
     }
 
+
+    public function send_new_department_email($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("new_department_registered", true);
+        $email = $data['email'];
+        if(!$email){
+            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+
+        }
+
+        $parser_data["DEP_ID"] = $data['DEP_ID'];
+        $parser_data["DEP_NAME_EN"] = $data['DEP_NAME_EN'];
+        $parser_data["DEP_NAME_SO"] = $data['DEP_NAME_SO'];
+        $parser_data["DEP_CREATED_AT"] = $data['DEP_CREATED_AT'];
+        $parser_data["DEP_UPDATED_AT"] = $data['DEP_UPDATED_AT'];
+        
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if (send_app_mail($email, $subject, $message)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /* add or edit an item */
 
     function save()
@@ -71,7 +106,23 @@ class Departments extends Security_Controller
         }
 
         if ($save_id && $id) {
+
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
+            
+            
+
+                    //send email to the administration
+                   $department_email_data = [
+                       'DEP_ID'=>$save_id,
+                       'DEP_NAME_EN' => $data->nameEn,
+                       'DEP_NAME_SO'=>$data->nameSo,
+                       'DEP_CREATED_AT'=>$data->created_at,  
+                       'DEP_UPDATED_AT'=>$data->updated_at,  
+                       'email'=>'',                 
+                   ];
+
+                   $r = $this->send_new_department_email($department_email_data);
+                   
             echo json_encode(array("success" => true, "id" => $save_id, "data" => $this->_make_department_row($data), 'message' => app_lang('record_updated')));
         } elseif ($save_id) {
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();

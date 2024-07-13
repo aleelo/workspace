@@ -392,6 +392,10 @@ $lang["select_a_team"] = "Select an employee";
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
 
+/* Deparrtment */
+$lang["new_department_registered"] = "New Department Registered";
+
+
 /* attendance */
 $lang["add_attendance"] = "Add time manually";
 $lang["edit_attendance"] = "Edit time card";
