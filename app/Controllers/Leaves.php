@@ -90,7 +90,7 @@ class Leaves extends Security_Controller {
             //     app_redirect("forbidden");
             // }
             
-            $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
+        $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
             
             if ($save_id) {
                 
@@ -203,15 +203,15 @@ class Leaves extends Security_Controller {
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
+        }elseif($status == 'verified'){
+            $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
         }
-        // }else($status == 'verified'){
-        //     $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
-        // }
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
         $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
         $parser_data["LEAVE_URL"] = get_uri('leaves');
+
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
