@@ -218,9 +218,6 @@ class Clients extends Security_Controller {
                    ];
 
                    $r = $this->send_new_payer_email($payer_email_data);
-
-                   
-
             }
 
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
