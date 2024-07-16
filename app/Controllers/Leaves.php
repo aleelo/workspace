@@ -109,6 +109,8 @@ class Leaves extends Security_Controller {
                     log_notification("leave_rejected", $notification_options);
                 } else if ($status == "canceled") {
                     log_notification("leave_canceled", $notification_options);
+                }else if ($status == "verified") {
+                    log_notification("leave_verified_director", $notification_options);
                 }                
                         
                 $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
@@ -550,8 +552,8 @@ class Leaves extends Security_Controller {
                 $leave_email_data = [
                     'LEAVE_ID'=>$save_id,
                     'UUID' => $leave_info->uuid,
-                    'LEAVE_REASON' => $leave_info->reason,
                     'LEAVE_TITLE' => $leave_info->title,
+                    'LEAVE_REASON' => $leave_info->reason,
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'EMAIL'=>$user_info->private_email,
@@ -672,7 +674,7 @@ class Leaves extends Security_Controller {
 
 
 
-    
+
 
     public function leave_return_search_form() {
         $search = $this->request->getPost('searchTerm') ?? 0;
