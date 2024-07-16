@@ -48,6 +48,11 @@ class Leaves extends Security_Controller {
         return $this->template->rander("leaves/index", $view_data);
     }
 
+
+
+
+
+
      //update leave status
      function update_status() {
 
@@ -163,6 +168,10 @@ class Leaves extends Security_Controller {
         }
     }
 
+
+
+
+
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
@@ -194,6 +203,9 @@ class Leaves extends Security_Controller {
             return false;
         }
     }
+
+
+
 
     public function send_notify_leave_status_email($data = array()) {
         
@@ -235,6 +247,9 @@ class Leaves extends Security_Controller {
         }
     }
 
+
+
+
     //load assign leave modal 
 
     function assign_leave_modal_form($applicant_id = 0) {
@@ -264,6 +279,9 @@ class Leaves extends Security_Controller {
         $view_data['form_type'] = "apply_leave";
         return $this->template->view('leaves/modal_form', $view_data);
     }
+
+
+
 
     // save: assign leave 
     function assign_leave() {
@@ -395,6 +413,9 @@ class Leaves extends Security_Controller {
         }
     }
 
+
+
+
     public function saveAsPDF($driveId,$itemId) {
 
     
@@ -429,6 +450,10 @@ class Leaves extends Security_Controller {
 
         return $data;
     }
+
+
+
+
 
     /* save: apply leave */
 
@@ -555,6 +580,9 @@ class Leaves extends Security_Controller {
     /**
      * start document functions
      */
+
+
+
     
      
     public function get_leave_pdf($path,$data,$mode='view'){
@@ -604,6 +632,10 @@ class Leaves extends Security_Controller {
 
     }
 
+
+
+
+
     public function leave_nolosto_search_form() {
         $search = $this->request->getPost('searchTerm') ?? 0;
         // die($search);
@@ -637,6 +669,10 @@ class Leaves extends Security_Controller {
         return  $this->template->view('leaves/leave_return_search',$view_data);
 
     }
+
+
+
+    
 
     public function leave_return_search_form() {
         $search = $this->request->getPost('searchTerm') ?? 0;

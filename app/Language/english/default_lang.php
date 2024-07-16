@@ -388,6 +388,7 @@ $lang["edit_team"] = "Edit employee";
 $lang["delete_team"] = "Delete employee";
 $lang["team"] = "Employees";
 $lang["select_a_team"] = "Select an employee";
+$lang["employee_number"] = "Employee Number";
 
 /* dashboard */
 $lang["dashboard"] = "Dashboard";

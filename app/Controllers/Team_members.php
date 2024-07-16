@@ -152,9 +152,12 @@ class Team_members extends Security_Controller {
         return $this->template->view('team_members/modal_form', $view_data);
     }
 
+
+
     /* save new member */
 
     function add_team_member() {
+        
         $this->access_only_admin_or_member_creator();
 
         //check duplicate email address, if found then show an error message
@@ -240,6 +243,7 @@ class Team_members extends Security_Controller {
 
         //add a new team member
         $user_id = $this->Users_model->ci_save($user_data);
+
         if ($user_id) {
             //user added, now add the job info for the user
             // new Data: `department_id`, `section_id`, `job_title_en`, `job_title_so`, `employee_type`, `employee_id`
@@ -257,6 +261,7 @@ class Team_members extends Security_Controller {
                 "employee_type" => $this->request->getPost('employee_type'),
                 "employee_id" => $this->request->getPost('employee_id'),
             );
+
             $this->Users_model->save_job_info($job_data);
 
             save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
@@ -289,6 +294,8 @@ class Team_members extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
+
+
 
     /* open invitation modal */
 
@@ -367,6 +374,8 @@ class Team_members extends Security_Controller {
         }
     }
 
+
+
     //prepere the data for members list
     function list_data() {
         if (!$this->can_view_team_members_list()) {
@@ -410,6 +419,8 @@ class Team_members extends Security_Controller {
                     ));
     }
 
+
+
     //get a row data for member list
     function _row_data($id) {
         validate_numeric_value($id);
@@ -423,8 +434,11 @@ class Team_members extends Security_Controller {
         return $this->_make_row($data, $custom_fields);
     }
 
+
+
     //prepare team member list row
     private function _make_row($data, $custom_fields) {
+
         $image_url = get_avatar($data->image);
         
 
@@ -440,6 +454,7 @@ class Team_members extends Security_Controller {
 
         $row_data = array(
             $user_avatar,
+            $data->employee_id,
             get_team_member_profile_link($data->id, $full_name),
             $data->job_title,
             $show_cotact_info ? $data->email : "",
@@ -460,6 +475,8 @@ class Team_members extends Security_Controller {
 
         return $row_data;
     }
+
+
 
     //delete a team member
     function delete() {
@@ -482,6 +499,8 @@ class Team_members extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
         }
     }
+
+
 
     //show team member's details view
     function view($id = 0, $tab = "") {
@@ -650,6 +669,7 @@ class Team_members extends Security_Controller {
 
     //save job information of a team member
     function save_job_info() {
+
         if (!($this->login_user->is_admin || $this->has_job_info_manage_permission())) {
             app_redirect("forbidden");
         }
@@ -686,6 +706,7 @@ class Team_members extends Security_Controller {
 
 
         $this->Users_model->ci_save($user_data, $user_id);
+
         if ($this->Users_model->save_job_info($job_data)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
         } else {
