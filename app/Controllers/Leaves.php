@@ -174,6 +174,7 @@ class Leaves extends Security_Controller {
         $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
         $parser_data["LEAVE_DATE"] = $data['LEAVE_DATE'];
         $parser_data["TOTAL_DAYS"] = $data['TOTAL_DAYS'];
+
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
@@ -201,6 +202,7 @@ class Leaves extends Security_Controller {
 
         if($status == 'approved'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
+            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
         }elseif($status == 'verified'){
