@@ -125,9 +125,9 @@ class Leaves extends Security_Controller {
                         'LEAVE_ID'=>$save_id,
                         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                         'LEAVE_TITLE' => $leave_info->title,
-                        'LEAVE_REASON' => $leave_info->reason,
-                        'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
-                        'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                        // 'LEAVE_REASON' => $leave_info->reason,
+                        // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                        // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
                         'email'=>$user_info->private_email,                 
                     ];
@@ -142,9 +142,9 @@ class Leaves extends Security_Controller {
                             'LEAVE_ID'=>$save_id,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                             'LEAVE_TITLE' => $leave_info->title,
-                            'LEAVE_REASON' => $leave_info->reason,
-                            'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
-                            'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            // 'LEAVE_REASON' => $leave_info->reason,
+                            // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                            // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
                             'email'=>$user_info->private_email,                 
                         ];
@@ -160,9 +160,9 @@ class Leaves extends Security_Controller {
                             'LEAVE_ID'=>$save_id,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                             'LEAVE_TITLE' => $leave_info->title,
-                            'LEAVE_REASON' => $leave_info->reason,
-                            'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
-                            'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            // 'LEAVE_REASON' => $leave_info->reason,
+                            // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                            // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
                             'email'=>$user_info->private_email,                 
                         ];
@@ -238,9 +238,9 @@ class Leaves extends Security_Controller {
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
         $parser_data["LEAVE_TITLE"] = $data['LEAVE_TITLE'];
-        $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
-        $parser_data["LEAVE_DATE"] = $data['LEAVE_DATE'];
-        $parser_data["TOTAL_DAYS"] = $data['TOTAL_DAYS'];
+        // $parser_data["LEAVE_REASON"] = $data['LEAVE_REASON'];
+        // $parser_data["LEAVE_DATE"] = $data['LEAVE_DATE'];
+        // $parser_data["TOTAL_DAYS"] = $data['TOTAL_DAYS'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
