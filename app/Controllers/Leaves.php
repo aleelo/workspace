@@ -205,8 +205,10 @@ class Leaves extends Security_Controller {
             $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
+            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }elseif($status == 'verified'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
+            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
