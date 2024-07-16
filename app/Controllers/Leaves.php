@@ -94,6 +94,7 @@ class Leaves extends Security_Controller {
         // if (($applicatoin_info->status != "pending" || $applicatoin_info->status != "active") || !($status === "approved" || $status === "rejected" || $status === "canceled")) {
             //     app_redirect("forbidden");
             // }
+        $duration = (int)$leave_info->total_days;
             
         $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
             
