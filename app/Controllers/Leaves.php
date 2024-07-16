@@ -124,7 +124,7 @@ class Leaves extends Security_Controller {
                     $leave_email_data = [
                         'LEAVE_ID'=>$save_id,
                         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                        // 'LEAVE_TITLE' => $leave_info->title,
+                        'LEAVE_TITLE' => $leave_info->title,
                         // 'LEAVE_REASON' => $leave_info->reason,
                         // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
