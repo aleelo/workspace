@@ -122,8 +122,11 @@ class Leaves extends Security_Controller {
                      //send email to the user for leave status
                     $leave_email_data = [
                         'LEAVE_ID'=>$save_id,
-                        'LEAVE_TITLE' => $leave_info->title,
                         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                        'LEAVE_TITLE' => $leave_info->title,
+                        'LEAVE_REASON' => $leave_info->reason,
+                        'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                        'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
                         'email'=>$user_info->private_email,                 
                     ];
@@ -134,11 +137,14 @@ class Leaves extends Security_Controller {
                 }elseif($status === "rejected"){
 
                      //send email to the user for leave status:
-                         $leave_email_data = [
+                        $leave_email_data = [
                             'LEAVE_ID'=>$save_id,
-                            'LEAVE_TITLE' => $leave_info->title,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                            'LEAVE_STATUS'=>$status,                 
+                            'LEAVE_TITLE' => $leave_info->title,
+                            'LEAVE_REASON' => $leave_info->reason,
+                            'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                            'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            'LEAVE_STATUS'=>$status,  
                             'email'=>$user_info->private_email,                 
                         ];
     
@@ -151,9 +157,12 @@ class Leaves extends Security_Controller {
                      //send email to the user for leave status:
                         $leave_email_data = [
                             'LEAVE_ID'=>$save_id,
-                            'LEAVE_TITLE' => $leave_info->title,
                             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                            'LEAVE_STATUS'=>$status,                 
+                            'LEAVE_TITLE' => $leave_info->title,
+                            'LEAVE_REASON' => $leave_info->reason,
+                            'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
+                            'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            'LEAVE_STATUS'=>$status,  
                             'email'=>$user_info->private_email,                 
                         ];
     
@@ -463,6 +472,7 @@ class Leaves extends Security_Controller {
     /* save: apply leave */
 
     function apply_leave() {
+
         $leave_data = $this->_prepare_leave_form_data();
         $leave_data['applicant_id'] = $this->login_user->id;
         $leave_data['created_by'] = 0;
