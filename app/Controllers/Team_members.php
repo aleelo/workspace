@@ -454,7 +454,7 @@ class Team_members extends Security_Controller {
 
         $row_data = array(
             $user_avatar,
-            $data->employee_id,
+            // $data->employee_id,
             get_team_member_profile_link($data->id, $full_name),
             $data->job_title,
             $show_cotact_info ? $data->email : "",
