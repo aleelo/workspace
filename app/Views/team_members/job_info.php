@@ -178,7 +178,7 @@
                 
                 <div class="form-group">
                     <div class="row">
-                        <label for="employee_id" class=" col-md-3"><?php echo 'Employee Number'; ?></label>
+                        <label for="employee_id" class=" col-md-3"><?php echo 'Employee ID'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(

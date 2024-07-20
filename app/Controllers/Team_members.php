@@ -701,7 +701,8 @@ class Team_members extends Security_Controller {
        
         //we'll save the job title in users table
         $user_data = array(
-            "job_title" => $this->request->getPost('job_title_en')
+            "job_title" => $this->request->getPost('job_title_en'),
+            "employee_id" => $this->request->getPost('employee_id'),
         );
 
 
