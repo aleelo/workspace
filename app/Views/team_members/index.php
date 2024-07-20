@@ -46,7 +46,7 @@
             // serverSide: true,
             columns: [
                 {title: '', "class": "w50 text-center all"},
-                {title: "<?php echo app_lang("employee_number") ?>", "class": "w200 all"},
+                {title: "<?php echo app_lang("employee_id") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("name") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("job_title") ?>", "class": "w15p"},
                 {visible: visibleContact, title: "<?php echo app_lang("email") ?>", "class": "w20p"},
