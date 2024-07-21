@@ -796,6 +796,7 @@ class Team_members extends Security_Controller {
         //important! here id=user_id
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
+        $user_id == null ? 0 : $user_id;
 
         $view_data['user_id'] = $user_id;
         $options=['user_id' => $user_id];
