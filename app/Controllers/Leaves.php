@@ -226,14 +226,15 @@ class Leaves extends Security_Controller {
 
         if($status == 'approved'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
-            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
-            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }elseif($status == 'verified'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
-            $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }
+
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
@@ -255,7 +256,10 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
-        if (send_app_mail($email, $subject, $message)) {
+        $sent1 = send_app_mail($info_email, $subject, $message);
+       $sent2 =  send_app_mail($email, $subject, $message);
+
+        if ($sent1) {
             return true;
         } else {
             return false;
