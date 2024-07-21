@@ -115,6 +115,8 @@ class Leaves extends Security_Controller {
                 }                
                         
                 $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
+
+                $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = 25 = $save_id")->getRow();
                 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
 
@@ -129,6 +131,7 @@ class Leaves extends Security_Controller {
                         // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
+                        'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,                 
                         'PRIVATE_EMAIL'=>$user_info->private_email,                 
                         'MOF_EMAIL'=>$user_info->email,                 
                     ];
@@ -649,6 +652,7 @@ class Leaves extends Security_Controller {
         exit();
     }
 
+    
     // nolo osto search
     public function leave_nolosto_search() {
         $search = $this->request->getPost('searchTerm') ?? 0;
