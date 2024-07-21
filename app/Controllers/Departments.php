@@ -68,7 +68,7 @@ class Departments extends Security_Controller
             $this->db->query("update departments set nameSo='$nameSo',nameEn='$nameEn',head_id=$head_id,email='$email',remarks='$remarks' where id=$id");
             $save_id = $id;
         } else {
-            $this->db->query("insert into departments (nameSo,nameEn,head_id,email,remarks) values('$nameSo','$nameEn',$head_id,'$email','$remarks')");
+            $this->db->query("insert into departments (nameSo,nameEn,head_id,email,remarks) values('$nameSo','$nameEn','$head_id','$email','$remarks')");
             $save_id = $this->db->insertID();
         }
 
