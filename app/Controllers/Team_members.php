@@ -220,6 +220,7 @@ class Team_members extends Security_Controller {
             "master_degree" => $this->request->getPost('master_degree'),
             "highest_school" => $this->request->getPost('highest_school'),
             "employee_id" => $this->request->getPost('employee_id'),
+            "department_id" => $this->request->getPost('department_id'),
             "relevant_document_url" => $this->request->getPost('relevant_document_url'),
             "user_type" => "staff",
             "created_at" => get_current_utc_time()
@@ -691,7 +692,6 @@ class Team_members extends Security_Controller {
             "salary" => unformat_currency($this->request->getPost('salary')),
             "salary_term" => $this->request->getPost('salary_term'),
             "date_of_hire" => $this->request->getPost('date_of_hire'),         
-               
             "department_id" => $this->request->getPost('department_id'),
             "section_id" => 0,
             "job_title_en" => $this->request->getPost('job_title_en'),
@@ -707,6 +707,7 @@ class Team_members extends Security_Controller {
         $user_data = array(
             "job_title" => $this->request->getPost('job_title_en'),
             "employee_id" => $this->request->getPost('employee_id'),
+            "department_id" => $this->request->getPost('department_id'),
         );
 
 

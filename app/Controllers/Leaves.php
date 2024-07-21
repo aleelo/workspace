@@ -129,7 +129,7 @@ class Leaves extends Security_Controller {
                         // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
-                        'EMAIL'=>$user_info->private_email,                 
+                        'PRIVATE_EMAIL'=>$user_info->private_email,                 
                     ];
 
                     $r = $this->send_notify_leave_status_email($leave_email_data);
@@ -146,7 +146,7 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'EMAIL'=>$user_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email,                 
                         ];
     
 
@@ -164,7 +164,7 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'EMAIL'=>$user_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email,                 
                         ];
     
 
@@ -187,7 +187,7 @@ class Leaves extends Security_Controller {
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
-        $email = $data['EMAIL'];
+        $private_email = $data['PRIVATE_EMAIL'];
         $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
@@ -210,10 +210,10 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
-        $sent1 = send_app_mail($info_email, $subject, $message);
-        $sent2 = send_app_mail($email, $subject, $message);
+        $info_email = send_app_mail($info_email, $subject, $message);
+        $private_email = send_app_mail($private_email, $subject, $message);
 
-        if ($sent1) {
+        if ($info_email) {
             return true;
         } else {
             return false;
@@ -226,7 +226,7 @@ class Leaves extends Security_Controller {
 
     public function send_notify_leave_status_email($data = array()) {
         
-        $email = $data['EMAIL'];
+        $private_email = $data['PRIVATE_EMAIL'];
         $status = $data['LEAVE_STATUS'];
 
         if($status == 'approved'){
@@ -261,8 +261,8 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
-        $sent1 = send_app_mail($info_email, $subject, $message);
-        $sent2 =  send_app_mail($email, $subject, $message);
+        $info_email = send_app_mail($info_email, $subject, $message);
+        $private_email =  send_app_mail($private_email, $subject, $message);
 
         if ($sent1) {
             return true;
@@ -412,7 +412,7 @@ class Leaves extends Security_Controller {
                 'LEAVE_TITLE' => $leave_info->title,
                 'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                 'JOB_TITLE'=>$user_info->job_title_so,
-                'EMAIL'=>$user_info->private_email,
+                'PRIVATE_EMAIL'=>$user_info->private_email,
                 'PASSPORT'=>$user_info->passport_no,
                 'LEAVE_TYPE'=>$leave_info->title,            
                 'TOTAL_DAYS'=>(int)$leave_info->total_days,            
@@ -540,7 +540,7 @@ class Leaves extends Security_Controller {
                     'LEAVE_REASON' => $leave_info->reason,
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
-                    'EMAIL'=>$user_info->private_email,
+                    'PRIVATE_EMAIL'=>$user_info->private_email,
                     'PASSPORT'=>$user_info->passport_no,            
                     'TOTAL_DAYS'=>$duration,
                     'LEAVE_TYPE'=>$leave_info->title,            
