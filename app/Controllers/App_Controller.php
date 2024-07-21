@@ -33,6 +33,7 @@ class App_Controller extends Controller {
     public $Fuel_Receive_model;
     public $Fuel_Order_model;
     public $Fuel_Request_model;
+    public $Bank_details_model;
     
     public $Purchase_Order_model;
     public $Purchase_Receive_model;
@@ -149,6 +150,7 @@ class App_Controller extends Controller {
     private function get_models_array() {
         return array(
             'Company_model',
+            'Bank_details_model',
             'Departments_model',
             'Settings_model',
             'Users_model',

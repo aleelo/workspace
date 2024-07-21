@@ -20,7 +20,7 @@
                                 "id" => "bank_name",
                                 "name" => "bank_name",
                                 "class" => "form-control",
-                                'value'=>  $job_info->job_title_en,
+                                'value'=>  $job_info->bank_name,
                                 "placeholder" => 'Bank Name',
                                 "data-rule-required" => true,
                                 "data-msg-required" => app_lang("field_required"),
@@ -40,7 +40,7 @@
                                 "name" => "bank_account",
                                 "class" => "form-control",
                                 "placeholder" => 'Bank Account',
-                                'value'=> $job_info->job_title_so,
+                                'value'=> $job_info->bank_account,
                                 "data-rule-required" => true,
                                 "data-msg-required" => app_lang("field_required"),
                             ));
@@ -58,7 +58,7 @@
                                 "id" => "registered_name",
                                 "name" => "registered_name",
                                 "class" => "form-control",
-                                'value'=> $job_info->employee_id,
+                                'value'=> $job_info->registered_name,
                                 "placeholder" => 'Registered Name',
                                 "autocomplete" => "off"
                             ));
