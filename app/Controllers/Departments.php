@@ -82,27 +82,27 @@ class Departments extends Security_Controller
 
             $data = $this->Departments_model->get_details(['id' => $save_id])->getRow();
 
-            //send email to the administration
-            $department_email_data = [
-                'DEP_ID'=>$save_id,
-                'DEP_NAME_EN' => $data->nameEn,
-                'DEP_NAME_SO'=>$data->nameSo,
-                'DEP_CREATED_AT'=>$data->created_at,  
-                'DEP_UPDATED_AT'=>$data->updated_at,  
-                'email'=>'',                 
-            ];
+            // //send email to the administration
+            // $department_email_data = [
+            //     'DEP_ID'=>$save_id,
+            //     'DEP_NAME_EN' => $data->nameEn,
+            //     'DEP_NAME_SO'=>$data->nameSo,
+            //     'DEP_CREATED_AT'=>$data->created_at,  
+            //     'DEP_UPDATED_AT'=>$data->updated_at,  
+            //     'email'=>'',                 
+            // ];
 
-            $r = $this->send_new_department_email($department_email_data);
+            // $r = $this->send_new_department_email($department_email_data);
 
-            //send email to the user
-            $department_email_data = [
-                'DEP_ID'=>$save_id,
-                'DEP_NAME_EN' => $data->nameEn,
-                'DEP_NAME_SO'=>$data->nameSo,
-                'DEP_CREATED_AT'=>$data->created_at,  
-                'DEP_UPDATED_AT'=>$data->updated_at,  
-                'email'=>$user_info->private_email,                 
-            ];
+            // //send email to the user
+            // $department_email_data = [
+            //     'DEP_ID'=>$save_id,
+            //     'DEP_NAME_EN' => $data->nameEn,
+            //     'DEP_NAME_SO'=>$data->nameSo,
+            //     'DEP_CREATED_AT'=>$data->created_at,  
+            //     'DEP_UPDATED_AT'=>$data->updated_at,  
+            //     // 'email'=>$user_info->private_email,                 
+            // ];
 
             $r = $this->send_new_department_email($department_email_data);
 
