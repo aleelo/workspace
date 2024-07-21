@@ -1,5 +1,5 @@
 <?php echo form_open(get_uri("team_members/add_team_member"), array("id" => "team_member-form", "class" => "general-form", "role" => "form")); ?>
-<!-- <div id="team-dropzone" class="post-dropzone"> -->
+
     <div class="modal-body clearfix">
         <div class="container-fluid">
 
@@ -408,6 +408,8 @@
                     <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
 
             </div>
+
+            <!---------------------------------- Job Info Tab ----------------------------->
                     
             <div role="tabpanel" class="tab-pane" id="job-info-tab">
                     
@@ -575,37 +577,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="hasSignature" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>
-                            <div class=" col-md-9 col-xs-7 col-sm-8">
-                                <?php
-                                echo form_checkbox("hasSignature", "1", $model_info->education_level ? true : false, "id='hasSignature' class='form-check-input'");
-                                ?>                       
-                            </div>
-                        </div>
-                    </div>  
-
-                    <div id="hasSignatureFields" class="<?php if (!$model_info->education_level) echo "hide"; ?>"> 
-                    
-                        <div class="form-group">
-                            <div class="row">  
-                                <label for="hasSignature" class=" col-md-3 col-xs-5 col-sm-4"></label>
-                                <div class="col-md-9">
-                                    <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
-                            </div>
-                        </div>
-
-                            <?php echo view("includes/file_list", array("files" => $model_info->education_level)); ?>
-
-                            <?php echo view("includes/dropzone_preview"); ?>
-                    </div>
-
-
-                </div>   
-            </div>
                 
+            <!---------------------------------- Job Info Tab ----------------------------->
+
             <div role="tabpanel" class="tab-pane" id="account-info-tab">
 
                     <div class="form-group">
@@ -707,7 +683,7 @@
         <button id="form-next" type="button" class="btn btn-info text-white"><span data-feather="arrow-right-circle" class="icon-16"></span> <?php echo app_lang('next'); ?></button>
         <button id="form-submit" type="button" class="btn btn-primary hide"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
     </div>
-<!-- </div> -->
+
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
