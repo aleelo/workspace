@@ -282,7 +282,7 @@ class Leaves extends Security_Controller {
 
         // $info_email = send_app_mail($info_email, $subject, $message);
         // $mof_email =  send_app_mail($mof_email, $subject, $message);
-        
+
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email =  send_app_mail($private_email, $subject, $message);
 
@@ -478,7 +478,6 @@ class Leaves extends Security_Controller {
         $leave_data = clean_data($leave_data);
         
         $webUrl = null;
-        $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $applicant_id")->getRow();
       
         if(!$user_info){
@@ -490,7 +489,7 @@ class Leaves extends Security_Controller {
         // $this->access_only_allowed_members($leave_data['applicant_id']);
 
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
-
+        $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
