@@ -114,8 +114,8 @@ class Leaves extends Security_Controller {
                     log_notification("leave_verified_director", $notification_options);
                 }                
                         
-                $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
-                                left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
+                $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
+                
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
 
                 if ($status === "approved" ) {
