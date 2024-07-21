@@ -1,5 +1,5 @@
 <?php echo form_open(get_uri("team_members/add_team_member"), array("id" => "team_member-form", "class" => "general-form", "role" => "form")); ?>
-<div id="team-dropzone" class="post-dropzone">
+<!-- <div id="team-dropzone" class="post-dropzone"> -->
     <div class="modal-body clearfix">
         <div class="container-fluid">
 
@@ -707,7 +707,7 @@
         <button id="form-next" type="button" class="btn btn-info text-white"><span data-feather="arrow-right-circle" class="icon-16"></span> <?php echo app_lang('next'); ?></button>
         <button id="form-submit" type="button" class="btn btn-primary hide"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
     </div>
-</div>
+<!-- </div> -->
 <?php echo form_close(); ?>
 
 <script type="text/javascript">

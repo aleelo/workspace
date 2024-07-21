@@ -219,7 +219,7 @@ class Team_members extends Security_Controller {
             "bachelor_degree" => $this->request->getPost('bachelor_degree'),
             "master_degree" => $this->request->getPost('master_degree'),
             "highest_school" => $this->request->getPost('highest_school'),
-            
+            "employee_id" => $this->request->getPost('employee_id'),
             "relevant_document_url" => $this->request->getPost('relevant_document_url'),
             "user_type" => "staff",
             "created_at" => get_current_utc_time()
