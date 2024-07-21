@@ -264,6 +264,7 @@
             </div>  
 
             <div id="recurring_fields" class="<?php if (!$model_info->recurring) echo "hide"; ?>"> 
+
                 <div class="form-group">
                     <div class="row">
                         <label for="repeat_every" class=" col-md-3 col-xs-12"><?php echo app_lang('repeat_every'); ?></label>
@@ -351,6 +352,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
         var uploadUrl = "<?php echo get_uri("events/upload_file"); ?>";
         var validationUri = "<?php echo get_uri("events/validate_events_file"); ?>";
 

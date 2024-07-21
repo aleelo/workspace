@@ -571,6 +571,75 @@ class Documents extends Security_Controller
         echo json_encode($result);
     }
 
+
+    /* return a row of lead list table */
+
+    private function _row_data($id)
+    {
+        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
+        
+        $options = array(
+            "id" => $id,
+            "custom_fields" => $custom_fields,
+            // "leads_only" => true
+        );
+        $data = $this->Documents_model->get_one($id)->getRow();
+        return $this->_make_row($data, $custom_fields);
+    }
+
+    /* prepare a row of lead list table */
+
+    private function _make_row($data, $custom_fields)
+    {
+        //primary contact
+        // $image_url = get_avatar($data->contact_avatar);
+        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
+        // $primary_contact = get_lead_contact_profile_link($data->primary_contact_id, $contact);
+
+        // `document_title`, `ref_number`, `depertment`, `template`, `item_id`,`created_by`, `created_at`
+        //lead owner
+        $owner = "-";
+        if ($data->created_by) {
+            // $owner_image_url = get_avatar($data->owner_avatar);
+            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
+            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
+            $owner = $data->user; //$this->db->query("select * from rise_users where id = $data->created_by");
+
+        }
+
+        // $lead_labels = make_labels_view_data($data->labels_list, true);
+
+        $row_data = array(
+            $data->id,
+            modal_anchor(get_uri("documents/modal_form"), $data->document_title, array("class" => "edit", "title" => app_lang('edit_lead'), "data-post-id" => $data->id)),
+            // anchor(get_uri("documents/view/" . $data->id), ),
+            $data->ref_number,
+            $data->depertment,
+            $data->template,
+            // $data->item_id,
+            $owner,
+            format_to_date($data->created_at, false),
+        );
+
+        // $row_data[] = js_anchor($data->document_title, array("style" => "background-color: green;",
+        // "class" => "badge", "data-id" => $data->id, "data-value" => $data->id, "data-act" => "update-lead-status"));
+
+        // foreach ($custom_fields as $field) {
+        //     $cf_id = "cfv_" . $field->id;
+        //     $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
+        // }
+        //open doc link:
+        $link = "<a href='$data->webUrl' class='btn btn-success' target='_blank' title='Open Document' style='background: #1cc976;color: white'><i data-feather='eye' class='icon-16'></i>";
+
+        $row_data[] = modal_anchor(get_uri("documents/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit",
+            "title" => app_lang('edit_lead'), "data-post-id" => $data->id))
+        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_lead'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("documents/delete"), "data-action" => "delete-confirmation"))
+            . $link;
+
+        return $row_data;
+    }
+
+
     public function templates_list_data()
     {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
@@ -657,74 +726,6 @@ class Documents extends Security_Controller
         // die();
         echo json_encode($result);
     }
-
-    /* return a row of lead list table */
-
-    private function _row_data($id)
-    {
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
-        $options = array(
-            "id" => $id,
-            "custom_fields" => $custom_fields,
-            // "leads_only" => true
-        );
-        $data = $this->Documents_model->get_one($id)->getRow();
-        return $this->_make_row($data, $custom_fields);
-    }
-
-    /* prepare a row of lead list table */
-
-    private function _make_row($data, $custom_fields)
-    {
-        //primary contact
-        // $image_url = get_avatar($data->contact_avatar);
-        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-        // $primary_contact = get_lead_contact_profile_link($data->primary_contact_id, $contact);
-
-        // `document_title`, `ref_number`, `depertment`, `template`, `item_id`,`created_by`, `created_at`
-        //lead owner
-        $owner = "-";
-        if ($data->created_by) {
-            // $owner_image_url = get_avatar($data->owner_avatar);
-            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-            $owner = $data->user; //$this->db->query("select * from rise_users where id = $data->created_by");
-
-        }
-
-        // $lead_labels = make_labels_view_data($data->labels_list, true);
-
-        $row_data = array(
-            $data->id,
-            modal_anchor(get_uri("documents/modal_form"), $data->document_title, array("class" => "edit", "title" => app_lang('edit_lead'), "data-post-id" => $data->id)),
-            // anchor(get_uri("documents/view/" . $data->id), ),
-            $data->ref_number,
-            $data->depertment,
-            $data->template,
-            // $data->item_id,
-            $owner,
-            format_to_date($data->created_at, false),
-        );
-
-        // $row_data[] = js_anchor($data->document_title, array("style" => "background-color: green;",
-        // "class" => "badge", "data-id" => $data->id, "data-value" => $data->id, "data-act" => "update-lead-status"));
-
-        // foreach ($custom_fields as $field) {
-        //     $cf_id = "cfv_" . $field->id;
-        //     $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
-        // }
-        //open doc link:
-        $link = "<a href='$data->webUrl' class='btn btn-success' target='_blank' title='Open Document' style='background: #1cc976;color: white'><i data-feather='eye' class='icon-16'></i>";
-
-        $row_data[] = modal_anchor(get_uri("documents/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit",
-            "title" => app_lang('edit_lead'), "data-post-id" => $data->id))
-        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_lead'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("documents/delete"), "data-action" => "delete-confirmation"))
-            . $link;
-
-        return $row_data;
-    }
-
-
     
     private function template_row_data($id)
     {

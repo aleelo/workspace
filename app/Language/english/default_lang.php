@@ -390,6 +390,7 @@ $lang["team"] = "Employees";
 $lang["select_a_team"] = "Select an employee";
 $lang["employee_number"] = "Employee Number";
 $lang["employee_id"] = "Employee ID";
+$lang["has_signature"] = "Has Signature";
 
 /* dashboard */
 $lang["dashboard"] = "Dashboard";

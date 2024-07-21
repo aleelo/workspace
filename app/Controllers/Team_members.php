@@ -219,6 +219,7 @@ class Team_members extends Security_Controller {
             "bachelor_degree" => $this->request->getPost('bachelor_degree'),
             "master_degree" => $this->request->getPost('master_degree'),
             "highest_school" => $this->request->getPost('highest_school'),
+            "employee_id" => $this->request->getPost('employee_id'),
             "relevant_document_url" => $this->request->getPost('relevant_document_url'),
             "user_type" => "staff",
             "created_at" => get_current_utc_time()
@@ -385,8 +386,8 @@ class Team_members extends Security_Controller {
         $result = $this->check_access('lead');//here means documents for us.
 
         $role = get_array_value($result,'role');
-        $created_by = get_array_value($result,'created_by');
         $department_id = get_array_value($result,'department_id');
+        $created_by = get_array_value($result,'created_by');
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
