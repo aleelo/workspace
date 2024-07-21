@@ -223,10 +223,11 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
+        //$info_email = send_app_mail($info_email, $subject, $message);
+        //$mof_email = send_app_mail($mof_email, $subject, $message);
+
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
-        $info_email = send_app_mail($info_email, $subject, $message);
         $private_email = send_app_mail($private_email, $subject, $message);
-        $mof_email = send_app_mail($mof_email, $subject, $message);
 
         if ($info_email) {
             return true;
@@ -279,10 +280,11 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
-        $info_email = send_app_mail($info_email, $subject, $message);
+        // $info_email = send_app_mail($info_email, $subject, $message);
+        // $mof_email =  send_app_mail($mof_email, $subject, $message);
+        
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email =  send_app_mail($private_email, $subject, $message);
-        $mof_email =  send_app_mail($mof_email, $subject, $message);
 
         if ($info_email) {
             return true;
