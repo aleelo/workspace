@@ -130,6 +130,7 @@ class Leaves extends Security_Controller {
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
                         'PRIVATE_EMAIL'=>$user_info->private_email,                 
+                        'MOF_EMAIL'=>$user_info->email,                 
                     ];
 
                     $r = $this->send_notify_leave_status_email($leave_email_data);
@@ -146,7 +147,9 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'PRIVATE_EMAIL'=>$user_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email, 
+                            'MOF_EMAIL'=>$user_info->email,                 
+
                         ];
     
 
@@ -164,7 +167,9 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'PRIVATE_EMAIL'=>$user_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email,   
+                            'MOF_EMAIL'=>$user_info->email,                 
+
                         ];
     
 
@@ -187,7 +192,9 @@ class Leaves extends Security_Controller {
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
+
         $private_email = $data['PRIVATE_EMAIL'];
+        $mof_email = $data['MOF_EMAIL'];
         $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
@@ -212,6 +219,7 @@ class Leaves extends Security_Controller {
 
         $info_email = send_app_mail($info_email, $subject, $message);
         $private_email = send_app_mail($private_email, $subject, $message);
+        $mof_email = send_app_mail($mof_email, $subject, $message);
 
         if ($info_email) {
             return true;
@@ -228,6 +236,7 @@ class Leaves extends Security_Controller {
         
         $private_email = $data['PRIVATE_EMAIL'];
         $status = $data['LEAVE_STATUS'];
+        $mof_email = $data['MOF_EMAIL'];
 
         if($status == 'approved'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
@@ -263,6 +272,7 @@ class Leaves extends Security_Controller {
 
         $info_email = send_app_mail($info_email, $subject, $message);
         $private_email =  send_app_mail($private_email, $subject, $message);
+        $mof_email =  send_app_mail($mof_email, $subject, $message);
 
         if ($sent1) {
             return true;
@@ -413,6 +423,7 @@ class Leaves extends Security_Controller {
                 'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                 'JOB_TITLE'=>$user_info->job_title_so,
                 'PRIVATE_EMAIL'=>$user_info->private_email,
+                'MOF_EMAIL'=>$user_info->email,                 
                 'PASSPORT'=>$user_info->passport_no,
                 'LEAVE_TYPE'=>$leave_info->title,            
                 'TOTAL_DAYS'=>(int)$leave_info->total_days,            
@@ -541,6 +552,7 @@ class Leaves extends Security_Controller {
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'PRIVATE_EMAIL'=>$user_info->private_email,
+                    'MOF_EMAIL'=>$user_info->email,                 
                     'PASSPORT'=>$user_info->passport_no,            
                     'TOTAL_DAYS'=>$duration,
                     'LEAVE_TYPE'=>$leave_info->title,            
