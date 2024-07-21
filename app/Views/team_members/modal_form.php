@@ -579,7 +579,6 @@
                     </div>
                 </div>
 
-                
             <!---------------------------------- Job Info Tab ----------------------------->
 
             <div role="tabpanel" class="tab-pane" id="account-info-tab">

@@ -664,12 +664,91 @@ class Team_members extends Security_Controller {
         return $this->template->view("team_members/job_info", $view_data);
     }
 
+    //show the job information of a team member
+    function bank_details($user_id) {
+
+        validate_numeric_value($user_id);
+        if (!($this->login_user->is_admin || $this->login_user->id === $user_id || $this->has_job_info_manage_permission())) {
+            app_redirect("forbidden");
+        }
+
+        $view_data['departments'] = $this->get_departments_for_select();
+        // echo json_encode($view_data['departments']);
+        // die('ok');
+        
+        $view_data['education_levels'] = [''=>'Choose Education Level','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+
+        // var_dump($view_data['departments']);
+        // die();
+
+        $options = array("id" => $user_id);
+        $user_info = $this->Users_model->get_details($options)->getRow();
+
+        $view_data['user_id'] = $user_id;
+        $view_data['job_info'] = $this->Users_model->get_job_info($user_id);
+        $view_data['job_info']->job_title = $user_info->job_title;
+
+        $view_data['can_manage_team_members_job_information'] = $this->has_job_info_manage_permission();
+
+        return $this->template->view("team_members/bank_details", $view_data);
+    }
+
     private function has_job_info_manage_permission() {
         return get_array_value($this->login_user->permissions, "job_info_manage_permission");
     }
 
     //save job information of a team member
     function save_job_info() {
+
+        if (!($this->login_user->is_admin || $this->has_job_info_manage_permission())) {
+            app_redirect("forbidden");
+        }
+        
+        // var_dump($this->request->getPost());
+        // die();
+
+        $this->validate_submitted_data(array(
+            "user_id" => "required|numeric"
+        ));
+        $user_id = $this->request->getPost('user_id');
+       
+        $job_data = array(
+            "user_id" => $user_id,
+            "salary" => unformat_currency($this->request->getPost('salary')),
+            "salary_term" => $this->request->getPost('salary_term'),
+            "date_of_hire" => $this->request->getPost('date_of_hire'),         
+               
+            "department_id" => $this->request->getPost('department_id'),
+            "section_id" => 0,
+            "job_title_en" => $this->request->getPost('job_title_en'),
+            "job_title_so" => $this->request->getPost('job_title_so'),
+            "employee_type" => $this->request->getPost('employee_type'),
+            "employee_id" => $this->request->getPost('employee_id'),
+            "work_experience" => $this->request->getPost('work_experience'),
+            "place_of_work" => $this->request->getPost('place_of_work'),
+        );
+
+       
+        //we'll save the job title in users table
+        $user_data = array(
+            "job_title" => $this->request->getPost('job_title_en'),
+            "employee_id" => $this->request->getPost('employee_id'),
+        );
+
+
+        $this->Users_model->ci_save($user_data, $user_id);
+
+        if ($this->Users_model->save_job_info($job_data)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+
+    //save Bank Details of a team member
+    function save_bank_details() {
 
         if (!($this->login_user->is_admin || $this->has_job_info_manage_permission())) {
             app_redirect("forbidden");
