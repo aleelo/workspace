@@ -129,7 +129,7 @@ class Leaves extends Security_Controller {
                         // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
-                        'email'=>$user_info->private_email,                 
+                        'EMAIL'=>$user_info->private_email,                 
                     ];
 
                     $r = $this->send_notify_leave_status_email($leave_email_data);
@@ -146,7 +146,7 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'email'=>$user_info->private_email,                 
+                            'EMAIL'=>$user_info->private_email,                 
                         ];
     
 
@@ -164,7 +164,7 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status,  
-                            'email'=>$user_info->private_email,                 
+                            'EMAIL'=>$user_info->private_email,                 
                         ];
     
 
@@ -187,7 +187,8 @@ class Leaves extends Security_Controller {
     public function send_leave_request_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
-        $email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+        $email = $data['EMAIL'];
+        $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
@@ -209,11 +210,15 @@ class Leaves extends Security_Controller {
         $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
-        if (send_app_mail($email, $subject, $message)) {
+        $sent1 = send_app_mail($info_email, $subject, $message);
+        $sent2 = send_app_mail($email, $subject, $message);
+
+        if ($sent1) {
             return true;
         } else {
             return false;
         }
+
     }
 
 
@@ -221,7 +226,7 @@ class Leaves extends Security_Controller {
 
     public function send_notify_leave_status_email($data = array()) {
         
-        $email = $data['email'];
+        $email = $data['EMAIL'];
         $status = $data['LEAVE_STATUS'];
 
         if($status == 'approved'){
@@ -257,7 +262,7 @@ class Leaves extends Security_Controller {
         $subject = $this->parser->setData($parser_data)->renderString($subject);
 
         $sent1 = send_app_mail($info_email, $subject, $message);
-       $sent2 =  send_app_mail($email, $subject, $message);
+        $sent2 =  send_app_mail($email, $subject, $message);
 
         if ($sent1) {
             return true;
@@ -435,45 +440,6 @@ class Leaves extends Security_Controller {
 
 
 
-    public function saveAsPDF($driveId,$itemId) {
-
-    
-        $pdfApi = "https://graph.microsoft.com/v1.0/drive/items/$itemId/content?format=pdf";///drives/$driveId
-        $curl = curl_init();
-        $accessToken = $this->AccesToken();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $pdfApi,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer ' . $accessToken,
-            ),
-        ));
-
-        $json = curl_exec($curl);
-
-        curl_close($curl);
-
-        // var_dump($itemId);
-        // var_dump($driveId);
-        // var_dump($accessToken);
-        // die();
-        
-        // Decode the JSON response into an associative array
-        $data = json_decode($json, true);
-
-        return $data;
-    }
-
-
-
-
-
     /* save: apply leave */
 
     function apply_leave() {
@@ -600,10 +566,41 @@ class Leaves extends Security_Controller {
     /**
      * start document functions
      */
-
-
+     public function saveAsPDF($driveId,$itemId) {
 
     
+        $pdfApi = "https://graph.microsoft.com/v1.0/drive/items/$itemId/content?format=pdf";///drives/$driveId
+        $curl = curl_init();
+        $accessToken = $this->AccesToken();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $pdfApi,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . $accessToken,
+            ),
+        ));
+
+        $json = curl_exec($curl);
+
+        curl_close($curl);
+
+        // var_dump($itemId);
+        // var_dump($driveId);
+        // var_dump($accessToken);
+        // die();
+        
+        // Decode the JSON response into an associative array
+        $data = json_decode($json, true);
+
+        return $data;
+    }
+
      
     public function get_leave_pdf($path,$data,$mode='view'){
 
@@ -653,9 +650,6 @@ class Leaves extends Security_Controller {
     }
 
 
-
-
-
     public function leave_nolosto_search_form() {
         $search = $this->request->getPost('searchTerm') ?? 0;
         // die($search);
@@ -689,9 +683,6 @@ class Leaves extends Security_Controller {
         return  $this->template->view('leaves/leave_return_search',$view_data);
 
     }
-
-
-
 
 
     public function leave_return_search_form() {
