@@ -800,7 +800,7 @@ class Team_members extends Security_Controller {
         $view_data['user_id'] = $user_id;
         $options=['user_id' => $user_id];
 
-        $view_data['model_info'] = $this->Bank_details_model->get_one_where(['user_id' => $user_id]);
+        $view_data['model_info'] = $this->Bank_details_model->get_one_where($options);
         
         return $this->template->view("users/bank_details", $view_data);
     }
