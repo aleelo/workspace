@@ -801,13 +801,19 @@ class Team_members extends Security_Controller {
         $view_data['user_id'] = $user_id;
         $options=['user_id' => $user_id];
 
-        $view_data['model_info'] = $this->db->query("select * from rise_bank_details where user_id = $user_id")->getRow();
+        $info = $this->db->query("select * from rise_bank_details where user_id = $user_id")->getRow();
+        if($info){
+            $view_data['model_info'] = $info;
+        }else{
+
+            $view_data['model_info'] = $this->Bank_details_model;
+        }
         
         return $this->template->view("users/bank_details", $view_data);
     }
 
     
-    //save social links of a team member
+    //save Bank Details of a team member
     function save_Bank_details($user_id) {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
