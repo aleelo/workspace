@@ -1,5 +1,5 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("clients/save/"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("clients/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
             <?php if ($model_info->type == "person") { ?>

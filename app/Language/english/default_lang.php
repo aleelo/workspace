@@ -88,7 +88,10 @@ $lang["department_head"] = "Department Head";
 
 //Company:
 $lang["payers"] = "Payers";
+$lang["payers_info"] = "Payers Info";
 $lang["new_payer_registered"] = "New Payer Registered";
+$lang["Registration_type"] = "Registration Type";
+$lang["Registration_no"] = "Registration Number";
 
 $lang["company"] = "Company";
 $lang["company_list"] = "Company List";

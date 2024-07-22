@@ -68,7 +68,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Reg_Type" class="<?php echo $label_column; ?>"><?php echo app_lang('b_reg_type'); ?></label>
+        <label for="Reg_Type" class="<?php echo $label_column; ?>"><?php echo app_lang('Registration_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
@@ -76,7 +76,7 @@
                 "name" => "Reg_Type",
                 "value" => $model_info->Reg_Type,
                 "class" => "form-control",
-                "placeholder" => app_lang('b_reg_type_p')
+                "placeholder" => app_lang('Registration_type')
             ),[''=>'','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
         );
             ?>
@@ -88,7 +88,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Reg_NO" class="<?php echo $label_column; ?>"><?php echo app_lang('b_reg_no'); ?></label>
+        <label for="Reg_NO" class="<?php echo $label_column; ?>"><?php echo app_lang('Registration_no'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -96,7 +96,7 @@
                 "name" => "Reg_NO",
                 "value" => $model_info->Reg_NO,
                 "class" => "form-control",
-                "placeholder" => app_lang('b_reg_no_p')
+                "placeholder" => app_lang('Registration_no')
             ));
             ?>
         </div>
@@ -108,7 +108,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Start_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('reg_start_date'); ?></label>
+        <label for="Start_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('start_date'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -116,7 +116,7 @@
                 "name" => "Start_Date",
                 "value" => $model_info->Start_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('reg_start_date_p')
+                "placeholder" => app_lang('start_date')
             ));
             ?>
         </div>
@@ -127,7 +127,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="End_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('reg_end_date'); ?></label>
+        <label for="End_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('end_date'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -135,7 +135,7 @@
                 "name" => "End_Date",
                 "value" => $model_info->End_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('reg_End_date_p')
+                "placeholder" => app_lang('end_date')
             ));
             ?>
         </div>
