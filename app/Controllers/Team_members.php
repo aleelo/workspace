@@ -815,8 +815,8 @@ class Team_members extends Security_Controller {
         $this->update_only_allowed_members($user_id);
         $options=['user_id' => $user_id];
 
-        $id = 0;
-        $has_banka_account = $this->Bank_details_model->get_one_where($options);
+        $id = 1;
+        $has_banka_account = $this->Bank_details_model->get_one_where($user_id);
         if (isset($has_banka_account->id)) {
             $id = $has_banka_account->id;
         }
