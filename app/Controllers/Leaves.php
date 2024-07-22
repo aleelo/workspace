@@ -117,6 +117,8 @@ class Leaves extends Security_Controller {
                 $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
                 $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
+
+                $hrm_info = $this->db->query("SELECT us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
                 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
 
@@ -131,6 +133,7 @@ class Leaves extends Security_Controller {
                         // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                         'LEAVE_STATUS'=>$status,  
+                        'HRM_EMAIL'=>$hrm_info->private_email,                 
                         'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,                 
                         'PRIVATE_EMAIL'=>$user_info->private_email,                 
                         'MOF_EMAIL'=>$user_info->email,                 
@@ -149,7 +152,8 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_REASON' => $leave_info->reason,
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
-                            'LEAVE_STATUS'=>$status,  
+                            'LEAVE_STATUS'=>$status, 
+                            'HRM_EMAIL'=>$hrm_info->private_email,                 
                             'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
                             'PRIVATE_EMAIL'=>$user_info->private_email, 
                             'MOF_EMAIL'=>$user_info->email,                 
@@ -171,6 +175,7 @@ class Leaves extends Security_Controller {
                             // 'LEAVE_DATE' => $duration == 1 ? $leave_data['start_date']: $leave_data['start_date'] .' - '.$leave_data['end_date'],
                             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
                             'LEAVE_STATUS'=>$status, 
+                            'HRM_EMAIL'=>$hrm_info->private_email,                 
                             'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email, 
                             'PRIVATE_EMAIL'=>$user_info->private_email,   
                             'MOF_EMAIL'=>$user_info->email,                 
@@ -198,6 +203,7 @@ class Leaves extends Security_Controller {
         
         $email_template = $this->Email_templates_model->get_final_template("new_leave_request", true);
 
+        $hrm_email = $data['HRM_EMAIL'];
         $head_department_email = $data['HEAD_DEPARTMENT_EMAIL'];
         $private_email = $data['PRIVATE_EMAIL'];
         $mof_email = $data['MOF_EMAIL'];
@@ -226,6 +232,7 @@ class Leaves extends Security_Controller {
         //$info_email = send_app_mail($info_email, $subject, $message);
         //$mof_email = send_app_mail($mof_email, $subject, $message);
 
+        $hrm_email =  send_app_mail($hrm_email, $subject, $message);
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email = send_app_mail($private_email, $subject, $message);
 
@@ -242,8 +249,9 @@ class Leaves extends Security_Controller {
 
     public function send_notify_leave_status_email($data = array()) {
         
-        $private_email = $data['PRIVATE_EMAIL'];
+        $hrm_email = $data['HRM_EMAIL'];
         $head_department_email = $data['HEAD_DEPARTMENT_EMAIL'];
+        $private_email = $data['PRIVATE_EMAIL'];
         $mof_email = $data['MOF_EMAIL'];
 
         $status = $data['LEAVE_STATUS'];
@@ -283,6 +291,7 @@ class Leaves extends Security_Controller {
         // $info_email = send_app_mail($info_email, $subject, $message);
         // $mof_email =  send_app_mail($mof_email, $subject, $message);
 
+        $hrm_email =  send_app_mail($hrm_email, $subject, $message);
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email =  send_app_mail($private_email, $subject, $message);
 
@@ -347,6 +356,7 @@ class Leaves extends Security_Controller {
         
         
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
+        $hrm_info = $this->db->query("SELECT us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
         $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $applicant_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l 
@@ -434,6 +444,7 @@ class Leaves extends Security_Controller {
                 'LEAVE_TITLE' => $leave_info->title,
                 'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                 'JOB_TITLE'=>$user_info->job_title_so,
+                'HRM_EMAIL'=>$hrm_info->private_email,                 
                 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
                 'PRIVATE_EMAIL'=>$user_info->private_email,
                 'MOF_EMAIL'=>$user_info->email,                 
@@ -489,6 +500,7 @@ class Leaves extends Security_Controller {
         // $this->access_only_allowed_members($leave_data['applicant_id']);
 
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
+        $hrm_info = $this->db->query("SELECT us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
         $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
@@ -563,6 +575,7 @@ class Leaves extends Security_Controller {
                     'LEAVE_REASON' => $leave_info->reason,
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
+                    'HRM_EMAIL'=>$hrm_info->private_email,                 
                     'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
                     'PRIVATE_EMAIL'=>$user_info->private_email,
                     'MOF_EMAIL'=>$user_info->email,                 
