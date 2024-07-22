@@ -810,13 +810,13 @@ class Team_members extends Security_Controller {
     
     //save social links of a team member
     function save_Bank_details($user_id) {
-        
+
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
         $options=['user_id' => $user_id];
 
         $id = 0;
-        $has_banka_account = $this->Bank_details_model->get_one_where($options);
+        $has_banka_account = $this->Bank_details_model->get_one_where($user_id);
         if (isset($has_banka_account->id)) {
             $id = $has_banka_account->id;
         }
