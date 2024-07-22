@@ -1,6 +1,6 @@
 <div class="tab-content">
     <?php
-    $reload_url = get_uri("team_members/view/" . $user_id . "/social");
+    $reload_url = get_uri("team_members/view/" . $user_id . "/Bank_Details");
     $save_url = get_uri("team_members/save_Bank_details/" . $user_id);
     $show_submit = true;
 

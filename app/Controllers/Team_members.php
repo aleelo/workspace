@@ -810,6 +810,7 @@ class Team_members extends Security_Controller {
     
     //save social links of a team member
     function save_Bank_details($user_id) {
+        
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
         $options=['user_id' => $user_id];
