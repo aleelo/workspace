@@ -797,13 +797,11 @@ class Team_members extends Security_Controller {
         //important! here id=user_id
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
-        $user_id == null ? 0 : $user_id;
-
         $view_data['user_id'] = $user_id;
-        $options=['user_id' => $user_id];
-
-        $view_data['model_info'] = $this->Bank_details_model->get_one_where($user_id);
-        
+        // $$view_data['model_info'] = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
+        $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
+        // print_r($user_id);
+        // die();
         return $this->template->view("users/bank_details", $view_data);
     }
 
@@ -815,8 +813,10 @@ class Team_members extends Security_Controller {
         $this->update_only_allowed_members($user_id);
         $options=['user_id' => $user_id];
 
-        $id = 1;
-        $has_banka_account = $this->Bank_details_model->get_one_where($user_id);
+        $id = 0;
+        // $has_banka_account = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
+        $has_banka_account = $this->Bank_details_model->get_one($user_id);
+
         if (isset($has_banka_account->id)) {
             $id = $has_banka_account->id;
         }
