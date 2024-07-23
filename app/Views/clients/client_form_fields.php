@@ -146,16 +146,15 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="merchant_type" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
+        <label for="bank_id" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "merchant_type",
-                "name" => "merchant_type",
-                "value" => $model_info->bank_id,
-                "class" => "form-control",
+                "id" => "bank_id",
+                "name" => "bank_id",
+                "class" => "form-control select2",
                 "placeholder" => app_lang('merchant_type')
-            ),[''=>'','New'=>'SALAAM BANK','Renew'=>'PREMEIR BANK)'],[$model_info->Reg_Type]
+            ),[$Bank_names_dropdown],[$model_info?->bank_id]
         );
             ?>
         </div>
@@ -598,6 +597,8 @@
                 $(".company_name_input_section").attr("placeholder", "Company name");
             }
         });
+
+        $("#client-form .select2").select2();
 
     });
 </script>

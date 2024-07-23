@@ -65,6 +65,10 @@ class Clients extends Security_Controller {
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
+        $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
+
+        // $view_data['Bank_names_dropdown'] = array("" => "-") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
+
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
 
         //prepare label suggestions
@@ -138,7 +142,13 @@ class Clients extends Security_Controller {
             "address" => $this->request->getPost('address'),
             "phone" => $this->request->getPost('phone'),
             "email" => $this->request->getPost('email'),
-            "TIN" => $this->request->getPost('TIN')
+            "TIN" => $this->request->getPost('TIN'),
+            "bank_id" => $this->request->getPost('bank_id'),
+            "merchant_number" => $this->request->getPost('merchant_number'),
+            "turnover_tax" => $this->request->getPost('turnover_tax'),
+            "number_of_employees" => $this->request->getPost('number_of_employees'),
+            "industries" => $this->request->getPost('industries'),
+            "segment" => $this->request->getPost('segment')
         );
 
         if ($this->login_user->user_type === "staff") {

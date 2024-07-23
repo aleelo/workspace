@@ -66,7 +66,24 @@ class Security_Controller extends App_Controller {
         }
 
         return $temp_array;
+    
     }
+
+    public function get_bank_name_dropdown() {
+        $bane_names = $this->db->query("SELECT id, bank_name FROM rise_bank_names WHERE deleted=0")->getResult();
+        $temp_array = array('' => '---Choose Bank Name---');
+
+        if(!$bane_names){
+            return null;
+        }
+  
+        foreach($bane_names as $b){
+            $temp_array[$b->id] = $b->bank_name;
+        }
+
+        return $temp_array;
+    }
+
     public function get_employees_dropdown_for_table() {
         $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'  and deleted=0")->getResult();
         $temp_array[] = array('id' => '', 'text' => '---Choose Employee---');
