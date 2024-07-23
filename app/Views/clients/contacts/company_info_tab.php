@@ -28,5 +28,8 @@
                 appAlert.success(result.message, {duration: 10000});
             }
         });
+
+        $("#company-form .select2").select2();
+
     });
 </script>

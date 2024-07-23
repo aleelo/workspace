@@ -37,7 +37,7 @@
                 "id" => "type",
                 "name" => "type",
                 "value" => $model_info->type,
-                "class" => "form-control",
+                "class" => "form-control select2",
                 "placeholder" => app_lang('payer_type')
             ),[''=>'', 'Corporate'=>'Corporate','Limited Liability Company (LLC)'=>'Limited Liability Company (LLC)', 'Partnership'=>'Partnership', 'Non-Profit Organization'=>'Non-Profit Organization', 'Trust'=>'Trust', 
             'Estate'=>'Estate', 'Public Limited Company (PLC)'=>'Public Limited Company (PLC)', 'Private Limited Company (Ltd)'=>'Private Limited Company (Ltd)', 'Cooperative (Co-op)'=>'Cooperative (Co-op)', 'Joint Venture (JV)'=>'Joint Venture (JV)',  ],[$model_info->type]
@@ -75,7 +75,7 @@
                 "id" => "Reg_Type",
                 "name" => "Reg_Type",
                 "value" => $model_info->Reg_Type,
-                "class" => "form-control",
+                "class" => "form-control select2",
                 "placeholder" => app_lang('Registration_type')
             ),[''=>'','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
         );
