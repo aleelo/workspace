@@ -142,6 +142,118 @@
     </div>
 </div>
 
+<!-----------------------------------------  Merchant Type  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="merchant_type" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "merchant_type",
+                "name" => "merchant_type",
+                "value" => $model_info->Reg_Type,
+                "class" => "form-control",
+                "placeholder" => app_lang('merchant_type')
+            ),[''=>'','New'=>'SALAAM BANK','Renew'=>'PREMEIR BANK)'],[$model_info->Reg_Type]
+        );
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------   Merchant Number ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="merchant_number" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_number'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "merchant_number",
+                "name" => "merchant_number",
+                "value" => $model_info->Contact_Name,
+                "class" => "form-control",
+                "placeholder" => app_lang('merchant_number')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------   Turnover Tax  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="turnover_tax" class="<?php echo $label_column; ?>"><?php echo app_lang('turnover_tax'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "turnover_tax",
+                "name" => "turnover_tax",
+                "value" => $model_info->Contact_Name,
+                "class" => "form-control",
+                "placeholder" => app_lang('turnover_tax')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------   Number of EMployees ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="number_of_employees" class="<?php echo $label_column; ?>"><?php echo app_lang('number_of_employees'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "number_of_employees",
+                "name" => "number_of_employees",
+                "value" => $model_info->Contact_Name,
+                "class" => "form-control",
+                "placeholder" => app_lang('number_of_employees')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+<!-----------------------------------------  Industries ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="industries" class="<?php echo $label_column; ?>"><?php echo app_lang('industries'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "industries",
+                "name" => "industries",
+                "value" => $model_info->Contact_Name,
+                "class" => "form-control",
+                "placeholder" => app_lang('industries')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+<!-----------------------------------------  Segment  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="segment" class="<?php echo $label_column; ?>"><?php echo app_lang('segment'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "segment",
+                "name" => "segment",
+                "value" => $model_info->Contact_Name,
+                "class" => "form-control",
+                "placeholder" => app_lang('segment')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
 
 <!-----------------------------------------   Contact Name  ------------------------------------>
 

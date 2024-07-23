@@ -93,6 +93,13 @@ $lang["new_payer_registered"] = "New Payer Registered";
 $lang["Registration_type"] = "Registration Type";
 $lang["Registration_no"] = "Registration Number";
 
+$lang["merchant_type"] = "Merchant Type";
+$lang["merchant_number"] = "Merchant Number";
+$lang["turnover_tax"] = "Turnover Tax";
+$lang["number_of_employees"] = "Number Of Employees";
+$lang["industries"] = "Industries";
+$lang["segment"] = "Segment";
+
 $lang["company"] = "Company";
 $lang["company_list"] = "Company List";
 $lang["payer_list"] = "Payer List";

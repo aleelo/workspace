@@ -94,8 +94,11 @@
 
                         <div class="form-group">
                             <div class="row">
+
                                 <label for="share_with" class=" col-md-2"><?php echo app_lang('share_with'); ?></label>
+
                                 <div class="col-md-10">
+
                                     <div>
                                         <?php
                                         echo form_checkbox(array(
@@ -108,6 +111,7 @@
                                         <label for="share_with_members"><?php echo app_lang("all_team_members"); ?> </label>
                                     </div>
 
+         
                                     <?php
                                     $has_client_group = false;
                                     $client_groups_value = "";
@@ -126,6 +130,7 @@
                                     ?>
 
                                     <div id="share_with_clients_area" class="<?php echo $has_client_group ? "hide" : ""; ?>">
+
                                         <div>
                                             <?php
                                             echo form_checkbox(array(
@@ -144,19 +149,23 @@
 
 
                                     <div id="share_with_specific_area" class="form-group <?php echo (in_array("all_clients", $share_with)) ? "hide" : ""; ?>">
+
                                         <div>
+                                            
                                             <?php
                                             echo form_checkbox("share_with_specific_checkbox", "1", $has_client_group ? true : false, "id='share_with_specific_checkbox' class='form-check-input'");
                                             ?>
+
                                             <label for="share_with_specific_checkbox"><?php echo app_lang("specific_client_groups"); ?></label>
 
                                             <div class="specific_dropdown">
                                                 <input type="text" value="<?php echo $client_groups_value; ?>" name="share_with_specific_client_groups" id="share_with_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_client_groups'); ?>"  />    
-
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
+
                             </div>
                             <div class="form-group">
                                 <div class="row">
