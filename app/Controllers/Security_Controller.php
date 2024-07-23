@@ -85,6 +85,22 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
+    public function get_merchant_types_dropdown() {
+        
+        $merchant_types = $this->db->query("SELECT mt.id, mt.merchant_type FROM rise_merchant_types mt WHERE mt.deleted=0")->getResult();
+        $temp_array = array('' => '---  Choose Merchant Type ---');
+
+        if(!$merchant_types){
+            return null;
+        }
+  
+        foreach($merchant_types as $m){
+            $temp_array[$m->id] = $m->merchant_type;
+        }
+
+        return $temp_array;
+    }
+
     public function get_employees_dropdown_for_table() {
         $employees = $this->db->query("SELECT id,concat(first_name,' ',last_name) as name FROM rise_users where user_type = 'Staff'  and deleted=0")->getResult();
         $temp_array[] = array('id' => '', 'text' => '---Choose Employee---');

@@ -172,15 +172,15 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="bank_id" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
+        <label for="merchant_id" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "bank_id",
-                "name" => "bank_id",
+                "id" => "merchant_id",
+                "name" => "merchant_id",
                 "class" => "form-control select2",
                 "placeholder" => app_lang('merchant_type')
-            ),[$Bank_names_dropdown],[$model_info?->bank_id]
+            ),[$Merchant_types_dropdown],[$model_info?->merchant_id]
         );
             ?>
         </div>
