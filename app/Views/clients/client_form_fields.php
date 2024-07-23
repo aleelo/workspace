@@ -152,7 +152,7 @@
             echo form_dropdown(array(
                 "id" => "merchant_type",
                 "name" => "merchant_type",
-                "value" => $model_info->Reg_Type,
+                "value" => $model_info->bank_id,
                 "class" => "form-control",
                 "placeholder" => app_lang('merchant_type')
             ),[''=>'','New'=>'SALAAM BANK','Renew'=>'PREMEIR BANK)'],[$model_info->Reg_Type]
@@ -172,7 +172,7 @@
             echo form_input(array(
                 "id" => "merchant_number",
                 "name" => "merchant_number",
-                "value" => $model_info->Contact_Name,
+                "value" => $model_info->merchant_number,
                 "class" => "form-control",
                 "placeholder" => app_lang('merchant_number')
             ));
@@ -191,7 +191,7 @@
             echo form_input(array(
                 "id" => "turnover_tax",
                 "name" => "turnover_tax",
-                "value" => $model_info->Contact_Name,
+                "value" => $model_info->turnover_tax,
                 "class" => "form-control",
                 "placeholder" => app_lang('turnover_tax')
             ));
@@ -210,7 +210,7 @@
             echo form_input(array(
                 "id" => "number_of_employees",
                 "name" => "number_of_employees",
-                "value" => $model_info->Contact_Name,
+                "value" => $model_info->number_of_employees,
                 "class" => "form-control",
                 "placeholder" => app_lang('number_of_employees')
             ));
@@ -228,7 +228,7 @@
             echo form_input(array(
                 "id" => "industries",
                 "name" => "industries",
-                "value" => $model_info->Contact_Name,
+                "value" => $model_info->industries,
                 "class" => "form-control",
                 "placeholder" => app_lang('industries')
             ));
@@ -246,7 +246,7 @@
             echo form_input(array(
                 "id" => "segment",
                 "name" => "segment",
-                "value" => $model_info->Contact_Name,
+                "value" => $model_info->segment,
                 "class" => "form-control",
                 "placeholder" => app_lang('segment')
             ));
