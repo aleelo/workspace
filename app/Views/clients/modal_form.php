@@ -57,9 +57,9 @@
                 }
             }
         });
-        setTimeout(function () {
-            $("#company_name").focus();
-        }, 200);
+        // setTimeout(function () {
+        //     $("#company_name").focus();
+        // }, 200);
 
         //save and open add new contact member modal
         window.showAddNewModal = false;

@@ -17,7 +17,7 @@
                 "value" => $model_info->company_name,
                 "class" => "form-control company_name_input_section",
                 "placeholder" => app_lang('payer_name'),
-                "autofocus" => true,
+                //"autofocus" => true,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
             ));
@@ -47,22 +47,48 @@
     </div>
 </div>
 
-<!-----------------------------------------  Large / Medium  ------------------------------------>
+<!-----------------------------------------  Payer Size ------------------------------------>
 
-<?php //if ($login_user->is_admin && get_setting("module_invoice")) { ?>
-    <div class="form-group">
-        <div class="row">
-            <label for="LargeMedium" class="<?php echo $label_column; ?> col-xs-8 col-sm-6"><?php echo app_lang('large_medium'); ?></label>
-            <div class="<?php echo $field_column; ?> col-xs-4 col-sm-6">
-                <?php
-                echo form_checkbox("LargeMedium", "1", $model_info->LargeMedium == 'TRUE' ? true : false, "id='LargeMedium' class='form-check-input'");
-                ?>                       
-            </div>
+<div class="form-group">
+
+    <div class="row">
+        
+        <label for="payer_size" class="<?php echo $label_column; ?>"><?php echo app_lang('payer_size'); ?></label>
+
+        <div class=" col-md-9">
+
+            <?php
+            echo form_radio(array(
+                "id" => "small",
+                "name" => "payer_size",
+                "class" => "form-check-input",
+                    ), "Small", $model_info->payer_size == 'Small'? true : false, "class='form-check-input'");
+            ?>
+            <label for="small" class="mr15 p0"><?php echo app_lang('small'); ?></label> 
+
+            <?php
+            echo form_radio(array(
+                "id" => "medium",
+                "name" => "payer_size",
+                "class" => "form-check-input",
+                    ), "Medium" , $model_info?->id ? ($model_info->payer_size == 'Medium' ? true: false) : true, "class='form-check-input'");
+            ?>
+            <label for="medium" class="p0 mr15"><?php echo app_lang('medium'); ?></label>
+
+            <?php
+            echo form_radio(array(
+                "id" => "large",
+                "name" => "payer_size",
+                "class" => "form-check-input",
+                    ), "Large" ,$model_info->payer_size == 'Large'? true : false, "class='form-check-input'");
+            ?>
+            <label for="large" class="p0 mr15"><?php echo app_lang('large'); ?></label>
+
         </div>
+
     </div>
-<?php //} ?>
 
-
+</div>
 
 <!-----------------------------------------  Registration Type  ------------------------------------>
 

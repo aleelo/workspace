@@ -133,7 +133,7 @@ class Clients extends Security_Controller {
         $data = array(
             "company_name" => $company_name,
             "type" => $this->request->getPost('type'),
-            "LargeMedium" => $this->request->getPost('LargeMedium') ? 'TRUE' : 'FALSE',
+            "payer_size" => $this->request->getPost('payer_size'), // ? 'TRUE' : 'FALSE',
             "Reg_Type" => $this->request->getPost('Reg_Type'),
             "Reg_NO" => $this->request->getPost('Reg_NO'),
             "Start_Date" => $this->request->getPost('Start_Date'),
@@ -364,7 +364,7 @@ class Clients extends Security_Controller {
             $data->Reg_NO,
             $data->Start_Date,
             $data->End_Date,
-            $data->LargeMedium,
+            $data->payer_size,
             $data->Contact_Name,
             $owner?->first_name.' '.$owner?->last_name,
             $data->Status,
@@ -985,6 +985,7 @@ class Clients extends Security_Controller {
 
             $view_data['model_info'] = $this->Clients_model->get_one($client_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
+
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();

@@ -70,6 +70,7 @@ class Security_Controller extends App_Controller {
     }
 
     public function get_bank_name_dropdown() {
+        
         $bane_names = $this->db->query("SELECT id, bank_name FROM rise_bank_names WHERE deleted=0")->getResult();
         $temp_array = array('' => '---Choose Bank Name---');
 

@@ -99,6 +99,10 @@ $lang["turnover_tax"] = "Turnover Tax";
 $lang["number_of_employees"] = "Number Of Employees";
 $lang["industries"] = "Industries";
 $lang["segment"] = "Segment";
+$lang["payer_size"] = "Payer Size";
+$lang["small"] = "Small";
+$lang["medium"] = "Medium";
+$lang["large"] = "Large";
 
 $lang["company"] = "Company";
 $lang["company_list"] = "Company List";
