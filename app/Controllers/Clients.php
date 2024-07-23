@@ -985,6 +985,7 @@ class Clients extends Security_Controller {
 
             $view_data['model_info'] = $this->Clients_model->get_one($client_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
+            $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
