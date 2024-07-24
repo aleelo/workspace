@@ -1066,6 +1066,7 @@ class Leaves extends Security_Controller {
 
     // list of pending leave application. prepared for datatable
     function pending_approval_list_data() {
+
         $options = array("status" => "pending",'view_type' => 'pending_list', "access_type" => $this->access_type, "allowed_members" => $this->allowed_members);
         $list_data = $this->Leave_applications_model->get_list($options)->getResult();
 
@@ -1074,6 +1075,7 @@ class Leaves extends Security_Controller {
             $result[] = $this->_make_row($data);
         }
         echo json_encode(array("data" => $result));
+        
     }
 
     // list of all leave application. prepared for datatable 

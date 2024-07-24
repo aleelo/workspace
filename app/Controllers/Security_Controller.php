@@ -85,6 +85,14 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
+    public function get_employee_of_this_department_list($login_user_id){
+
+        $EmpList = $this->db->query("SELECT eu.* FROM rise_users lu LEFT JOIN departments dp ON lu.id = dp.head_id LEFT JOIN rise_users eu ON dp.id = eu.department_id WHERE lu.id = $login_user_id")->getResult();
+    // print_r($EmpList);
+    // die;
+        return $EmpList;
+    }
+
     public function get_merchant_types_dropdown() {
         
         $merchant_types = $this->db->query("SELECT mt.id, mt.merchant_type FROM rise_merchant_types mt WHERE mt.deleted=0")->getResult();

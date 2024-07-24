@@ -155,11 +155,11 @@ class Users_model extends Crud_model {
     }
 
     function get_details($options = array()) {
+
         $users_table = $this->db->prefixTable('users');
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $clients_table = $this->db->prefixTable('clients');
         $roles_table = $this->db->prefixTable('roles');
-        
         
         $Users_model = model("App\Models\Users_model");
         $login_user_id = $Users_model->login_user_id();
@@ -174,8 +174,6 @@ class Users_model extends Crud_model {
         }else{
             $role = $r->title;
         }
-
-        // die($role);
 
         $role = get_array_value($options,'role') ?? '%';
         $created_by = get_array_value($options,'created_by') ?? '%';
@@ -316,7 +314,7 @@ class Users_model extends Crud_model {
         $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*, $roles_table.title AS role_title,
             $team_member_job_info_table.date_of_hire, $team_member_job_info_table.salary, $team_member_job_info_table.salary_term $select_custom_fieds
         FROM $users_table
-        LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id=$users_table.id
+        LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
         LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
         LEFT JOIN $roles_table ON $roles_table.id=$users_table.role_id
         $join_custom_fieds    

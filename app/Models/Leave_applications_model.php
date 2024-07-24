@@ -29,10 +29,12 @@ class Leave_applications_model extends Crud_model {
     }
 
     function get_list($options = array()) {
+
         $leave_applications_table = $this->db->prefixTable('leave_applications');
         $users_table = $this->db->prefixTable('users');
         $leave_types_table = $this->db->prefixTable('leave_types');
         $where = "";
+        
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
             $where = " AND $leave_applications_table.id=$id";
@@ -41,8 +43,8 @@ class Leave_applications_model extends Crud_model {
 
         //role and user info:
         $Users_model = model("App\Models\Users_model");
-       $role = $Users_model->get_user_role();
-       $user = $Users_model->get_access_info($Users_model->login_user_id());
+        $role = $Users_model->get_user_role();
+        $user = $Users_model->get_access_info($Users_model->login_user_id());
 
         // die($role);
         $d = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user->id")->getRow();
@@ -114,8 +116,8 @@ class Leave_applications_model extends Crud_model {
                 $leave_types_table.title as leave_type_title,   $leave_types_table.color as leave_type_color,$leave_applications_table.leave_type_id,$leave_applications_table.uuid,
                 $leave_applications_table.nolo_status
             FROM $leave_applications_table
-            LEFT JOIN $users_table ON $users_table.id= $leave_applications_table.applicant_id
-            LEFT JOIN $leave_types_table ON $leave_types_table.id= $leave_applications_table.leave_type_id        
+            LEFT JOIN $users_table ON $users_table.id = $leave_applications_table.applicant_id
+            LEFT JOIN $leave_types_table ON $leave_types_table.id = $leave_applications_table.leave_type_id        
             
             WHERE $leave_applications_table.deleted=0 $where order by start_date desc";
         return $this->db->query($sql);
