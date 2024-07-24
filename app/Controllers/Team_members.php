@@ -380,7 +380,7 @@ class Team_members extends Security_Controller {
 
     //prepere the data for members list
     function list_data() {
-        
+
         if (!$this->can_view_team_members_list()) {
             app_redirect("forbidden");
         }
@@ -457,7 +457,7 @@ class Team_members extends Security_Controller {
 
         $row_data = array(
             $user_avatar,
-            $data->department_id,
+            $data->dp_name,
             $data->employee_id,
             get_team_member_profile_link($data->id, $full_name),
             $data->job_title,

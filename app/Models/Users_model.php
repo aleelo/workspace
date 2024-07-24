@@ -160,6 +160,7 @@ class Users_model extends Crud_model {
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $clients_table = $this->db->prefixTable('clients');
         $roles_table = $this->db->prefixTable('roles');
+        $department_table = 'departments';
         
         $Users_model = model("App\Models\Users_model");
         $login_user_id = $Users_model->login_user_id();
@@ -178,6 +179,13 @@ class Users_model extends Crud_model {
         $role = get_array_value($options,'role') ?? '%';
         $created_by = get_array_value($options,'created_by') ?? '%';
         $department_id = get_array_value($options,'department_id') ?? '%';
+
+        
+        if($role == 'Head Department'){
+            $department_id = get_user_department_id();
+            $created_by = "%";
+        }
+
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -309,31 +317,42 @@ class Users_model extends Crud_model {
         $select_custom_fieds = get_array_value($custom_field_query_info, "select_string");
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
-
+       
         //prepare full query string
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*, $roles_table.title AS role_title,
-            $team_member_job_info_table.date_of_hire, $team_member_job_info_table.salary, $team_member_job_info_table.salary_term $select_custom_fieds
-        FROM $users_table
-        LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
-        LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
-        LEFT JOIN $roles_table ON $roles_table.id=$users_table.role_id
-        $join_custom_fieds    
-        WHERE $users_table.deleted=0  $where $custom_fields_where
-        $order $limit_offset";
 
-        $raw_query = $this->db->query($sql);
+        //if( $role == 'Head Department'){
 
-        $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+            $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*,$department_table.nameEn as dp_name, $roles_table.title AS role_title,
+                $team_member_job_info_table.date_of_hire, $team_member_job_info_table.salary, $team_member_job_info_table.salary_term $select_custom_fieds
+            FROM $users_table
+            LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
+            LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id
+            LEFT JOIN $roles_table ON $roles_table.id = $users_table.role_id
+            LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id
+            $join_custom_fieds    
+            WHERE $users_table.deleted=0 $where $custom_fields_where
+            $order $limit_offset";
 
-        if ($limit) {
-            return array(
-                "data" => $raw_query->getResult(),
-                "recordsTotal" => $total_rows->found_rows,
-                "recordsFiltered" => $total_rows->found_rows,
-            );
-        } else {
-            return $raw_query;
-        }
+//  print_r($sql);
+//         die();
+            $raw_query = $this->db->query($sql);
+
+            $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+
+            if ($limit) {
+                return array(
+                    "data" => $raw_query->getResult(),
+                    "recordsTotal" => $total_rows->found_rows,
+                    "recordsFiltered" => $total_rows->found_rows,
+                );
+            } else {
+                return $raw_query;
+            }
+        //}
+
+       //}elseif(){
+
+       // }
     }
 
     function get_cardholder_details($options = array()) {
