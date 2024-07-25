@@ -28,11 +28,15 @@ class Leave_applications_model extends Crud_model {
         return $this->db->query($sql)->getRow();
     }
 
+
+
     function get_list($options = array()) {
 
         $leave_applications_table = $this->db->prefixTable('leave_applications');
-        $users_table = $this->db->prefixTable('users');
         $leave_types_table = $this->db->prefixTable('leave_types');
+        $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
+        $users_table = $this->db->prefixTable('users');
+        $department_table = 'departments';
         $where = "";
         
         $id = $this->_get_clean_value($options, "id");
@@ -110,17 +114,21 @@ class Leave_applications_model extends Crud_model {
 
         $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $leave_applications_table.department_id like '$department_id'";
 
-        $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $leave_applications_table.end_date, $leave_applications_table.total_hours,
+        $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $department_table.nameEn as dp_name, $leave_applications_table.end_date, $leave_applications_table.total_hours,
                 $leave_applications_table.total_days, $leave_applications_table.applicant_id, $leave_applications_table.status,
                 CONCAT($users_table.first_name, ' ',$users_table.last_name) AS applicant_name, $users_table.image as applicant_avatar,
                 $leave_types_table.title as leave_type_title,   $leave_types_table.color as leave_type_color,$leave_applications_table.leave_type_id,$leave_applications_table.uuid,
                 $leave_applications_table.nolo_status
             FROM $leave_applications_table
             LEFT JOIN $users_table ON $users_table.id = $leave_applications_table.applicant_id
-            LEFT JOIN $leave_types_table ON $leave_types_table.id = $leave_applications_table.leave_type_id        
+            LEFT JOIN $leave_types_table ON $leave_types_table.id = $leave_applications_table.leave_type_id 
+            LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
+            LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id       
             
             WHERE $leave_applications_table.deleted=0 $where order by start_date desc";
+
         return $this->db->query($sql);
+
     }
 
     function get_summary($options = array()) {
