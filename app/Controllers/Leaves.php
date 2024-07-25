@@ -256,7 +256,7 @@ class Leaves extends Security_Controller {
 
     public function send_notify_leave_status_email($data = array()) {
 
-        $head_department_email = get_array_value($data,'HEAD_DEPARTMENT_EMAIL') ? '%';
+        $head_department_email = get_array_value($data,'HEAD_DEPARTMENT_EMAIL') ?? '%';
         
         $hrm_email = $data['HRM_EMAIL'];
         // $head_department_email = $data['HEAD_DEPARTMENT_EMAIL'];
