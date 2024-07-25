@@ -186,6 +186,11 @@ class Users_model extends Crud_model {
             $created_by = "%";
         }
 
+        // if($role == 'Head Department'){
+        //     $department_id = get_dept_id_of_Head_list();
+        //     $created_by = "%";
+        // }
+
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -255,6 +260,12 @@ class Users_model extends Crud_model {
         }else{
 
         }
+
+        // if($user_type =='staff') {
+        //     $where .=" AND $users_table.id LIKE '$created_by' AND $department_table.head_id like '$department_id'";
+        // }else{
+
+        // }
 
         $custom_field_type = "team_members";
         if ($user_type === "client") {
@@ -333,8 +344,7 @@ class Users_model extends Crud_model {
             WHERE $users_table.deleted=0 $where $custom_fields_where
             $order $limit_offset";
 
-//  print_r($sql);
-//         die();
+
             $raw_query = $this->db->query($sql);
 
             $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
@@ -348,11 +358,7 @@ class Users_model extends Crud_model {
             } else {
                 return $raw_query;
             }
-        //}
 
-       //}elseif(){
-
-       // }
     }
 
     function get_cardholder_details($options = array()) {

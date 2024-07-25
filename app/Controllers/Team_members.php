@@ -408,7 +408,7 @@ class Team_members extends Security_Controller {
 
         $list_data = $this->Users_model->get_details($options);
         
-        $list_data = get_array_value($list_data,'data') ?get_array_value($list_data,'data') : $list_data->getResult(); 
+        $list_data = get_array_value($list_data,'data') ? get_array_value($list_data,'data') : $list_data->getResult(); 
         $recordsTotal =  get_array_value($list_data,'recordsTotal');
         $recordsFiltered =  get_array_value($list_data,'recordsFiltered');
 

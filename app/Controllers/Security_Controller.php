@@ -85,12 +85,18 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
-    public function get_employee_of_this_department_list($login_user_id){
+    public function get_dept_id_of_Head_list(){
+        $user_id = $this->login_user->id;
+        $EmpList = $this->db->query("SELECT dp.id FROM rise_users lu LEFT JOIN departments dp ON lu.id = dp.head_id LEFT JOIN rise_users eu ON dp.id = eu.department_id WHERE lu.id = $user_id")->getResult();
 
-        $EmpList = $this->db->query("SELECT eu.* FROM rise_users lu LEFT JOIN departments dp ON lu.id = dp.head_id LEFT JOIN rise_users eu ON dp.id = eu.department_id WHERE lu.id = $login_user_id")->getResult();
-    // print_r($EmpList);
-    // die;
-        return $EmpList;
+        return $EmpList?->id;
+    }
+
+    public function get_user_department_id(){
+        $user_id = $this->login_user->id;
+        $job_info = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user_id")->getRow();
+        
+        return $job_info?->department_id;
     }
 
     public function get_merchant_types_dropdown() {
@@ -913,12 +919,7 @@ class Security_Controller extends App_Controller {
         return $job_info->nameSo;
     }
 
-    public function get_user_department_id(){
-        $user_id = $this->login_user->id;
-        $job_info = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user_id")->getRow();
-        
-        return $job_info?->department_id;
-    }
+
 
     public function check_access($name = null){
         

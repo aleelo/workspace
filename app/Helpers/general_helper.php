@@ -2015,6 +2015,17 @@ if (!function_exists('get_user_department_id')) {
 
 }
 
+if (!function_exists('get_dept_id_of_Head_list')) {
+
+    function get_dept_id_of_Head_list() {
+        $ci = new Security_Controller(false);      
+        $dept = $ci->get_dept_id_of_Head_list();
+
+        return $dept;
+    }
+
+}
+
 if (!function_exists('get_user_role')) {
 
     function get_user_role() {
