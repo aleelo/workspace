@@ -239,7 +239,11 @@ class Leaves extends Security_Controller {
 
         if ($hrm_email) {
             return true;
-        } else {
+        }elseif($head_department_email) {
+            return true;
+        }elseif($private_email) {
+            return true;
+        }else{
             return false;
         }
 
