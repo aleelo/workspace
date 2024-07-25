@@ -237,7 +237,13 @@ class Leaves extends Security_Controller {
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email = send_app_mail($private_email, $subject, $message);
 
-        if ($hrm_email || $head_department_email || $private_email) {
+        // if ($hrm_email || $head_department_email || $private_email) {
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+
+        if ($private_email) {
             return true;
         }else{
             return false;
