@@ -1154,11 +1154,11 @@ class Leaves extends Security_Controller {
 
         return array(
             $data->id,
+            $data->dp_name,
             get_team_member_profile_link($data->applicant_id, $meta_info->applicant_meta),
             $meta_info->leave_type_meta,
             $meta_info->date_meta,
             $meta_info->duration_meta,
-            $data->dp_name,
             $meta_info->status_meta,
             $actions
         );
