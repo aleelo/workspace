@@ -65,7 +65,7 @@ class Clients extends Security_Controller {
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
-        $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
+        // $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
 
         $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 

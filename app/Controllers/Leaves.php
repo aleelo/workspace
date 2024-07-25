@@ -316,8 +316,36 @@ class Leaves extends Security_Controller {
         }
     }
 
+    
+    // Edit Leave 
 
+    function edit_leave_modal_form() {
 
+        $application_id = $this->request->getPost('id');
+        
+
+        // if ($applicant_id) {
+        //     $view_data['team_members_info'] = $this->Users_model->get_one($applicant_id);
+        // } else {
+
+        //     //show all members list to only admin and other members who has permission to manage all member's leave
+        //     //show only specific members list who has limited access
+        //     if ($this->access_type === "all") {
+        //         $where = array("user_type" => "staff");
+        //     } else {
+        //         $where = array("user_type" => "staff", "id !=" => $this->login_user->id, "where_in" => array("id" => $this->allowed_members));
+        //     }
+        // }
+
+        $view_data['team_members_dropdown'] = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"));
+        
+        $view_data['model_info'] = $this->Leave_applications_model->get_one($application_id);
+
+        $view_data['leave_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
+        $view_data['form_type'] = "assign_leave";
+
+        return $this->template->view('leaves/modal_form', $view_data);
+    }
 
     //load assign leave modal 
 
@@ -339,6 +367,7 @@ class Leaves extends Security_Controller {
 
         $view_data['leave_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
         $view_data['form_type'] = "assign_leave";
+
         return $this->template->view('leaves/modal_form', $view_data);
     }
 
@@ -1153,7 +1182,9 @@ class Leaves extends Security_Controller {
         $can_manage_application = false;
         if ($this->access_type === "all" && $can_approve_leaves) {
             $can_manage_application = true;
-            $actions = modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
+            $actions = modal_anchor(get_uri("leaves/edit_leave_modal_form"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_leave'), "data-post-id" => $data->id));
+            $actions .= modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
+            //$actions .= modal_anchor(get_uri("clients/application_details"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
         } else if (array_search($data->applicant_id, $this->allowed_members) && $data->applicant_id !== $this->login_user->id && ($can_approve_leaves)) {
             $can_manage_application = true;
         }

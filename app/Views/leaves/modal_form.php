@@ -2,7 +2,11 @@
 <div id="leaves-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
+
+        <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+
             <?php if ($form_type == "assign_leave") { ?>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="applicant_id" class=" col-md-3"><?php echo app_lang('team_member'); ?></label>
@@ -21,6 +25,7 @@
                         </div>
                     </div>
                 </div>
+
             <?php } ?>
 
             <div class="form-group">
@@ -95,6 +100,7 @@
                             echo form_input(array(
                                 "id" => "start_date",
                                 "name" => "start_date",
+                                "value" => $model_info->start_date,
                                 "class" => "form-control",
                                 "placeholder" => app_lang('start_date'),
                                 "autocomplete" => "off",

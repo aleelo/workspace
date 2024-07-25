@@ -85,6 +85,7 @@ $lang["employee"] = "Employee";
 $lang["employees"] = "Employees";
 $lang["department_head"] = "Department Head";
 $lang["department_ame"] = "Department Name";
+$lang["edit_leave"] = "Edit Leave";
 
 
 //Company:
