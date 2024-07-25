@@ -255,9 +255,11 @@ class Leaves extends Security_Controller {
 
 
     public function send_notify_leave_status_email($data = array()) {
+
+        $head_department_email = get_array_value($data,'HEAD_DEPARTMENT_EMAIL') ? '%';
         
         $hrm_email = $data['HRM_EMAIL'];
-        $head_department_email = $data['HEAD_DEPARTMENT_EMAIL'];
+        // $head_department_email = $data['HEAD_DEPARTMENT_EMAIL'];
         $private_email = $data['PRIVATE_EMAIL'];
         $mof_email = $data['MOF_EMAIL'];
 
@@ -301,6 +303,11 @@ class Leaves extends Security_Controller {
         $hrm_email =  send_app_mail($hrm_email, $subject, $message);
         $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         $private_email =  send_app_mail($private_email, $subject, $message);
+
+        // if(!empty()){
+
+        // }
+
 
         if ($hrm_email) {
             return true;
@@ -583,7 +590,7 @@ class Leaves extends Security_Controller {
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'HRM_EMAIL'=>$hrm_info->private_email,                 
-                    'HEAD_DEPARTMENT_EMAIL'=>$head_department_info?->private_email,
+                    'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
                     'PRIVATE_EMAIL'=>$user_info->private_email,
                     'MOF_EMAIL'=>$user_info->email,                 
                     'PASSPORT'=>$user_info->passport_no,            
