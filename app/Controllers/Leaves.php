@@ -583,7 +583,7 @@ class Leaves extends Security_Controller {
                     'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
                     'JOB_TITLE'=>$user_info->job_title_so,
                     'HRM_EMAIL'=>$hrm_info->private_email,                 
-                    'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
+                    'HEAD_DEPARTMENT_EMAIL'=>$head_department_info?->private_email,
                     'PRIVATE_EMAIL'=>$user_info->private_email,
                     'MOF_EMAIL'=>$user_info->email,                 
                     'PASSPORT'=>$user_info->passport_no,            
