@@ -423,6 +423,7 @@ class Leaves extends Security_Controller {
         
         
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
+
         $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
         $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $applicant_id")->getRow();
@@ -468,6 +469,7 @@ class Leaves extends Security_Controller {
         ];
 
         $doc_id = $this->Documents_model->ci_save($doc_data);
+
         $doc = $this->db->query("SELECT * FROM rise_documents where id = $doc_id")->getRow();
         $this->db->query("insert into rise_leave_document(leave_id,document_id) values($save_id,$doc_id)");
         $doc_leave_data['document_id'] = $doc->id;
@@ -567,6 +569,7 @@ class Leaves extends Security_Controller {
         // $this->access_only_allowed_members($leave_data['applicant_id']);
 
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
+        
         $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
         $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title FROM rise_leave_applications l 
