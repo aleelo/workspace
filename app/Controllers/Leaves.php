@@ -69,7 +69,7 @@ class Leaves extends Security_Controller {
         
         if($role === "HRM" && $status === "approved"){
             $status = 'approved';
-        }elseif($role == "Director" && $status === "verified"){
+        }elseif($role == "Director" || $role === "HRM" && $status === "verified"){
             $status = 'pending';
         }
 
