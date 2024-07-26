@@ -181,10 +181,10 @@ class Users_model extends Crud_model {
         $department_id = get_array_value($options,'department_id') ?? '%';
 
         
-        if($role == 'Head Department'){
-            $department_id = get_user_department_id();
-            $created_by = "%";
-        }
+        // if($role == 'Head Department'){
+        //     $department_id = get_user_department_id();
+        //     $created_by = "%";
+        // }
 
         // if($role == 'Head Department'){
         //     $department_id = get_dept_id_of_Head_list();

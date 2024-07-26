@@ -85,11 +85,11 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
-    public function get_dept_id_of_Head_list(){
+    public function get_director_department_id(){
         $user_id = $this->login_user->id;
-        $EmpList = $this->db->query("SELECT dp.id FROM rise_users lu LEFT JOIN departments dp ON lu.id = dp.head_id LEFT JOIN rise_users eu ON dp.id = eu.department_id WHERE lu.id = $user_id")->getResult();
+        $dep_info = $this->db->query("SELECT dp.id FROM departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user_id")->getRow();
 
-        return $EmpList?->id;
+        return $dep_info?->id;
     }
 
     public function get_user_department_id(){
@@ -925,6 +925,7 @@ class Security_Controller extends App_Controller {
         
         $this->check_module_availability('module_'.$name);
         $role = $this->get_user_role();
+        $dr_dp_id = $this->get_director_department_id();
         $dept_id = $this->get_user_department_id();
         $permissions = $this->login_user->permissions;
 
@@ -933,7 +934,16 @@ class Security_Controller extends App_Controller {
         if ($this->login_user->is_admin || $role == 'Administrator'  || $role == 'Access Control' || $role == 'HRM' || $perm == "all") {
             $created_by = '%';
             $dept_id = '%';
-        } else if ($role == 'Director'|| $role == 'Secretary') {
+        } else if ($role == 'Director') {
+
+             if(!empty($dr_dp_id)){
+                 $dept_id = $dr_dp_id;
+                 $created_by = '%';
+             }else{
+                $created_by = $this->login_user->id;
+             }
+
+        } else if ($role == 'Secretary') {
             $created_by = '%';
         } else if ($perm == "own" || $role == 'Employee') {
             $created_by = $this->login_user->id;

@@ -69,7 +69,7 @@ class Leaves extends Security_Controller {
         
         if($role === "HRM" && $status === "approved"){
             $status = 'approved';
-        }elseif($role == "Director" && $status === "approved"){
+        }elseif($role == "Director" && $status === "verified"){
             $status = 'pending';
         }
 
@@ -105,14 +105,12 @@ class Leaves extends Security_Controller {
                 if ($status == "approved") {
                     log_notification("leave_approved_HR", $notification_options);//leave_approved
                 } else if ($status == "pending") {
-                    log_notification("leave_approved_Director", $notification_options);
+                    log_notification("leave_verified_Director", $notification_options);
                 } else if ($status == "rejected") {
                     log_notification("leave_rejected", $notification_options);
                 } else if ($status == "canceled") {
                     log_notification("leave_canceled", $notification_options);
-                }else if ($status == "verified") {
-                    log_notification("leave_verified_director", $notification_options);
-                }                
+                }               
                         
                 $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
@@ -165,7 +163,7 @@ class Leaves extends Security_Controller {
                     $r = $this->send_notify_leave_status_email($leave_email_data);
 
 
-                }elseif($status == 'verified'){
+                }elseif($status == 'pending'){
                     
                      //send email to the user for leave status:
                         $leave_email_data = [
@@ -233,9 +231,20 @@ class Leaves extends Security_Controller {
         //$info_email = send_app_mail($info_email, $subject, $message);
         //$mof_email = send_app_mail($mof_email, $subject, $message);
 
-        $hrm_email =  send_app_mail($hrm_email, $subject, $message);
-        $head_department_email =  send_app_mail($head_department_email, $subject, $message);
-        $private_email = send_app_mail($private_email, $subject, $message);
+        if(!empty($hrm_email)){
+
+            $hrm_email =  send_app_mail($hrm_email, $subject, $message);
+        }
+
+        if(!empty($head_department_email)){
+
+            $head_department_email =  send_app_mail($head_department_email, $subject, $message);
+        }
+
+        if(!empty($private_email)){
+
+            $private_email = send_app_mail($private_email, $subject, $message);
+        }
 
         // if ($hrm_email || $head_department_email || $private_email) {
         //     return true;
@@ -267,13 +276,13 @@ class Leaves extends Security_Controller {
 
         if($status == 'approved'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_approved", true);
-            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+           // $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }else if($status == 'rejected'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_rejected", true);
-            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
-        }elseif($status == 'verified'){
+           // $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+        }elseif($status == 'pending'){
             $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
-            $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
+           // $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }
 
 
@@ -300,9 +309,9 @@ class Leaves extends Security_Controller {
         // $info_email = send_app_mail($info_email, $subject, $message);
         // $mof_email =  send_app_mail($mof_email, $subject, $message);
 
-        $hrm_email =  send_app_mail($hrm_email, $subject, $message);
-        $head_department_email =  send_app_mail($head_department_email, $subject, $message);
-        $private_email =  send_app_mail($private_email, $subject, $message);
+        // $hrm_email =  send_app_mail($hrm_email, $subject, $message);
+        // $head_department_email =  send_app_mail($head_department_email, $subject, $message);
+        // $private_email =  send_app_mail($private_email, $subject, $message);
 
         // if(!empty()){
 
@@ -1198,7 +1207,7 @@ class Leaves extends Security_Controller {
 
         return array(
             $data->id,
-           // $data->dp_name,
+            //$data->dp_name,
             get_team_member_profile_link($data->applicant_id, $meta_info->applicant_meta),
             $meta_info->leave_type_meta,
             $meta_info->date_meta,
