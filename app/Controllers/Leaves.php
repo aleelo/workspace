@@ -309,6 +309,21 @@ class Leaves extends Security_Controller {
         // $info_email = send_app_mail($info_email, $subject, $message);
         // $mof_email =  send_app_mail($mof_email, $subject, $message);
 
+        if(!empty($hrm_email)){
+
+            $hrm_email =  send_app_mail($hrm_email, $subject, $message);
+        }
+
+        if(!empty($head_department_email)){
+
+            $head_department_email =  send_app_mail($head_department_email, $subject, $message);
+        }
+
+        if(!empty($private_email)){
+
+            $private_email = send_app_mail($private_email, $subject, $message);
+        }
+
         // $hrm_email =  send_app_mail($hrm_email, $subject, $message);
         // $head_department_email =  send_app_mail($head_department_email, $subject, $message);
         // $private_email =  send_app_mail($private_email, $subject, $message);
