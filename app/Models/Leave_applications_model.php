@@ -75,7 +75,7 @@ class Leave_applications_model extends Crud_model {
                 $department_id = $dr_dp_id;
                 $created_by = '%';
             }
-            
+
         }elseif($role == 'Secretary'){
             $created_by = '%';
         }elseif($role == 'HRM' || $role == 'Admin' || $role == 'Administrator'){
@@ -132,6 +132,7 @@ class Leave_applications_model extends Crud_model {
         // }
        
         $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $team_member_job_info_table.department_id like '$department_id'";
+        // $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND ( $team_member_job_info_table.department_id like '$dr_department_id' OR $leave_applications_table.department_id like '$department_id' )";
         // $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $leave_applications_table.department_id like '$department_id'";
 
         $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $department_table.nameEn as dp_name, $leave_applications_table.end_date, $leave_applications_table.total_hours,
