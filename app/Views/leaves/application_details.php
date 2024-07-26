@@ -113,7 +113,7 @@
             
         <?php }else if ($role == 'Director' ) { ?>
             
-            <button data-status="verified" type="submit" class="btn btn-success btn-sm update-leave-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('verify_sign'); ?></button>
+            <button data-status="pending" type="submit" class="btn btn-success btn-sm update-leave-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('verify_sign'); ?></button>
         <?php }?>
 
     <?php } ?>
