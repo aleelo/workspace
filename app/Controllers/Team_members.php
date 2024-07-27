@@ -268,7 +268,7 @@ class Team_members extends Security_Controller {
                 "employee_id" => $this->request->getPost('employee_id'),
             );
 
-            //$job_data["signature"] = serialize($files_data);
+            $job_data["signature"] = serialize($files_data);
 
             $this->Users_model->save_job_info($job_data);
 
