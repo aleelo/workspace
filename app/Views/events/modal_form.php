@@ -355,7 +355,6 @@
         
         var uploadUrl = "<?php echo get_uri("events/upload_file"); ?>";
         var validationUri = "<?php echo get_uri("events/validate_events_file"); ?>";
-
         var dropzone = attachDropzoneWithForm("#events-dropzone", uploadUrl, validationUri);
 
         $("#event-form").appForm({
