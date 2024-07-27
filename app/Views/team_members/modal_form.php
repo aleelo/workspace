@@ -577,9 +577,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="event_recurring" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>
+                            <div class=" col-md-9 col-xs-7 col-sm-8">
+                                <?php
+                                echo form_checkbox("recurring", "1", "" ? true : false, "id='event_recurring' class='form-check-input'");
+                                ?>                       
+                            </div>
+
+                            <div id="recurring_fields" class="<?php echo "hide"; ?>"> 
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="repeat_every" class=" col-md-3 col-xs-12"><?php  ?></label>
+                                        <div class="col-md-4 col-xs-6">
+                                        <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                                        </div>
+                                        
+                                    </div>
+                                </div>    
+
+                            </div>     
+                        
+                        </div>
+                    </div>
                 </div>
 
-            <!---------------------------------- Job Info Tab ----------------------------->
+            <!---------------------------------- Account Settings Tab ----------------------------->
 
             <div role="tabpanel" class="tab-pane" id="account-info-tab">
 
@@ -830,6 +855,15 @@
                 $("#hasSignatureFields").removeClass("hide");
             } else {
                 $("#hasSignatureFields").addClass("hide");
+            }
+        });
+
+        //show/hide recurring fields
+        $("#event_recurring").click(function () {
+            if ($(this).is(":checked")) {
+                $("#recurring_fields").removeClass("hide");
+            } else {
+                $("#recurring_fields").addClass("hide");
             }
         });
         

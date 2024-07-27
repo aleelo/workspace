@@ -66,16 +66,12 @@ class Leave_applications_model extends Crud_model {
         $created_by = $user->id;
 
         if($role == 'Employee'){
-
             $created_by = $user->id;
-
         }elseif($role == 'Director'){
-
             if(!empty($dr_dp_id)){
                 $department_id = $dr_dp_id;
                 $created_by = '%';
             }
-
         }elseif($role == 'Secretary'){
             $created_by = '%';
         }elseif($role == 'HRM' || $role == 'Admin' || $role == 'Administrator'){
