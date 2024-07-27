@@ -1296,6 +1296,10 @@ class Team_members extends Security_Controller {
         upload_file_to_temp();
     }
 
+    function validate_team_file() {
+        return validate_post_file($this->request->getPost("file_name"));
+    }
+
     /* check valid file for user */
 
     function validate_file() {

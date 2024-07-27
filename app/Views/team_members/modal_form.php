@@ -1,5 +1,5 @@
 <?php echo form_open(get_uri("team_members/add_team_member"), array("id" => "team_member-form", "class" => "general-form", "role" => "form")); ?>
-
+<div id="events-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
 
@@ -699,7 +699,7 @@
 
         </div>
     </div>
-
+</div>>
 
     <div class="modal-footer">
         <button class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
@@ -713,6 +713,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         
+        var uploadUrl = "<?php echo get_uri("team_members/upload_file"); ?>";
+        var validationUri = "<?php echo get_uri("team_members/validate_team_file"); ?>";
+
+        var dropzone = attachDropzoneWithForm("#events-dropzone", uploadUrl, validationUri);
+
         
         $("#team_member-form").appForm({
             onSuccess: function (result) {
