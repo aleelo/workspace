@@ -713,10 +713,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         
-        var uploadUrl = "<?php echo get_uri("team_members/upload_file"); ?>";
-        var validationUri = "<?php echo get_uri("team_members/validate_team_file"); ?>";
-
-        var dropzone = attachDropzoneWithForm("#events-dropzone", uploadUrl, validationUri);
 
         
         $("#team_member-form").appForm({
