@@ -246,6 +246,10 @@ class Team_members extends Security_Controller {
         //add a new team member
         $user_id = $this->Users_model->ci_save($user_data);
 
+        $target_path = get_setting("signature_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "signature");
+        //$signature = unserialize($files_data);
+
         if ($user_id) {
             //user added, now add the job info for the user
             // new Data: `department_id`, `section_id`, `job_title_en`, `job_title_so`, `employee_type`, `employee_id`
@@ -263,6 +267,8 @@ class Team_members extends Security_Controller {
                 "employee_type" => $this->request->getPost('employee_type'),
                 "employee_id" => $this->request->getPost('employee_id'),
             );
+
+            $job_data["signature"] = serialize($files_data);
 
             $this->Users_model->save_job_info($job_data);
 
