@@ -3,6 +3,7 @@
     <div class="container-fluid">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id; ?>" />
         <?php echo view("clients/client_form_fields"); ?>
+
     </div>
 </div>
 
@@ -23,6 +24,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
         var ticket_id = "<?php echo $ticket_id; ?>";
 
         window.clientForm = $("#client-form").appForm({
