@@ -1209,9 +1209,8 @@ class Leaves extends Security_Controller {
         $can_manage_application = false;
         if ($this->access_type === "all" && $can_approve_leaves) {
             $can_manage_application = true;
-            //$actions = modal_anchor(get_uri("leaves/edit_leave_modal_form"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_leave'), "data-post-id" => $data->id));
             $actions .= modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
-            //$actions .= modal_anchor(get_uri("clients/application_details"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
+            // $actions .= modal_anchor(get_uri("clients/application_details"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
         } else if (array_search($data->applicant_id, $this->allowed_members) && $data->applicant_id !== $this->login_user->id && ($can_approve_leaves)) {
             $can_manage_application = true;
         }

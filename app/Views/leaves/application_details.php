@@ -95,24 +95,24 @@
 
     <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 
+    <!-- Cancel -->
+
     <?php if (($leave_info->status === "active" || $leave_info->status === "pending" ) && $login_user->id === $leave_info->applicant_id) { ?>
 
         <button data-status="canceled" type="submit" class="btn btn-danger btn-sm update-leave-status"><span data-feather="x-circle" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
 
     <?php } ?>   
     
+    <!-- Reject, Verify & Approve -->
 
     <?php if (($leave_info->status === "active" || $leave_info->status === "pending" ) && $show_approve_reject) { ?>
 
         <button data-status="rejected" type="submit" class="btn btn-danger btn-sm update-leave-status"><span data-feather="x-circle" class="icon-16"></span> <?php echo app_lang('reject'); ?></button>
 
-        <?php if ($role !== 'Director' && $role !== 'Employee' ) { ?>
-
+        <?php if ($role === 'admin' || $role === 'HRM' || $role === 'Administrator') { ?>
             <button data-status="pending" type="submit" class="btn btn-success btn-sm update-leave-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('verify_sign'); ?></button>
             <button data-status="approved" type="submit" class="btn btn-success btn-sm update-leave-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('approve_sign'); ?></button>
-            
         <?php }else if ($role == 'Director' ) { ?>
-            
             <button data-status="pending" type="submit" class="btn btn-success btn-sm update-leave-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('verify_sign'); ?></button>
         <?php }?>
 

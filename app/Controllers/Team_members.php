@@ -690,10 +690,16 @@ class Team_members extends Security_Controller {
         // var_dump($this->request->getPost());
         // die();
 
+
         $this->validate_submitted_data(array(
             "user_id" => "required|numeric"
         ));
         $user_id = $this->request->getPost('user_id');
+
+        $target_path = get_setting("signature_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "signature");
+        $new_files = unserialize($files_data);    
+        
        
         $job_data = array(
             "user_id" => $user_id,
@@ -717,6 +723,15 @@ class Team_members extends Security_Controller {
             "employee_id" => $this->request->getPost('employee_id'),
             "department_id" => $this->request->getPost('department_id'),
         );
+
+        if ($user_id) {
+            $user_j0b_info = $this->Users_model->get_details(['id'=>$user_id])->getRow();
+            // print_r($user_j0b_info);die;
+            $timeline_file_path = get_setting("signature_file_path");
+            $new_files = update_saved_files($timeline_file_path, $user_j0b_info->signature, $new_files);
+        }
+
+        $job_data["signature"] = serialize($new_files);
 
 
         $this->Users_model->ci_save($user_data, $user_id);

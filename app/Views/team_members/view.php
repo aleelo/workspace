@@ -46,7 +46,7 @@
         <?php if ($show_account_settings) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
         <?php } ?>
-<!-- 
+
         <?php if ($show_account_settings) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/bank_details/" . $user_info->id); ?>" data-bs-target="#tab-bank-details"> <?php echo app_lang('bank_details'); ?></a></li>
         <?php } ?> -->
