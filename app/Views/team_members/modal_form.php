@@ -571,6 +571,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <div class="row">
                             <label for="event_recurring" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>
