@@ -253,7 +253,7 @@
                 
                 appAlert.success(result.message, {duration: 15000});
 
-                if(result.webUrl != null) {
+                if(result.webUrl != null && result.flight_included == 1) {
                     let newTab = window.open();
                     newTab.location.target = '_blank';
                     newTab.location.href = result.webUrl;

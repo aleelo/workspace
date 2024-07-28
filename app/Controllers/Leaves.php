@@ -444,6 +444,7 @@ class Leaves extends Security_Controller {
         // die();
 
         $duration = (int)$leave_info->total_days;
+        $flight_included = $leave_info->flight_included;
 
         $doc_leave_data = [
             'uuid' => $leave_info->uuid,
@@ -535,7 +536,7 @@ class Leaves extends Security_Controller {
 
         if ($save_id) {
             log_notification("leave_assigned", array("leave_id" => $save_id, "to_user_id" => $applicant_id));
-            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'webUrl'=>$webUrl, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'flight_included'=>$flight_included,'webUrl'=>$webUrl, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -578,6 +579,9 @@ class Leaves extends Security_Controller {
         $template = $this->db->query("SELECT * FROM rise_templates where destination_folder = 'Leave'")->getRow();
         $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template->id");
         $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template->id")->getRow()->sqn;
+
+        
+        $flight_included = $leave_info->flight_included;
 
         $doc_leave_data = [
             'uuid' => $leave_info->uuid,
@@ -664,7 +668,7 @@ class Leaves extends Security_Controller {
 
         if ($save_id) {
             log_notification("leave_application_submitted", array("leave_id" => $save_id));
-            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'flight_included'=>$flight_included,'webUrl'=>$webUrl, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
