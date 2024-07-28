@@ -68,6 +68,8 @@ class Clients extends Security_Controller {
         // $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
 
         $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
+        // $view_data['Merchant_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
+
 
         // $view_data['Bank_names_dropdown'] = array("" => "-") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 

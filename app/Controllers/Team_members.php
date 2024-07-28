@@ -823,6 +823,8 @@ class Team_members extends Security_Controller {
         $view_data['user_id'] = $user_id;
         // $$view_data['model_info'] = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
         $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
+        $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
+
         // print_r($user_id);
         // die();
         return $this->template->view("users/bank_details", $view_data);
@@ -845,7 +847,7 @@ class Team_members extends Security_Controller {
         }
 
         $bank_details_data = array(
-            "bank_name" => $this->request->getPost('bank_name'),
+            "bank_id" => $this->request->getPost('bank_id'),
             "bank_account" => $this->request->getPost('bank_account'),
             "registered_name" => $this->request->getPost('registered_name'),
             "user_id" => $user_id,
@@ -893,7 +895,7 @@ class Team_members extends Security_Controller {
             "vine" => $this->request->getPost('vine'),
             "whatsapp" => $this->request->getPost('whatsapp'),
             "user_id" => $user_id,
-            "id" => $id ? $id : $user_id
+            // "id" => $id ? $id : $user_id
         );
 
         $social_link_data = clean_data($social_link_data);

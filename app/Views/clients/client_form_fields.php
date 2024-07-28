@@ -175,6 +175,7 @@
         <label for="merchant_id" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
+            echo form_dropdown("applicant_id", $team_members_dropdown, "", "class='select2 validate-hidden' id='applicant_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
             echo form_dropdown(array(
                 "id" => "merchant_id",
                 "name" => "merchant_id",

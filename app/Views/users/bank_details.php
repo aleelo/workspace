@@ -17,7 +17,7 @@
         }
     }
 
-    echo form_open($save_url, array("id" => "social-links-form", "class" => "general-form dashed-row white", "role" => "form"));
+    echo form_open($save_url, array("id" => "bank-details-form", "class" => "general-form dashed-row white", "role" => "form"));
     ?>
     <div class="card">
         <div class=" card-header">
@@ -29,13 +29,14 @@
                     <label for="bank_name" class=" col-md-2">Bank Name</label>
                     <div class=" col-md-10">
                         <?php
-                        echo form_input(array(
-                            "id" => "bank_name",
-                            "name" => "bank_name",
-                            "value" => $model_info->bank_name,
-                            "class" => "form-control",
-                            "placeholder" => "Bank Name"
-                        ));
+                        echo form_dropdown("bank_id", $bank_names_dropdown, "$model_info->bank_id", "class='select2 validate-hidden' id='leave_type_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                        // echo form_input(array(
+                        //     "id" => "bank_name",
+                        //     "name" => "bank_name",
+                        //     "value" => $model_info->bank_name,
+                        //     "class" => "form-control",
+                        //     "placeholder" => "Bank Name"
+                        // ));
                         ?>
                     </div>
                 </div>
@@ -85,7 +86,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#social-links-form").appForm({
+        $("#bank-details-form .select2").select2();
+        $("#bank-details-form").appForm({
             isModal: false,
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
