@@ -233,8 +233,8 @@ class App_Controller extends Controller {
             'Checklist_groups_model',
             'Project_status_model',
             'Subscriptions_model',
-            'Subscription_items_model'
-            'Merchant_types_model'
+            'Subscription_items_model',
+            'Merchant_types_model',
             'Merchant_details_model'
         );
     }
