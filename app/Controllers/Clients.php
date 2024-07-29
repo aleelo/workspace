@@ -57,6 +57,11 @@ class Clients extends Security_Controller {
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
 
+        $view_data['label_column_2'] = "col-md-2 text-right";
+        $view_data['field_column_2'] = "col-md-4";
+
+        $view_data['field_column_3'] = "col-md-10";
+
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
         $view_data['model_info'] = $this->Clients_model->get_one($client_id);
@@ -153,8 +158,7 @@ class Clients extends Security_Controller {
             "merchant_number" => $this->request->getPost('merchant_number'),
             "turnover_tax" => $this->request->getPost('turnover_tax'),
             "number_of_employees" => $this->request->getPost('number_of_employees'),
-            "industries" => $this->request->getPost('industries'),
-            "segment" => $this->request->getPost('segment')
+            "industries" => $this->request->getPost('industries')
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -996,11 +1000,18 @@ class Clients extends Security_Controller {
 
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
+            $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
+
+            $view_data['label_column_2'] = "col-md-2 text-right";
+            $view_data['field_column_2'] = "col-md-4";
+
+            $view_data['field_column_3'] = "col-md-10";
+
             $view_data['can_edit_clients'] = $this->can_edit_clients($client_id);
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();

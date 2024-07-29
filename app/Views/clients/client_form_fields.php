@@ -8,8 +8,8 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="payer_name" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('payer_name'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="payer_name" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('payer_name'); ?></label>
+        <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_input(array(
                 "id" => "company_name",
@@ -26,12 +26,15 @@
     </div>
 </div>
 
-<!-----------------------------------------  Company Type  ------------------------------------>
+<!----------------------------------------- Payer Segment & Company Type  ------------------------------------>
 
 <div class="form-group">
+
     <div class="row">
-        <label for="type" class="<?php echo $label_column; ?>"><?php echo app_lang('payer_type'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_type'); ?></label>
+
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "type",
@@ -41,22 +44,13 @@
                 "placeholder" => app_lang('payer_type')
             ),[''=>'', 'Corporate'=>'Corporate','Limited Liability Company (LLC)'=>'Limited Liability Company (LLC)', 'Partnership'=>'Partnership', 'Non-Profit Organization'=>'Non-Profit Organization', 'Trust'=>'Trust', 
             'Estate'=>'Estate', 'Public Limited Company (PLC)'=>'Public Limited Company (PLC)', 'Private Limited Company (Ltd)'=>'Private Limited Company (Ltd)', 'Cooperative (Co-op)'=>'Cooperative (Co-op)', 'Joint Venture (JV)'=>'Joint Venture (JV)',  ],[$model_info->type]
-        );
+             );
             ?>
         </div>
-    </div>
-</div>
 
-<!-----------------------------------------  Payer Size ------------------------------------>
+        <label for="payer_size" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_segment'); ?></label>
 
-<div class="form-group">
-
-    <div class="row">
-        
-        <label for="payer_size" class="<?php echo $label_column; ?>"><?php echo app_lang('payer_size'); ?></label>
-
-        <div class=" col-md-9">
-
+        <div class=" col-md-4">
             <?php
             echo form_radio(array(
                 "id" => "small",
@@ -87,15 +81,18 @@
         </div>
 
     </div>
-
 </div>
 
-<!-----------------------------------------  Registration Type  ------------------------------------>
+
+<!-----------------------------------------  Registration Type & Registration NO. ------------------------------------>
 
 <div class="form-group">
+
     <div class="row">
-        <label for="Reg_Type" class="<?php echo $label_column; ?>"><?php echo app_lang('Registration_type'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="Reg_Type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('Registration_type'); ?></label>
+
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "Reg_Type",
@@ -104,18 +101,13 @@
                 "class" => "form-control select2",
                 "placeholder" => app_lang('Registration_type')
             ),[''=>'','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
-        );
+            );
             ?>
         </div>
-    </div>
-</div>
 
-<!-----------------------------------------  Registration NO.  ------------------------------------>
+        <label for="Reg_NO" class="<?php echo $label_column_2; ?>"><?php echo app_lang('Registration_no'); ?></label>
 
-<div class="form-group">
-    <div class="row">
-        <label for="Reg_NO" class="<?php echo $label_column; ?>"><?php echo app_lang('Registration_no'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "Reg_NO",
@@ -126,16 +118,20 @@
             ));
             ?>
         </div>
+
     </div>
 </div>
 
 
-<!-----------------------------------------    Start Date  ------------------------------------>
+ 
+<!-----------------------------------------    Start Date & End Date  ------------------------------------>
 
 <div class="form-group">
+
     <div class="row">
-        <label for="Start_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('start_date'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="Start_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('start_date'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "Start_Date",
@@ -146,15 +142,10 @@
             ));
             ?>
         </div>
-    </div>
-</div>
 
-<!-----------------------------------------  End Date  ------------------------------------>
+        <label for="End_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('end_date'); ?></label>
 
-<div class="form-group">
-    <div class="row">
-        <label for="End_Date" class="<?php echo $label_column; ?>"><?php echo app_lang('end_date'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "End_Date",
@@ -165,54 +156,19 @@
             ));
             ?>
         </div>
+
     </div>
+
 </div>
 
-<!-----------------------------------------  Merchant Type  ------------------------------------>
+<!-----------------------------------------   Turnover Tax & Number of EMployees  ------------------------------------>
 
 <div class="form-group">
+
     <div class="row">
-        <label for="merchant_id" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_type'); ?></label>
-        <div class="<?php echo $field_column; ?>">
-            <?php
-            echo form_dropdown("merchant_id", $Merchant_types_dropdown,"$model_info?->merchant_id", "class='select2 validate-hidden' id='applicant_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
-            echo form_dropdown(array(
-                "id" => "merchant_id",
-                "name" => "merchant_id",
-                "class" => "form-control select2",
-                "placeholder" => app_lang('merchant_type')
-            ),[$Merchant_types_dropdown],[$model_info?->merchant_id]
-        );
-            ?>
-        </div>
-    </div>
-</div>
-
-<!-----------------------------------------   Merchant Number ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-        <label for="merchant_number" class="<?php echo $label_column; ?>"><?php echo app_lang('merchant_number'); ?></label>
-        <div class="<?php echo $field_column; ?>">
-            <?php
-            echo form_input(array(
-                "id" => "merchant_number",
-                "name" => "merchant_number",
-                "value" => $model_info->merchant_number,
-                "class" => "form-control",
-                "placeholder" => app_lang('merchant_number')
-            ));
-            ?>
-        </div>
-    </div>
-</div>
-
-<!-----------------------------------------   Turnover Tax  ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-        <label for="turnover_tax" class="<?php echo $label_column; ?>"><?php echo app_lang('turnover_tax'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        
+        <label for="turnover_tax" class="<?php echo $label_column_2; ?>"><?php echo app_lang('turnover_tax'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "turnover_tax",
@@ -223,15 +179,9 @@
             ));
             ?>
         </div>
-    </div>
-</div>
 
-<!-----------------------------------------   Number of EMployees ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-        <label for="number_of_employees" class="<?php echo $label_column; ?>"><?php echo app_lang('number_of_employees'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="number_of_employees" class="<?php echo $label_column_2; ?>"><?php echo app_lang('number_of_employees'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "number_of_employees",
@@ -242,14 +192,17 @@
             ));
             ?>
         </div>
+
     </div>
 </div>
-<!-----------------------------------------  Industries ------------------------------------>
+
+<!-----------------------------------------  Industries & TIN ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="industries" class="<?php echo $label_column; ?>"><?php echo app_lang('industries'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="industries" class="<?php echo $label_column_2; ?>"><?php echo app_lang('industries'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "industries",
@@ -260,33 +213,30 @@
             ));
             ?>
         </div>
-    </div>
-</div>
-<!-----------------------------------------  Segment  ------------------------------------>
 
-<div class="form-group">
-    <div class="row">
-        <label for="segment" class="<?php echo $label_column; ?>"><?php echo app_lang('segment'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="TIN" class="<?php echo $label_column_2; ?>"><?php echo app_lang('tin'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
-                "id" => "segment",
-                "name" => "segment",
-                "value" => $model_info->segment,
+                "id" => "TIN",
+                "name" => "TIN",
+                "value" => $model_info->TIN,
                 "class" => "form-control",
-                "placeholder" => app_lang('segment')
+                "placeholder" => app_lang('tin')
             ));
             ?>
         </div>
     </div>
 </div>
 
-<!-----------------------------------------   Contact Name  ------------------------------------>
+
+<!-----------------------------------------   Contact Name & Phone Number  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="Contact_Name" class="<?php echo $label_column; ?>"><?php echo app_lang('contact_name'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="Contact_Name" class="<?php echo $label_column_2; ?>"><?php echo app_lang('contact_name'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "Contact_Name",
@@ -297,6 +247,20 @@
             ));
             ?>
         </div>
+
+        <label for="phone" class="<?php echo $label_column_2; ?>"><?php echo app_lang('phone_number'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "phone",
+                "name" => "phone",
+                "value" => $model_info->phone,
+                "class" => "form-control",
+                "placeholder" => app_lang('phone_number')
+            ));
+            ?>
+        </div>
+
     </div>
 </div>
 
@@ -304,8 +268,8 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="address" class="<?php echo $label_column; ?>"><?php echo app_lang('address'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="address" class="<?php echo $label_column_2; ?>"><?php echo app_lang('address'); ?></label>
+        <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_textarea(array(
                 "id" => "address",
@@ -320,32 +284,13 @@
     </div>
 </div>
 
-<!-----------------------------------------  Phone Number  ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-        <label for="phone" class="<?php echo $label_column; ?>"><?php echo app_lang('phone_number'); ?></label>
-        <div class="<?php echo $field_column; ?>">
-            <?php
-            echo form_input(array(
-                "id" => "phone",
-                "name" => "phone",
-                "value" => $model_info->phone,
-                "class" => "form-control",
-                "placeholder" => app_lang('phone_number')
-            ));
-            ?>
-        </div>
-    </div>
-</div>
-
 
 <!-----------------------------------------  Email  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="email" class="<?php echo $label_column; ?>"><?php echo app_lang('email'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="email" class="<?php echo $label_column_2; ?>"><?php echo app_lang('email'); ?></label>
+        <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_input(array(
                 "id" => "email",
@@ -359,25 +304,6 @@
     </div>
 </div>
 
-
-<!-----------------------------------------  TIN  ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-        <label for="TIN" class="<?php echo $label_column; ?>"><?php echo app_lang('tin'); ?></label>
-        <div class="<?php echo $field_column; ?>">
-            <?php
-            echo form_input(array(
-                "id" => "TIN",
-                "name" => "TIN",
-                "value" => $model_info->TIN,
-                "class" => "form-control",
-                "placeholder" => app_lang('tin')
-            ));
-            ?>
-        </div>
-    </div>
-</div>
 
 <!------------------------------------------------------------------------------------------>
 

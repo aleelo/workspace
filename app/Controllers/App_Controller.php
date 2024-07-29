@@ -35,6 +35,8 @@ class App_Controller extends Controller {
     public $Fuel_Request_model;
     public $Bank_details_model;
     public $Bank_names_model;
+    public $Merchant_types_model;
+    public $Merchant_details_model;
     
     public $Purchase_Order_model;
     public $Purchase_Receive_model;
@@ -232,6 +234,8 @@ class App_Controller extends Controller {
             'Project_status_model',
             'Subscriptions_model',
             'Subscription_items_model'
+            'Merchant_types_model'
+            'Merchant_details_model'
         );
     }
 
