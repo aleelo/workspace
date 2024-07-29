@@ -668,7 +668,7 @@ class Leaves extends Security_Controller {
 
         if ($save_id) {
             log_notification("leave_application_submitted", array("leave_id" => $save_id));
-            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'flight_included'=>$flight_included,'webUrl'=>$webUrl, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
