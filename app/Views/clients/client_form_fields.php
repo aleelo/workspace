@@ -354,8 +354,8 @@
             $('#add_visitors_table tbody').append(
                 "<tr class=''>"+
                 "<td>" + k + "</td>"+
-                    "<td><input type='text' class='form-control' data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='visitor_name[]'></td>"+
-                    "<td><input type='text' class='form-control'  id='merchant_number" + k + "' placeholder='Merchant Number'  name='visitor_mobile[]'></td>"+
+                    "<td><input type='text' class='form-control' data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='merchant_type[]'></td>"+
+                    "<td><input type='text' class='form-control'  id='merchant_number" + k + "' placeholder='Merchant Number'  name='merchant_number[]'></td>"+
                     "<td style='width: 110px;'>" + actions + "</td>"+
                 "</tr>"
             );

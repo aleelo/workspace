@@ -154,8 +154,6 @@ class Clients extends Security_Controller {
             "phone" => $this->request->getPost('phone'),
             "email" => $this->request->getPost('email'),
             "TIN" => $this->request->getPost('TIN'),
-            "merchant_id" => $this->request->getPost('merchant_id'),
-            "merchant_number" => $this->request->getPost('merchant_number'),
             "turnover_tax" => $this->request->getPost('turnover_tax'),
             "number_of_employees" => $this->request->getPost('number_of_employees'),
             "industries" => $this->request->getPost('industries')
@@ -204,6 +202,32 @@ class Clients extends Security_Controller {
         }
 
         $save_id = $this->Clients_model->ci_save($data, $client_id);
+        
+        $merchant_type = $this->request->getPost('merchant_type');
+        $merchant_number = $this->request->getPost('merchant_number');
+
+        if($save_id && $merchant_type && !$client_id){
+            foreach($merchant_type as $k => $v){
+                
+                $this->db->query("INSERT INTO rise_merchant_details(payer_id,merchant_id,merchant_number)
+                            VALUES($save_id,'$merchant_type[$k]','$merchant_number[$k]')");
+                // $insert_id = $this->db->insertID();
+
+            }
+        }else if($client_id && $merchant_type){
+            // var_dump($member_names);die;
+
+            //delete the old member
+            $this->db->query("delete from rise_merchant_details where payer_id =  $client_id");
+            // insert the new members
+            foreach($merchant_type as $k => $v){
+                
+                $this->db->query("INSERT INTO rise_merchant_details(payer_id,merchant_id,merchant_number)
+                            VALUES($save_id,'$merchant_type[$k]','$merchant_number[$k]')");
+                // $insert_id = $this->db->insertID();
+
+            }
+        }
 
         if ($save_id) {
 
