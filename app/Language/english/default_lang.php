@@ -417,6 +417,8 @@ $lang["has_signature"] = "Has Signature";
 $lang["bank_details"] = "Bank Details";
 $lang["payer_segment"] = "Payer Segment :";
 $lang["bank_name"] = "Bank Name";
+$lang["Profile_info"] = "Profile Info";
+$lang["education_info"] = "Education Info";
 
 /* dashboard */
 $lang["dashboard"] = "Dashboard";

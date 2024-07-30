@@ -12,7 +12,8 @@
             <div class="form-widget">
                 <div class="widget-title clearfix">
                     <div class="row">
-                        <div id="general-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('general_info'); ?></strong></div>
+                        <div id="general-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('Profile_info'); ?></strong></div>
+                        <div id="education-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('education_info'); ?></strong></div>
                         <div id="job-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('job_info'); ?></strong></div>
                         <div id="account-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('account_settings'); ?></strong></div> 
                     </div>
@@ -26,14 +27,15 @@
 
             <div class="tab-content mt15">
 
-             <!---------------------------------- Geneneral Info Tab ----------------------------->
+             <!---------------------------------- Profile Info Tab ----------------------------->
                 
                 <div role="tabpanel" class="tab-pane active" id="general-info-tab">
                     
                         <div class="mb-4">
-                            <h4  class="text-muted">Basic Information</h4>
+                            <h4  class="text-muted">Profile Infomation</h4>
                             <hr class="mt-0"/> 
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="first_name" class=" col-md-3"><?php echo app_lang('first_name'); ?></label>
@@ -418,6 +420,11 @@
             <!---------------------------------- Job Info Tab ----------------------------->
                     
                 <div role="tabpanel" class="tab-pane" id="job-info-tab">
+
+                    <div class="mb-4">
+                            <h4  class="text-muted">Job Infomation</h4>
+                            <hr class="mt-0"/> 
+                        </div>
                     
                     <div class="form-group">
                         <div class="row">
@@ -616,9 +623,18 @@
                     </div>
                 </div>
 
+             <!---------------------------------- Bank Details Tab ----------------------------->
+
+              
+
             <!---------------------------------- Account Settings Tab ----------------------------->
 
                 <div role="tabpanel" class="tab-pane" id="account-info-tab">
+                                
+                    <div class="mb-4">
+                            <h4  class="text-muted">Account Details</h4>
+                            <hr class="mt-0"/> 
+                        </div>
 
                         <div class="form-group">
                             <div class="row">
@@ -769,56 +785,103 @@
         
 
         $("#form-previous").click(function () {
-            var $generalTab = $("#general-info-tab"),
-                    $jobTab = $("#education-info-tab"),
-                    $jobTab = $("#job-info-tab"),
-                    $accountTab = $("#account-info-tab"),
-                    $previousButton = $("#form-previous"),
-                    $nextButton = $("#form-next"),
-                    $submitButton = $("#form-submit");
 
-            if ($accountTab.hasClass("active")) {
+            var $generalTab = $("#general-info-tab"),
+                $educationTab = $("#education-info-tab"),
+                $jobTab = $("#job-info-tab"),
+                $accountTab = $("#account-info-tab"),
+
+                $previousButton = $("#form-previous"),
+                $nextButton = $("#form-next"),
+                $submitButton = $("#form-submit");
+
+            if ($educationTab.hasClass("active")) {
+
+                $educationTab.removeClass("active");
+                $generalTab.addClass("active");
+
+                $jobTab.addClass("hide");
+                $accountTab.addClass("hide");
+
+                $previousButton.removeClass("hide");
+                $nextButton.removeClass("hide");
+                $submitButton.addClass("hide");
+
+            } else if ($jobTab.hasClass("active")) {
+
+                $jobTab.removeClass("active");
+                $educationTab.addClass("active");
+
+                $generalTab.addClass("hide");
+                $accountTab.addClass("hide");
+
+                $previousButton.removeClass("hide");
+                $nextButton.removeClass("hide");
+                $submitButton.addClass("hide");
+
+            } else if($accountTab.hasClass("active")) {
+
                 $accountTab.removeClass("active");
                 $jobTab.addClass("active");
+
+                $previousButton.removeClass("hide");
                 $nextButton.removeClass("hide");
                 $submitButton.addClass("hide");
-            } else if ($jobTab.hasClass("active")) {
-                $jobTab.removeClass("active");
-                $generalTab.addClass("active");
-                $previousButton.addClass("hide");
-                $nextButton.removeClass("hide");
-                $submitButton.addClass("hide");
-            } 
+            }
+           
         });
 
         $("#form-next").click(function () {
+
             var $generalTab = $("#general-info-tab"),
-                    $jobTab = $("#education-info-tab"),
-                    $jobTab = $("#job-info-tab"),
-                    $accountTab = $("#account-info-tab"),
-                    $previousButton = $("#form-previous"),
-                    $nextButton = $("#form-next"),
-                    $submitButton = $("#form-submit");
+                $educationInfoTab = $("#education-info-tab"),
+                $jobTab = $("#job-info-tab"),
+                $accountTab = $("#account-info-tab"),
+                $previousButton = $("#form-previous"),
+                $nextButton = $("#form-next"),
+                $submitButton = $("#form-submit");
+
             if (!$("#team_member-form").valid()) {
                 return false;
             }
             if ($generalTab.hasClass("active")) {
+
                 $generalTab.removeClass("active");
-                $jobTab.addClass("active");
+                $educationInfoTab.addClass("active");
+
                 $previousButton.removeClass("hide");
-                $("#form-progress-bar").width("45%");
+                
+                $("#form-progress-bar").width("50%");
                 $("#general-info-label").find("svg").remove();
                 $("#general-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
                 feather.replace();
                 $("#team_member_id").focus();
                 $("#employee_type").focus();
+
+            } else if ($educationInfoTab.hasClass("active")) {
+
+                $educationInfoTab.removeClass("active");
+                $jobTab.addClass("active");
+
+                $previousButton.removeClass("hide");
+
+                $("#form-progress-bar").width("75%");
+                $("#education-info-label").find("svg").remove();
+                $("#education-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+                feather.replace();
+                $("#team_member_id").focus();
+                $("#employee_type").focus();
+
             } else if ($jobTab.hasClass("active")) {
+
                 $jobTab.removeClass("active");
                 $accountTab.addClass("active");
+
                 $previousButton.removeClass("hide");
                 $nextButton.addClass("hide");
                 $submitButton.removeClass("hide");
-                $("#form-progress-bar").width("72%");
+
+                $("#form-progress-bar").width("100%");
                 $("#job-info-label").find("svg").remove();
                 $("#job-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
                 feather.replace();
