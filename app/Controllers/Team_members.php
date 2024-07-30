@@ -866,9 +866,9 @@ class Team_members extends Security_Controller {
     function bank_details($user_id) {
         //important! here id=user_id
         validate_numeric_value($user_id);
-        $this->update_only_allowed_members($user_id);
+        // $this->update_only_allowed_members($user_id);
 
-        die($user_id);
+        // die($user_id);
         $view_data['user_id'] = $user_id;
         $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
         $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
