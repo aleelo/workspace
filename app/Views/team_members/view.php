@@ -32,7 +32,11 @@
         <?php } ?>
 
         <?php if ($show_general_info) { ?>
-            <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/general_info/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
+            <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/general_info/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('profile_info'); ?></a></li>
+        <?php } ?>
+
+        <?php if ($show_general_info) { ?>
+            <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/education_info/" . $user_info->id); ?>" data-bs-target="#tab-education-info"> <?php echo app_lang('education_info'); ?></a></li>
         <?php } ?>
 
         <?php if ($show_general_info) { ?>
@@ -99,6 +103,7 @@
             <?php echo timeline_widget(array("limit" => 20, "offset" => 0, "is_first_load" => true, "user_id" => $user_info->id)); ?>
         </div>
         <div role="tabpanel" class="tab-pane fade" id="tab-general-info"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-education-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-files"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-social-links"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-job-info"></div>
@@ -158,6 +163,8 @@
             var tab = "<?php echo $tab; ?>";
             if (tab === "general") {
                 $("[data-bs-target='#tab-general-info']").trigger("click");
+            } else if (tab === "educaton") {
+                $("[data-bs-target='#tab-education-info']").trigger("click");
             } else if (tab === "account") {
                 $("[data-bs-target='#tab-account-settings']").trigger("click");
             } else if (tab === "account") {

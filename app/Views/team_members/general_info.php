@@ -5,6 +5,7 @@
             <h4> <?php echo app_lang('general_info'); ?></h4>
         </div>
         <div class="card-body">
+            
             <div class="form-group">
                 <div class="row">
                     <label for="first_name" class=" col-md-2"><?php echo app_lang('first_name'); ?></label>
@@ -23,6 +24,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="last_name" class=" col-md-2"><?php echo app_lang('last_name'); ?></label>
@@ -41,6 +43,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="address" class=" col-md-2"><?php echo app_lang('mailing_address'); ?></label>
@@ -57,6 +60,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="alternative_address" class=" col-md-2"><?php echo app_lang('alternative_address'); ?></label>
@@ -73,6 +77,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="phone" class=" col-md-2"><?php echo app_lang('phone'); ?></label>
@@ -89,6 +94,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="alternative_phone" class=" col-md-2"><?php echo app_lang('alternative_phone'); ?></label>
@@ -105,6 +111,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="skype" class=" col-md-2">Skype</label>
@@ -138,6 +145,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="gender" class=" col-md-2"><?php echo app_lang('gender'); ?></label>
@@ -162,6 +170,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="marital_status_single" class=" col-md-2"><?php echo app_lang('marital_status'); ?></label>
@@ -203,6 +212,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="emergency_name" class=" col-md-2"><?php echo 'Emergency Contact Name'; ?></label>
@@ -219,6 +229,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="emergency_phone" class=" col-md-2"><?php echo 'Emergency Contact Phone'; ?></label>
@@ -253,6 +264,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="form-group">
                 <div class="row">
                     <label for="birth_place" class=" col-md-2"><?php echo 'Place of Birth'; ?></label>
@@ -269,173 +281,24 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <div class="row">
-                    <label for="education_level" class=" col-md-2"><?php echo 'Education Level'; ?></label>
-                    <div class=" col-md-10">
+                    <label for="relevant_document_url" class=" col-md-2"><?php echo 'Relevant Document Url'; ?></label>
+                    <div class=" col-md-9">
                         <?php
-                        echo form_dropdown(array(
-                            "id" => "education_level",
-                            "name" => "education_level",
-                            "class" => "form-control select2",
-                            "value" => $user_info->education_level,
-                            "placeholder" => 'Education Level'
-                        ),$education_levels, [$user_info->education_level =>$education_levels[$user_info->education_level]]);//$education_levels[$user_info->education_level]
+                        echo form_input(array(
+                            "id" => "relevant_document_url",
+                            "name" => "relevant_document_url",
+                            "value" => $user_info->relevant_document_url,
+                            "class" => "form-control",
+                            "placeholder" => 'Relevant Document Url e.g. resume drive url',
+                            "autocomplete" => "off",
+                        ));
                         ?>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="education_field" class=" col-md-2"><?php echo 'Field of Study'; ?></label>
-                    <div class=" col-md-10">
-                                               
-                        <select id= "education_field",
-                                name= "education_field",
-                                class = "form-control select2",
-                                placeholder = 'Field of Study',
-                                autocomplete= "off",
-                                data-rule-required = 'true',
-                                data-msg-required =  "<?= app_lang("field_required")?>">
-                                <option value="">Choose Field of Study</option>
-
-                                    <?php
-                                    if(count($education_fields)){
-                                        foreach($education_fields as $f){
-                                        ?>
-                                            <option value="<?php echo $f->name?>" <?php echo $f->name == $user_info->education_field ? 'selected' : '' ?>><?php echo $f->name?></option>
-                                        <?php
-                                    }
-                                   }
-                                    ?>
-                            </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                    <div class="row">
-                        <label for="faculty" class=" col-md-2"><?php echo 'Faculty 1'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "faculty",
-                                "name" => "faculty",
-                                "class" => "form-control",
-                                "value" => $user_info->faculty,
-                                "placeholder" => 'Faculty 1 Name',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="faculty2" class=" col-md-2"><?php echo 'Faculty 2'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "faculty2",
-                                "name" => "faculty2",
-                                "class" => "form-control",
-                                "value" => $user_info->faculty2,
-                                "placeholder" => 'Faculty 2 Name',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="row">
-                        <label for="education_school" class=" col-md-2"><?php echo 'School of Study'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "education_school",
-                                "name" => "education_school",
-                                "value" => $user_info->education_school,
-                                "class" => "form-control",
-                                "placeholder" => 'School of Study',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                  
-                <div class="form-group">
-                    <div class="row">
-                        <label for="highest_school" class=" col-md-2"><?php echo 'Highest School of Education'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "highest_school",
-                                "name" => "highest_school",
-                                "value" => $user_info->highest_school,
-                                "class" => "form-control",
-                                "placeholder" => 'Highest School of Education',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="bachelor_degree" class=" col-md-2"><?php echo 'Bachelor Degree'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "bachelor_degree",
-                                "name" => "bachelor_degree",
-                                "value" => $user_info->bachelor_degree,
-                                "class" => "form-control",
-                                "placeholder" => 'Bachelor Degree Name',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="master_degree" class=" col-md-2"><?php echo 'Master Degree'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "master_degree",
-                                "name" => "master_degree",
-                                "value" => $user_info->master_degree,
-                                "class" => "form-control",
-                                "placeholder" => 'Master Degree Name',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="relevant_document_url" class=" col-md-2"><?php echo 'Relevant Document Url'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "relevant_document_url",
-                                "name" => "relevant_document_url",
-                                "value" => $user_info->relevant_document_url,
-                                "class" => "form-control",
-                                "placeholder" => 'Relevant Document Url e.g. resume drive url',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-2", "field_column" => " col-md-10")); ?> 
 

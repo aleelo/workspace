@@ -90,6 +90,8 @@ $lang["shot_name_so"] = "Short Name SO";
 $lang["shot_name_en"] = "Short Name EN";
 $lang["job_location"] = "Job Location";
 $lang["edit_leave"] = "Edit Leave";
+$lang["education_info"] = "Education Info";
+$lang["profile_info"] = "Profile Info";
 
 
 //Company:

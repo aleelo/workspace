@@ -777,32 +777,75 @@ class Team_members extends Security_Controller {
         ));
 
         $user_data = array(
+
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
             "address" => $this->request->getPost('address'),
-            "phone" => $this->request->getPost('phone'),
-            "skype" => $this->request->getPost('skype'),
-            "gender" => $this->request->getPost('gender'),
             "alternative_address" => $this->request->getPost('alternative_address'),
+            "phone" => $this->request->getPost('phone'),
             "alternative_phone" => $this->request->getPost('alternative_phone'),
-            "dob" => $this->request->getPost('dob'),
+            "skype" => $this->request->getPost('skype'),
             "ssn" => $this->request->getPost('ssn'),
+            "gender" => $this->request->getPost('gender'),
             "marital_status" => $this->request->getPost('marital_status'),
+            "passport_no" => $this->request->getPost('passport_no'),
             "emergency_name" => $this->request->getPost('emergency_name'),
             "emergency_phone" => $this->request->getPost('emergency_phone'),
             "birth_date" => $this->request->getPost('birth_date'),
             "birth_place" => $this->request->getPost('birth_place'),
+            "age_level" => $this->request->getPost('age_level'),
+            "relevant_document_url" => $this->request->getPost('relevant_document_url'),
+            "dob" => $this->request->getPost('dob')
+        );
+
+        $user_data = clean_data($user_data);
+
+        $user_info_updated = $this->Users_model->ci_save($user_data, $user_id);
+
+        save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
+
+        if ($user_info_updated) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    //show general information of a team member
+    function education_info($user_id) {
+        validate_numeric_value($user_id);
+        $this->update_only_allowed_members($user_id);
+
+        $view_data['departments'] = $this->Team_model->get_departments_for_select();
+        // array_unshift($view_data['departments'],'Choose Department');
+        $view_data['education_levels'] = [''=>'Choose Education Level','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+        $view_data['education_fields'] = $this->db->query("select id,name from education_industry")->getResult();
+
+        $view_data['user_info'] = $this->Users_model->get_one($user_id);
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        return $this->template->view("team_members/education_info", $view_data);
+    }
+
+    //save general information of a team member
+    function save_education_info($user_id) {
+        
+        validate_numeric_value($user_id);
+        $this->update_only_allowed_members($user_id);
+
+
+        $user_data = array(
+
             "education_level" => $this->request->getPost('education_level'),
             "education_field" => $this->request->getPost('education_field'),
-            "education_school" => $this->request->getPost('education_school'),
-            "passport_no" => $this->request->getPost('passport_no'),
-            "age_level" => $this->request->getPost('age_level'),
             "faculty" => $this->request->getPost('faculty'),
             "faculty2" => $this->request->getPost('faculty2'),
+            "education_school" => $this->request->getPost('education_school'),
+            // "highest_school" => $this->request->getPost('highest_school'),
             "bachelor_degree" => $this->request->getPost('bachelor_degree'),
             "master_degree" => $this->request->getPost('master_degree'),
-            "highest_school" => $this->request->getPost('highest_school'),
-            "relevant_document_url" => $this->request->getPost('relevant_document_url')
+
         );
 
         $user_data = clean_data($user_data);
