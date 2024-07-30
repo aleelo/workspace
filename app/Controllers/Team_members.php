@@ -898,6 +898,7 @@ class Team_members extends Security_Controller {
             "bank_account" => $this->request->getPost('bank_account'),
             "registered_name" => $this->request->getPost('registered_name'),
             "user_id" => $user_id,
+            "id" => $id ? $id : $user_id
             
         );
 
