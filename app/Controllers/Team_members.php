@@ -943,7 +943,7 @@ class Team_members extends Security_Controller {
             "vine" => $this->request->getPost('vine'),
             "whatsapp" => $this->request->getPost('whatsapp'),
             "user_id" => $user_id,
-            // "id" => $id ? $id : $user_id
+            "id" => $id ? $id : $user_id
         );
 
         $social_link_data = clean_data($social_link_data);
