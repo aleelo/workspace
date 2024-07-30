@@ -21,8 +21,10 @@
             order: [[0, 'desc']],
             columns: [
                 {title: "<?php echo app_lang('id') ?> ", "class": "all"},
-                {title: "<?php echo app_lang('name_so') ?> ", "class": ""},
-                {title: "<?php echo app_lang('name_en') ?>", "class": " "},
+                {title: "<?php echo app_lang('Department_name_so') ?> ", "class": ""},
+                {title: "<?php echo app_lang('short_name_SO') ?> ", "class": ""},
+                {title: "<?php echo app_lang('Department_name_en') ?>", "class": " "},
+                {title: "<?php echo app_lang('short_name_EN') ?>", "class": " "},
                 {title: "<?php echo app_lang('department_email') ?>", "class": " "},
                 {title: "<?php echo app_lang('department_head') ?>", "class": ""},
                 {title: "<?php echo app_lang('remarks') ?>", "class": "text-right "},

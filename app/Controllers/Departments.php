@@ -58,17 +58,19 @@ class Departments extends Security_Controller
         $id = $this->request->getPost('id');
 
         $nameSo = $this->request->getPost('nameSo');
+        $short_name_SO = $this->request->getPost('short_name_SO');
         $nameEn = $this->request->getPost('nameEn');
+        $short_name_EN = $this->request->getPost('short_name_EN');
         $head_id = $this->request->getPost('head_id');
         $email = $this->request->getPost('email');
         $remarks = $this->request->getPost('remarks');
 
 
         if ($id) {
-            $this->db->query("update departments set nameSo='$nameSo',nameEn='$nameEn',head_id='$head_id',email='$email',remarks='$remarks' where id='$id'");
+            $this->db->query("update departments set nameSo='$nameSo',short_name_SO='$short_name_SO',nameEn='$nameEn',short_name_EN='$short_name_EN',head_id='$head_id',email='$email',remarks='$remarks' where id='$id'");
             $save_id = $id;
         } else {
-            $this->db->query("insert into departments (nameSo,nameEn,head_id,email,remarks) values('$nameSo','$nameEn','$head_id','$email','$remarks')");
+            $this->db->query("insert into departments (nameSo,short_name_SO,nameEn,short_name_EN,head_id,email,remarks) values('$nameSo','$short_name_SO','$nameEn','$short_name_EN','$head_id','$email','$remarks')");
             $save_id = $this->db->insertID();
         }
 
@@ -191,7 +193,9 @@ class Departments extends Security_Controller
         return array(
             $data->id,
             $data->nameSo,
+            $data->short_name_SO,
             $data->nameEn,
+            $data->short_name_EN,
             $data->email,
             $data->head,
             $data->remarks,

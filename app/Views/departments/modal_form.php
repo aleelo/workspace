@@ -26,6 +26,26 @@
     
             <div class="form-group">
                 <div class="row">
+                    <label for="nameSo" class=" col-md-3"><?php echo app_lang('short_name_SO'); ?></label>
+                    <div class="col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "nameSo",
+                            "name" => "short_name_SO",
+                            "value" => $model_info?->short_name_SO,
+                            "class" => "form-control validate-hidden",
+                            "placeholder" => app_lang('short_name_SO'),
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <div class="row">
                     <label for="nameEn" class=" col-md-3"><?php echo app_lang('name_en'); ?></label>
                     <div class="col-md-9">
                         <?php
@@ -35,6 +55,25 @@
                             "value" => $model_info?->nameEn,
                             "class" => "form-control validate-hidden",
                             "placeholder" => app_lang('name_en'),
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="nameEn" class=" col-md-3"><?php echo app_lang('short_name_EN'); ?></label>
+                    <div class="col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "nameEn",
+                            "name" => "short_name_EN",
+                            "value" => $model_info?->short_name_EN,
+                            "class" => "form-control validate-hidden",
+                            "placeholder" => app_lang('short_name_EN'),
                             "autofocus" => true,
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),

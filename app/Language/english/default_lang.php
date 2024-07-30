@@ -415,6 +415,11 @@ $lang["dashboard"] = "Dashboard";
 
 /* Deparrtment */
 $lang["new_department_registered"] = "New Department Registered";
+$lang["Department_name_so"] = "Department Name SO";
+$lang["short_name_SO"] = "Short Name SO";
+$lang["Department_name_en"] = "Department Name EN";
+$lang["short_name_EN"] = "Short Name EN";
+
 
 
 /* attendance */
