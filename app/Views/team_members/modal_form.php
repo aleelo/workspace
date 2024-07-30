@@ -195,6 +195,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="passport_no" class=" col-md-3"><?php echo 'Passport Number'; ?></label>
@@ -210,10 +211,12 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="my-4">
                             <h4 class="text-muted">Emergency Information</h4>
                             <hr class="mt-0"/> 
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="emergency_name" class=" col-md-3"><?php echo 'Emergency Contact Name'; ?></label>
@@ -245,6 +248,11 @@
                                 </div>
                             </div>
                         </div>
+                </div>
+            
+            <!---------------------------------- Education Info Tab ----------------------------->
+
+                <div role="tabpanel" class="tab-pane active" id="education-info-tab">
 
                         <div class="my-4">
                             <h4 class="text-muted">Education Information</h4>
@@ -300,6 +308,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="faculty2" class=" col-md-3"><?php echo 'Faculty 2'; ?></label>
@@ -350,6 +359,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="bachelor_degree" class=" col-md-3"><?php echo 'Bachelor Degree'; ?></label>
@@ -366,6 +376,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="master_degree" class=" col-md-3"><?php echo 'Master Degree'; ?></label>
@@ -382,6 +393,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row">
                                 <label for="relevant_document_url" class=" col-md-3"><?php echo 'Relevant Document Url'; ?></label>
@@ -418,11 +430,12 @@
                                     "class" => "form-control select2",
                                     "placeholder" => 'Employee Type',
                                     "autocomplete" => "off"
-                                ),['Fixed'=>'Fixed','Temporary'=>'Temporary','Internship'=>'Internship']);
+                                ),['Fixed'=>'Fixed','Temporary'=>'Temporary','Contract'=>'Contract']);
                                 ?>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <label for="department_id" class=" col-md-3"><?php echo 'Employee Department'; ?></label>
@@ -441,6 +454,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <label for="job_title_en" class=" col-md-3"><?php echo 'Job Title English'; ?></label>
@@ -458,6 +472,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <label for="job_title_so" class=" col-md-3"><?php echo 'Job Title Somali'; ?></label>
@@ -492,6 +507,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row">
                             <label for="place_of_work" class=" col-md-3"><?php echo 'Place of Work'; ?></label>
@@ -754,6 +770,7 @@
 
         $("#form-previous").click(function () {
             var $generalTab = $("#general-info-tab"),
+                    $jobTab = $("#education-info-tab"),
                     $jobTab = $("#job-info-tab"),
                     $accountTab = $("#account-info-tab"),
                     $previousButton = $("#form-previous"),
@@ -776,6 +793,7 @@
 
         $("#form-next").click(function () {
             var $generalTab = $("#general-info-tab"),
+                    $jobTab = $("#education-info-tab"),
                     $jobTab = $("#job-info-tab"),
                     $accountTab = $("#account-info-tab"),
                     $previousButton = $("#form-previous"),

@@ -15,7 +15,7 @@
                         <label for="employee_type" class=" col-md-3"><?php echo 'Employee Type'; ?></label>
                         <div class=" col-md-9">
                             <?php
-                            $types = ['Temporary'=>'Temporary','Fixed'=>'Fixed','Internship'=>'Internship'];
+                            $types = ['Temporary'=>'Temporary','Fixed'=>'Fixed','Contract'=>'Contract'];
                             echo form_dropdown(array(
                                 "id" => "employee_type",
                                 "name" => "employee_type",
