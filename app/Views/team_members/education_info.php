@@ -2,7 +2,7 @@
     <?php echo form_open(get_uri("team_members/save_education_info/" . $user_info->id), array("id" => "education-info-form", "class" => "education-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
-            <h4> <?php echo app_lang('general_info'); ?></h4>
+            <h4> <?php echo app_lang('education_info'); ?></h4>
         </div>
         <div class="card-body">
 

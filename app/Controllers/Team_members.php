@@ -828,6 +828,7 @@ class Team_members extends Security_Controller {
         return $this->template->view("team_members/education_info", $view_data);
     }
 
+
     //save general information of a team member
     function save_education_info($user_id) {
         
@@ -861,53 +862,94 @@ class Team_members extends Security_Controller {
         }
     }
 
-
-    //show social links of a team member
-    function bank_details($user_id) {
-        //important! here id=user_id
+     //show general information of a team member
+     function bank_details($user_id) {
         validate_numeric_value($user_id);
-        // $this->update_only_allowed_members($user_id);
+        $this->update_only_allowed_members($user_id);
 
-        // die($user_id);
-        $view_data['user_id'] = $user_id;
-        $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
+        // array_unshift($view_data['departments'],'Choose Department');
+
         $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 
-        // print_r($user_id);
-        // die();
-        return $this->template->view("users/bank_details", $view_data);
+
+        $view_data['user_info'] = $this->Users_model->get_one($user_id);
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        return $this->template->view("team_members/bank_details", $view_data);
     }
 
-    
-    //save social links of a team member
-    function save_Bank_details($user_id) {
+    //save general information of a team member
+    function save_bank_details($user_id) {
         
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
-        $options=['user_id' => $user_id];
 
-        $id = 0;
-        // $has_banka_account = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
-        $has_banka_account = $this->Bank_details_model->get_one($user_id);
 
-        if (isset($has_banka_account->id)) {
-            $id = $has_banka_account->id;
-        }
-
-        $bank_details_data = array(
+        $user_data = array(
             "bank_id" => $this->request->getPost('bank_id'),
             "bank_account" => $this->request->getPost('bank_account'),
-            "registered_name" => $this->request->getPost('registered_name'),
-            "user_id" => $user_id,
-            "id" => $id ? $id : $user_id
-            
+            "registered_name" => $this->request->getPost('bank_registered_name'),
         );
 
-        $bank_details_data = clean_data($bank_details_data);
+        $user_data = clean_data($user_data);
 
-        $this->Bank_details_model->ci_save($bank_details_data, $id);
-        echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+        $user_info_updated = $this->Users_model->ci_save($user_data, $user_id);
+
+        save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
+
+        if ($user_info_updated) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
     }
+    // //show social links of a team member
+    // function bank_detailsssss($user_id) {
+    //     validate_numeric_value($user_id);
+    //     $this->update_only_allowed_members($user_id);
+
+    //     // $view_data['user_id'] = $user_id;
+    //     // $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
+    //     $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
+
+    //     $view_data['user_info'] = $this->Users_model->get_one($user_id);
+    //     $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+    //     // print_r($user_id);
+    //     // die();
+    //     return $this->template->view("users/bank_details", $view_data);
+    // }
+
+    
+    // //save social links of a team member
+    // function save_Bank_detailssss($user_id) {
+        
+    //     validate_numeric_value($user_id);
+    //     $this->update_only_allowed_members($user_id);
+    //     $options=['user_id' => $user_id];
+
+    //     $id = 0;
+    //     // $has_banka_account = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
+    //     $has_banka_account = $this->Bank_details_model->get_one($user_id);
+
+    //     if (isset($has_banka_account->id)) {
+    //         $id = $has_banka_account->id;
+    //     }
+
+    //     $bank_details_data = array(
+    //         "bank_id" => $this->request->getPost('bank_id'),
+    //         "bank_account" => $this->request->getPost('bank_account'),
+    //         "registered_name" => $this->request->getPost('registered_name'),
+    //         "user_id" => $user_id,
+    //         "id" => $id ? $id : $user_id
+            
+    //     );
+
+    //     $bank_details_data = clean_data($bank_details_data);
+
+    //     $this->Bank_details_model->ci_save($bank_details_data, $id);
+    //     echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+    // }
 
     //show social links of a team member
     function social_links($user_id) {

@@ -92,6 +92,7 @@ $lang["job_location"] = "Job Location";
 $lang["edit_leave"] = "Edit Leave";
 $lang["education_info"] = "Education Info";
 $lang["profile_info"] = "Profile Info";
+$lang["profile_info"] = "Profile Info";
 
 
 //Company:
@@ -415,6 +416,7 @@ $lang["employee_id"] = "Employee ID";
 $lang["has_signature"] = "Has Signature";
 $lang["bank_details"] = "Bank Details";
 $lang["payer_segment"] = "Payer Segment :";
+$lang["bank_name"] = "Bank Name";
 
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
