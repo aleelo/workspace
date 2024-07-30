@@ -46,10 +46,14 @@
             // serverSide: true,
             columns: [
                 {title: '', "class": "w50 text-center all"},
-                {title: "<?php echo app_lang("department_ame") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("employee_id") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("name") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("job_title") ?>", "class": "w15p"},
+                {title: "<?php echo app_lang("department_name_so") ?>", "class": "w200 all"},
+                {title: "<?php echo app_lang("shot_name_so") ?>", "class": "w200 all"},
+                {title: "<?php echo app_lang("department_name_en") ?>", "class": "w200 all"},
+                {title: "<?php echo app_lang("shot_name_en") ?>", "class": "w200 all"},
+                {title: "<?php echo app_lang("job_location") ?>", "class": "w200 all"},
                 {visible: visibleContact, title: "<?php echo app_lang("email") ?>", "class": "w20p"},
                 {visible: visibleContact, title: "<?php echo app_lang("phone") ?>", "class": "w15p"}
                 <?php echo $custom_field_headers; ?>,

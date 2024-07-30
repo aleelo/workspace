@@ -84,7 +84,11 @@ $lang["private_email"] = "Private Email";
 $lang["employee"] = "Employee";
 $lang["employees"] = "Employees";
 $lang["department_head"] = "Department Head";
-$lang["department_ame"] = "Department Name";
+$lang["department_name_so"] = "Department Name SO";
+$lang["department_name_en"] = "Department Name EN";
+$lang["shot_name_so"] = "Short Name SO";
+$lang["shot_name_en"] = "Short Name EN";
+$lang["job_location"] = "Job Location";
 $lang["edit_leave"] = "Edit Leave";
 
 
