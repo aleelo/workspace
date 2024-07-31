@@ -419,6 +419,7 @@ $lang["payer_segment"] = "Payer Segment :";
 $lang["bank_name"] = "Bank Name";
 $lang["Profile_info"] = "Profile Info";
 $lang["education_info"] = "Education Info";
+$lang["Bank_details"] = "Bank Details";
 
 /* dashboard */
 $lang["dashboard"] = "Dashboard";

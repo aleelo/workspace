@@ -44,6 +44,24 @@
                         </div>
                     </div>
                 </div> 
+
+                <div class="form-group">
+                        <div class="row">
+                            <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                $grade = [''=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D'];
+                                echo form_dropdown(array(
+                                    "id" => "grade",
+                                    "name" => "grade",
+                                    "class" => "form-control select2",
+                                    "placeholder" => 'Grade',
+                                    "autocomplete" => "off"
+                                ),$grade,[$job_info->grade]);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
  
                 <div class="form-group">
                     <div class="row">
@@ -97,6 +115,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group" style="display:none;">
                     <div class="row">
                         <label for="salary_term" class=" col-md-3"><?php echo app_lang('salary_term'); ?></label>
@@ -113,18 +132,7 @@
                         </div>
                     </div>
                 </div>
-                 <!-- 
-                    age_level,	
-                    work_experience	,
-                    place_of_work,	
-                    faculty	,
-                    faculty2,		
-                    bachelor_degree,	
-                    master_degree,	
-                    highest_school,	
-                    relevant_document_url,
-                -->
-                 
+
                 <div class="form-group">
                     <div class="row">
                         <label for="work_experience" class=" col-md-3"><?php echo 'Work Experience'; ?></label>
@@ -195,6 +203,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="form-group">
                         <div class="row">
                             <label for="event_recurring" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>

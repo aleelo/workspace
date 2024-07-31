@@ -248,7 +248,7 @@ class Team_members extends Security_Controller {
 
         $target_path = get_setting("signature_file_path");
         $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "signature");
-        //$signature = unserialize($files_data);
+        $signature = unserialize($files_data);
 
         if ($user_id) {
             //user added, now add the job info for the user
@@ -266,9 +266,10 @@ class Team_members extends Security_Controller {
                 "place_of_work" => $this->request->getPost('place_of_work'),
                 "employee_type" => $this->request->getPost('employee_type'),
                 "employee_id" => $this->request->getPost('employee_id'),
+                "grade" => $this->request->getPost('grade'),
             );
 
-            $job_data["signature"] = serialize($files_data);
+            $job_data["signature"] = serialize($signature);
 
             $this->Users_model->save_job_info($job_data);
 
@@ -716,6 +717,7 @@ class Team_members extends Security_Controller {
             "job_title_so" => $this->request->getPost('job_title_so'),
             "employee_type" => $this->request->getPost('employee_type'),
             "employee_id" => $this->request->getPost('employee_id'),
+            "grade" => $this->request->getPost('grade'),
             "work_experience" => $this->request->getPost('work_experience'),
             "place_of_work" => $this->request->getPost('place_of_work'),
         );
@@ -735,7 +737,7 @@ class Team_members extends Security_Controller {
             $new_files = update_saved_files($timeline_file_path, $user_j0b_info->signature, $new_files);
         }
 
-        $job_data["signature"] = serialize($new_files);
+            $job_data["signature"] = serialize($new_files);
 
 
         $this->Users_model->ci_save($user_data, $user_id);

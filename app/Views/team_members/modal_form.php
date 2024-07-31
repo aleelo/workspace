@@ -9,6 +9,7 @@
                     margin-top: 70px;
                 }
             </style>
+
             <div class="form-widget">
                 <div class="widget-title clearfix">
                     <div class="row">
@@ -461,6 +462,23 @@
                             </div>
                         </div>
                     </div>
+                
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_dropdown(array(
+                                    "id" => "grade",
+                                    "name" => "grade",
+                                    "class" => "form-control select2",
+                                    "placeholder" => 'Grade',
+                                    "autocomplete" => "off"
+                                ),[''=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="row">
@@ -622,10 +640,6 @@
                         </div>
                     </div>
                 </div>
-
-             <!---------------------------------- Bank Details Tab ----------------------------->
-
-              
 
             <!---------------------------------- Account Settings Tab ----------------------------->
 
@@ -789,6 +803,7 @@
             var $generalTab = $("#general-info-tab"),
                 $educationTab = $("#education-info-tab"),
                 $jobTab = $("#job-info-tab"),
+                $bankTab = $("#bank_details-tab"),
                 $accountTab = $("#account-info-tab"),
 
                 $previousButton = $("#form-previous"),
@@ -836,7 +851,9 @@
             var $generalTab = $("#general-info-tab"),
                 $educationInfoTab = $("#education-info-tab"),
                 $jobTab = $("#job-info-tab"),
+                $bankTab = $("#bank_details-tab"),
                 $accountTab = $("#account-info-tab"),
+
                 $previousButton = $("#form-previous"),
                 $nextButton = $("#form-next"),
                 $submitButton = $("#form-submit");
@@ -850,7 +867,7 @@
                 $educationInfoTab.addClass("active");
 
                 $previousButton.removeClass("hide");
-                
+
                 $("#form-progress-bar").width("50%");
                 $("#general-info-label").find("svg").remove();
                 $("#general-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
