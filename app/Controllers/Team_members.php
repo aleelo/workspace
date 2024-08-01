@@ -125,7 +125,7 @@ class Team_members extends Security_Controller {
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
         $view_data['education_levels'] = [''=>'-- Choose Education Level --','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
-        $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from education_industry")->getResult();
+        $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from rise_education_industry where deleted=0")->getResult();
 
 
         $age_levels = [
@@ -759,7 +759,7 @@ class Team_members extends Security_Controller {
         // array_unshift($view_data['departments'],'Choose Department');
         $view_data['education_levels'] = [''=>'Choose Education Level','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
-        $view_data['education_fields'] = $this->db->query("select id,name from education_industry")->getResult();
+        $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -822,7 +822,7 @@ class Team_members extends Security_Controller {
         // array_unshift($view_data['departments'],'Choose Department');
         $view_data['education_levels'] = [''=>'Choose Education Level','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
-        $view_data['education_fields'] = $this->db->query("select id,name from education_industry")->getResult();
+        $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();

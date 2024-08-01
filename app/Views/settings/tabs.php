@@ -97,6 +97,10 @@ if (get_setting("module_leave") == "1") {
     $settings_menu["setup"][] = array("name" => "bank_names", "url" => "bank_names");
 }
 
+if (get_setting("module_leave") == "1") {
+    $settings_menu["setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
+}
+
 if (get_setting("module_ticket") == "1") {
     $settings_menu["setup"][] = array("name" => "tickets", "url" => "ticket_types");
 }
