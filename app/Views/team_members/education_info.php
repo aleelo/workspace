@@ -54,6 +54,23 @@
 
             <div class="form-group">
                 <div class="row">
+                    <label for="other_study" class=" col-md-2"><?php echo 'Other Field of Study'; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_textarea(array(
+                            "id" => "other_study",
+                            "name" => "other_study",
+                            "class" => "form-control",
+                            "value" => $user_info->faculty,
+                            "placeholder" => 'Other Field of Study',
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
                     <label for="faculty" class=" col-md-2"><?php echo 'Faculty 1'; ?></label>
                     <div class=" col-md-9">
                         <?php

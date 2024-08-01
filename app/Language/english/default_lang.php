@@ -421,6 +421,15 @@ $lang["Profile_info"] = "Profile Info";
 $lang["education_info"] = "Education Info";
 $lang["Bank_details"] = "Bank Details";
 
+
+/* Bank Names */
+$lang["bank_names"] = "Bank Names";
+$lang["bank_name"] = "Bank Name";
+$lang["add_bank_name"] = "Add Bank Name";
+$lang["edit_bank_name"] = "Edit Bank Name";
+$lang["delete_bank_name"] = "Delete Bank Name";
+
+
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
 

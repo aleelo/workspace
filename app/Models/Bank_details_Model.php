@@ -12,17 +12,17 @@ class Bank_details_model extends Crud_model {
     }
 
     function get_details($options = array()) {
-        $social_links_table = $this->db->prefixTable('bank_details');
+        $bank_details_table = $this->db->prefixTable('bank_details');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
-            $where = " AND $social_links_table.id=$id";
+            $where = " AND $bank_details_table.id=$id";
         }
 
-        $sql = "SELECT $social_links_table.*
-        FROM $social_links_table
-        WHERE $social_links_table.deleted=0 $where";
+        $sql = "SELECT $bank_details_table.*
+        FROM $bank_details_table
+        WHERE $bank_details_table.deleted=0 $where";
         return $this->db->query($sql);
     }
 

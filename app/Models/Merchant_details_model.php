@@ -12,17 +12,17 @@ class Merchant_details_model extends Crud_model {
     }
 
     function get_details($options = array()) {
-        $social_links_table = $this->db->prefixTable('bank_details');
+        $merchant_details_table = $this->db->prefixTable('merchant_details');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
-            $where = " AND $social_links_table.id=$id";
+            $where = " AND $merchant_details_table.id=$id";
         }
 
-        $sql = "SELECT $social_links_table.*
-        FROM $social_links_table
-        WHERE $social_links_table.deleted=0 $where";
+        $sql = "SELECT $merchant_details_table.*
+        FROM $merchant_details_table
+        WHERE $merchant_details_table.deleted=0 $where";
         return $this->db->query($sql);
     }
 

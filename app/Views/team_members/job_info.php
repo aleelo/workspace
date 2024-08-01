@@ -50,7 +50,7 @@
                             <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
                             <div class=" col-md-9">
                                 <?php
-                                $grade = [''=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D'];
+                                $grade = [''=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','F'=>'F','X'=>'X'];
                                 echo form_dropdown(array(
                                     "id" => "grade",
                                     "name" => "grade",
