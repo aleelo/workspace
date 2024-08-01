@@ -429,6 +429,11 @@ $lang["add_bank_name"] = "Add Bank Name";
 $lang["edit_bank_name"] = "Edit Bank Name";
 $lang["delete_bank_name"] = "Delete Bank Name";
 
+/* Merchant Types */
+$lang["merchant_type"] = "Merchant Type";
+$lang["merchant_types"] = "Merchant Types";
+$lang["add_merchant_type"] = "Add Merchant Type";
+
 /* Field of Study */
 $lang["field_of_study"] = "Field of Study";
 $lang["field_of_studies"] = "Field of Studies";
