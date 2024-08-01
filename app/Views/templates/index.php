@@ -52,7 +52,7 @@
             {title: "<?php echo app_lang("ref_prefix") ?>", order_by: "ref_prefix"},
             {title: "<?php echo app_lang("destination_folder") ?>", order_by: "destination_folder"},
             {title: "<?php echo app_lang("depertment") ?>", order_by: "depertment"},
-            {title: "<?php echo app_lang("description") ?>", order_by: "description"},
+            // {title: "<?php //echo app_lang("description") ?>", order_by: "description"},
             {title: "<?php echo app_lang("created_at") ?>", order_by: "created_at"}
             <?php echo $custom_field_headers; ?>,
             {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w10p"}

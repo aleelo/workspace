@@ -24,6 +24,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group">
             <div class="row">
                 <label for="description" class=" col-md-3"><?php echo app_lang('description'); ?></label>
@@ -41,6 +42,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="row">
+                <label for="description" class=" col-md-3"><?php echo app_lang('allowed_days'); ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "allowed_days",
+                        "name" => "allowed_days",
+                        "value" => process_images_from_content($model_info->allowed_days, true),
+                        "class" => "form-control",
+                        "placeholder" => app_lang('allowed_days'),
+                        "data-rich-text-editor" => true
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="row">
                 <label for="status" class=" col-md-3"><?php echo app_lang('status'); ?></label>

@@ -751,7 +751,7 @@ class Documents extends Security_Controller
             $data->ref_prefix,
             $data->destination_folder,
             $data->department,
-            $data->description,
+            // $data->description,
             format_to_date($data->created_at, false),
         );
 

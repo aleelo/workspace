@@ -459,6 +459,7 @@ $lang["edit_leave_type"] = "Edit leave type";
 $lang["delete_leave_type"] = "Delete leave type";
 $lang["leave_type"] = "Leave type";
 $lang["leave_types"] = "Leave types";
+$lang["allowed_days"] = "Allowed Days";
 
 /* leave */
 $lang["apply_leave"] = "Apply leave";

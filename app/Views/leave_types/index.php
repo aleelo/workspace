@@ -30,6 +30,7 @@
             columns: [
                 {title: '<?php echo app_lang("title"); ?>'},
                 {title: '<?php echo app_lang("description"); ?>'},
+                {title: '<?php echo app_lang("allowed_days"); ?>'},
                 {title: '<?php echo app_lang("status"); ?>'},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
