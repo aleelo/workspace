@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="form-group">
                 <div class="row">
                     <label for="other_study" class=" col-md-2"><?php echo 'Other Field of Study'; ?></label>
@@ -68,20 +68,20 @@
                     </div>
                 </div>
             </div>
-
+<!-- 
             <div class="form-group">
                 <div class="row">
                     <label for="faculty" class=" col-md-2"><?php echo 'Faculty 1'; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "faculty",
-                            "name" => "faculty",
-                            "class" => "form-control",
-                            "value" => $user_info->faculty,
-                            "placeholder" => 'Faculty 1 Name',
-                            "autocomplete" => "off",
-                        ));
+                        // echo form_input(array(
+                        //     "id" => "faculty",
+                        //     "name" => "faculty",
+                        //     "class" => "form-control",
+                        //     "value" => $user_info->faculty,
+                        //     "placeholder" => 'Faculty 1 Name',
+                        //     "autocomplete" => "off",
+                        // ));
                         ?>
                     </div>
                 </div>
@@ -92,18 +92,18 @@
                     <label for="faculty2" class=" col-md-2"><?php echo 'Faculty 2'; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "faculty2",
-                            "name" => "faculty2",
-                            "class" => "form-control",
-                            "value" => $user_info->faculty2,
-                            "placeholder" => 'Faculty 2 Name',
-                            "autocomplete" => "off",
-                        ));
+                        // echo form_input(array(
+                        //     "id" => "faculty2",
+                        //     "name" => "faculty2",
+                        //     "class" => "form-control",
+                        //     "value" => $user_info->faculty2,
+                        //     "placeholder" => 'Faculty 2 Name',
+                        //     "autocomplete" => "off",
+                        // ));
                         ?>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="form-group">
                 <div class="row">
@@ -123,19 +123,19 @@
                 </div>
             </div>
                    -->
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <div class="row">
                     <label for="highest_school" class=" col-md-2"><?php echo 'Highest School of Education'; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "highest_school",
-                            "name" => "highest_school",
-                            "value" => $user_info->highest_school,
-                            "class" => "form-control",
-                            "placeholder" => 'Highest School of Education',
-                            "autocomplete" => "off",
-                        ));
+                        // echo form_input(array(
+                        //     "id" => "highest_school",
+                        //     "name" => "highest_school",
+                        //     "value" => $user_info->highest_school,
+                        //     "class" => "form-control",
+                        //     "placeholder" => 'Highest School of Education',
+                        //     "autocomplete" => "off",
+                        // ));
                         ?>
                     </div>
                 </div>
@@ -146,14 +146,14 @@
                     <label for="bachelor_degree" class=" col-md-2"><?php echo 'Bachelor Degree'; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "bachelor_degree",
-                            "name" => "bachelor_degree",
-                            "value" => $user_info->bachelor_degree,
-                            "class" => "form-control",
-                            "placeholder" => 'Bachelor Degree Name',
-                            "autocomplete" => "off",
-                        ));
+                        // echo form_input(array(
+                        //     "id" => "bachelor_degree",
+                        //     "name" => "bachelor_degree",
+                        //     "value" => $user_info->bachelor_degree,
+                        //     "class" => "form-control",
+                        //     "placeholder" => 'Bachelor Degree Name',
+                        //     "autocomplete" => "off",
+                        // ));
                         ?>
                     </div>
                 </div>
@@ -164,18 +164,18 @@
                     <label for="master_degree" class=" col-md-2"><?php echo 'Master Degree'; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "master_degree",
-                            "name" => "master_degree",
-                            "value" => $user_info->master_degree,
-                            "class" => "form-control",
-                            "placeholder" => 'Master Degree Name',
-                            "autocomplete" => "off",
-                        ));
+                        // echo form_input(array(
+                        //     "id" => "master_degree",
+                        //     "name" => "master_degree",
+                        //     "value" => $user_info->master_degree,
+                        //     "class" => "form-control",
+                        //     "placeholder" => 'Master Degree Name',
+                        //     "autocomplete" => "off",
+                        // ));
                         ?>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-2", "field_column" => " col-md-10")); ?> 
 
