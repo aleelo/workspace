@@ -85,6 +85,22 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
+    public function get_job_locations_dropdown_list() {
+        
+        $job_lo = $this->db->query("SELECT id, name FROM rise_job_locations WHERE deleted=0")->getResult();
+        $temp_array = array('' => '---Choose Job Location---');
+
+        if(!$job_lo){
+            return null;
+        }
+  
+        foreach($job_lo as $j){
+            $temp_array[$j->id] = $j->name;
+        }
+
+        return $temp_array;
+    }
+
     public function get_director_department_id(){
         $user_id = $this->login_user->id;
         $dep_info = $this->db->query("SELECT dp.id FROM departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user_id")->getRow();
@@ -169,6 +185,8 @@ class Security_Controller extends App_Controller {
             return $data;
         }
     }
+
+
 
 
     //initialize the login user's permissions with readable format

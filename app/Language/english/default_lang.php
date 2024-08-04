@@ -446,6 +446,10 @@ $lang["add_job_location"] = "Add Job Location";
 $lang["delete_job_location"] = "Delete Job Location";
 $lang["edit_job_location"] = "Edit Job Location";
 
+/* Job Tap Info */
+$lang["job_description"] = "Job Description";
+$lang["work_experience"] = "Work Experience";
+
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
 

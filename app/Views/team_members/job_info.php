@@ -27,6 +27,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="department_id" class=" col-md-3"><?php echo 'Employee Department'; ?></label>
@@ -62,6 +63,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="job_description" class=" col-md-3"><?php echo app_lang('job_description'); ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_textarea(array(
+                                    "id" => "job_description",
+                                    "name" => "job_description",
+                                    "value" => $job_info->job_description,
+                                    "class" => "form-control",
+                                    "placeholder" => 'Job Descpription'
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
  
                 <div class="form-group">
                     <div class="row">
@@ -81,6 +99,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="job_title_so" class=" col-md-3"><?php echo 'Job Title Somali'; ?></label>
@@ -134,22 +153,22 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="row">
-                        <label for="work_experience" class=" col-md-3"><?php echo 'Work Experience'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "work_experience",
-                                "name" => "work_experience",
-                                "class" => "form-control",
-                                'value'=> $job_info->work_experience,
-                                "placeholder" => 'Enter Work Experience',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
+                        <div class="row">
+                            <label for="work_experience" class=" col-md-3"><?php echo app_lang('work_experience'); ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_textarea(array(
+                                    "id" => "work_experience",
+                                    "name" => "work_experience",
+                                    "value" => $job_info->work_experience,
+                                    "class" => "form-control",
+                                    "placeholder" => 'Enter Work Experience'
+                                ));
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="place_of_work" class=" col-md-3"><?php echo 'Place of Work'; ?></label>
@@ -167,6 +186,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <label for="job_location" class=" col-md-3"><?php echo 'Job Location'; ?></label>
+                        <div class=" col-md-9">
+                        <?php 
+                        echo form_dropdown(array( 
+                                'id'=> "job_location",
+                                'name'=> "job_location",
+                                'class' => "form-control select2",
+                                'placeholder' => 'Job Location',
+                                'autocomplete'=> "off",
+                                'data-rule-required' => true,
+                                'data-msg-required' =>   app_lang('field_required')
+                            ),$job_locations,[$job_info->job_location_id]); ?>
+                        </div>
+                    </div>
+                </div> 
 
                 <div class="form-group">
                     <div class="row">
