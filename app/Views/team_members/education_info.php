@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="div_education_field_of_study">
                 <div class="row">
                     <label for="education_field" class=" col-md-2"><?php echo 'Field of Study'; ?></label>
                     <div class=" col-md-10">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" id="div_other_field_of_study">
                 <div class="row">
                     <label for="other_study" class=" col-md-2"><?php echo 'Other Field of Study'; ?></label>
                     <div class=" col-md-9">
@@ -188,7 +188,9 @@
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
+
         $("#education-info-form").appForm({
             isModal: false,
             onSuccess: function (result) {
@@ -198,9 +200,27 @@
                 }, 500);
             }
         });
+        
         $("#education-info-form .select2").select2();
 
         setDatePicker("#birth_date");
+
+        // $('#div_education_field_of_study').hide();
+        $('#div_other_field_of_study').hide();
+        
+        // $('#education_level').on('change',function(){
+        //     var value = $(this).val();
+        //     if(value == 'Bachelor'){
+        //         $('#div_education_field_of_study').show();
+        //     }
+        // });
+
+        $('#education_field').on('change',function(){
+            var value = $(this).val();
+            if(value == 'Others'){
+                $('#div_other_field_of_study').show();
+            }
+        });
 
     });
 </script>    

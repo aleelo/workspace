@@ -450,6 +450,9 @@ $lang["edit_job_location"] = "Edit Job Location";
 $lang["job_description"] = "Job Description";
 $lang["work_experience"] = "Work Experience";
 
+/* Form Setup */
+$lang["form_setup"] = "Form Setup";
+
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
 

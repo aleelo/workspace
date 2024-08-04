@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-3 col-lg-2">
             <?php
-            $tab_view['active_tab'] = "Job_locations";
+            $tab_view['active_tab'] = "job_locations";
             echo view("settings/tabs", $tab_view);
             ?>
         </div>

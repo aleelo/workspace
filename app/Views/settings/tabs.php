@@ -39,6 +39,8 @@ $settings_menu = array(
         array("name" => "client_groups", "url" => "client_groups"),
         array("name" => "tasks", "url" => "settings/tasks"),
     ),
+
+    "form_setup" => array(),
 );
 
 //restricted settings
@@ -106,22 +108,6 @@ if (get_setting("module_leave") == "1") {
     $settings_menu["setup"][] = array("name" => "leave_types", "url" => "leave_types");
 }
 
-if (get_setting("module_leave") == "1") {
-    $settings_menu["setup"][] = array("name" => "bank_names", "url" => "bank_names");
-}
-
-if (get_setting("module_leave") == "1") {
-    $settings_menu["setup"][] = array("name" => "merchant_types", "url" => "merchant_types");
-}
-
-if (get_setting("module_leave") == "1") {
-    $settings_menu["setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
-}
-
-if (get_setting("module_leave") == "1") {
-    $settings_menu["setup"][] = array("name" => "job_locations", "url" => "job_locations");
-}
-
 if (get_setting("module_ticket") == "1") {
     $settings_menu["setup"][] = array("name" => "tickets", "url" => "ticket_types");
 }
@@ -129,6 +115,14 @@ if (get_setting("module_ticket") == "1") {
 if (get_setting("module_lead") == "1") {
     $settings_menu["setup"][] = array("name" => "leads", "url" => "lead_status");
 }
+
+// Form Setups
+
+$settings_menu["form_setup"][] = array("name" => "bank_names", "url" => "bank_names");
+$settings_menu["form_setup"][] = array("name" => "merchant_types", "url" => "merchant_types");
+$settings_menu["form_setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
+$settings_menu["form_setup"][] = array("name" => "job_locations", "url" => "job_locations");
+
 
 $settings_menu["setup"][] = array("name" => "gdpr", "url" => "settings/gdpr");
 $settings_menu["setup"][] = array("name" => "pages", "url" => "pages");

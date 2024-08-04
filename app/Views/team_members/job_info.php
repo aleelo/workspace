@@ -243,17 +243,17 @@
                 
                 <div class="form-group">
                         <div class="row">
-                            <label for="event_recurring" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>
+                            <label for="has_signature" class=" col-md-3 col-xs-5 col-sm-4"><?php echo app_lang('has_signature'); ?></label>
                             <div class=" col-md-2 col-xs-7 col-sm-8">
                             <?php echo view("includes/file_list", array("files" => $job_info->signature)); ?>
                                 <?php
-                                echo form_checkbox("recurring", "1", "" ? true : false, "id='event_recurring' class='form-check-input'");
+                                echo form_checkbox("recurring", "1", "" ? true : false, "id='signature_check' class='form-check-input'");
                                 ?>  
 
                             </div>
                     
 
-                            <div id="recurring_fields" class="<?php echo "hide"; ?>"> 
+                            <div id="signature_field" class="<?php echo "hide"; ?>"> 
 
                                 <div class="form-group">
                                     <div class="row">
@@ -306,11 +306,11 @@
         setDatePicker(".date");
 
         //show/hide recurring fields
-        $("#event_recurring").click(function () {
+        $("#signature_check").click(function () {
             if ($(this).is(":checked")) {
-                $("#recurring_fields").removeClass("hide");
+                $("#signature_field").removeClass("hide");
             } else {
-                $("#recurring_fields").addClass("hide");
+                $("#signature_field").addClass("hide");
             }
         });
 
