@@ -194,7 +194,7 @@
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
                 setTimeout(function () {
-                    window.location.href = "<?php echo get_uri("team_members/view/" . $user_info->id); ?>" + "/education";
+                    window.location.href = "<?php echo get_uri("team_members/view/" . $user_info->id); ?>" + "/education_info";
                 }, 500);
             }
         });
