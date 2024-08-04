@@ -439,6 +439,13 @@ $lang["field_of_study"] = "Field of Study";
 $lang["field_of_studies"] = "Field of Studies";
 $lang["add_field_of_study"] = "Add Field of Study";
 
+/* Job Location */
+$lang["job_location"] = "Job Location";
+$lang["job_locations"] = "Job Locations";
+$lang["add_job_location"] = "Add Job Location";
+$lang["delete_job_location"] = "Delete Job Location";
+$lang["edit_job_location"] = "Edit Job Location";
+
 /* dashboard */
 $lang["dashboard"] = "Dashboard";
 

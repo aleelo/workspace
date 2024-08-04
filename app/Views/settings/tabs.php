@@ -1,5 +1,8 @@
 <?php
 $settings_menu = array(
+
+    // App Settings
+
     "app_settings" => array(
         array("name" => "general", "url" => "settings/general"),
         array("name" => "localization", "url" => "settings/localization"),
@@ -12,6 +15,9 @@ $settings_menu = array(
         array("name" => "cron_job", "url" => "settings/cron_job"),
         array("name" => "updates", "url" => "Updates"),
     ),
+
+    // Access Permission
+
     "access_permission" => array(),
     "client_portal" => array(
         array("name" => "client_permissions", "url" => "settings/client_permissions"),
@@ -19,9 +25,15 @@ $settings_menu = array(
         array("name" => "client_left_menu", "url" => "left_menus/index/client_default"),
         array("name" => "client_projects", "url" => "settings/client_projects"),
     ),
+
+    // Sales and Prospects
+
     "sales_and_prospects" => array(
         array("name" => "company", "url" => "company")
     ),
+
+    // Setup
+
     "setup" => array(
         array("name" => "custom_fields", "url" => "custom_fields"),
         array("name" => "client_groups", "url" => "client_groups"),
@@ -31,10 +43,12 @@ $settings_menu = array(
 
 //restricted settings
 if ($login_user->is_admin || (get_array_value($login_user->permissions, "can_manage_all_kinds_of_settings") && get_array_value($login_user->permissions, "can_manage_user_role_and_permissions"))) {
+    
     $settings_menu["access_permission"] = array(
         array("name" => "roles", "url" => "roles"),
         array("name" => "user_roles", "url" => "roles/user_roles")
     );
+    
 }
 
 $settings_menu["access_permission"][] = array("name" => "team", "url" => "team");
@@ -84,7 +98,6 @@ if (get_setting("module_event") == "1") {
     $settings_menu["setup"][] = array("name" => "events", "url" => "settings/events");
 }
 
-
 if (get_setting("module_expense") == "1") {
     $settings_menu["setup"][] = array("name" => "expense_categories", "url" => "expense_categories");
 }
@@ -103,6 +116,10 @@ if (get_setting("module_leave") == "1") {
 
 if (get_setting("module_leave") == "1") {
     $settings_menu["setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
+}
+
+if (get_setting("module_leave") == "1") {
+    $settings_menu["setup"][] = array("name" => "job_locations", "url" => "job_locations");
 }
 
 if (get_setting("module_ticket") == "1") {

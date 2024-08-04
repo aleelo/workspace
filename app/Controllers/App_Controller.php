@@ -106,6 +106,7 @@ class App_Controller extends Controller {
     public $Subscriptions_model;
     public $Subscription_items_model;
     public $Field_of_study_model;
+    public $Job_locations_model;
     
     public function __construct() {
         //main template to make frame of this app
@@ -237,7 +238,8 @@ class App_Controller extends Controller {
             'Subscription_items_model',
             'Merchant_types_model',
             'Merchant_details_model',
-            'Field_of_study_model'
+            'Field_of_study_model',
+            'Job_locations_model'
         );
     }
 
