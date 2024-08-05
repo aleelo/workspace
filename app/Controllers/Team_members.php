@@ -824,7 +824,10 @@ class Team_members extends Security_Controller {
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
         // array_unshift($view_data['departments'],'Choose Department');
-        $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+
+        $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary',
+        'Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','2 Bachelors'=>'2 Bachelors','2 Bachelors & Master'=>'2 Bachelors & Master',
+        '2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 

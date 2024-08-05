@@ -343,6 +343,8 @@
         //start 
         $('#add_visitors_table').hide();
 
+
+        $('.modal-dialog').removeClass('modal-lg').addClass('modal-xl');
         // add visitor table
         $('#add_visitor_btn').on('click', function(){
 
@@ -372,9 +374,60 @@
             k = k+1;
         });
 
-
-        $('.modal-dialog').removeClass('modal-lg').addClass('modal-xl');
         //end
+
+        // if ($('#id').val() != '') {
+        //     var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
+
+        //     $.ajax({
+        //         url: 'payers/merchant_details/' + $('#id').val(),
+        //         cache: false,
+        //         type: 'GET',
+        //         success: function(data) {
+
+        //             $('#add_members_table').show();
+        //             $('#add_members_table tbody').html('');
+        //             data = JSON.parse(data);
+        //             console.log(data[0].name);
+        //             console.log(data[1].name);
+
+        //             if (data.length > 0 && data[0].name != null) {
+        //                 for (let i = 0; i < data.length; i++) {
+
+        //                     $('#add_visitors_table tbody').append(
+        //                         "<tr class=''>"+
+        //                         "<td>" + k + "</td>"+
+        //                             "<td><input type='text' class='form-control' value='" + data[i].name + " data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='merchant_type[]'></td>"+
+        //                             "<td><input type='text' class='form-control'  id='merchant_number" + k + "' placeholder='Merchant Number'  name='merchant_number[]'></td>"+
+        //                             "<td style='width: 110px;'>" + actions + "</td>"+
+        //                         "</tr>"
+        //                     );
+                            
+        //                     $("#merchant_type"+k).select2({data: <?php echo json_encode($Merchant_types_dropdown_js); ?>});
+        //                     $("#merchant_type"+k).val(data[i].merchant_id).trigger('change');
+           
+        //                     k = k + 1;
+        //                 }
+        //             }
+
+        //             feather.replace();
+        //         },
+        //         statusCode: {
+        //             403: function() {
+        //                 console.log("403: Session expired.");
+        //                 window.location.reload();
+        //             },
+        //             404: function() {
+        //                 appLoader.hide();
+        //                 appAlert.error("404: Page not found.");
+        //             }
+        //         },
+        //         error: function() {
+        //             appLoader.hide();
+        //             appAlert.error("500: Internal Server Error.");
+        //         }
+        //     });
+        // }
 
         setDatePicker("#Start_Date")
         setDatePicker("#End_Date")

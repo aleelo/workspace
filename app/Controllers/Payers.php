@@ -279,6 +279,17 @@ class Payers extends Security_Controller {
         }
     }
 
+    // public function merchant_details($id) {
+
+    //     $detail_info = $this->db->query("SELECT t.merchant_type as name,d.* from rise_merchant_types t 
+    //                 left join rise_merchant_details d on t.id=d.merchant_id
+    //                 left join rise_clients c on c.id = d.payer_id
+
+    //                 where c.id = $id")->getResult();
+
+    //     return json_encode($detail_info);
+    // }
+
     /* delete or undo a client */
 
     function delete() {
