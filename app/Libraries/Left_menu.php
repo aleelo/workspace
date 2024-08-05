@@ -55,18 +55,26 @@ class Left_menu {
             }
 
 
-            if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["company_Old"] = array("name" => "company_old", "url" => "company", "class" => "briefcase");
-            }
+            // if ($this->ci->login_user->is_admin || $access_client) {
+            //     $sidebar_menu["company_Old"] = array("name" => "company_old", "url" => "company", "class" => "briefcase");
+            // }
 
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["departments"] = array("name" => "departments", "url" => "departments", "class" => "briefcase");
             }
 
             if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["payers"] = array("name" => "payers", "url" => "clients", "class" => "briefcase");
+                $sidebar_menu["client"] = array("name" => "client", "url" => "clients", "class" => "briefcase");
             }
-
+            
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["payers"] = array("name" => "payers", "url" => "payers", "class" => "briefcase");
+            }
+            
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["partners"] = array("name" => "partners", "url" => "partners", "class" => "briefcase");
+            }
+            
         
             $sidebar_menu["archives"] = array("name" => "archives", "url" => "archives", "class" => "layers");
             

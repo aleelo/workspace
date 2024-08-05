@@ -95,9 +95,20 @@ $lang["profile_info"] = "Profile Info";
 $lang["profile_info"] = "Profile Info";
 
 
-//Company:
+// Payers:
+
 $lang["payers"] = "Payers";
 $lang["payers_info"] = "Payers Info";
+$lang["payer_details"] = "Payer Details";
+$lang["payer_info"] = "Payer Info";
+
+
+// Partners:
+$lang["partners"] = "Partners";
+
+
+//Company:
+
 $lang["new_payer_registered"] = "New Payer Registered";
 $lang["Registration_type"] = "Registration Type :";
 $lang["Registration_no"] = "Registration Number :";
