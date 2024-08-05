@@ -7,7 +7,7 @@
     if (isset($user_type)) {
         if ($user_type === "client") {
             $reload_url = "";
-            $save_url = get_uri("clients/save_contact_social_links/" . $user_id);
+            $save_url = get_uri("payers/save_contact_social_links/" . $user_id);
             if (isset($can_edit_clients) && !$can_edit_clients) {
                 $show_submit = false;
             }

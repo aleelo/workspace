@@ -1077,6 +1077,7 @@ class Payers extends Security_Controller {
     /* insert/upadate a contact */
 
     function save_contact() {
+
         $contact_id = $this->request->getPost('contact_id');
         $client_id = $this->request->getPost('client_id');
         $this->_validate_client_manage_access($client_id);
@@ -1094,18 +1095,18 @@ class Payers extends Security_Controller {
             "note" => $this->request->getPost('note')
         );
 
-        $this->validate_submitted_data(array(
-            "first_name" => "required",
-            "last_name" => "required",
-            "client_id" => "required|numeric"
-        ));
+        // $this->validate_submitted_data(array(
+        //     "first_name" => "required",
+        //     "last_name" => "required",
+        //     "client_id" => "required|numeric"
+        // ));
 
         if (!$contact_id) {
             //inserting new contact. client_id is required
 
-            $this->validate_submitted_data(array(
-                "email" => "required|valid_email",
-            ));
+            // $this->validate_submitted_data(array(
+            //     "email" => "required|valid_email",
+            // ));
 
             //we'll save following fields only when creating a new contact from this form
             $user_data["client_id"] = $client_id;
@@ -1231,6 +1232,7 @@ class Payers extends Security_Controller {
 
         $account_data = array(
             "email" => $email,            
+            "private_email" => $this->request->getPost('private_email'),
             "login_type" => $this->request->getPost('login_type')
         );
 

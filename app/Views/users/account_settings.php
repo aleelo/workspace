@@ -3,7 +3,7 @@
     $url = "team_members";
     $show_submit = true;
     if ($user_info->user_type === "client") {
-        $url = "clients";
+        $url = "payers";
         if (isset($can_edit_clients) && !$can_edit_clients) {
             $show_submit = false;
         }

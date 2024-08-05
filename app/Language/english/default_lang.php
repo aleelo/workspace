@@ -97,10 +97,12 @@ $lang["profile_info"] = "Profile Info";
 
 // Payers:
 
+$lang["payer"] = "Payer";
 $lang["payers"] = "Payers";
 $lang["payers_info"] = "Payers Info";
 $lang["payer_details"] = "Payer Details";
 $lang["payer_info"] = "Payer Info";
+$lang["contact_info"] = "Contact Info";
 
 
 // Partners:

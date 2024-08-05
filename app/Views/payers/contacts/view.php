@@ -63,8 +63,8 @@
 
 
     <ul id="client-contact-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs b-b rounded-0" role="tablist">
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('company'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('contact_info'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo app_lang('payer'); ?></a></li>
         <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
         <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("payers/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
         <?php if ($user_info->id == $login_user->id) { ?>
