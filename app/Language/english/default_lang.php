@@ -101,6 +101,13 @@ $lang["add_grade"] = "Add Grade";
 $lang["edit_grade"] = "Edit Grade";
 $lang["delete_grade"] = "Delete Grade";
 
+// Grades:
+$lang["trainer"] = "Trainer";
+$lang["trainers"] = "Trainers";
+$lang["add_trainer"] = "Add Trainer";
+$lang["delete_trainer"] = "Delete Trainer";
+$lang["edit_trainer"] = "Edit Trainer";
+
 // Payers:
 $lang["payer"] = "Payer";
 $lang["payers"] = "Payers";

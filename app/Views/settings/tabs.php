@@ -123,6 +123,7 @@ $settings_menu["form_setup"][] = array("name" => "merchant_types", "url" => "mer
 $settings_menu["form_setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
 $settings_menu["form_setup"][] = array("name" => "grades", "url" => "grades");
 $settings_menu["form_setup"][] = array("name" => "job_locations", "url" => "job_locations");
+$settings_menu["form_setup"][] = array("name" => "trainers", "url" => "trainers");
 
 
 $settings_menu["setup"][] = array("name" => "gdpr", "url" => "settings/gdpr");
