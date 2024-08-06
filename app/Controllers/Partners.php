@@ -390,13 +390,14 @@ class Partners extends Security_Controller {
 
     /* load client details view */
 
-    function view($client_id = 0, $tab = "") {
-        $this->_validate_client_view_access($client_id);
+    function view($partner_id = 0, $tab = "") {
+        
+        $this->_validate_client_view_access($partner_id);
 
-        if ($client_id) {
-            $options = array("id" => $client_id);
-            $client_info = $this->Clients_model->get_details($options)->getRow();
-            if ($client_info && !$client_info->is_lead) {
+        if ($partner_id) {
+            $options = array("id" => $partner_id);
+            $partner_info = $this->Partners_model->get_details($options)->getRow();
+            if ($partner_info && !$partner_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -406,9 +407,9 @@ class Partners extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['client_info'] = $client_info;
+                $view_data['partner_info'] = $partner_info;
 
-                $view_data["is_starred"] = strpos($client_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($partner_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -901,14 +902,15 @@ class Partners extends Security_Controller {
 
     /* load contacts tab  */
 
-    function contacts($client_id = 0) {
-        $this->_validate_client_view_access($client_id);
+    function contacts($partner_id = 0) {
 
-        if ($client_id) {
-            $view_data["client_id"] = clean_data($client_id);
+        $this->_validate_client_view_access($partner_id);
+
+        if ($partner_id) {
+            $view_data["partner_id"] = clean_data($partner_id);
             $view_data["view_type"] = "";
         } else {
-            $view_data["client_id"] = "";
+            $view_data["partner_id"] = "";
             $view_data["view_type"] = "list_view";
         }
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
@@ -925,11 +927,11 @@ class Partners extends Security_Controller {
         $this->_validate_client_manage_access();
 
         $view_data['model_info'] = $this->Users_model->get_one(0);
-        $view_data['model_info']->client_id = $this->request->getPost('client_id');
+        $view_data['model_info']->partner_id = $this->request->getPost('partner_id');
 
         $view_data['add_type'] = $this->request->getPost('add_type');
 
-        $this->_validate_client_manage_access($view_data['model_info']->client_id);
+        $this->_validate_client_manage_access($view_data['model_info']->partner_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
         return $this->template->view('partners/contacts/modal_form', $view_data);
@@ -954,11 +956,11 @@ class Partners extends Security_Controller {
 
     /* load contact's company info tab view */
 
-    function company_info_tab($client_id = 0) {
-        if ($client_id) {
-            $this->_validate_client_view_access($client_id);
+    function company_info_tab($partner_id = 0) {
+        if ($partner_id) {
+            $this->_validate_client_view_access($partner_id);
 
-            $view_data['model_info'] = $this->Clients_model->get_one($client_id);
+            $view_data['model_info'] = $this->Partners_model->get_one($partner_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -967,7 +969,7 @@ class Partners extends Security_Controller {
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
 
-            $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+            $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $partner_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
@@ -977,7 +979,7 @@ class Partners extends Security_Controller {
 
             $view_data['field_column_3'] = "col-md-10";
 
-            $view_data['can_edit_clients'] = $this->can_edit_clients($client_id);
+            $view_data['can_edit_clients'] = $this->can_edit_clients($partner_id);
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
@@ -1007,9 +1009,10 @@ class Partners extends Security_Controller {
     /* insert/upadate a contact */
 
     function save_contact() {
+
         $contact_id = $this->request->getPost('contact_id');
-        $client_id = $this->request->getPost('client_id');
-        $this->_validate_client_manage_access($client_id);
+        $partner_id = $this->request->getPost('partner_id');
+        $this->_validate_client_manage_access($partner_id);
 
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -1027,25 +1030,25 @@ class Partners extends Security_Controller {
         $this->validate_submitted_data(array(
             "first_name" => "required",
             "last_name" => "required",
-            "client_id" => "required|numeric"
+            "partner_id" => "required|numeric"
         ));
 
         if (!$contact_id) {
-            //inserting new contact. client_id is required
+            //inserting new contact. partner_id is required
 
             $this->validate_submitted_data(array(
                 "email" => "required|valid_email",
             ));
 
             //we'll save following fields only when creating a new contact from this form
-            $user_data["client_id"] = $client_id;
+            $user_data["partner_id"] = $partner_id;
             $user_data["email"] = trim($this->request->getPost('email'));
             $user_data["password"] = $this->request->getPost("login_password") ? password_hash($this->request->getPost("login_password"), PASSWORD_DEFAULT) : "";
             $user_data["created_at"] = get_current_utc_time();
             $user_data["login_type"] = 'normal_login';
 
             //validate duplicate email address
-            if ($this->Users_model->is_email_exists($user_data["email"], 0, $client_id)) {
+            if ($this->Users_model->is_email_exists($user_data["email"], 0, $partner_id)) {
                 echo json_encode(array("success" => false, 'message' => app_lang('duplicate_email')));
                 exit();
             }
@@ -1053,7 +1056,7 @@ class Partners extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Clients_model->get_primary_contact($client_id);
+        $primary_contact = $this->Partners_model->get_primary_contact($partner_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1095,7 +1098,7 @@ class Partners extends Security_Controller {
                 send_app_mail($this->request->getPost('email'), $subject, $message);
             }
 
-            echo json_encode(array("success" => true, "data" => $this->_contact_row_data($save_id), 'id' => $contact_id, "client_id" => $client_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_contact_row_data($save_id), 'id' => $contact_id, "partner_id" => $partner_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -1282,15 +1285,15 @@ class Partners extends Security_Controller {
 
     /* list of contacts, prepared for datatable  */
 
-    function contacts_list_data($client_id = 0) {
+    function contacts_list_data($partner_id = 0) {
 
-        $this->_validate_client_view_access($client_id);
+        $this->_validate_client_view_access($partner_id);
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
             "user_type" => "client",
-            "client_id" => $client_id,
+            "partner_id" => $partner_id,
             "custom_fields" => $custom_fields,
             "show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("client_contacts", $this->login_user->is_admin, $this->login_user->user_type),
@@ -1311,7 +1314,7 @@ class Partners extends Security_Controller {
         }
 
         $hide_primary_contact_label = false;
-        if (!$client_id) {
+        if (!$partner_id) {
             $hide_primary_contact_label = true;
         }
 
@@ -1341,6 +1344,7 @@ class Partners extends Security_Controller {
     /* prepare a row of contact list table */
 
     private function _make_contact_row($data, $custom_fields, $hide_primary_contact_label = false) {
+
         $image_url = get_avatar($data?->image);
         $user_avatar = "<span class='avatar avatar-xs'><img src='$image_url' alt='...'></span>";
         $full_name = $data->first_name . " " . $data->last_name . " ";
@@ -1359,12 +1363,12 @@ class Partners extends Security_Controller {
             $contact_link = $full_name; //don't show clickable link to client
         }
 
-        $client_info = $this->Clients_model->get_one($data->client_id);
+        $client_info = $this->Clients_model->get_one($data->partner_id);
 
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("partners/view/" . $data->client_id), $client_info->company_name),
+            anchor(get_uri("partners/view/" . $data->partner_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",

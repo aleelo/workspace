@@ -159,6 +159,7 @@ class Users_model extends Crud_model {
         $users_table = $this->db->prefixTable('users');
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $clients_table = $this->db->prefixTable('clients');
+        $partners_table = $this->db->prefixTable('partners');
         $roles_table = $this->db->prefixTable('roles');
         $department_table = 'departments';
         
@@ -197,6 +198,7 @@ class Users_model extends Crud_model {
         $status = $this->_get_clean_value($options, "status");
         $user_type = $this->_get_clean_value($options, "user_type");
         $client_id = $this->_get_clean_value($options, "client_id");
+        $partner_id = $this->_get_clean_value($options, "partner_id");
         $exclude_user_id = $this->_get_clean_value($options, "exclude_user_id");
         $first_name = $this->_get_clean_value($options, "first_name");
         $last_name = $this->_get_clean_value($options, "last_name");
@@ -226,6 +228,10 @@ class Users_model extends Crud_model {
 
         if ($client_id) {
             $where .= " AND $users_table.client_id=$client_id";
+        }
+
+        if ($partner_id) {
+            $where .= " AND $users_table.partner_id=$partner_id";
         }
 
         if ($exclude_user_id) {
@@ -339,6 +345,7 @@ class Users_model extends Crud_model {
             FROM $users_table
             LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
             LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id
+            LEFT JOIN $partners_table ON $partners_table.id = $users_table.partner_id
             LEFT JOIN $roles_table ON $roles_table.id = $users_table.role_id
             LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id
             $join_custom_fieds    

@@ -116,6 +116,8 @@ $lang["email"] = "Email";
 $lang["address"] = "Address";
 $lang["edit_partner"] = "Edit Partner";
 $lang["delete_partner"] = "Delete Partner";
+$lang["partner_details"] = "Partner Details";
+$lang["partner_info"] = "Partner Info";
 
 
 //Company:

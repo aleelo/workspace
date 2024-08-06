@@ -3,13 +3,13 @@
     <div class="card">
         <div class=" card-header">
             <?php if ($model_info->type == "person") { ?>
-                <h4> <?php echo app_lang('contact_info'); ?></h4>
+                <h4> <?php echo app_lang('partner_info'); ?></h4>
             <?php } else { ?>
-                <h4> <?php echo app_lang('client_info'); ?></h4>
+                <h4> <?php echo app_lang('partner_info'); ?></h4>
             <?php } ?>
         </div>
         <div class="card-body">
-            <?php echo view("partners/client_form_fields"); ?>
+            <?php echo view("partners/partners_form_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">

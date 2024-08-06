@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <input type="hidden" name="contact_id" value="<?php echo $model_info->id; ?>" />
-    <input type="hidden" name="client_id" value="<?php echo $model_info->client_id; ?>" />
+    <input type="hidden" name="partner_id" value="<?php echo $model_info->partner_id; ?>" />
     <div class="form-group">
         <div class="row">
             <?php
