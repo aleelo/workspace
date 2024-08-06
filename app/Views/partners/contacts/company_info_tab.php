@@ -1,5 +1,5 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("clients/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("partners/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
             <?php if ($model_info->type == "person") { ?>
@@ -9,7 +9,7 @@
             <?php } ?>
         </div>
         <div class="card-body">
-            <?php echo view("clients/client_form_fields"); ?>
+            <?php echo view("partners/client_form_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">

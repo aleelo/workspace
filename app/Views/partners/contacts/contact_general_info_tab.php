@@ -1,11 +1,11 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("clients/save_contact/"), array("id" => "contact-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("partners/save_contact/"), array("id" => "contact-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
             <h4> <?php echo app_lang('general_info'); ?></h4>
         </div>
         <div class="card-body">
-            <?php echo view("clients/contacts/contact_general_info_fields"); ?>
+            <?php echo view("partners/contacts/contact_general_info_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer">
@@ -23,7 +23,7 @@
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
                 setTimeout(function () {
-                    window.location.href = "<?php echo get_uri("clients/contact_profile/" . $model_info->id); ?>" + "/general";
+                    window.location.href = "<?php echo get_uri("partners/contact_profile/" . $model_info->id); ?>" + "/general";
                 }, 500);
             }
         });

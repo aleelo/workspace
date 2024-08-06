@@ -40,7 +40,7 @@ class Partners extends Security_Controller {
 
         
 
-        return $this->template->rander("clients/index", $view_data);
+        return $this->template->rander("partners/index", $view_data);
     }
 
   
@@ -88,7 +88,7 @@ class Partners extends Security_Controller {
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('clients/modal_form', $view_data);
+        return $this->template->view('partners/modal_form', $view_data);
     }
 
     
@@ -317,7 +317,7 @@ class Partners extends Security_Controller {
 
         $all_options = append_server_side_filtering_commmon_params($options);
 
-        $result = $this->Clients_model->get_details($all_options);
+        $result = $this->Partners_model->get_details($all_options);
 
         //by this, we can handel the server side or client side from the app table prams.
         if (get_array_value($all_options, "server_side")) {
@@ -354,54 +354,52 @@ class Partners extends Security_Controller {
     private function _make_row($data, $custom_fields) {
 
 
-        $image_url = get_avatar($data->contact_avatar);
+        // $image_url = get_avatar($data->contact_avatar);
 
-        $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
+        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
 
-        $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
+        // $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
 
-        $group_list = "";
-        if ($data->client_groups) {
-            $groups = explode(",", $data->client_groups);
-            foreach ($groups as $group) {
-                if ($group) {
-                    $group_list .= "<li>" . $group . "</li>";
-                }
-            }
-        }
+        // $group_list = "";
+        // if ($data->client_groups) {
+        //     $groups = explode(",", $data->client_groups);
+        //     foreach ($groups as $group) {
+        //         if ($group) {
+        //             $group_list .= "<li>" . $group . "</li>";
+        //         }
+        //     }
+        // }
 
-        if ($group_list) {
-            $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
-        }
+        // if ($group_list) {
+        //     $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
+        // }
 
-        $client_labels = make_labels_view_data($data->labels_list, true);
+        // // $client_labels = make_labels_view_data($data->labels_list, true);
 
-        $due = 0;
-        if ($data->invoice_value) {
-            $due = ignor_minor_value($data->invoice_value - $data->payment_received);
-        }
+        // $due = 0;
+        // if ($data->invoice_value) {
+        //     $due = ignor_minor_value($data->invoice_value - $data->payment_received);
+        // }
 
-        $owner = "-";
-        if ($data->created_by) {
-            // $owner_image_url = get_avatar($data->owner_avatar);
-            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-            $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
-            // $data->user; //
+        // $owner = "-";
+        // if ($data->created_by) {
+        //     // $owner_image_url = get_avatar($data->owner_avatar);
+        //     // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
+        //     // $owner = get_team_member_profile_link($data->created_by, $owner_user);
+        //     $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
+        //     // $data->user; //
 
-        }
+        // }
 
 
         $row_data = array($data->id,
 
-            anchor(get_uri("clients/view/" . $data->id), $data->company_name),
-            $data->Reg_NO,
-            $data->Start_Date,
-            $data->End_Date,
-            $data->payer_size,
-            $data->Contact_Name,
-            $owner?->first_name.' '.$owner?->last_name,
-            $data->Status,
+            anchor(get_uri("partners/view/" . $data->id), $data->name),
+            $data->contact_name,
+            $data->phone,
+            $data->email,
+            $data->address,
+            
 
             // $data->primary_contact ? $primary_contact : "",
             // $group_list,
@@ -418,8 +416,8 @@ class Partners extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("clients/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("partners/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("partners/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -476,7 +474,7 @@ class Partners extends Security_Controller {
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
-                return $this->template->rander("clients/view", $view_data);
+                return $this->template->rander("partners/view", $view_data);
             } else {
                 show_404();
             }
@@ -493,17 +491,17 @@ class Partners extends Security_Controller {
 
             if ($type === "add") {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "add");
-                return $this->template->view('clients/star/starred', $view_data);
+                return $this->template->view('partners/star/starred', $view_data);
             } else {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "remove");
-                return $this->template->view('clients/star/not_starred', $view_data);
+                return $this->template->view('partners/star/not_starred', $view_data);
             }
         }
     }
 
     function show_my_starred_clients() {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
-        return $this->template->view('clients/star/clients_list', $view_data);
+        return $this->template->view('partners/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
@@ -517,7 +515,7 @@ class Partners extends Security_Controller {
 
         $view_data['client_id'] = clean_data($client_id);
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
-        return $this->template->view("clients/projects/index", $view_data);
+        return $this->template->view("partners/projects/index", $view_data);
     }
 
     /* load payments tab  */
@@ -528,7 +526,7 @@ class Partners extends Security_Controller {
         if ($client_id) {
             $view_data["client_info"] = $this->Clients_model->get_one($client_id);
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("clients/payments/index", $view_data);
+            return $this->template->view("partners/payments/index", $view_data);
         }
     }
 
@@ -545,7 +543,7 @@ class Partners extends Security_Controller {
 
             $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
-            return $this->template->view("clients/tickets/index", $view_data);
+            return $this->template->view("partners/tickets/index", $view_data);
         }
     }
 
@@ -570,7 +568,7 @@ class Partners extends Security_Controller {
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
-            return $this->template->view("clients/invoices/index", $view_data);
+            return $this->template->view("partners/invoices/index", $view_data);
         }
     }
 
@@ -586,7 +584,7 @@ class Partners extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("estimates", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("estimates", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("clients/estimates/estimates", $view_data);
+            return $this->template->view("partners/estimates/estimates", $view_data);
         }
     }
 
@@ -602,7 +600,7 @@ class Partners extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("orders", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("orders", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("clients/orders/orders", $view_data);
+            return $this->template->view("partners/orders/orders", $view_data);
         }
     }
 
@@ -613,7 +611,7 @@ class Partners extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("clients/estimates/estimate_requests", $view_data);
+            return $this->template->view("partners/estimates/estimate_requests", $view_data);
         }
     }
 
@@ -624,7 +622,7 @@ class Partners extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("clients/notes/index", $view_data);
+            return $this->template->view("partners/notes/index", $view_data);
         }
     }
 
@@ -657,9 +655,9 @@ class Partners extends Security_Controller {
 
         if ($view_type == "page_view") {
             $view_data['page_view'] = true;
-            return $this->template->rander("clients/files/index", $view_data);
+            return $this->template->rander("partners/files/index", $view_data);
         } else {
-            return $this->template->view("clients/files/index", $view_data);
+            return $this->template->view("partners/files/index", $view_data);
         }
     }
 
@@ -673,7 +671,7 @@ class Partners extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data['client_id'] = $client_id;
-        return $this->template->view('clients/files/modal_form', $view_data);
+        return $this->template->view('partners/files/modal_form', $view_data);
     }
 
     /* save file data and move temp file to parmanent file directory */
@@ -754,7 +752,7 @@ class Partners extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("clients/view_file/" . $data->id)));
+                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("partners/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -762,10 +760,10 @@ class Partners extends Security_Controller {
             $description .= "</div>";
         }
 
-        $options = anchor(get_uri("clients/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
+        $options = anchor(get_uri("partners/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
 
         if ($this->login_user->user_type == "staff") {
-            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_file"), "data-action" => "delete-confirmation"));
+            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("partners/delete_file"), "data-action" => "delete-confirmation"));
         }
 
 
@@ -803,7 +801,7 @@ class Partners extends Security_Controller {
 
             $view_data["file_info"] = $file_info;
             $view_data['file_id'] = clean_data($file_id);
-            return $this->template->view("clients/files/view", $view_data);
+            return $this->template->view("partners/files/view", $view_data);
         } else {
             show_404();
         }
@@ -876,7 +874,7 @@ class Partners extends Security_Controller {
             $view_data['show_cotact_info'] = true;
             $view_data['show_social_links'] = true;
             $view_data['social_link'] = $this->Social_links_model->get_one($contact_id);
-            return $this->template->rander("clients/contacts/view", $view_data);
+            return $this->template->rander("partners/contacts/view", $view_data);
         } else {
             show_404();
         }
@@ -903,7 +901,7 @@ class Partners extends Security_Controller {
 
         $view_data["hidden_topbar_menus_dropdown"] = $this->get_hidden_topbar_menus_dropdown();
 
-        return $this->template->view("clients/contacts/my_preferences", $view_data);
+        return $this->template->view("partners/contacts/my_preferences", $view_data);
     }
 
     function save_my_preferences() {
@@ -975,7 +973,7 @@ class Partners extends Security_Controller {
 
         $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-        return $this->template->view("clients/contacts/index", $view_data);
+        return $this->template->view("partners/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -991,7 +989,7 @@ class Partners extends Security_Controller {
         $this->_validate_client_manage_access($view_data['model_info']->client_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-        return $this->template->view('clients/contacts/modal_form', $view_data);
+        return $this->template->view('partners/contacts/modal_form', $view_data);
     }
 
     /* load contact's general info tab view */
@@ -1007,7 +1005,7 @@ class Partners extends Security_Controller {
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients($view_data['model_info']->client_id);
-            return $this->template->view('clients/contacts/contact_general_info_tab', $view_data);
+            return $this->template->view('partners/contacts/contact_general_info_tab', $view_data);
         }
     }
 
@@ -1042,7 +1040,7 @@ class Partners extends Security_Controller {
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
             $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
-            return $this->template->view('clients/contacts/company_info_tab', $view_data);
+            return $this->template->view('partners/contacts/company_info_tab', $view_data);
         }
     }
 
@@ -1413,7 +1411,7 @@ class Partners extends Security_Controller {
             $removal_request_pending = "<span class='bg-danger badge'>" . app_lang("removal_request_pending") . "</span>";
         }
 
-        $contact_link = anchor(get_uri("clients/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
+        $contact_link = anchor(get_uri("partners/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
         if ($this->login_user->user_type === "client") {
             $contact_link = $full_name; //don't show clickable link to client
         }
@@ -1423,7 +1421,7 @@ class Partners extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("clients/view/" . $data->client_id), $client_info->company_name),
+            anchor(get_uri("partners/view/" . $data->client_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
@@ -1435,7 +1433,7 @@ class Partners extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("clients/delete_contact"), "data-action" => "delete"));
+        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("partners/delete_contact"), "data-action" => "delete"));
 
         return $row_data;
     }
@@ -1455,7 +1453,7 @@ class Partners extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-        return $this->template->view('clients/contacts/invitation_modal', $view_data);
+        return $this->template->view('partners/contacts/invitation_modal', $view_data);
     }
 
     //send a team member invitation to an email address
@@ -1513,7 +1511,7 @@ class Partners extends Security_Controller {
     function users() {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
-            return $this->template->rander("clients/contacts/users", $view_data);
+            return $this->template->rander("partners/contacts/users", $view_data);
         }
     }
 
@@ -1530,7 +1528,7 @@ class Partners extends Security_Controller {
     function import_clients_modal_form() {
         $this->_validate_client_manage_access();
 
-        return $this->template->view("clients/import_clients_modal_form");
+        return $this->template->view("partners/import_clients_modal_form");
     }
 
     private function _prepare_client_data($data_row, $allowed_headers) {
@@ -1966,7 +1964,7 @@ class Partners extends Security_Controller {
 
     function gdpr() {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
-        return $this->template->view("clients/contacts/gdpr", $view_data);
+        return $this->template->view("partners/contacts/gdpr", $view_data);
     }
 
     function export_my_data() {
@@ -2060,7 +2058,7 @@ class Partners extends Security_Controller {
             log_notification("client_contact_requested_account_removal", array("client_id" => $client_id), $user_id);
 
             $this->session->setFlashdata("success_message", app_lang("estimate_submission_message"));
-            app_redirect("clients/contact_profile/$user_id/gdpr");
+            app_redirect("partners/contact_profile/$user_id/gdpr");
         }
     }
 
@@ -2077,7 +2075,7 @@ class Partners extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("clients/expenses/index", $view_data);
+            return $this->template->view("partners/expenses/index", $view_data);
         }
     }
 
@@ -2091,11 +2089,11 @@ class Partners extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("clients/contracts/contracts", $view_data);
+            return $this->template->view("partners/contracts/contracts", $view_data);
         }
     }
 
-    function clients_list() {
+    function partners_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2109,7 +2107,7 @@ class Partners extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("clients/clients_list", $view_data);
+        return $this->template->view("partners/partners_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {
@@ -2150,7 +2148,7 @@ class Partners extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("proposals", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("proposals", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("clients/proposals/proposals", $view_data);
+            return $this->template->view("partners/proposals/proposals", $view_data);
         }
     }
 
@@ -2187,7 +2185,7 @@ class Partners extends Security_Controller {
         $view_data["can_create_task"] = $this->can_edit_clients();
 
         $view_data['client_id'] = clean_data($client_id);
-        return $this->template->view("clients/tasks/index", $view_data);
+        return $this->template->view("partners/tasks/index", $view_data);
     }
 }
 

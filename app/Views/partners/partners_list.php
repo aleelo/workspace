@@ -18,7 +18,7 @@
     }
 
     var ignoreSavedFilter = false;
-    var quick_filters_dropdown = <?php echo view("clients/quick_filters_dropdown"); ?>;
+    var quick_filters_dropdown = <?php echo view("partners/quick_filters_dropdown"); ?>;
     if (window.selectedClientQuickFilter){
     var filterIndex = quick_filters_dropdown.findIndex(x => x.id === window.selectedClientQuickFilter);
     if ([filterIndex] > - 1){
@@ -29,7 +29,7 @@
     }
 
     $(selector).appTable({
-    source: '<?php echo_uri("clients/list_data") ?>',
+    source: '<?php echo_uri("partners/list_data") ?>',
             serverSide: true,
             smartFilterIdentity: "all_clients_list", //a to z and _ only. should be unique to avoid conflicts
             ignoreSavedFilter: ignoreSavedFilter,
@@ -44,14 +44,11 @@
             ],
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("payer_name") ?>", "class": "all", order_by: "company_name"},
-            {title: "<?php echo app_lang("Registration_no") ?>", order_by: "Reg_NO"},
-            {title: "<?php echo app_lang("start_date") ?>", order_by: "Start_Date"},
-            {title: "<?php echo app_lang("end_date") ?>", order_by: "End_Date"},
-            {title: "<?php echo app_lang("payer_size") ?>", order_by: "payer_size"},
-            {title: "<?php echo app_lang("contact_name") ?>", order_by: "Contact_Name"},
-            {title: "<?php echo app_lang("created_by") ?>", order_by: "created_by"},
-            {title: "<?php echo app_lang("status") ?>", order_by: "Status"}
+            {title: "<?php echo app_lang("partner_name") ?>", "class": "all", order_by: "name"},
+            {title: "<?php echo app_lang("focul_point") ?>", order_by: "contact_name"},
+            {title: "<?php echo app_lang("phone") ?>", order_by: "phone"},
+            {title: "<?php echo app_lang("email") ?>", order_by: "email"},
+            {title: "<?php echo app_lang("address") ?>", order_by: "address"}
 
             
 <?php echo $custom_field_headers; ?>,

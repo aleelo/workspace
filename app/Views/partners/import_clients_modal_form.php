@@ -1,11 +1,11 @@
-<?php echo form_open(get_uri("clients/save_client_from_excel_file"), array("id" => "import-client-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("partners/save_client_from_excel_file"), array("id" => "import-client-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix import-client-modal-body">
     <div class="container-fluid">
         <div id="upload-area">
             <?php
             echo view("includes/multi_file_uploader", array(
-                "upload_url" => get_uri("clients/upload_excel_file"),
-                "validation_url" => get_uri("clients/validate_import_clients_file"),
+                "upload_url" => get_uri("partners/upload_excel_file"),
+                "validation_url" => get_uri("partners/validate_import_clients_file"),
                 "max_files" => 1,
                 "hide_description" => true,
                 "disable_button_type" => true
@@ -18,7 +18,7 @@
 </div>
 
 <div class="modal-footer">
-    <?php echo anchor("clients/download_sample_excel_file", "<i data-feather='download' class='icon-16'></i> " . app_lang("download_sample_file"), array("title" => app_lang("download_sample_file"), "class" => "btn btn-default float-start")); ?>
+    <?php echo anchor("partners/download_sample_excel_file", "<i data-feather='download' class='icon-16'></i> " . app_lang("download_sample_file"), array("title" => app_lang("download_sample_file"), "class" => "btn btn-default float-start")); ?>
     <button type="button" class="btn btn-default cancel-upload" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
     <button id="form-previous" type="button" class="btn btn-default hide"><span data-feather="arrow-left-circle" class="icon-16"></span> <?php echo app_lang('back'); ?></button>
     <button id="form-next" type="button" disabled="true" class="btn btn-info text-white"><span data-feather="arrow-right-circle" class="icon-16"></span> <?php echo app_lang('next'); ?></button>
@@ -76,7 +76,7 @@
 
 
             $.ajax({
-                url: "<?php echo get_uri('clients/validate_import_clients_file_data') ?>",
+                url: "<?php echo get_uri('partners/validate_import_clients_file_data') ?>",
                 type: 'POST',
                 dataType: 'json',
                 data: {file_name: fileName},

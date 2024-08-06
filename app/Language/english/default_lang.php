@@ -107,6 +107,13 @@ $lang["contact_info"] = "Contact Info";
 
 // Partners:
 $lang["partners"] = "Partners";
+$lang["partners_list"] = "Partners List";
+$lang["add_partner"] = "Add Partner";
+$lang["partner_name"] = "Partner Name";
+$lang["focul_point"] = "Focul Point";
+$lang["phone"] = "Phone";
+$lang["email"] = "Email";
+$lang["address"] = "Address";
 
 
 //Company:
