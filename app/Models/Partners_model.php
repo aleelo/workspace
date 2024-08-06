@@ -156,8 +156,6 @@ class Partners_model extends Crud_model {
         $sql = "SELECT SQL_CALC_FOUND_ROWS $partners_table.*
         FROM $partners_table
         LEFT JOIN (SELECT partner_id, COUNT(id) AS total_projects FROM $projects_table WHERE deleted=0 AND project_type='partner_project' GROUP BY partner_id) AS project_table ON project_table.partner_id= $partners_table.id
-        
-                       
         $join_custom_fieds               
         WHERE $partners_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";

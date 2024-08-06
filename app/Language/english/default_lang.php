@@ -94,9 +94,14 @@ $lang["education_info"] = "Education Info";
 $lang["profile_info"] = "Profile Info";
 $lang["profile_info"] = "Profile Info";
 
+// Grades:
+$lang["grade"] = "Grade";
+$lang["grades"] = "Grades";
+$lang["add_grade"] = "Add Grade";
+$lang["edit_grade"] = "Edit Grade";
+$lang["delete_grade"] = "Delete Grade";
 
 // Payers:
-
 $lang["payer"] = "Payer";
 $lang["payers"] = "Payers";
 $lang["payers_info"] = "Payers Info";
