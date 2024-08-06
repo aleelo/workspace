@@ -47,14 +47,15 @@ class Partners extends Security_Controller {
     /* load client add/edit modal */
 
     function modal_form() {
-        $client_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($client_id);
+        
+        $partner_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($partner_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
 
-        $view_data['label_column'] = "col-md-3";
+        $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
 
         $view_data['label_column_2'] = "col-md-2 text-right";
@@ -64,7 +65,7 @@ class Partners extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Clients_model->get_one($client_id);
+        $view_data['model_info'] = $this->Partners_model->get_one($partner_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         //prepare groups dropdown list
@@ -86,7 +87,7 @@ class Partners extends Security_Controller {
         $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
         //get custom fields
-        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $partner_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
         return $this->template->view('partners/modal_form', $view_data);
     }
@@ -130,33 +131,23 @@ class Partners extends Security_Controller {
     
     function save() {
         
-        $client_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($client_id);
+        $partner_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($partner_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "company_name" => "required"
+            "partner_name" => "required"
         ));
 
-        $company_name = $this->request->getPost('company_name');
+        $partner_name = $this->request->getPost('partner_name');
 
         $data = array(
-            "company_name" => $company_name,
-            "type" => $this->request->getPost('type'),
-            "payer_size" => $this->request->getPost('payer_size'), // ? 'TRUE' : 'FALSE',
-            "Reg_Type" => $this->request->getPost('Reg_Type'),
-            "Reg_NO" => $this->request->getPost('Reg_NO'),
-            "Start_Date" => $this->request->getPost('Start_Date'),
-            "End_Date" => $this->request->getPost('End_Date'),
-            "Contact_Name" => $this->request->getPost('Contact_Name'),
-            "address" => $this->request->getPost('address'),
-            "phone" => $this->request->getPost('phone'),
+            "name" => $partner_name,
+            "contact_name" => $this->request->getPost('focul_person'),
+            "phone" => $this->request->getPost('phone'), // ? 'TRUE' : 'FALSE',
             "email" => $this->request->getPost('email'),
-            "TIN" => $this->request->getPost('TIN'),
-            "turnover_tax" => $this->request->getPost('turnover_tax'),
-            "number_of_employees" => $this->request->getPost('number_of_employees'),
-            "industries" => $this->request->getPost('industries')
+            "address" => $this->request->getPost('address'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -165,30 +156,30 @@ class Partners extends Security_Controller {
         }
 
 
-        if (!$client_id) {
+        if (!$partner_id) {
             $data["created_date"] = get_current_utc_time();
         }
 
 
-        if ($this->login_user->is_admin) {
-            $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-            $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-            $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
+        // if ($this->login_user->is_admin) {
+        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
+        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
+        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
 
-            //check if the currency is editable
-            if ($client_id) {
-                $client_info = $this->Clients_model->get_one($client_id);
-                if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($client_id)) {
-                    echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-                    exit();
-                }
-            }
-        }
+        //     //check if the currency is editable
+        //     if ($partner_id) {
+        //         $client_info = $this->Clients_model->get_one($partner_id);
+        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($partner_id)) {
+        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
+        //             exit();
+        //         }
+        //     }
+        // }
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$client_id) {
+        } else if (!$partner_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -196,72 +187,24 @@ class Partners extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $client_id)) {
-            echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
-            exit();
-        }
+        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $partner_id)) {
+        //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
+        //     exit();
+        // }
 
-        $save_id = $this->Clients_model->ci_save($data, $client_id);
-        
-        $merchant_type = $this->request->getPost('merchant_type');
-        $merchant_number = $this->request->getPost('merchant_number');
-
-        if($save_id && $merchant_type && !$client_id){
-            foreach($merchant_type as $k => $v){
-                
-                $this->db->query("INSERT INTO rise_merchant_details(payer_id,merchant_id,merchant_number)
-                            VALUES($save_id,'$merchant_type[$k]','$merchant_number[$k]')");
-                // $insert_id = $this->db->insertID();
-
-            }
-        }else if($client_id && $merchant_type){
-            // var_dump($member_names);die;
-
-            //delete the old member
-            $this->db->query("delete from rise_merchant_details where payer_id =  $client_id");
-            // insert the new members
-            foreach($merchant_type as $k => $v){
-                
-                $this->db->query("INSERT INTO rise_merchant_details(payer_id,merchant_id,merchant_number)
-                            VALUES($save_id,'$merchant_type[$k]','$merchant_number[$k]')");
-                // $insert_id = $this->db->insertID();
-
-            }
-        }
+        $save_id = $this->Partners_model->ci_save($data, $partner_id);
+     
 
         if ($save_id) {
 
-            if(!$client_id){
+            if(!$partner_id){
                     
                 $options = array('id'=>$save_id);
 
-                $payer = $this->Clients_model->get_details($options)->getRow();
+                $partner = $this->Partners_model->get_details($options)->getRow();
 
-                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $payer?->created_by")->getRow();
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
 
-                    //send email to the administration
-                   $payer_email_data = [
-                       'PAYER_ID'=>$save_id,
-                       'PAYER_NAME' => $payer->company_name,
-                       'REG_NO'=>$payer->Reg_NO,
-                       'START_DATE'=>$payer->Start_Date,  
-                       'END_DATE'=>$payer->End_Date,  
-                       'email'=>'',                 
-                   ];
-
-                   $r = $this->send_new_payer_email($payer_email_data);
-
-                    //send email to the user 
-                   $payer_email_data = [
-                       'PAYER_ID'=>$save_id,
-                       'PAYER_NAME' => $payer->company_name,
-                       'REG_NO'=>$payer->Reg_NO,
-                       'START_DATE'=>$payer->Start_Date,  
-                       'END_DATE'=>$payer->End_Date,  
-                       'email'=>$user_info->private_email,                 
-                   ];
-
-                   $r = $this->send_new_payer_email($payer_email_data);
             }
 
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
@@ -269,7 +212,7 @@ class Partners extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("client_id" => $save_id);
+                $ticket_data = array("partner_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
@@ -282,14 +225,14 @@ class Partners extends Security_Controller {
     /* delete or undo a client */
 
     function delete() {
+
         $id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($id);
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
-        if ($this->Clients_model->delete_client_and_sub_items($id)) {
+        if ($this->db->query("delete from rise_partners where id = $id")) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -345,7 +288,7 @@ class Partners extends Security_Controller {
             "id" => $id,
             "custom_fields" => $custom_fields
         );
-        $data = $this->Clients_model->get_details($options)->getRow();
+        $data = $this->Partners_model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
     }
 
@@ -416,8 +359,8 @@ class Partners extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("partners/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("partners/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("partners/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_partner'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_partner'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("partners/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }

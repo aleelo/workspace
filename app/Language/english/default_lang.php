@@ -110,10 +110,12 @@ $lang["partners"] = "Partners";
 $lang["partners_list"] = "Partners List";
 $lang["add_partner"] = "Add Partner";
 $lang["partner_name"] = "Partner Name";
-$lang["focul_point"] = "Focul Point";
+$lang["focul_person"] = "Focul Person";
 $lang["phone"] = "Phone";
 $lang["email"] = "Email";
 $lang["address"] = "Address";
+$lang["edit_partner"] = "Edit Partner";
+$lang["delete_partner"] = "Delete Partner";
 
 
 //Company:

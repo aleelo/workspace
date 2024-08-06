@@ -45,7 +45,7 @@
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
             {title: "<?php echo app_lang("partner_name") ?>", "class": "all", order_by: "name"},
-            {title: "<?php echo app_lang("focul_point") ?>", order_by: "contact_name"},
+            {title: "<?php echo app_lang("focul_person") ?>", order_by: "contact_name"},
             {title: "<?php echo app_lang("phone") ?>", order_by: "phone"},
             {title: "<?php echo app_lang("email") ?>", order_by: "email"},
             {title: "<?php echo app_lang("address") ?>", order_by: "address"}
