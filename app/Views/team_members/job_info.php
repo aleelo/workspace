@@ -51,14 +51,13 @@
                             <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
                             <div class=" col-md-9">
                                 <?php
-                                $grade = [''=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','F'=>'F','X'=>'X'];
                                 echo form_dropdown(array(
                                     "id" => "grade",
-                                    "name" => "grade",
+                                    "name" => "grade_id",
                                     "class" => "form-control select2",
                                     "placeholder" => 'Grade',
                                     "autocomplete" => "off"
-                                ),$grade,[$job_info->grade]);
+                                ),$grades,[$job_info->grade_id]);
                                 ?>
                             </div>
                         </div>

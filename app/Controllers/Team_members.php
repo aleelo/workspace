@@ -266,7 +266,7 @@ class Team_members extends Security_Controller {
                 "place_of_work" => $this->request->getPost('place_of_work'),
                 "employee_type" => $this->request->getPost('employee_type'),
                 "employee_id" => $this->request->getPost('employee_id'),
-                "grade" => $this->request->getPost('grade'),
+                "grade_id" => $this->request->getPost('grade_id'),
             );
 
             $job_data["signature"] = serialize($signature);
@@ -660,6 +660,7 @@ class Team_members extends Security_Controller {
         // echo json_encode($view_data['departments']);
         // die('ok');
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
+        $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
 
         
         $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
@@ -719,7 +720,7 @@ class Team_members extends Security_Controller {
             "job_title_so" => $this->request->getPost('job_title_so'),
             "employee_type" => $this->request->getPost('employee_type'),
             "employee_id" => $this->request->getPost('employee_id'),
-            "grade" => $this->request->getPost('grade'),
+            "grade_id" => $this->request->getPost('grade_id'),
             "work_experience" => $this->request->getPost('work_experience'),
             "place_of_work" => $this->request->getPost('place_of_work'),
             "job_location_id" => $this->request->getPost('job_location'),
