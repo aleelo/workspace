@@ -103,7 +103,7 @@ class Security_Controller extends App_Controller {
 
     public function get_director_department_id(){
         $user_id = $this->login_user->id;
-        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user_id")->getRow();
+        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.dep_head_id = us.id WHERE us.id = $user_id")->getRow();
 
         return $dep_info?->id;
     }
