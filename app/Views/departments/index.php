@@ -1,37 +1,45 @@
-<div id="page-content" class="page-wrapper clearfix grid-button">
-    <div class="card">
-        <div class="page-title clearfix items-page-title">
-            <h1> <?php echo app_lang('departments_list'); ?></h1>
-            <div class="title-button-group">
-                <!-- <?php //echo modal_anchor(get_uri("purchase_items/import_items_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'))); ?> -->
-                <?php echo modal_anchor(get_uri("departments/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_departments'), array("class" => "btn btn-default", "title" => app_lang('add_departments'))); ?>
+<div id="page-content" class="page-wrapper clearfix">
+    <div class="clearfix grid-button">
+        <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/departments_list/"); ?>" data-bs-target="#clients_list"><?php echo app_lang('departments_list'); ?></a></li>
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("departments/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
+            <div class="tab-title clearfix no-border">
+                <div class="title-button-group">
+                    <?php
+                    if ($can_edit_clients) {
+                        // echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-outline-light", "title" => app_lang('manage_labels'), "data-post-type" => "client"));
+                        // echo modal_anchor(get_uri("departments/import_clients_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_clients'), array("class" => "btn btn-default", "title" => app_lang('import_clients')));
+                        echo modal_anchor(get_uri("departments/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_department'), array("class" => "btn btn-default", "title" => app_lang('add_department')));
+                    }
+                    ?>
+                </div>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table id="departments-table" class="display" cellspacing="0" width="100%">            
-            </table>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade" id="overview">
+                <?php echo view("departments/overview/index"); ?>
+            </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="clients_list"></div>
+            <div role="tabpanel" class="tab-pane fade" id="contacts"></div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#departments-table").appTable({
-            source: '<?php echo_uri("departments/list_data") ?>',
-            order: [[0, 'desc']],
-            columns: [
-                {title: "<?php echo app_lang('id') ?> ", "class": "all"},
-                {title: "<?php echo app_lang('Department_name_so') ?> ", "class": ""},
-                {title: "<?php echo app_lang('short_name_SO') ?> ", "class": ""},
-                {title: "<?php echo app_lang('Department_name_en') ?>", "class": " "},
-                {title: "<?php echo app_lang('short_name_EN') ?>", "class": " "},
-                {title: "<?php echo app_lang('department_email') ?>", "class": " "},
-                {title: "<?php echo app_lang('department_head') ?>", "class": ""},
-                {title: "<?php echo app_lang('remarks') ?>", "class": "text-right "},
-                {title: "<i data-feather='menu' class='icon-16'></i>", "class": "text-center option "}
-            ],
-            printColumns: [0, 1, 2, 3, 4,5],
-            xlsColumns: [0, 1, 2, 3, 4,5]
-        });
+        setTimeout(function () {
+            var tab = "<?php echo $tab; ?>";
+            if (tab === "clients_list" || tab === "clients_list-has_open_projects") {
+                $("[data-bs-target='#clients_list']").trigger("click");
+
+                window.selectedClientQuickFilter = window.location.hash.substring(1);
+            } else if (tab === "contacts") {
+                $("[data-bs-target='#contacts']").trigger("click");
+
+                window.selectedContactQuickFilter = window.location.hash.substring(1);
+            }
+        }, 210);
     });
 </script>

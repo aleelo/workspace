@@ -33,7 +33,7 @@ class Leave_applications_model extends Crud_model {
         $Users_model = model("App\Models\Users_model");
         $user = $Users_model->get_access_info($Users_model->login_user_id());
 
-        $dep_info = $this->db->query("SELECT dp.id FROM departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user->id")->getRow();
+        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user->id")->getRow();
 
         return $dep_info?->id;
     }
@@ -45,7 +45,7 @@ class Leave_applications_model extends Crud_model {
         $leave_types_table = $this->db->prefixTable('leave_types');
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $users_table = $this->db->prefixTable('users');
-        $department_table = 'departments';
+        $department_table = $this->db->prefixTable('departments');
         $where = "";
         
         $id = $this->_get_clean_value($options, "id");

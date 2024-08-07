@@ -161,7 +161,8 @@ class Users_model extends Crud_model {
         $clients_table = $this->db->prefixTable('clients');
         $partners_table = $this->db->prefixTable('partners');
         $roles_table = $this->db->prefixTable('roles');
-        $department_table = 'departments';
+        $department_table = $this->db->prefixTable('departments');
+        // $department_table = 'departments';
         
         $Users_model = model("App\Models\Users_model");
         $login_user_id = $Users_model->login_user_id();
@@ -869,11 +870,12 @@ class Users_model extends Crud_model {
     function count_users_by_department() {
         $users_table = $this->db->prefixTable('users');
         $team_member_job_info = $this->db->prefixTable('team_member_job_info');
+        $department_table = $this->db->prefixTable('departments');
 
-        $sql = "SELECT CASE WHEN d.nameSo is null THEN 'No Department' ELSE d.nameSo END department,count(j.department_id) count
+        $sql = "SELECT CASE WHEN $department_table.nameSo is null THEN 'No Department' ELSE $department_table.nameSo END department,count(j.department_id) count
             FROM $users_table u            
             left join $team_member_job_info j on u.id = j.user_id
-            left join departments d on d.id = j.department_id
+            left join $department_table  on $department_table.id = j.department_id
 
             WHERE u.deleted=0 AND u.user_type='staff' AND u.status='active' AND  d.nameSo is not null 
             Group by d.id";

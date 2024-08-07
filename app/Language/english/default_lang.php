@@ -71,7 +71,6 @@ $lang["total_team_members_overview"] = "Total Employee Overview";
 //Departments:
 $lang["departments"] = "Departments";
 $lang["add_department"] = "Add Department";
-$lang["add_department"] = "Add Department";
 $lang["add_departments"] = "Add Department";
 $lang["edit_department"] = "Edit Department";
 $lang["departments_list"] = "Departments List";
@@ -93,6 +92,7 @@ $lang["edit_leave"] = "Edit Leave";
 $lang["education_info"] = "Education Info";
 $lang["profile_info"] = "Profile Info";
 $lang["profile_info"] = "Profile Info";
+$lang["remarks"] = "Remarks";
 
 // Grades:
 $lang["grade"] = "Grade";
@@ -101,12 +101,26 @@ $lang["add_grade"] = "Add Grade";
 $lang["edit_grade"] = "Edit Grade";
 $lang["delete_grade"] = "Delete Grade";
 
-// Grades:
+// Trainers:
 $lang["trainer"] = "Trainer";
 $lang["trainers"] = "Trainers";
 $lang["add_trainer"] = "Add Trainer";
 $lang["delete_trainer"] = "Delete Trainer";
 $lang["edit_trainer"] = "Edit Trainer";
+
+// Sections:
+$lang["section"] = "Section";
+$lang["sections"] = "Sections";
+$lang["add_section"] = "Add Section";
+$lang["sections_list"] = "Sections List";
+$lang["section_name_so"] = "Section Name SO";
+$lang["short_name_so"] = "Short Name SO";
+$lang["section_name_en"] = "Section Name EN";
+$lang["short_name_en"] = "Short Name EN";
+$lang["section_email"] = "Section Email";
+$lang["section_department"] = "Department";
+$lang["section_head"] = "Section Head";
+$lang["section_remarks"] = "Remarks";
 
 // Payers:
 $lang["payer"] = "Payer";

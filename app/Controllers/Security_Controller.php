@@ -103,7 +103,7 @@ class Security_Controller extends App_Controller {
 
     public function get_director_department_id(){
         $user_id = $this->login_user->id;
-        $dep_info = $this->db->query("SELECT dp.id FROM departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user_id")->getRow();
+        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.head_id = us.id WHERE us.id = $user_id")->getRow();
 
         return $dep_info?->id;
     }
@@ -169,7 +169,7 @@ class Security_Controller extends App_Controller {
             $dept_id = '%';
         }
 
-        $depts = $this->db->query("select id,nameSo from departments where id like '$dept_id' and deleted=0");
+        $depts = $this->db->query("select id,nameSo from rise_departments where id like '$dept_id' and deleted=0");
         
         $data = array('' => '---Choose Department---');
 
@@ -933,7 +933,7 @@ class Security_Controller extends App_Controller {
 
     
     public function get_department_name($id){
-        $d = $this->db->query("SELECT nameSo from departments where id = $id")->getRow();
+        $d = $this->db->query("SELECT nameSo from rise_departments where id = $id")->getRow();
         
         if(empty($d)){
             return '';
@@ -945,7 +945,7 @@ class Security_Controller extends App_Controller {
         $user_id = $this->login_user->id;
         $job_info = $this->db->query("SELECT d.nameSo from rise_team_member_job_info t 
         left join rise_users u on u.id=t.user_id 
-        left join departments d on d.id=t.department_id 
+        left join rise_departments d on d.id=t.department_id 
         where t.user_id = $user_id")->getRow();
 
         if(empty($job_info)){
@@ -1246,7 +1246,7 @@ class Security_Controller extends App_Controller {
             $dept_id = '%';
         }
 
-        $depts = $this->db->query("select id,nameSo from departments where id like '$dept_id'");
+        $depts = $this->db->query("select id,nameSo from rise_departments where id like '$dept_id'");
         $data[] = array('id' => '', 'text' => 'Choose Department');
 
         if(!$depts){
@@ -1270,7 +1270,7 @@ class Security_Controller extends App_Controller {
             $dept_id = '%';
         }
 
-        $depts = $this->db->query("select id,nameSo from departments where id like '$dept_id'");
+        $depts = $this->db->query("select id,nameSo from rise_departments where id like '$dept_id'");
         $data[] = array('id' => '', 'text' => 'Choose Department');
 
         if(!$depts){

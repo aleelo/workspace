@@ -534,7 +534,7 @@ class Documents extends Security_Controller
             $result = $this->db->query("select d.*,t.name as template,dp.nameSo as depertment,concat(u.first_name,' ',u.last_name) user from rise_documents d
             LEFT JOIN rise_users u on d.created_by = u.id
             LEFT JOIN rise_templates t on d.template = t.id
-            LEFT JOIN departments dp on d.depertment = dp.id
+            LEFT JOIN rise_departments dp on d.depertment = dp.id
             where d.created_by LIKE '$created_by' and d.depertment LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
 
             $list_data = $result->getResult();
@@ -547,7 +547,7 @@ class Documents extends Security_Controller
             $result = $this->db->query("select d.*,t.name as template,dp.nameSo as depertment,concat(u.first_name,' ',u.last_name) user from rise_documents d
             LEFT JOIN rise_users u on d.created_by = u.id
             LEFT JOIN rise_templates t on d.template = t.id
-            LEFT JOIN departments dp on d.depertment = dp.id
+            LEFT JOIN rise_departments dp on d.depertment = dp.id
             where d.created_by LIKE '$created_by' and d.depertment LIKE '$department_id' and  d.deleted=0 $extraWhere");
 
             $list_data = $result->getResult();
@@ -692,23 +692,23 @@ class Documents extends Security_Controller
             }
 
             $result = $this->db->query("select d.*,dp.nameSo as department from rise_templates d
-            LEFT JOIN departments dp on d.department = dp.id
+            LEFT JOIN rise_departments dp on d.department = dp.id
             where d.department LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
-            LEFT JOIN departments dp on d.department = dp.id
+            LEFT JOIN rise_departments dp on d.department = dp.id
             where department LIKE '$department_id' and d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
 
         } else {
             $result = $this->db->query("select d.*,dp.nameSo as department from rise_templates d
-            LEFT JOIN departments dp on d.department = dp.id
+            LEFT JOIN rise_departments dp on d.department = dp.id
             where  d.department LIKE '$department_id' and  d.deleted=0 $extraWhere");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
-            LEFT JOIN departments dp on d.department = dp.id
+            LEFT JOIN rise_departments dp on d.department = dp.id
             where   department LIKE '$department_id' and  d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
         }

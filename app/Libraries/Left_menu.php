@@ -59,9 +59,7 @@ class Left_menu {
             //     $sidebar_menu["company_Old"] = array("name" => "company_old", "url" => "company", "class" => "briefcase");
             // }
 
-            if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["departments"] = array("name" => "departments", "url" => "departments", "class" => "briefcase");
-            }
+            
 
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["client"] = array("name" => "client", "url" => "clients", "class" => "briefcase");
@@ -74,6 +72,20 @@ class Left_menu {
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["partners"] = array("name" => "partners", "url" => "partners", "class" => "briefcase");
             }
+
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["departments"] = array("name" => "departments", "url" => "", "class" => "briefcase");
+            }
+
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["department"] = array("name" => "department", "url" => "departments", "class" => "briefcase");
+            }
+            
+
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["sections"] = array("name" => "sections", "url" => "sections", "class" => "briefcase");
+            }
+
             
         
             $sidebar_menu["archives"] = array("name" => "archives", "url" => "archives", "class" => "layers");
