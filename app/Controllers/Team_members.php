@@ -659,6 +659,9 @@ class Team_members extends Security_Controller {
         $view_data['departments'] = $this->get_departments_for_select();
         // echo json_encode($view_data['departments']);
         // die('ok');
+        $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Units'] = array("" => " -- Choose Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
 
@@ -720,6 +723,8 @@ class Team_members extends Security_Controller {
             "job_title_so" => $this->request->getPost('job_title_so'),
             "employee_type" => $this->request->getPost('employee_type'),
             "employee_id" => $this->request->getPost('employee_id'),
+            "section_id" => $this->request->getPost('section_id'),
+            "unit_id" => $this->request->getPost('unit_id'),
             "grade_id" => $this->request->getPost('grade_id'),
             "work_experience" => $this->request->getPost('work_experience'),
             "place_of_work" => $this->request->getPost('place_of_work'),

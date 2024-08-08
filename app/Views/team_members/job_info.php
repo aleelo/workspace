@@ -47,38 +47,72 @@
                 </div> 
 
                 <div class="form-group">
-                        <div class="row">
-                            <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
-                            <div class=" col-md-9">
-                                <?php
-                                echo form_dropdown(array(
-                                    "id" => "grade",
-                                    "name" => "grade_id",
-                                    "class" => "form-control select2",
-                                    "placeholder" => 'Grade',
-                                    "autocomplete" => "off"
-                                ),$grades,[$job_info->grade_id]);
-                                ?>
-                            </div>
+                    <div class="row">
+                        <label for="section_id" class=" col-md-3"><?php echo 'Employee Section'; ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_dropdown(array(
+                                "id" => "section_id",
+                                "name" => "section_id",
+                                "class" => "form-control select2",
+                                "placeholder" => 'Employee Section',
+                                "autocomplete" => "off"
+                            ),$Sections,[$job_info->section_id]);
+                            ?>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="job_description" class=" col-md-3"><?php echo app_lang('job_description'); ?></label>
-                            <div class=" col-md-9">
-                                <?php
-                                echo form_textarea(array(
-                                    "id" => "job_description",
-                                    "name" => "job_description",
-                                    "value" => $job_info->job_description,
-                                    "class" => "form-control",
-                                    "placeholder" => 'Job Descpription'
-                                ));
-                                ?>
-                            </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="unit_id" class=" col-md-3"><?php echo 'Employee Unit'; ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_dropdown(array(
+                                "id" => "unit_id",
+                                "name" => "unit_id",
+                                "class" => "form-control select2",
+                                "placeholder" => 'Employee Unit',
+                                "autocomplete" => "off"
+                            ),$Units,[$job_info->unit_id]);
+                            ?>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <label for="employee_type" class=" col-md-3"><?php echo 'Grade'; ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_dropdown(array(
+                                "id" => "grade",
+                                "name" => "grade_id",
+                                "class" => "form-control select2",
+                                "placeholder" => 'Grade',
+                                "autocomplete" => "off"
+                            ),$grades,[$job_info->grade_id]);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <label for="job_description" class=" col-md-3"><?php echo app_lang('job_description'); ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_textarea(array(
+                                "id" => "job_description",
+                                "name" => "job_description",
+                                "value" => $job_info->job_description,
+                                "class" => "form-control",
+                                "placeholder" => 'Job Descpription'
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
  
                 <div class="form-group">
                     <div class="row">
