@@ -126,6 +126,24 @@ $lang["section_remarks"] = "Remarks";
 $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
 
+// Units:
+$lang["unit"] = "Unit";
+$lang["units"] = "Units";
+$lang["unit_name_so"] = "Unit Name SO";
+$lang["short_name_so"] = "Short Name SO";
+$lang["unit_name_en"] = "Unit Name EN";
+$lang["short_name_en"] = "Short Name EN";
+$lang["unit_email"] = "Unit Email";
+$lang["unit_department"] = "Department";
+$lang["unit_section"] = "Section";
+$lang["unit_head"] = "Unit Head";
+$lang["unit_remarks"] = "Remarks";
+$lang["unit_info"] = "Unit Info";
+$lang["unit_details"] = "Unit Details";
+$lang["units_list"] = "Unit List";
+$lang["add_unit"] = "Add Unit";
+
+
 // Payers:
 $lang["payer"] = "Payer";
 $lang["payers"] = "Payers";

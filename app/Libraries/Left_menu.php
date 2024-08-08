@@ -54,13 +54,6 @@ class Left_menu {
                 $sidebar_menu["events"] = array("name" => "events", "url" => "events", "class" => "calendar");
             }
 
-
-            // if ($this->ci->login_user->is_admin || $access_client) {
-            //     $sidebar_menu["company_Old"] = array("name" => "company_old", "url" => "company", "class" => "briefcase");
-            // }
-
-            
-
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["client"] = array("name" => "client", "url" => "clients", "class" => "briefcase");
             }
@@ -84,6 +77,11 @@ class Left_menu {
 
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["sections"] = array("name" => "sections", "url" => "sections", "class" => "briefcase");
+            }
+
+            
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["units"] = array("name" => "units", "url" => "units", "class" => "briefcase");
             }
 
             

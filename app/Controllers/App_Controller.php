@@ -111,6 +111,7 @@ class App_Controller extends Controller {
     public $Grades_model;
     public $Trainers_model;
     public $Sections_model;
+    public $Units_model;
     
     public function __construct() {
         //main template to make frame of this app
@@ -248,6 +249,7 @@ class App_Controller extends Controller {
             'Grades_model',
             'Trainers_model',
             'Sections_model',
+            'Units_model',
         );
     }
 
