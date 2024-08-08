@@ -93,6 +93,8 @@ $lang["education_info"] = "Education Info";
 $lang["profile_info"] = "Profile Info";
 $lang["profile_info"] = "Profile Info";
 $lang["remarks"] = "Remarks";
+$lang["department_info"] = "Department Info";
+$lang["department_details"] = "Department Details";
 
 // Grades:
 $lang["grade"] = "Grade";

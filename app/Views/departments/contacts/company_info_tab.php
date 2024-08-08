@@ -2,14 +2,12 @@
     <?php echo form_open(get_uri("departments/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
-            <?php if ($model_info->type == "person") { ?>
-                <h4> <?php echo app_lang('partner_info'); ?></h4>
-            <?php } else { ?>
-                <h4> <?php echo app_lang('partner_info'); ?></h4>
-            <?php } ?>
+            
+                <h4> <?php echo app_lang('department_info'); ?></h4>
+           
         </div>
         <div class="card-body">
-            <?php echo view("departments/partners_form_fields"); ?>
+            <?php echo view("departments/department_form_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">

@@ -360,8 +360,8 @@ class Departments extends Security_Controller {
 
         if ($Deparment_id) {
             $options = array("id" => $Deparment_id);
-            $partner_info = $this->Departments_model->get_details($options)->getRow();
-            if ($partner_info && !$partner_info->is_lead) {
+            $department_info = $this->Departments_model->get_details($options)->getRow();
+            if ($department_info && !$department_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -371,9 +371,9 @@ class Departments extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['partner_info'] = $partner_info;
+                $view_data['department_info'] = $department_info;
 
-                $view_data["is_starred"] = strpos($partner_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($department_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -934,6 +934,9 @@ class Departments extends Security_Controller {
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Deparment_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+            $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
