@@ -2,6 +2,7 @@
 <div id="tasks-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
+            
             <input type="hidden" name="id" value="<?php echo $add_type == "multiple" ? "" : $model_info->id; ?>" />
             <input type="hidden" name="add_type" value="<?php echo $add_type; ?>" />
 
@@ -41,6 +42,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="description" class=" col-md-3"><?php echo app_lang('description'); ?></label>
