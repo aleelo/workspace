@@ -123,6 +123,8 @@ $lang["section_email"] = "Section Email";
 $lang["section_department"] = "Department";
 $lang["section_head"] = "Section Head";
 $lang["section_remarks"] = "Remarks";
+$lang["section_info"] = "Section Info";
+$lang["section_details"] = "Section Details";
 
 // Payers:
 $lang["payer"] = "Payer";

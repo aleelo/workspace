@@ -78,15 +78,6 @@ class Sections extends Security_Controller {
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
-        // $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
-
-        $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
-        $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
-        // print_r(json_encode($view_data['Merchant_types_dropdown_js']));
-        // $view_data['Merchant_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
-
-
-        // $view_data['Bank_names_dropdown'] = array("" => "-") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
 
@@ -375,8 +366,8 @@ class Sections extends Security_Controller {
 
         if ($Sections_id) {
             $options = array("id" => $Sections_id);
-            $partner_info = $this->Sections_model->get_details($options)->getRow();
-            if ($partner_info && !$partner_info->is_lead) {
+            $section_info = $this->Sections_model->get_details($options)->getRow();
+            if ($section_info && !$section_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -386,9 +377,9 @@ class Sections extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['partner_info'] = $partner_info;
+                $view_data['section_info'] = $section_info;
 
-                $view_data["is_starred"] = strpos($partner_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($section_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -959,6 +950,9 @@ class Sections extends Security_Controller {
             $view_data['field_column_3'] = "col-md-10";
 
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
+
+            $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
