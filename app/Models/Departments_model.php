@@ -7,7 +7,7 @@ class Departments_model extends Crud_model {
     protected $table = null;
 
     function __construct() {
-        $this->table = 'sections';
+        $this->table = 'departments';
         parent::__construct($this->table);
     }
 
@@ -154,7 +154,7 @@ class Departments_model extends Crud_model {
         $sql = "SELECT SQL_CALC_FOUND_ROWS $departments_table.*, 
         CONCAT($users_table.first_name,' ',$users_table.last_name) as DeptHead
         FROM $departments_table
-        LEFT JOIN $users_table ON $users_table.id = $departments_table.head_id
+        LEFT JOIN $users_table ON $users_table.id = $departments_table.dep_head_id
         $join_custom_fieds               
         WHERE $departments_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";

@@ -48,8 +48,8 @@ class Departments extends Security_Controller {
 
     function modal_form() {
         
-        $Sections_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Sections_id);
+        $Deparment_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($Deparment_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -65,35 +65,24 @@ class Departments extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Departments_model->get_one($Sections_id);
+        $view_data['model_info'] = $this->Departments_model->get_one($Deparment_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
-        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
-        // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
         $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
-        // $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
-
-        $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
-        $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
-        // print_r(json_encode($view_data['Merchant_types_dropdown_js']));
-        // $view_data['Merchant_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
-
-
-        // $view_data['Bank_names_dropdown'] = array("" => "-") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
 
         //prepare label suggestions
 
         //get custom fields
-        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Deparment_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
         return $this->template->view('departments/modal_form', $view_data);
     }
@@ -104,24 +93,23 @@ class Departments extends Security_Controller {
     
     function save() {
         
-        $Sections_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Sections_id);
+        $Deparment_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($Deparment_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
 
-        $section_name_so = $this->request->getPost('section_name_so');
+        $section_name_so = $this->request->getPost('department_name_so');
 
         $data = array(
             "nameSo" => $section_name_so,
             "short_name_SO" => $this->request->getPost('short_name_so'),
-            "nameEn" => $this->request->getPost('section_name_en'), // ? 'TRUE' : 'FALSE',
+            "nameEn" => $this->request->getPost('department_name_en'), // ? 'TRUE' : 'FALSE',
             "short_name_EN" => $this->request->getPost('short_name_en'),
-            "email" => $this->request->getPost('email'),
-            "department_id" => $this->request->getPost('section_department'),
-            "section_head_id" => $this->request->getPost('section_head'),
+            "email" => $this->request->getPost('department_email'),
+            "dep_head_id" => $this->request->getPost('department_head'),
             "remarks" => $this->request->getPost('section_remarks'),
         );
 
@@ -130,7 +118,7 @@ class Departments extends Security_Controller {
         }
 
 
-        if (!$Sections_id) {
+        if (!$Deparment_id) {
             $data["created_at"] = get_current_utc_time();
         }
 
@@ -141,9 +129,9 @@ class Departments extends Security_Controller {
         //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
 
         //     //check if the currency is editable
-        //     if ($Sections_id) {
-        //         $client_info = $this->Clients_model->get_one($Sections_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Sections_id)) {
+        //     if ($Deparment_id) {
+        //         $client_info = $this->Clients_model->get_one($Deparment_id);
+        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Deparment_id)) {
         //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
         //             exit();
         //         }
@@ -153,7 +141,7 @@ class Departments extends Security_Controller {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$Sections_id) {
+        } else if (!$Deparment_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -161,17 +149,17 @@ class Departments extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $Sections_id)) {
+        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $Deparment_id)) {
         //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
         //     exit();
         // }
 
-        $save_id = $this->Departments_model->ci_save($data, $Sections_id);
+        $save_id = $this->Departments_model->ci_save($data, $Deparment_id);
      
 
         if ($save_id) {
 
-            if(!$Sections_id){
+            if(!$Deparment_id){
                     
                 $options = array('id'=>$save_id);
 
@@ -186,7 +174,7 @@ class Departments extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("Sections_id" => $save_id);
+                $ticket_data = array("Deparment_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
@@ -366,12 +354,12 @@ class Departments extends Security_Controller {
 
     /* load client details view */
 
-    function view($Sections_id = 0, $tab = "") {
+    function view($Deparment_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($Sections_id);
+        $this->_validate_client_view_access($Deparment_id);
 
-        if ($Sections_id) {
-            $options = array("id" => $Sections_id);
+        if ($Deparment_id) {
+            $options = array("id" => $Deparment_id);
             $partner_info = $this->Departments_model->get_details($options)->getRow();
             if ($partner_info && !$partner_info->is_lead) {
 
@@ -878,15 +866,15 @@ class Departments extends Security_Controller {
 
     /* load contacts tab  */
 
-    function contacts($Sections_id = 0) {
+    function contacts($Deparment_id = 0) {
 
-        $this->_validate_client_view_access($Sections_id);
+        $this->_validate_client_view_access($Deparment_id);
 
-        if ($Sections_id) {
-            $view_data["Sections_id"] = clean_data($Sections_id);
+        if ($Deparment_id) {
+            $view_data["Deparment_id"] = clean_data($Deparment_id);
             $view_data["view_type"] = "";
         } else {
-            $view_data["Sections_id"] = "";
+            $view_data["Deparment_id"] = "";
             $view_data["view_type"] = "list_view";
         }
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
@@ -903,11 +891,11 @@ class Departments extends Security_Controller {
         $this->_validate_client_manage_access();
 
         $view_data['model_info'] = $this->Users_model->get_one(0);
-        $view_data['model_info']->Sections_id = $this->request->getPost('Sections_id');
+        $view_data['model_info']->Deparment_id = $this->request->getPost('Deparment_id');
 
         $view_data['add_type'] = $this->request->getPost('add_type');
 
-        $this->_validate_client_manage_access($view_data['model_info']->Sections_id);
+        $this->_validate_client_manage_access($view_data['model_info']->Deparment_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
         return $this->template->view('departments/contacts/modal_form', $view_data);
@@ -932,11 +920,11 @@ class Departments extends Security_Controller {
 
     /* load contact's company info tab view */
 
-    function company_info_tab($Sections_id = 0) {
-        if ($Sections_id) {
-            $this->_validate_client_view_access($Sections_id);
+    function company_info_tab($Deparment_id = 0) {
+        if ($Deparment_id) {
+            $this->_validate_client_view_access($Deparment_id);
 
-            $view_data['model_info'] = $this->Departments_model->get_one($Sections_id);
+            $view_data['model_info'] = $this->Departments_model->get_one($Deparment_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -945,7 +933,7 @@ class Departments extends Security_Controller {
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
 
-            $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+            $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Deparment_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
@@ -955,7 +943,7 @@ class Departments extends Security_Controller {
 
             $view_data['field_column_3'] = "col-md-10";
 
-            $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
+            $view_data['can_edit_clients'] = $this->can_edit_clients($Deparment_id);
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
@@ -987,8 +975,8 @@ class Departments extends Security_Controller {
     function save_contact() {
 
         $contact_id = $this->request->getPost('contact_id');
-        $Sections_id = $this->request->getPost('Sections_id');
-        $this->_validate_client_manage_access($Sections_id);
+        $Deparment_id = $this->request->getPost('Deparment_id');
+        $this->_validate_client_manage_access($Deparment_id);
 
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -1006,25 +994,25 @@ class Departments extends Security_Controller {
         $this->validate_submitted_data(array(
             "first_name" => "required",
             "last_name" => "required",
-            "Sections_id" => "required|numeric"
+            "Deparment_id" => "required|numeric"
         ));
 
         if (!$contact_id) {
-            //inserting new contact. Sections_id is required
+            //inserting new contact. Deparment_id is required
 
             $this->validate_submitted_data(array(
                 "email" => "required|valid_email",
             ));
 
             //we'll save following fields only when creating a new contact from this form
-            $user_data["Sections_id"] = $Sections_id;
+            $user_data["Deparment_id"] = $Deparment_id;
             $user_data["email"] = trim($this->request->getPost('email'));
             $user_data["password"] = $this->request->getPost("login_password") ? password_hash($this->request->getPost("login_password"), PASSWORD_DEFAULT) : "";
             $user_data["created_at"] = get_current_utc_time();
             $user_data["login_type"] = 'normal_login';
 
             //validate duplicate email address
-            if ($this->Users_model->is_email_exists($user_data["email"], 0, $Sections_id)) {
+            if ($this->Users_model->is_email_exists($user_data["email"], 0, $Deparment_id)) {
                 echo json_encode(array("success" => false, 'message' => app_lang('duplicate_email')));
                 exit();
             }
@@ -1032,7 +1020,7 @@ class Departments extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Departments_model->get_primary_contact($Sections_id);
+        $primary_contact = $this->Departments_model->get_primary_contact($Deparment_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1074,7 +1062,7 @@ class Departments extends Security_Controller {
                 send_app_mail($this->request->getPost('email'), $subject, $message);
             }
 
-            echo json_encode(array("success" => true, "data" => $this->_contact_row_data($save_id), 'id' => $contact_id, "Sections_id" => $Sections_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_contact_row_data($save_id), 'id' => $contact_id, "Deparment_id" => $Deparment_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -1261,15 +1249,15 @@ class Departments extends Security_Controller {
 
     /* list of contacts, prepared for datatable  */
 
-    function contacts_list_data($Sections_id = 0) {
+    function contacts_list_data($Deparment_id = 0) {
 
-        $this->_validate_client_view_access($Sections_id);
+        $this->_validate_client_view_access($Deparment_id);
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
             "user_type" => "client",
-            "Sections_id" => $Sections_id,
+            "Deparment_id" => $Deparment_id,
             "custom_fields" => $custom_fields,
             "show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("client_contacts", $this->login_user->is_admin, $this->login_user->user_type),
@@ -1290,7 +1278,7 @@ class Departments extends Security_Controller {
         }
 
         $hide_primary_contact_label = false;
-        if (!$Sections_id) {
+        if (!$Deparment_id) {
             $hide_primary_contact_label = true;
         }
 
@@ -1339,12 +1327,12 @@ class Departments extends Security_Controller {
             $contact_link = $full_name; //don't show clickable link to client
         }
 
-        $client_info = $this->Clients_model->get_one($data->Sections_id);
+        $client_info = $this->Clients_model->get_one($data->Deparment_id);
 
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("departments/view/" . $data->Sections_id), $client_info->company_name),
+            anchor(get_uri("departments/view/" . $data->Deparment_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
