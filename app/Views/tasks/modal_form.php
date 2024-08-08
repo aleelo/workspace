@@ -58,6 +58,7 @@
                     </div>
                 </div>
             </div>
+            
             <?php
             $related_to_dropdowns = array();
             if ($show_contexts_dropdown) {

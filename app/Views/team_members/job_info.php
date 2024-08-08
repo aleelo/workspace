@@ -97,17 +97,20 @@
                     </div>
                 </div>
 
+                
                 <div class="form-group">
                     <div class="row">
-                        <label for="job_description" class=" col-md-3"><?php echo app_lang('job_description'); ?></label>
+                        <label for="job_title_so" class=" col-md-3"><?php echo 'Job Title Somali'; ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_textarea(array(
-                                "id" => "job_description",
-                                "name" => "job_description",
-                                "value" => $job_info->job_description,
+                            echo form_input(array(
+                                "id" => "job_title_so",
+                                "name" => "job_title_so",
                                 "class" => "form-control",
-                                "placeholder" => 'Job Descpription'
+                                "placeholder" => 'Job Title Somali',
+                                'value'=> $job_info->job_title_so,
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required"),
                             ));
                             ?>
                         </div>
@@ -135,22 +138,21 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="job_title_so" class=" col-md-3"><?php echo 'Job Title Somali'; ?></label>
+                        <label for="job_description" class=" col-md-3"><?php echo app_lang('job_description'); ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
-                                "id" => "job_title_so",
-                                "name" => "job_title_so",
+                            echo form_textarea(array(
+                                "id" => "job_description",
+                                "name" => "job_description",
+                                "value" => $job_info->job_description,
                                 "class" => "form-control",
-                                "placeholder" => 'Job Title Somali',
-                                'value'=> $job_info->job_title_so,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
+                                "placeholder" => 'Job Descpription'
                             ));
                             ?>
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group "  style="display:none;">
                     <div class="row">
                         <label for="salary" class=" col-md-3"><?php echo app_lang('salary'); ?></label>

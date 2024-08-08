@@ -122,7 +122,14 @@ class Team_members extends Security_Controller {
         );
 
         $view_data['model_info'] = $this->Users_model->get_details($options)->getRow();
-        $view_data['departments'] = $this->Team_model->get_departments_for_select();
+        // $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+
+        // $view_data['departments'] = $this->Team_model->get_departments_for_select();
+        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Units'] = array("" => " -- Choose Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
+        $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
         $view_data['education_levels'] = [''=>'-- Choose Education Level --','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from rise_education_industry where deleted=0")->getResult();
@@ -255,18 +262,22 @@ class Team_members extends Security_Controller {
             // new Data: `department_id`, `section_id`, `job_title_en`, `job_title_so`, `employee_type`, `employee_id`
             $job_data = array(
                 "user_id" => $user_id,
+                "employee_type" => $this->request->getPost('employee_type'),
+                "department_id" => $this->request->getPost('department_id'),
+                "section_id" => $this->request->getPost('section_id'),
+                "unit_id" => $this->request->getPost('unit_id'),
+                "grade_id" => $this->request->getPost('grade_id'),
+                "job_title_so" => $this->request->getPost('job_title_so'),
+                "job_title_en" => $this->request->getPost('job_title_en'),
+                "job_description" => $this->request->getPost('job_description'),
+                "work_experience" => $this->request->getPost('work_experience'),
+                "job_location_id" => $this->request->getPost('job_location'),
+                "date_of_hire" => $this->request->getPost('date_of_hire'),
+                "employee_id" => $this->request->getPost('employee_id'),
+
+
                 "salary" => $this->request->getPost('salary') ? $this->request->getPost('salary') : 0,
                 "salary_term" => $this->request->getPost('salary_term'),
-                "date_of_hire" => $this->request->getPost('date_of_hire'),
-                "department_id" => $this->request->getPost('department_id'),
-                "section_id" => 0,
-                "job_title_en" => $this->request->getPost('job_title_en'),
-                "job_title_so" => $this->request->getPost('job_title_so'),
-                "work_experience" => $this->request->getPost('work_experience'),
-                "place_of_work" => $this->request->getPost('place_of_work'),
-                "employee_type" => $this->request->getPost('employee_type'),
-                "employee_id" => $this->request->getPost('employee_id'),
-                "grade_id" => $this->request->getPost('grade_id'),
             );
 
             $job_data["signature"] = serialize($signature);
@@ -656,7 +667,9 @@ class Team_members extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $view_data['departments'] = $this->get_departments_for_select();
+        // $view_data['departments'] = $this->get_departments_for_select();
+        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+
         // echo json_encode($view_data['departments']);
         // die('ok');
         $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
@@ -714,22 +727,21 @@ class Team_members extends Security_Controller {
        
         $job_data = array(
             "user_id" => $user_id,
-            "salary" => unformat_currency($this->request->getPost('salary')),
-            "salary_term" => $this->request->getPost('salary_term'),
-            "date_of_hire" => $this->request->getPost('date_of_hire'),         
-            "department_id" => $this->request->getPost('department_id'),
-            "section_id" => 0,
-            "job_title_en" => $this->request->getPost('job_title_en'),
-            "job_title_so" => $this->request->getPost('job_title_so'),
             "employee_type" => $this->request->getPost('employee_type'),
-            "employee_id" => $this->request->getPost('employee_id'),
+            "department_id" => $this->request->getPost('department_id'),
             "section_id" => $this->request->getPost('section_id'),
             "unit_id" => $this->request->getPost('unit_id'),
             "grade_id" => $this->request->getPost('grade_id'),
-            "work_experience" => $this->request->getPost('work_experience'),
-            "place_of_work" => $this->request->getPost('place_of_work'),
-            "job_location_id" => $this->request->getPost('job_location'),
+            "job_title_so" => $this->request->getPost('job_title_so'),
+            "job_title_en" => $this->request->getPost('job_title_en'),
             "job_description" => $this->request->getPost('job_description'),
+            "work_experience" => $this->request->getPost('work_experience'),
+            "job_location_id" => $this->request->getPost('job_location'),
+            "date_of_hire" => $this->request->getPost('date_of_hire'),         
+            "employee_id" => $this->request->getPost('employee_id'),
+
+            "salary" => unformat_currency($this->request->getPost('salary')),
+            "salary_term" => $this->request->getPost('salary_term'),
         );
 
        
