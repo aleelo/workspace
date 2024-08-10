@@ -150,14 +150,14 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="unit_head" class=" <?php echo $label_column; ?>"><?php echo 'Section Head'; ?></label>
+        <label for="unit_head" class=" <?php echo $label_column; ?>"><?php echo 'Unit Head'; ?></label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown(array(
                 "id" => "unit_head",
                 "name" => "unit_head",
                 "class" => "form-control select2",
-                "placeholder" => 'Section Head',
+                "placeholder" => 'Unid Head',
                 "autocomplete" => "off"
             ),$Unit_heads,[$model_info->unit_head_id]);
             ?>

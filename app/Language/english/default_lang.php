@@ -103,13 +103,6 @@ $lang["add_grade"] = "Add Grade";
 $lang["edit_grade"] = "Edit Grade";
 $lang["delete_grade"] = "Delete Grade";
 
-// Trainers:
-$lang["trainer"] = "Trainer";
-$lang["trainers"] = "Trainers";
-$lang["add_trainer"] = "Add Trainer";
-$lang["delete_trainer"] = "Delete Trainer";
-$lang["edit_trainer"] = "Edit Trainer";
-
 // Sections:
 $lang["section"] = "Section";
 $lang["sections"] = "Sections";
@@ -125,6 +118,28 @@ $lang["section_head"] = "Section Head";
 $lang["section_remarks"] = "Remarks";
 $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
+
+// Trainers:
+$lang["trainer"] = "Trainer";
+$lang["trainers"] = "Trainers";
+$lang["add_trainer"] = "Add Trainer";
+$lang["delete_trainer"] = "Delete Trainer";
+$lang["edit_trainer"] = "Edit Trainer";
+
+// Training:
+$lang["training"] = "Training";
+$lang["training_name"] = "Training Name";
+$lang["training_start_date"] = "Start Date";
+$lang["training_end_date"] = "End Date";
+$lang["Training_location"] = "Location";
+$lang["Training_Type"] = "Type";
+$lang["Trainer_name"] = "Trainer";
+$lang["num_employee"] = "Number Employee";
+$lang["training_department"] = "Department";
+$lang["training_section"] = "Section";
+$lang["training_unit"] = "Unit";
+$lang["training_list"] = "Training List";
+$lang["add_training"] = "Add Training";
 
 // Units:
 $lang["unit"] = "Unit";

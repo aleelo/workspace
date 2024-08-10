@@ -68,7 +68,7 @@ class Sections extends Security_Controller {
         $view_data['model_info'] = $this->Sections_model->get_one($Sections_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
-        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['departments'] = array("" => " -- Choose Section Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
