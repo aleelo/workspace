@@ -46,6 +46,7 @@
             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
         <?php } else if ($login_user->user_type == "client" || $hide_clients_dropdown) { ?>
             <input type="hidden" name="client_id" value="<?php echo $model_info->client_id; ?>" />
+            
         <?php } else { ?>
 
             <div class="form-group <?php echo $model_info->project_type === "internal_project" ? 'hide' : ''; ?>" id="clients-dropdown">

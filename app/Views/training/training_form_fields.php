@@ -90,18 +90,20 @@
 <!----------------------------------------- Training Type  ------------------------------------>
 
 
+
 <div class="form-group">
     <div class="row">
-        <label for="Training_Type" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_Type'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="Training_Type" class=" <?php echo $label_column; ?>"><?php echo 'Training Type'; ?></label>
+        <div class=" col-md-9">
             <?php
-            echo form_input(array(
+            $training = [''=>'-- choose a type --','Face 2 Face'=>'Face 2 Face','Virtual'=>'Virtual'];
+            echo form_dropdown(array(
                 "id" => "Training_Type",
                 "name" => "Training_Type",
-                "value" => $model_info->type,
-                "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('Training_Type'),
-            ));
+                "class" => "form-control select2",
+                "placeholder" => 'Training Type',
+                "autocomplete" => "off"
+            ),$training,[$model_info->type]);
             ?>
         </div>
     </div>
@@ -187,18 +189,18 @@
 </div>
 
 
-<!----------------------------------------- Unit Head  ------------------------------------>
+<!----------------------------------------- Unit  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="unit_id" class=" <?php echo $label_column; ?>"><?php echo 'Section Head'; ?></label>
+        <label for="unit_id" class=" <?php echo $label_column; ?>"><?php echo 'Unit'; ?></label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown(array(
                 "id" => "unit_id",
                 "name" => "unit_id",
                 "class" => "form-control select2",
-                "placeholder" => 'Head',
+                "placeholder" => 'Unit',
                 "autocomplete" => "off"
             ),$Units,[$model_info->unit_id]);
             ?>

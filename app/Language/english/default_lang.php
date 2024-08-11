@@ -140,6 +140,8 @@ $lang["training_section"] = "Section";
 $lang["training_unit"] = "Unit";
 $lang["training_list"] = "Training List";
 $lang["add_training"] = "Add Training";
+$lang["training_details"] = "Training Details";
+$lang["training_info"] = "Training Info";
 
 // Units:
 $lang["unit"] = "Unit";

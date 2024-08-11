@@ -24,44 +24,7 @@ class Tasks extends Security_Controller {
         $this->Project_settings_model = model('App\Models\Project_settings_model');
     }
 
-    private function get_context_id_pairs() {
-        return array(
-            array("context" => "project", "id_key" => "project_id", "id" => null), //keep the 1st item as project since it'll be used maximum times
-            array("context" => "client", "id_key" => "client_id", "id" => null),
-            array("context" => "contract", "id_key" => "contract_id", "id" => null),
-            array("context" => "estimate", "id_key" => "estimate_id", "id" => null),
-            array("context" => "expense", "id_key" => "expense_id", "id" => null),
-            array("context" => "invoice", "id_key" => "invoice_id", "id" => null),
-            array("context" => "lead", "id_key" => "lead_id", "id" => null),
-            array("context" => "order", "id_key" => "order_id", "id" => null),
-            array("context" => "proposal", "id_key" => "proposal_id", "id" => null),
-            array("context" => "subscription", "id_key" => "subscription_id", "id" => null),
-            array("context" => "ticket", "id_key" => "ticket_id", "id" => null)
-        );
-    }
-
-    private function get_context_and_id($model_info = null) {
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        foreach ($context_id_pairs as $pair) {
-            $id_key = $pair["id_key"];
-            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
-
-            $request = request(); //needed when loading controller from widget helper
-
-            if ($id !== null) {
-                $pair["id"] = $id;
-            } else if ($request->getPost($id_key)) {
-                $pair["id"] = $request->getPost($id_key);
-            }
-
-            if ($pair["id"] !== null) {
-                return $pair;
-            }
-        }
-
-        return array("context" => "project", "id" => null);
-    }
+    
 
     private function _client_can_create_tasks($context, $project_id) {
         //check settings for client's project permission. Client can cteate task only in own projects. 
@@ -464,37 +427,7 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_accessible_contexts($type = "create", $task_info = null) {
-
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        $available_contexts = array();
-
-        foreach ($context_id_pairs as $pair) {
-            $context = $pair["context"];
-
-            $alwasy_enabled_module = array("project", "client");
-            if (!(in_array($context, $alwasy_enabled_module) || $this->_is_active_module("module_" . $context))) {
-                continue;
-            }
-
-            if ($type == "view") {
-                if ($this->can_view_tasks($context)) {
-                    $available_contexts[] = $context;
-                }
-            } else if ($type == "edit") {
-                if ($this->can_edit_tasks($task_info)) {
-                    $available_contexts[] = $context;
-                }
-            } else {
-                if ($this->can_create_tasks($context)) {
-                    $available_contexts[] = $context;
-                }
-            }
-        }
-
-        return $available_contexts;
-    }
+  
 
     //this will be applied to staff users only except project context
     private function _prepare_query_parameters_for_accessible_contexts($contexts) {
@@ -541,6 +474,78 @@ class Tasks extends Security_Controller {
         }
 
         return array("context_options" => $context_options);
+    }
+
+    private function get_context_id_pairs() {
+        return array(
+            array("context" => "project", "id_key" => "project_id", "id" => null), //keep the 1st item as project since it'll be used maximum times
+            array("context" => "client", "id_key" => "client_id", "id" => null),
+            array("context" => "contract", "id_key" => "contract_id", "id" => null),
+            array("context" => "estimate", "id_key" => "estimate_id", "id" => null),
+            array("context" => "expense", "id_key" => "expense_id", "id" => null),
+            array("context" => "invoice", "id_key" => "invoice_id", "id" => null),
+            array("context" => "lead", "id_key" => "lead_id", "id" => null),
+            array("context" => "order", "id_key" => "order_id", "id" => null),
+            array("context" => "proposal", "id_key" => "proposal_id", "id" => null),
+            array("context" => "subscription", "id_key" => "subscription_id", "id" => null),
+            array("context" => "ticket", "id_key" => "ticket_id", "id" => null)
+        );
+    }
+
+    private function get_context_and_id($model_info = null) {
+        
+        $context_id_pairs = $this->get_context_id_pairs();
+
+        foreach ($context_id_pairs as $pair) {
+            $id_key = $pair["id_key"];
+            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
+
+            $request = request(); //needed when loading controller from widget helper
+
+            if ($id !== null) {
+                $pair["id"] = $id;
+            } else if ($request->getPost($id_key)) {
+                $pair["id"] = $request->getPost($id_key);
+            }
+
+            if ($pair["id"] !== null) {
+                return $pair;
+            }
+        }
+
+        return array("context" => "project", "id" => null);
+    }
+
+    private function _get_accessible_contexts($type = "create", $task_info = null) {
+
+        $context_id_pairs = $this->get_context_id_pairs();
+
+        $available_contexts = array();
+
+        foreach ($context_id_pairs as $pair) {
+            $context = $pair["context"];
+
+            $alwasy_enabled_module = array("project", "client");
+            if (!(in_array($context, $alwasy_enabled_module) || $this->_is_active_module("module_" . $context))) {
+                continue;
+            }
+
+            if ($type == "view") {
+                if ($this->can_view_tasks($context)) {
+                    $available_contexts[] = $context;
+                }
+            } else if ($type == "edit") {
+                if ($this->can_edit_tasks($task_info)) {
+                    $available_contexts[] = $context;
+                }
+            } else {
+                if ($this->can_create_tasks($context)) {
+                    $available_contexts[] = $context;
+                }
+            }
+        }
+
+        return $available_contexts;
     }
 
     function modal_form() {

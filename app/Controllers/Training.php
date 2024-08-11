@@ -323,8 +323,8 @@ class Training extends Security_Controller {
 
         if ($training_id) {
             $options = array("id" => $training_id);
-            $section_info = $this->Training_model->get_details($options)->getRow();
-            if ($section_info && !$section_info->is_lead) {
+            $training_info = $this->Training_model->get_details($options)->getRow();
+            if ($training_info && !$training_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -334,9 +334,9 @@ class Training extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['section_info'] = $section_info;
+                $view_data['training_info'] = $training_info;
 
-                $view_data["is_starred"] = strpos($section_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($training_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -908,9 +908,10 @@ class Training extends Security_Controller {
 
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
 
-            $view_data['Departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Unit_heads'] = array("" => " -- Choose Unit Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
+            $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();

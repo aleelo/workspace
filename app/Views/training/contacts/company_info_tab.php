@@ -3,11 +3,11 @@
     <div class="card">
         <div class=" card-header">
             
-                <h4> <?php echo app_lang('unit_info'); ?></h4>
+                <h4> <?php echo app_lang('training_info'); ?></h4>
            
         </div>
         <div class="card-body">
-            <?php echo view("training/unit_form_fields"); ?>
+            <?php echo view("training/training_form_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">
