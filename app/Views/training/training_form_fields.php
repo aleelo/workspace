@@ -109,6 +109,50 @@
     </div>
 </div>
 
+<!----------------------------------------- Training Participant  ------------------------------------>
+
+
+
+<div class="form-group">
+    <div class="row">
+        <label for="participant" class=" <?php echo $label_column; ?>"><?php echo 'Related to'; ?></label>
+        <div class=" col-md-9">
+            <?php
+            $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
+            echo form_dropdown(array(
+                "id" => "Training_Type",
+                "name" => "Training_Type",
+                "class" => "form-control select2",
+                "placeholder" => 'Related to',
+                "autocomplete" => "off"
+            ),$participant,[$model_info->type]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Training Type  ------------------------------------>
+
+
+
+<div class="form-group">
+    <div class="row">
+        <label for="Training_Type" class=" <?php echo $label_column; ?>"><?php echo 'Training Type'; ?></label>
+        <div class=" col-md-9">
+            <?php
+            $training = [''=>'-- choose a type --','Face 2 Face'=>'Face 2 Face','Virtual'=>'Virtual'];
+            echo form_dropdown(array(
+                "id" => "Training_Type",
+                "name" => "Training_Type",
+                "class" => "form-control select2",
+                "placeholder" => 'Training Type',
+                "autocomplete" => "off"
+            ),$training,[$model_info->type]);
+            ?>
+        </div>
+    </div>
+</div>
+
 <!----------------------------------------- Number of Employee  ------------------------------------>
 
 

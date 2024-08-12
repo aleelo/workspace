@@ -43,7 +43,7 @@
                 </div>
 
                 <div>
-                    <?php echo view("training/info_widgets/index"); ?>
+                    <?php// echo view("training/info_widgets/index"); ?>
                 </div>
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">

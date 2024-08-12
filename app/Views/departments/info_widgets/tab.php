@@ -9,59 +9,59 @@ if ($login_user->user_type == "staff") {
     $view_type = "";
 }
 
-if (!is_object($client_info)) {
-    $client_info = new stdClass();
-    $client_info->id = 0;
-    $client_info->total_projects = 0;
-    $client_info->invoice_value = 0;
-    $client_info->currency_symbol = "$";
-    $client_info->payment_received = 0;
+if (!is_object($department_info)) {
+    $department_info = new stdClass();
+    $department_info->id = 0;
+    $department_info->total_projects = 0;
+    $department_info->invoice_value = 0;
+    $department_info->currency_symbol = "$";
+    $department_info->payment_received = 0;
 }
 
 
 if ($tab == "projects") {
     $card = "bg-info";
     $icon = "grid";
-    if (property_exists($client_info, "total_projects")) {
-        $value = to_decimal_format($client_info->total_projects);
+    if (property_exists($department_info, "total_projects")) {
+        $value = to_decimal_format($department_info->total_projects);
     }
     if ($view_type == "client_dashboard") {
         $link = get_uri('projects/index');
     } else {
-        $link = get_uri('departments/view/' . $client_info->id . '/projects');
+        $link = get_uri('departments/view/' . $department_info->id . '/projects');
     }
 } else if ($tab == "total_invoiced") {
     $card = "bg-primary";
     $icon = "file-text";
-    if (property_exists($client_info, "invoice_value")) {
-        $value = to_currency($client_info->invoice_value, $client_info->currency_symbol);
+    if (property_exists($department_info, "invoice_value")) {
+        $value = to_currency($department_info->invoice_value, $department_info->currency_symbol);
     }
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoices/index');
     } else {
-        $link = get_uri('departments/view/' . $client_info->id . '/invoices');
+        $link = get_uri('departments/view/' . $department_info->id . '/invoices');
     }
 } else if ($tab == "payments") {
     $card = "bg-success";
     $icon = "check-square";
-    if (property_exists($client_info, "payment_received")) {
-        $value = to_currency($client_info->payment_received, $client_info->currency_symbol);
+    if (property_exists($department_info, "payment_received")) {
+        $value = to_currency($department_info->payment_received, $department_info->currency_symbol);
     }
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoice_payments/index');
     } else {
-        $link = get_uri('departments/view/' . $client_info->id . '/payments');
+        $link = get_uri('departments/view/' . $department_info->id . '/payments');
     }
 } else if ($tab == "due") {
     $card = "bg-coral";
     $icon = "compass";
-    if (property_exists($client_info, "invoice_value")) {
-        $value = to_currency(ignor_minor_value($client_info->invoice_value - $client_info->payment_received), $client_info->currency_symbol);
+    if (property_exists($department_info, "invoice_value")) {
+        $value = to_currency(ignor_minor_value($department_info->invoice_value - $department_info->payment_received), $department_info->currency_symbol);
     }
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoices/index');
     } else {
-        $link = get_uri('departments/view/' . $client_info->id . '/invoices');
+        $link = get_uri('departments/view/' . $department_info->id . '/invoices');
     }
 }
 ?>

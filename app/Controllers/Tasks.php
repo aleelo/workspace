@@ -493,7 +493,7 @@ class Tasks extends Security_Controller {
     }
 
     private function get_context_and_id($model_info = null) {
-        
+
         $context_id_pairs = $this->get_context_id_pairs();
 
         foreach ($context_id_pairs as $pair) {
@@ -566,7 +566,7 @@ class Tasks extends Security_Controller {
 
             $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
             $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
-
+            
             if ($value) {
                 $selected_context = get_array_value($obj, "context");
                 $selected_context_id = $value;
@@ -590,7 +590,7 @@ class Tasks extends Security_Controller {
         $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
 
         $view_data = array_merge($view_data, $dropdowns);
-
+        
         if ($id) {
             if (!$this->can_edit_tasks($model_info)) {
                 app_redirect("forbidden");

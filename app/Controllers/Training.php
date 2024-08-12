@@ -43,6 +43,72 @@ class Training extends Security_Controller {
         return $this->template->rander("training/index", $view_data);
     }
 
+    private function get_context_id_pairs() {
+        return array(
+            array("context" => "employee", "id_key" => "employee_ids", "id" => null),
+            array("context" => "unit", "id_key" => "unit_ids", "id" => null),
+            array("context" => "section", "id_key" => "section_ids", "id" => null),
+            array("context" => "department", "id_key" => "department_ids", "id" => null),
+        );
+    }
+
+    private function get_context_and_id($model_info = null) {
+
+        $context_id_pairs = $this->get_context_id_pairs();
+
+        foreach ($context_id_pairs as $pair) {
+            $id_key = $pair["id_key"];
+            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
+
+            $request = request(); //needed when loading controller from widget helper
+
+            if ($id !== null) {
+                $pair["id"] = $id;
+            } else if ($request->getPost($id_key)) {
+                $pair["id"] = $request->getPost($id_key);
+            }
+
+            if ($pair["id"] !== null) {
+                return $pair;
+            }
+        }
+
+        return array("context" => "employee", "id" => null);
+    }
+
+    private function _get_accessible_contexts($type = "create", $task_info = null) {
+
+        $context_id_pairs = $this->get_context_id_pairs();
+
+        $available_contexts = array();
+
+        foreach ($context_id_pairs as $pair) {
+            $context = $pair["context"];
+
+            // $alwasy_enabled_module = array("project", "client");
+            // if (!(in_array($context))) {
+            //     continue;
+            // }
+
+            $available_contexts[] = $context;
+            
+            // if ($type == "view") {
+            //     if ($this->can_view_tasks($context)) {
+            //     }
+            // } else if ($type == "edit") {
+            //     if ($this->can_edit_tasks($task_info)) {
+            //         $available_contexts[] = $context;
+            //     }
+            // } else {
+            //     if ($this->can_create_tasks($context)) {
+            //         $available_contexts[] = $context;
+            //     }
+            // }
+        }
+
+        return $available_contexts;
+    }
+
   
     /* load client add/edit modal */
 
@@ -54,6 +120,61 @@ class Training extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
+
+        $contexts = $this->_get_accessible_contexts();
+        $selected_context = get_array_value($contexts, 0);
+        $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
+
+        $selected_context_id = 0;
+
+        foreach ($this->get_context_id_pairs() as $obj) {
+            $context_id_key = get_array_value($obj, "id_key");
+
+            $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
+            $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
+            
+            if ($value) {
+                $selected_context = get_array_value($obj, "context");
+                $selected_context_id = $value;
+                $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
+            }
+        }
+
+        $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
+
+        $view_data = array_merge($view_data, $dropdowns);
+        
+        if ($id) {
+            if (!$this->can_edit_tasks($model_info)) {
+                app_redirect("forbidden");
+            }
+            $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        }
+
+        $view_data['selected_context'] = $selected_context;
+        $view_data['contexts'] = $contexts;
+        $view_data['model_info'] = $model_info;
+        $view_data["add_type"] = $add_type;
+        $view_data['is_clone'] = $this->request->getPost('is_clone');
+        $view_data['view_type'] = $this->request->getPost("view_type");
+
+        $view_data['show_assign_to_dropdown'] = true;
+        if ($this->login_user->user_type == "client") {
+            if (!get_setting("client_can_assign_tasks")) {
+                $view_data['show_assign_to_dropdown'] = false;
+            }
+        } else {
+            //set default assigne to for new tasks
+            if (!$id && !$view_data['model_info']->assigned_to) {
+                $view_data['model_info']->assigned_to = $this->login_user->id;
+            }
+        }
 
         $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
@@ -89,6 +210,45 @@ class Training extends Security_Controller {
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $training_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
         return $this->template->view('training/modal_form', $view_data);
+    }
+
+
+    private function _get_task_related_dropdowns($context = "", $context_id = 0, $return_empty_context = false) {
+
+        //get milestone dropdown
+        $milestones_dropdown = array(array("id" => "", "text" => "-"));
+        if ($context == "project" && $context_id) {
+            $milestones = $this->Milestones_model->get_details(array("project_id" => $context_id, "deleted" => 0))->getResult();
+            foreach ($milestones as $milestone) {
+                $milestones_dropdown[] = array("id" => $milestone->id, "text" => $milestone->title);
+            }
+        }
+
+        //get project members and collaborators dropdown
+        if ($context == "employee" && $context_id) {
+           
+            $options = array("status" => "active", "user_type" => "staff");
+            $employee_members = $this->Users_model->get_details($options)->getResult();
+        }
+
+
+        $assign_to_dropdown = array(array("id" => "", "text" => "-"));
+        $collaborators_dropdown = array();
+        foreach ($employee_members as $member) {
+            $user_id = $member->id;
+            $member_name = ($member->first_name . " " . $member->last_name);
+            // $assign_to_dropdown[] = array("id" => $user_id, "text" => $member_name);
+            $employee_dropdown[] = array("id" => $user_id, "text" => $member_name);
+        }
+
+        
+
+        return array(
+            "milestones_dropdown" => $milestones_dropdown,
+            // "assign_to_dropdown" => $assign_to_dropdown,
+            "employees_dropdown" => $employees_dropdown
+           
+        );
     }
 
    
