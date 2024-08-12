@@ -87,6 +87,14 @@ class Left_menu {
             if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["training"] = array("name" => "training", "url" => "training", "class" => "briefcase");
             }
+            
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["appointments"] = array("name" => "appointments", "url" => "", "class" => "briefcase");
+            }
+            
+            if ($this->ci->login_user->is_admin || $access_client) {
+                $sidebar_menu["appointment"] = array("name" => "appointment", "url" => "appointments", "class" => "briefcase");
+            }
 
             
         

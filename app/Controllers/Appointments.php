@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Training extends Security_Controller {
+class Appointments extends Security_Controller {
 
     function __construct() {
         parent::__construct();
@@ -40,73 +40,7 @@ class Training extends Security_Controller {
 
         
 
-        return $this->template->rander("training/index", $view_data);
-    }
-
-    private function get_context_id_pairs() {
-        return array(
-            array("context" => "employee", "id_key" => "employee_ids", "id" => null),
-            array("context" => "unit", "id_key" => "unit_ids", "id" => null),
-            array("context" => "section", "id_key" => "section_ids", "id" => null),
-            array("context" => "department", "id_key" => "department_ids", "id" => null),
-        );
-    }
-
-    private function get_context_and_id($model_info = null) {
-
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        foreach ($context_id_pairs as $pair) {
-            $id_key = $pair["id_key"];
-            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
-
-            $request = request(); //needed when loading controller from widget helper
-
-            if ($id !== null) {
-                $pair["id"] = $id;
-            } else if ($request->getPost($id_key)) {
-                $pair["id"] = $request->getPost($id_key);
-            }
-
-            if ($pair["id"] !== null) {
-                return $pair;
-            }
-        }
-
-        return array("context" => "employee", "id" => null);
-    }
-
-    private function _get_accessible_contexts($type = "create", $task_info = null) {
-
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        $available_contexts = array();
-
-        foreach ($context_id_pairs as $pair) {
-            $context = $pair["context"];
-
-            // $alwasy_enabled_module = array("project", "client");
-            // if (!(in_array($context))) {
-            //     continue;
-            // }
-
-            $available_contexts[] = $context;
-            
-            // if ($type == "view") {
-            //     if ($this->can_view_tasks($context)) {
-            //     }
-            // } else if ($type == "edit") {
-            //     if ($this->can_edit_tasks($task_info)) {
-            //         $available_contexts[] = $context;
-            //     }
-            // } else {
-            //     if ($this->can_create_tasks($context)) {
-            //         $available_contexts[] = $context;
-            //     }
-            // }
-        }
-
-        return $available_contexts;
+        return $this->template->rander("appointments/index", $view_data);
     }
 
   
@@ -114,69 +48,12 @@ class Training extends Security_Controller {
 
     function modal_form() {
         
-        $training_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($training_id);
+        $appointments_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($appointments_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
-
-        // $model_info = $this->Tasks_model->get_one($id);
-
-        // $contexts = $this->_get_accessible_contexts();
-        // $selected_context = get_array_value($contexts, 0);
-        // $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
-
-        // $selected_context_id = 0;
-
-        // foreach ($this->get_context_id_pairs() as $obj) {
-        //     $context_id_key = get_array_value($obj, "id_key");
-
-        //     $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
-        //     $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
-            
-        //     if ($value) {
-        //         $selected_context = get_array_value($obj, "context");
-        //         $selected_context_id = $value;
-        //         $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
-        //     }
-        // }
-
-        // $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
-
-        // $view_data = array_merge($view_data, $dropdowns);
-        
-        // if ($id) {
-        //     if (!$this->can_edit_tasks($model_info)) {
-        //         app_redirect("forbidden");
-        //     }
-        //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
-        //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
-        // } else {
-        //     //Going to create new task. Check if the user has access in any context
-        //     if (!$this->can_create_tasks()) {
-        //         app_redirect("forbidden");
-        //     }
-        // }
-
-        // $view_data['selected_context'] = $selected_context;
-        // $view_data['contexts'] = $contexts;
-        // $view_data['model_info'] = $model_info;
-        // $view_data["add_type"] = $add_type;
-        // $view_data['is_clone'] = $this->request->getPost('is_clone');
-        // $view_data['view_type'] = $this->request->getPost("view_type");
-
-        // $view_data['show_assign_to_dropdown'] = true;
-        // if ($this->login_user->user_type == "client") {
-        //     if (!get_setting("client_can_assign_tasks")) {
-        //         $view_data['show_assign_to_dropdown'] = false;
-        //     }
-        // } else {
-        //     //set default assigne to for new tasks
-        //     if (!$id && !$view_data['model_info']->assigned_to) {
-        //         $view_data['model_info']->assigned_to = $this->login_user->id;
-        //     }
-        // }
 
         $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
@@ -188,13 +65,11 @@ class Training extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Training_model->get_one($training_id);
+        $view_data['model_info'] = $this->Appointments_model->get_one($appointments_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
-        $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
-        $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['guests'] = array("" => " -- choose guests -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -209,48 +84,9 @@ class Training extends Security_Controller {
         //prepare label suggestions
 
         //get custom fields
-        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $training_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $appointments_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('training/modal_form', $view_data);
-    }
-
-
-    private function _get_task_related_dropdowns($context = "", $context_id = 0, $return_empty_context = false) {
-
-        //get milestone dropdown
-        $milestones_dropdown = array(array("id" => "", "text" => "-"));
-        if ($context == "project" && $context_id) {
-            $milestones = $this->Milestones_model->get_details(array("project_id" => $context_id, "deleted" => 0))->getResult();
-            foreach ($milestones as $milestone) {
-                $milestones_dropdown[] = array("id" => $milestone->id, "text" => $milestone->title);
-            }
-        }
-
-        //get project members and collaborators dropdown
-        if ($context == "employee" && $context_id) {
-           
-            $options = array("status" => "active", "user_type" => "staff");
-            $employee_members = $this->Users_model->get_details($options)->getResult();
-        }
-
-
-        $assign_to_dropdown = array(array("id" => "", "text" => "-"));
-        $collaborators_dropdown = array();
-        foreach ($employee_members as $member) {
-            $user_id = $member->id;
-            $member_name = ($member->first_name . " " . $member->last_name);
-            // $assign_to_dropdown[] = array("id" => $user_id, "text" => $member_name);
-            $employee_dropdown[] = array("id" => $user_id, "text" => $member_name);
-        }
-
-        
-
-        return array(
-            "milestones_dropdown" => $milestones_dropdown,
-            // "assign_to_dropdown" => $assign_to_dropdown,
-            "employees_dropdown" => $employees_dropdown
-           
-        );
+        return $this->template->view('appointments/modal_form', $view_data);
     }
 
    
@@ -259,27 +95,26 @@ class Training extends Security_Controller {
     
     function save() {
         
-        $training_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($training_id);
+        $appointments_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($appointments_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
 
-        $training_name = $this->request->getPost('training_name');
+        $unit_name_so = $this->request->getPost('unit_name_so');
 
         $data = array(
-            "training_name" => $training_name,
-            "start_date" => $this->request->getPost('training_start_date'),
-            "end_date" => $this->request->getPost('training_end_date'), 
-            "training_location" => $this->request->getPost('Training_location'),
-            "type" => $this->request->getPost('Training_Type'),
-            "num_employee" => $this->request->getPost('num_employee'),
-            "trainer_id" => $this->request->getPost('trainer_id'),
-            "department_id" => $this->request->getPost('department_id'),
-            "section_id" => $this->request->getPost('section_id'),
-            "unit_id" => $this->request->getPost('unit_id'),
+            "nameSo" => $unit_name_so,
+            "short_name_SO" => $this->request->getPost('short_name_so'),
+            "nameEn" => $this->request->getPost('unit_name_en'), 
+            "short_name_EN" => $this->request->getPost('short_name_en'),
+            "email" => $this->request->getPost('unit_email'),
+            "department_id" => $this->request->getPost('unit_department'),
+            "section_id" => $this->request->getPost('unit_section'),
+            "unit_head_id" => $this->request->getPost('unit_head'),
+            "remarks" => $this->request->getPost('unit_remarks'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -287,7 +122,7 @@ class Training extends Security_Controller {
         }
 
 
-        if (!$training_id) {
+        if (!$appointments_id) {
             $data["created_at"] = get_current_utc_time();
         }
 
@@ -298,9 +133,9 @@ class Training extends Security_Controller {
         //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
 
         //     //check if the currency is editable
-        //     if ($training_id) {
-        //         $client_info = $this->Clients_model->get_one($training_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($training_id)) {
+        //     if ($appointments_id) {
+        //         $client_info = $this->Clients_model->get_one($appointments_id);
+        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($appointments_id)) {
         //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
         //             exit();
         //         }
@@ -310,7 +145,7 @@ class Training extends Security_Controller {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$training_id) {
+        } else if (!$appointments_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -318,21 +153,21 @@ class Training extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $training_id)) {
+        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $appointments_id)) {
         //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
         //     exit();
         // }
 
-        $save_id = $this->Training_model->ci_save($data, $training_id);
+        $save_id = $this->Appointments_model->ci_save($data, $appointments_id);
      
 
         if ($save_id) {
 
-            if(!$training_id){
+            if(!$appointments_id){
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Training_model->get_details($options)->getRow();
+                $partner = $this->Appointments_model->get_details($options)->getRow();
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
 
@@ -343,7 +178,7 @@ class Training extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("training_id" => $save_id);
+                $ticket_data = array("appointments_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
@@ -363,7 +198,7 @@ class Training extends Security_Controller {
             "id" => "required|numeric"
         ));
 
-        if ($this->Training_model->delete($id)) {
+        if ($this->Appointments_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -391,7 +226,7 @@ class Training extends Security_Controller {
 
         $all_options = append_server_side_filtering_commmon_params($options);
 
-        $result = $this->Training_model->get_details($all_options);
+        $result = $this->Appointments_model->get_details($all_options);
 
         //by this, we can handel the server side or client side from the app table prams.
         if (get_array_value($all_options, "server_side")) {
@@ -419,7 +254,7 @@ class Training extends Security_Controller {
             "id" => $id,
             "custom_fields" => $custom_fields
         );
-        $data = $this->Training_model->get_details($options)->getRow();
+        $data = $this->Appointments_model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
     }
 
@@ -430,16 +265,12 @@ class Training extends Security_Controller {
 
         $row_data = array($data->id,
 
-            anchor(get_uri("training/view/" . $data->id), $data->training_name),
-            $data->start_date,
-            $data->end_date,
-            $data->training_location,
-            $data->type,
-            $data->trainer_name,
-            $data->num_employee,
-            $data->Department_name,
-            $data->Section_name,
-            $data->Unit_name,
+            anchor(get_uri("appointments/view/" . $data->id), $data->title),
+            $data->date,
+            $data->time,
+            $data->room,
+            $data->note,
+            $data->HostName,
             
         );
 
@@ -448,8 +279,8 @@ class Training extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("training/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_partner'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_partner'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_partner'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_partner'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -479,14 +310,14 @@ class Training extends Security_Controller {
 
     /* load client details view */
 
-    function view($training_id = 0, $tab = "") {
+    function view($appointments_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($training_id);
+        $this->_validate_client_view_access($appointments_id);
 
-        if ($training_id) {
-            $options = array("id" => $training_id);
-            $training_info = $this->Training_model->get_details($options)->getRow();
-            if ($training_info && !$training_info->is_lead) {
+        if ($appointments_id) {
+            $options = array("id" => $appointments_id);
+            $section_info = $this->Appointments_model->get_details($options)->getRow();
+            if ($section_info && !$section_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -496,9 +327,9 @@ class Training extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['training_info'] = $training_info;
+                $view_data['section_info'] = $section_info;
 
-                $view_data["is_starred"] = strpos($training_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($section_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -507,7 +338,7 @@ class Training extends Security_Controller {
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
-                return $this->template->rander("training/view", $view_data);
+                return $this->template->rander("appointments/view", $view_data);
             } else {
                 show_404();
             }
@@ -524,17 +355,17 @@ class Training extends Security_Controller {
 
             if ($type === "add") {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "add");
-                return $this->template->view('training/star/starred', $view_data);
+                return $this->template->view('appointments/star/starred', $view_data);
             } else {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "remove");
-                return $this->template->view('training/star/not_starred', $view_data);
+                return $this->template->view('appointments/star/not_starred', $view_data);
             }
         }
     }
 
     function show_my_starred_clients() {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
-        return $this->template->view('training/star/clients_list', $view_data);
+        return $this->template->view('appointments/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
@@ -548,7 +379,7 @@ class Training extends Security_Controller {
 
         $view_data['client_id'] = clean_data($client_id);
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
-        return $this->template->view("training/projects/index", $view_data);
+        return $this->template->view("appointments/projects/index", $view_data);
     }
 
     /* load payments tab  */
@@ -559,7 +390,7 @@ class Training extends Security_Controller {
         if ($client_id) {
             $view_data["client_info"] = $this->Clients_model->get_one($client_id);
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("training/payments/index", $view_data);
+            return $this->template->view("appointments/payments/index", $view_data);
         }
     }
 
@@ -576,7 +407,7 @@ class Training extends Security_Controller {
 
             $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
-            return $this->template->view("training/tickets/index", $view_data);
+            return $this->template->view("appointments/tickets/index", $view_data);
         }
     }
 
@@ -601,7 +432,7 @@ class Training extends Security_Controller {
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
-            return $this->template->view("training/invoices/index", $view_data);
+            return $this->template->view("appointments/invoices/index", $view_data);
         }
     }
 
@@ -617,7 +448,7 @@ class Training extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("estimates", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("estimates", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("training/estimates/estimates", $view_data);
+            return $this->template->view("appointments/estimates/estimates", $view_data);
         }
     }
 
@@ -633,7 +464,7 @@ class Training extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("orders", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("orders", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("training/orders/orders", $view_data);
+            return $this->template->view("appointments/orders/orders", $view_data);
         }
     }
 
@@ -644,7 +475,7 @@ class Training extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("training/estimates/estimate_requests", $view_data);
+            return $this->template->view("appointments/estimates/estimate_requests", $view_data);
         }
     }
 
@@ -655,7 +486,7 @@ class Training extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("training/notes/index", $view_data);
+            return $this->template->view("appointments/notes/index", $view_data);
         }
     }
 
@@ -688,9 +519,9 @@ class Training extends Security_Controller {
 
         if ($view_type == "page_view") {
             $view_data['page_view'] = true;
-            return $this->template->rander("training/files/index", $view_data);
+            return $this->template->rander("appointments/files/index", $view_data);
         } else {
-            return $this->template->view("training/files/index", $view_data);
+            return $this->template->view("appointments/files/index", $view_data);
         }
     }
 
@@ -704,7 +535,7 @@ class Training extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data['client_id'] = $client_id;
-        return $this->template->view('training/files/modal_form', $view_data);
+        return $this->template->view('appointments/files/modal_form', $view_data);
     }
 
     /* save file data and move temp file to parmanent file directory */
@@ -785,7 +616,7 @@ class Training extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("training/view_file/" . $data->id)));
+                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("appointments/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -793,10 +624,10 @@ class Training extends Security_Controller {
             $description .= "</div>";
         }
 
-        $options = anchor(get_uri("training/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
+        $options = anchor(get_uri("appointments/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
 
         if ($this->login_user->user_type == "staff") {
-            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training/delete_file"), "data-action" => "delete-confirmation"));
+            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete_file"), "data-action" => "delete-confirmation"));
         }
 
 
@@ -834,7 +665,7 @@ class Training extends Security_Controller {
 
             $view_data["file_info"] = $file_info;
             $view_data['file_id'] = clean_data($file_id);
-            return $this->template->view("training/files/view", $view_data);
+            return $this->template->view("appointments/files/view", $view_data);
         } else {
             show_404();
         }
@@ -907,7 +738,7 @@ class Training extends Security_Controller {
             $view_data['show_cotact_info'] = true;
             $view_data['show_social_links'] = true;
             $view_data['social_link'] = $this->Social_links_model->get_one($contact_id);
-            return $this->template->rander("training/contacts/view", $view_data);
+            return $this->template->rander("appointments/contacts/view", $view_data);
         } else {
             show_404();
         }
@@ -934,7 +765,7 @@ class Training extends Security_Controller {
 
         $view_data["hidden_topbar_menus_dropdown"] = $this->get_hidden_topbar_menus_dropdown();
 
-        return $this->template->view("training/contacts/my_preferences", $view_data);
+        return $this->template->view("appointments/contacts/my_preferences", $view_data);
     }
 
     function save_my_preferences() {
@@ -1007,7 +838,7 @@ class Training extends Security_Controller {
 
         $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-        return $this->template->view("training/contacts/index", $view_data);
+        return $this->template->view("appointments/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -1023,7 +854,7 @@ class Training extends Security_Controller {
         $this->_validate_client_manage_access($view_data['model_info']->Sections_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-        return $this->template->view('training/contacts/modal_form', $view_data);
+        return $this->template->view('appointments/contacts/modal_form', $view_data);
     }
 
     /* load contact's general info tab view */
@@ -1039,7 +870,7 @@ class Training extends Security_Controller {
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients($view_data['model_info']->client_id);
-            return $this->template->view('training/contacts/contact_general_info_tab', $view_data);
+            return $this->template->view('appointments/contacts/contact_general_info_tab', $view_data);
         }
     }
 
@@ -1049,7 +880,7 @@ class Training extends Security_Controller {
         if ($Sections_id) {
             $this->_validate_client_view_access($Sections_id);
 
-            $view_data['model_info'] = $this->Training_model->get_one($Sections_id);
+            $view_data['model_info'] = $this->Appointments_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -1070,16 +901,15 @@ class Training extends Security_Controller {
 
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
 
-            $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
-            $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-            $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-            $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Unit_heads'] = array("" => " -- Choose Unit Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
             $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
-            return $this->template->view('training/contacts/company_info_tab', $view_data);
+            return $this->template->view('appointments/contacts/company_info_tab', $view_data);
         }
     }
 
@@ -1150,7 +980,7 @@ class Training extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Training_model->get_primary_contact($Sections_id);
+        $primary_contact = $this->Appointments_model->get_primary_contact($Sections_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1452,7 +1282,7 @@ class Training extends Security_Controller {
             $removal_request_pending = "<span class='bg-danger badge'>" . app_lang("removal_request_pending") . "</span>";
         }
 
-        $contact_link = anchor(get_uri("training/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
+        $contact_link = anchor(get_uri("appointments/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
         if ($this->login_user->user_type === "client") {
             $contact_link = $full_name; //don't show clickable link to client
         }
@@ -1462,7 +1292,7 @@ class Training extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("training/view/" . $data->Sections_id), $client_info->company_name),
+            anchor(get_uri("appointments/view/" . $data->Sections_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
@@ -1474,7 +1304,7 @@ class Training extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("training/delete_contact"), "data-action" => "delete"));
+        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("appointments/delete_contact"), "data-action" => "delete"));
 
         return $row_data;
     }
@@ -1494,7 +1324,7 @@ class Training extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-        return $this->template->view('training/contacts/invitation_modal', $view_data);
+        return $this->template->view('appointments/contacts/invitation_modal', $view_data);
     }
 
     //send a team member invitation to an email address
@@ -1552,7 +1382,7 @@ class Training extends Security_Controller {
     function users() {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
-            return $this->template->rander("training/contacts/users", $view_data);
+            return $this->template->rander("appointments/contacts/users", $view_data);
         }
     }
 
@@ -1569,7 +1399,7 @@ class Training extends Security_Controller {
     function import_clients_modal_form() {
         $this->_validate_client_manage_access();
 
-        return $this->template->view("training/import_clients_modal_form");
+        return $this->template->view("appointments/import_clients_modal_form");
     }
 
     private function _prepare_client_data($data_row, $allowed_headers) {
@@ -2005,7 +1835,7 @@ class Training extends Security_Controller {
 
     function gdpr() {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
-        return $this->template->view("training/contacts/gdpr", $view_data);
+        return $this->template->view("appointments/contacts/gdpr", $view_data);
     }
 
     function export_my_data() {
@@ -2099,7 +1929,7 @@ class Training extends Security_Controller {
             log_notification("client_contact_requested_account_removal", array("client_id" => $client_id), $user_id);
 
             $this->session->setFlashdata("success_message", app_lang("estimate_submission_message"));
-            app_redirect("training/contact_profile/$user_id/gdpr");
+            app_redirect("appointments/contact_profile/$user_id/gdpr");
         }
     }
 
@@ -2116,7 +1946,7 @@ class Training extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("training/expenses/index", $view_data);
+            return $this->template->view("appointments/expenses/index", $view_data);
         }
     }
 
@@ -2130,11 +1960,11 @@ class Training extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("training/contracts/contracts", $view_data);
+            return $this->template->view("appointments/contracts/contracts", $view_data);
         }
     }
 
-    function training_list() {
+    function appointments_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2148,7 +1978,7 @@ class Training extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("training/training_list", $view_data);
+        return $this->template->view("appointments/appointments_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {
@@ -2189,7 +2019,7 @@ class Training extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("proposals", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("proposals", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("training/proposals/proposals", $view_data);
+            return $this->template->view("appointments/proposals/proposals", $view_data);
         }
     }
 
@@ -2226,7 +2056,7 @@ class Training extends Security_Controller {
         $view_data["can_create_task"] = $this->can_edit_clients();
 
         $view_data['client_id'] = clean_data($client_id);
-        return $this->template->view("training/tasks/index", $view_data);
+        return $this->template->view("appointments/tasks/index", $view_data);
     }
 }
 

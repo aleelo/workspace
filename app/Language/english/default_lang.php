@@ -143,6 +143,18 @@ $lang["add_training"] = "Add Training";
 $lang["training_details"] = "Training Details";
 $lang["training_info"] = "Training Info";
 
+// Training:
+$lang["appointment"] = "Appointment";
+$lang["appointments"] = "Appointments";
+$lang["appointments_list"] = "Appointments List";
+$lang["add_appointment"] = "Add Appointment";
+$lang["title"] = "Title";
+$lang["date"] = "Date";
+$lang["time"] = "Time";
+$lang["room"] = "Room";
+$lang["note"] = "Note";
+$lang["host_name"] = "Host Name";
+
 // Units:
 $lang["unit"] = "Unit";
 $lang["units"] = "Units";
