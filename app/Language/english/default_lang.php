@@ -143,7 +143,7 @@ $lang["add_training"] = "Add Training";
 $lang["training_details"] = "Training Details";
 $lang["training_info"] = "Training Info";
 
-// Training:
+// Appointments:
 $lang["appointment"] = "Appointment";
 $lang["appointments"] = "Appointments";
 $lang["appointments_list"] = "Appointments List";
@@ -154,6 +154,9 @@ $lang["time"] = "Time";
 $lang["room"] = "Room";
 $lang["note"] = "Note";
 $lang["host_name"] = "Host Name";
+
+// Others:
+$lang["others"] = "Others";
 
 // Units:
 $lang["unit"] = "Unit";

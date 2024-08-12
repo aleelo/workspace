@@ -55,8 +55,9 @@ class Appointments extends Security_Controller {
             "id" => "numeric"
         ));
 
-        $view_data['label_column'] = "col-md-3 text-right";
-        $view_data['field_column'] = "col-md-9";
+        // $view_data['label_column'] = "col-md-2 text-right";
+        $view_data['label_column'] = "col-md-2 text-right";
+        $view_data['field_column'] = "col-md-10";
 
         $view_data['label_column_2'] = "col-md-2 text-right";
         $view_data['field_column_2'] = "col-md-4";
@@ -67,6 +68,7 @@ class Appointments extends Security_Controller {
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
         $view_data['model_info'] = $this->Appointments_model->get_one($appointments_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
+        $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
         $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
         $view_data['guests'] = array("" => " -- choose guests -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");

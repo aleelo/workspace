@@ -57,6 +57,7 @@
                         ));
                         ?>
                     </div>
+                    
                     <label for="start_time" class=" col-md-2 col-sm-2"><?php echo app_lang('start_time'); ?></label>
                     <div class=" col-md-3 col-sm-3">
                         <?php

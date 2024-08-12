@@ -31,8 +31,9 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="date" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('date'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="date" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('date'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "date",
@@ -43,28 +44,34 @@
             ));
             ?>
         </div>
-    </div>
-</div>
 
-<!----------------------------------------- Appointment Time  ------------------------------------>
-
-
-<div class="form-group">
-    <div class="row">
-        <label for="time" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('time'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="time" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('time'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
+            if (is_date_exists($model_info->time) && $model_info->time == "00:00:00") {
+                $time = "";
+            } else {
+                $time = $model_info->time;
+            }
+
+            if ($time_format_24_hours) {
+                $time = $time ? date("H:i", strtotime($time)) : "";
+            } else {
+                $time = $time ? convert_time_to_12hours_format(date("H:i:s", strtotime($time))) : "";
+            }
             echo form_input(array(
                 "id" => "time",
                 "name" => "time",
-                "value" => $model_info->time,
-                "class" => "form-control company_name_input_section",
+                "value" => $time,
+                "class" => "form-control",
                 "placeholder" => app_lang('time'),
             ));
             ?>
         </div>
+        
     </div>
 </div>
+
 
 <!----------------------------------------- Appointment Room  ------------------------------------>
 
@@ -94,7 +101,7 @@
         <label for="note" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('note'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
-            echo form_input(array(
+            echo form_textarea(array(
                 "id" => "note",
                 "name" => "note",
                 "value" => $model_info->note,
@@ -112,7 +119,7 @@
 <div class="form-group">
     <div class="row">
         <label for="host_id" class=" <?php echo $label_column; ?>"><?php echo 'Host'; ?></label>
-        <div class=" col-md-9">
+        <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "host_id",
@@ -131,7 +138,7 @@
 <div class="form-group">
     <div class="row">
         <label for="guest_id" class=" <?php echo $label_column; ?>"><?php echo 'Guest'; ?></label>
-        <div class=" col-md-9">
+        <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "guest_id",
@@ -194,6 +201,10 @@
         });
 
         $("#client-form .select2").select2();
+
+        setTimePicker("#time");
+        setDatePicker("#date");
+
 
     });
 </script>
