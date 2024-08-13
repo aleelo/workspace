@@ -275,6 +275,7 @@ class Training extends Security_Controller {
             "end_date" => $this->request->getPost('training_end_date'), 
             "training_location" => $this->request->getPost('Training_location'),
             "type" => $this->request->getPost('Training_Type'),
+            "participant" => $this->request->getPost('training_participant'),
             "num_employee" => $this->request->getPost('num_employee'),
             "trainer_id" => $this->request->getPost('trainer_id'),
             "department_id" => $this->request->getPost('department_id'),
