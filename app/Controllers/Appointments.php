@@ -71,7 +71,7 @@ class Appointments extends Security_Controller {
         $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
         $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-        $view_data['guests'] = array("" => " -- choose guests -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['guests'] = array("" => " -- choose a visitor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -105,18 +105,16 @@ class Appointments extends Security_Controller {
             "id" => "numeric",
         ));
 
-        $unit_name_so = $this->request->getPost('unit_name_so');
+        $appointment_title = $this->request->getPost('appointment_title');
 
         $data = array(
-            "nameSo" => $unit_name_so,
-            "short_name_SO" => $this->request->getPost('short_name_so'),
-            "nameEn" => $this->request->getPost('unit_name_en'), 
-            "short_name_EN" => $this->request->getPost('short_name_en'),
-            "email" => $this->request->getPost('unit_email'),
-            "department_id" => $this->request->getPost('unit_department'),
-            "section_id" => $this->request->getPost('unit_section'),
-            "unit_head_id" => $this->request->getPost('unit_head'),
-            "remarks" => $this->request->getPost('unit_remarks'),
+            "title" => $appointment_title,
+            "date" => $this->request->getPost('appointment_date'),
+            "time" => $this->request->getPost('appointment_time'), 
+            "room" => $this->request->getPost('appointment_room'),
+            "note" => $this->request->getPost('appointment_note'),
+            "host_id" => $this->request->getPost('appointment_host_id'),
+            "visitor_id" => $this->request->getPost('appointment_visitor_id'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -281,8 +279,8 @@ class Appointments extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_partner'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_partner'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_appointment'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -318,8 +316,8 @@ class Appointments extends Security_Controller {
 
         if ($appointments_id) {
             $options = array("id" => $appointments_id);
-            $section_info = $this->Appointments_model->get_details($options)->getRow();
-            if ($section_info && !$section_info->is_lead) {
+            $appointments_info = $this->Appointments_model->get_details($options)->getRow();
+            if ($appointments_info && !$appointments_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -329,9 +327,9 @@ class Appointments extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['section_info'] = $section_info;
+                $view_data['appointments_info'] = $appointments_info;
 
-                $view_data["is_starred"] = strpos($section_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($appointments_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -890,16 +888,20 @@ class Appointments extends Security_Controller {
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
+            $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['guests'] = array("" => " -- choose a visitor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-            $view_data['label_column'] = "col-md-2";
-            $view_data['field_column'] = "col-md-10";
+             // $view_data['label_column'] = "col-md-2 text-right";
+        $view_data['label_column'] = "col-md-2 text-right";
+        $view_data['field_column'] = "col-md-10";
 
-            $view_data['label_column_2'] = "col-md-2 text-right";
-            $view_data['field_column_2'] = "col-md-4";
+        $view_data['label_column_2'] = "col-md-2 text-right";
+        $view_data['field_column_2'] = "col-md-4";
 
-            $view_data['field_column_3'] = "col-md-10";
+        $view_data['field_column_3'] = "col-md-10";
 
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
 

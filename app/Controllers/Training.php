@@ -448,8 +448,8 @@ class Training extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("training/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_partner'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_partner'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("training/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_training'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_training'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }

@@ -62,9 +62,9 @@
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("partners/payments/" . $partner_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
                     <?php } ?> -->
 
-                    <?php if ($show_estimate_info) { ?>
+                    <!-- <?php if ($show_estimate_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("partners/estimates/" . $partner_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
-                    <?php } ?>
+                    <?php } ?> -->
 
                     <!-- <?php if ($show_order_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("partners/orders/" . $partner_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>

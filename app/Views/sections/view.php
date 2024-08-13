@@ -63,9 +63,9 @@
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/payments/" . $section_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
                     <?php } ?> -->
 
-                    <?php if ($show_estimate_info) { ?>
+                    <!-- <?php if ($show_estimate_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/estimates/" . $section_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
-                    <?php } ?>
+                    <?php } ?> -->
 
                     <!-- <?php if ($show_order_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/orders/" . $section_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>

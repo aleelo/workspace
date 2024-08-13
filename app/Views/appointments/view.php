@@ -4,30 +4,30 @@
             <div class="col-md-12">
                 <div class="page-title clearfix no-border no-border-top-radius no-bg">
                     <h1 class="pl0">
-                        <?php echo app_lang('unit_details') . " - " . $section_info->nameSo ?>
+                        <?php echo app_lang('appointment_details') . " - " . $appointments_info->title ?>
                         <span id="star-mark">
                             <?php
                             if ($is_starred) {
-                                echo view('appointments/star/starred', array("client_id" => $section_info->id));
+                                echo view('appointments/star/starred', array("client_id" => $appointments_info->id));
                             } else {
-                                echo view('appointments/star/not_starred', array("client_id" => $section_info->id));
+                                echo view('appointments/star/not_starred', array("client_id" => $appointments_info->id));
                             }
                             ?>
                         </span>
 
-                        <?php if ($section_info->lead_status_id) { ?>
+                        <?php if ($appointments_info->lead_status_id) { ?>
                             <?php $lead_information = app_lang("past_lead_information") . "<br />"; ?>
-                            <?php if ($section_info->created_date) { ?>
-                                <?php $lead_information .= app_lang("lead_created_at") . ": " . format_to_date($section_info->created_date, false) . "<br />"; ?>
+                            <?php if ($appointments_info->created_date) { ?>
+                                <?php $lead_information .= app_lang("lead_created_at") . ": " . format_to_date($appointments_info->created_date, false) . "<br />"; ?>
                             <?php } ?>
-                            <?php if ($section_info->client_migration_date && is_date_exists($section_info->client_migration_date)) { ?>
-                                <?php $lead_information .= app_lang("migrated_to_client_at") . ": " . format_to_date($section_info->client_migration_date, false) . "<br />"; ?>
+                            <?php if ($appointments_info->client_migration_date && is_date_exists($appointments_info->client_migration_date)) { ?>
+                                <?php $lead_information .= app_lang("migrated_to_client_at") . ": " . format_to_date($appointments_info->client_migration_date, false) . "<br />"; ?>
                             <?php } ?>
-                            <?php if ($section_info->last_lead_status) { ?>
-                                <?php $lead_information .= app_lang("last_status") . ": " . $section_info->last_lead_status . "<br />"; ?>
+                            <?php if ($appointments_info->last_lead_status) { ?>
+                                <?php $lead_information .= app_lang("last_status") . ": " . $appointments_info->last_lead_status . "<br />"; ?>
                             <?php } ?>
-                            <?php if ($section_info->owner_id) { ?>
-                                <?php $lead_information .= app_lang("owner") . ": " . $section_info->owner_name; ?>
+                            <?php if ($appointments_info->owner_id) { ?>
+                                <?php $lead_information .= app_lang("owner") . ": " . $appointments_info->owner_name; ?>
                             <?php } ?>
 
                             <span data-bs-toggle="tooltip" data-bs-html="true" title="<?php echo $lead_information; ?>"><i data-feather="help-circle" class="icon-16"></i></span>
@@ -37,7 +37,7 @@
 
                     <?php if (can_access_reminders_module()) { ?>
                         <div class="title-button-group mr0 clients-view">
-                            <?php echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr0", "id" => "reminder-icon", "data-post-client_id" => $section_info->id, "data-post-reminder_view_type" => "client", "title" => app_lang('reminders') . " (" . app_lang('private') . ")")); ?>
+                            <?php echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr0", "id" => "reminder-icon", "data-post-client_id" => $appointments_info->id, "data-post-reminder_view_type" => "client", "title" => app_lang('reminders') . " (" . app_lang('private') . ")")); ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -48,58 +48,58 @@
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/company_info_tab/" . $section_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('unit_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/company_info_tab/" . $appointments_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('appointment_info'); ?></a></li>
 
-                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/contacts/" . $section_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
+                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/contacts/" . $appointments_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
 
                     <?php if ($show_project_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/projects/" . $section_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/projects/" . $appointments_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
                     <?php } ?>
 
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tasks/" . $section_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tasks/" . $appointments_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
 
                     <!-- <?php if ($show_invoice_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/invoices/" . $section_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/payments/" . $section_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/invoices/" . $appointments_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/payments/" . $appointments_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
+                    <?php } ?> -->
+<!-- 
+                    <?php if ($show_estimate_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/estimates/" . $appointments_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
                     <?php } ?> -->
 
-                    <?php if ($show_estimate_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/estimates/" . $section_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
-                    <?php } ?>
-
                     <!-- <?php if ($show_order_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/orders/" . $section_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/orders/" . $appointments_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>
                     <?php } ?> -->
 
                     <!-- <?php if ($show_estimate_request_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/estimate_requests/" . $section_info->id); ?>" data-bs-target="#client-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/estimate_requests/" . $appointments_info->id); ?>" data-bs-target="#client-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_contract_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/contracts/" . $section_info->id); ?>" data-bs-target="#client-contracts"> <?php echo app_lang('contracts'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/contracts/" . $appointments_info->id); ?>" data-bs-target="#client-contracts"> <?php echo app_lang('contracts'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_proposal_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/proposals/" . $section_info->id); ?>" data-bs-target="#client-proposals"> <?php echo app_lang('proposals'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/proposals/" . $appointments_info->id); ?>" data-bs-target="#client-proposals"> <?php echo app_lang('proposals'); ?></a></li>
                     <?php } ?> -->
 
                     <!-- <?php if ($show_ticket_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tickets/" . $section_info->id); ?>" data-bs-target="#client-tickets"> <?php echo app_lang('tickets'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tickets/" . $appointments_info->id); ?>" data-bs-target="#client-tickets"> <?php echo app_lang('tickets'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_note_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/notes/" . $section_info->id); ?>" data-bs-target="#client-notes"> <?php echo app_lang('notes'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/notes/" . $appointments_info->id); ?>" data-bs-target="#client-notes"> <?php echo app_lang('notes'); ?></a></li>
                     <?php } ?>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/files/" . $section_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li> -->
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/files/" . $appointments_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li> -->
 
                     <!-- <?php if ($show_event_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/events/" . $section_info->id); ?>" data-bs-target="#client-events"> <?php echo app_lang('events'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/events/" . $appointments_info->id); ?>" data-bs-target="#client-events"> <?php echo app_lang('events'); ?></a></li>
                     <?php } ?>
 
                     <?php if ($show_expense_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/expenses/" . $section_info->id); ?>" data-bs-target="#client-expenses"> <?php echo app_lang('expenses'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/expenses/" . $appointments_info->id); ?>" data-bs-target="#client-expenses"> <?php echo app_lang('expenses'); ?></a></li>
                     <?php } ?> -->
 
                     <?php
                     $hook_tabs = array();
-                    $hook_tabs = app_hooks()->apply_filters('app_filter_client_details_ajax_tab', $hook_tabs, $section_info->id);
+                    $hook_tabs = app_hooks()->apply_filters('app_filter_client_details_ajax_tab', $hook_tabs, $appointments_info->id);
                     $hook_tabs = is_array($hook_tabs) ? $hook_tabs : array();
                     foreach ($hook_tabs as $hook_tab) {
                         ?>

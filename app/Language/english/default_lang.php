@@ -73,6 +73,7 @@ $lang["departments"] = "Departments";
 $lang["add_department"] = "Add Department";
 $lang["add_departments"] = "Add Department";
 $lang["edit_department"] = "Edit Department";
+$lang["delete_department"] = "Delete Department";
 $lang["departments_list"] = "Departments List";
 $lang["department_email"] = "Department Email";
 $lang["departments"] = "Departments";
@@ -107,6 +108,8 @@ $lang["delete_grade"] = "Delete Grade";
 $lang["section"] = "Section";
 $lang["sections"] = "Sections";
 $lang["add_section"] = "Add Section";
+$lang["edit_section"] = "Edit Section";
+$lang["delete_section"] = "Delete Section";
 $lang["sections_list"] = "Sections List";
 $lang["section_name_so"] = "Section Name SO";
 $lang["short_name_so"] = "Short Name SO";
@@ -140,6 +143,8 @@ $lang["training_section"] = "Section";
 $lang["training_unit"] = "Unit";
 $lang["training_list"] = "Training List";
 $lang["add_training"] = "Add Training";
+$lang["edit_training"] = "Edit Training";
+$lang["delete_training"] = "Delete Training";
 $lang["training_details"] = "Training Details";
 $lang["training_info"] = "Training Info";
 
@@ -147,7 +152,18 @@ $lang["training_info"] = "Training Info";
 $lang["appointment"] = "Appointment";
 $lang["appointments"] = "Appointments";
 $lang["appointments_list"] = "Appointments List";
+$lang["appointment_info"] = "Appointment Info";
+$lang["appointment_details"] = "Appointment Details";
 $lang["add_appointment"] = "Add Appointment";
+$lang["appointment_title"] = "Title";
+$lang["appointment_date"] = "Date";
+$lang["appointment_time"] = "Time";
+$lang["appointment_room"] = "Room";
+$lang["appointment_note"] = "Note";
+$lang["appointment_host_name"] = "Host Name";
+$lang["appointment_visitor_name"] = "Vistor Name";
+$lang["delete_appointment"] = "Delete Appointment";
+$lang["edit_appointment"] = "Edit Appointment";
 $lang["title"] = "Title";
 $lang["date"] = "Date";
 $lang["time"] = "Time";
@@ -174,6 +190,8 @@ $lang["unit_info"] = "Unit Info";
 $lang["unit_details"] = "Unit Details";
 $lang["units_list"] = "Unit List";
 $lang["add_unit"] = "Add Unit";
+$lang["edit_unit"] = "Edit Unit";
+$lang["delete_unit"] = "Delete Unit";
 
 
 // Payers:
@@ -183,6 +201,8 @@ $lang["payers_info"] = "Payers Info";
 $lang["payer_details"] = "Payer Details";
 $lang["payer_info"] = "Payer Info";
 $lang["contact_info"] = "Contact Info";
+$lang["edit_payer"] = "Edit Payer";
+$lang["delete_payer"] = "Delete Payer";
 
 
 // Partners:

@@ -8,15 +8,15 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="title" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('title'); ?></label>
+        <label for="appointment_title" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('appointment_title'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
-                "id" => "title",
-                "name" => "title",
+                "id" => "appointment_title",
+                "name" => "appointment_title",
                 "value" => $model_info->title,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('title'),
+                "placeholder" => app_lang('appointment_title'),
                 //"autofocus" => true,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
@@ -32,20 +32,20 @@
 <div class="form-group">
     <div class="row">
 
-        <label for="date" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('date'); ?></label>
+        <label for="appointment_date" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('appointment_date'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
-                "id" => "date",
-                "name" => "date",
+                "id" => "appointment_date",
+                "name" => "appointment_date",
                 "value" => $model_info->date,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('date'),
+                "placeholder" => app_lang('appointment_date'),
             ));
             ?>
         </div>
 
-        <label for="time" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('time'); ?></label>
+        <label for="appointment_time" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('appointment_time'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             if (is_date_exists($model_info->time) && $model_info->time == "00:00:00") {
@@ -60,11 +60,11 @@
                 $time = $time ? convert_time_to_12hours_format(date("H:i:s", strtotime($time))) : "";
             }
             echo form_input(array(
-                "id" => "time",
-                "name" => "time",
+                "id" => "appointment_time",
+                "name" => "appointment_time",
                 "value" => $time,
                 "class" => "form-control",
-                "placeholder" => app_lang('time'),
+                "placeholder" => app_lang('appointment_time'),
             ));
             ?>
         </div>
@@ -78,15 +78,15 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="room" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('room'); ?></label>
+        <label for="appointment_room" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('appointment_room'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
-                "id" => "room",
-                "name" => "room",
+                "id" => "appointment_room",
+                "name" => "appointment_room",
                 "value" => $model_info->room,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('room'),
+                "placeholder" => app_lang('appointment_room'),
             ));
             ?>
         </div>
@@ -98,15 +98,15 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="note" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('note'); ?></label>
+        <label for="appointment_note" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('appointment_note'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_textarea(array(
-                "id" => "note",
-                "name" => "note",
+                "id" => "appointment_note",
+                "name" => "appointment_note",
                 "value" => $model_info->note,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('note'),
+                "placeholder" => app_lang('appointment_note'),
             ));
             ?>
         </div>
@@ -118,12 +118,12 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="host_id" class=" <?php echo $label_column; ?>"><?php echo 'Host'; ?></label>
+        <label for="appointment_host_id" class=" <?php echo $label_column; ?>"><?php echo 'Host'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "host_id",
-                "name" => "host_id",
+                "id" => "appointment_host_id",
+                "name" => "appointment_host_id",
                 "class" => "form-control select2",
                 "placeholder" => 'Host Person',
                 "autocomplete" => "off"
@@ -137,16 +137,16 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="guest_id" class=" <?php echo $label_column; ?>"><?php echo 'Guest'; ?></label>
+        <label for="appointment_visitor_id" class=" <?php echo $label_column; ?>"><?php echo 'Visitor'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "guest_id",
-                "name" => "guest_id",
+                "id" => "appointment_visitor_id",
+                "name" => "appointment_visitor_id",
                 "class" => "form-control select2",
-                "placeholder" => 'Guests',
+                "placeholder" => 'Visitor',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->guest_id]);
+            ),$guests,[$model_info->visitor_id]);
             ?>
         </div>
     </div>
@@ -202,8 +202,8 @@
 
         $("#client-form .select2").select2();
 
-        setTimePicker("#time");
-        setDatePicker("#date");
+        setDatePicker("#appointment_date");
+        setTimePicker("#appointment_time");
 
 
     });
