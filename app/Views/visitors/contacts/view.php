@@ -1,81 +1,110 @@
 <?php echo view("includes/cropbox"); ?>
 <div id="page-content" class="clearfix">
-    <div class="bg-success p20">
+    <div class="bg-dark-success clearfix">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6">
-                    <?php echo view("users/profile_image_section"); ?>
+                    <div class="p20 row">
+                        <?php echo view("users/profile_image_section"); ?>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <p> 
-                        <?php
-                        $client_link = anchor(get_uri("leads/view/" . $lead_info->id), $lead_info->company_name, array("class" => "white-link"));
+                    <div class="p20 row">
+                        <?php if ($client_info->type != "person") { ?>
+                            <p> 
+                                <?php
+                                $client_link = anchor(get_uri("visitors/view/" . $client_info->id), $client_info->company_name, array("class" => "white-link"));
 
-                        if ($login_user->user_type === "client") {
-                            $client_link = anchor(get_uri("leads/contact_profile/" . $login_user->id . "/company"), $lead_info->company_name, array("class" => "white-link"));
-                        }
+                                if ($login_user->user_type === "client") {
+                                    $client_link = anchor(get_uri("visitors/contact_profile/" . $login_user->id . "/company"), $client_info->company_name, array("class" => "white-link"));
+                                }
 
-                        echo app_lang("company_name") . ": <b>" . $client_link . "</b>";
-                        ?>
-
-                    </p>
-                    <?php if ($lead_info->address) { ?>
-                        <p><?php echo nl2br($lead_info->address); ?>
-                            <?php if ($lead_info->city) { ?>
-                                <br /><?php echo $lead_info->city; ?>
-                            <?php } ?>
-                            <?php if ($lead_info->state) { ?>
-                                <br /><?php echo $lead_info->state; ?>
-                            <?php } ?>
-                            <?php if ($lead_info->zip) { ?>
-                                <br /><?php echo $lead_info->zip; ?>
-                            <?php } ?>
-                            <?php if ($lead_info->country) { ?>
-                                <br /><?php echo $lead_info->country; ?>
-                            <?php } ?>
-                        </p>
-                        <p>
-                            <?php
-                            if ($lead_info->website) {
-                                $website = to_url($lead_info->website);
-                                echo app_lang("website") . ": " . "<a target='_blank' href='" . $website . "' class='white-link'>$website</a>";
+                                echo app_lang("company_name") . ": <b>" . $client_link . "</b>";
                                 ?>
-                            <?php } ?>
-                            <?php if ($lead_info->vat_number) { ?>
-                                <br /><?php echo app_lang("vat_number") . ": " . $lead_info->vat_number; ?>
-                            <?php } ?>  
-                        </p>
-                    <?php } ?>
+
+                            </p>
+                        <?php } ?>
+
+                        <?php if ($client_info->address) { ?>
+                            <p><?php echo nl2br($client_info->address); ?>
+                                <?php if ($client_info->city) { ?>
+                                    <br /><?php echo $client_info->city; ?>
+                                <?php } ?>
+                                <?php if ($client_info->state) { ?>
+                                    <br /><?php echo $client_info->state; ?>
+                                <?php } ?>
+                                <?php if ($client_info->zip) { ?>
+                                    <br /><?php echo $client_info->zip; ?>
+                                <?php } ?>
+                                <?php if ($client_info->country) { ?>
+                                    <br /><?php echo $client_info->country; ?>
+                                <?php } ?>
+                            </p>
+                            <p>
+                                <?php
+                                if ($client_info->website) {
+                                    $website = to_url($client_info->website);
+                                    echo app_lang("website") . ": " . "<a target='_blank' href='" . $website . "' class='white-link'>$website</a>";
+                                    ?>
+                                <?php } ?>
+                                <?php if ($client_info->vat_number) { ?>
+                                    <br /><?php echo app_lang("vat_number") . ": " . $client_info->vat_number; ?>
+                                <?php } ?>
+                                <?php if ($client_info->gst_number) { ?>
+                                    <br /><?php echo app_lang("gst_number") . ": " . $client_info->gst_number; ?>
+                                <?php } ?>
+                            </p>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <ul data-bs-toggle="ajax-tab" class="nav nav-tabs no-border-top-radius" role="tablist">
-        <li><a data-bs-toggle="tab" role="presentation" href="<?php echo_uri("leads/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
-        <li><a data-bs-toggle="tab" role="presentation" href="<?php echo_uri("leads/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo app_lang('company'); ?></a></li>
-        <li><a data-bs-toggle="tab" role="presentation" href="<?php echo_uri("leads/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
+    <ul id="client-contact-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs b-b rounded-0" role="tablist">
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('company'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
+        <?php if ($user_info->id == $login_user->id) { ?>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
+        <?php } ?>
+        <?php if ($user_info->id == $login_user->id && !get_setting("disable_editing_left_menu_by_clients")) { ?>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("left_menus/index/user"); ?>" data-bs-target="#tab-user-left-menu"> <?php echo app_lang('left_menu'); ?></a></li>
+        <?php } ?>
+        <?php if ($user_info->id == $login_user->id && get_setting("enable_gdpr") && (get_setting("clients_can_request_account_removal") || get_setting("allow_clients_to_export_their_data"))) { ?>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/gdpr/" . $user_info->id); ?>" data-bs-target="#tab-gdpr">GDPR</a></li>
+        <?php } ?>
 
         <?php
         $hook_tabs = array();
-        $hook_tabs = app_hooks()->apply_filters('app_filter_lead_profile_ajax_tab', $hook_tabs, $user_info->id);
+        $hook_tabs = app_hooks()->apply_filters('app_filter_client_profile_ajax_tab', $hook_tabs, $user_info->id);
         $hook_tabs = is_array($hook_tabs) ? $hook_tabs : array();
         foreach ($hook_tabs as $hook_tab) {
             ?>
-            <li><a role="presentation" href="<?php echo get_array_value($hook_tab, 'url') ?>" data-bs-target="#<?php echo get_array_value($hook_tab, 'target') ?>"><?php echo get_array_value($hook_tab, 'title') ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo get_array_value($hook_tab, 'url') ?>" data-bs-target="#<?php echo get_array_value($hook_tab, 'target') ?>"><?php echo get_array_value($hook_tab, 'title') ?></a></li>
             <?php
         }
         ?>
     </ul>
 
     <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade" id="tab-files"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-general-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-company-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-social-links"></div>
-        <?php foreach ($hook_tabs as $hook_tab) { ?>
+        <div role="tabpanel" class="tab-pane fade" id="tab-account-settings"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-my-preferences"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-user-left-menu"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-gdpr"></div>
+        <?php
+        foreach ($hook_tabs as $hook_tab) {
+            ?>
             <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>
-        <?php } ?>
+            <?php
+        }
+        ?>
     </div>
 </div>
 <script type="text/javascript">
@@ -111,16 +140,22 @@
             }
         });
 
-        var tab = "<?php echo $tab; ?>";
-        if (tab === "general") {
-            $("[data-bs-target='#tab-general-info']").trigger("click");
-        } else if (tab === "company") {
-            $("[data-bs-target='#tab-company-info']").trigger("click");
-        } else if (tab === "social") {
-            $("[data-bs-target='#tab-social-links']").trigger("click");
-        } else if (tab === "my_preferences") {
-            $("[data-bs-target='#tab-my-preferences']").trigger("click");
-        }
+        setTimeout(function () {
+            var tab = "<?php echo $tab; ?>";
+            if (tab === "general") {
+                $("[data-bs-target='#tab-general-info']").trigger("click");
+            } else if (tab === "company") {
+                $("[data-bs-target='#tab-company-info']").trigger("click");
+            } else if (tab === "account") {
+                $("[data-bs-target='#tab-account-settings']").trigger("click");
+            } else if (tab === "social") {
+                $("[data-bs-target='#tab-social-links']").trigger("click");
+            } else if (tab === "my_preferences") {
+                $("[data-bs-target='#tab-my-preferences']").trigger("click");
+            } else if (tab === "left_menu") {
+                $("[data-bs-target='#tab-user-left-menu']").trigger("click");
+            }
+        }, 210);
 
     });
 </script>

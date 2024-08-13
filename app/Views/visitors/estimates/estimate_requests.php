@@ -1,4 +1,4 @@
-<div class="card no-border-top-radius">
+<div class="card rounded-bottom">
 
     <?php if ($login_user->user_type == "staff") { ?>
         <div class="tab-title clearfix">

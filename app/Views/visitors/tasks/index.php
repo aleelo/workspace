@@ -2,7 +2,11 @@
     <div class="tab-title clearfix">
         <h4><?php echo app_lang('tasks'); ?></h4>
         <div class="title-button-group">
-            <?php echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default mb0", "data-post-lead_id" => $client_id, "title" => app_lang('add_task'))); ?>
+            <?php
+            if ($can_create_task) {
+                echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default mb0", "data-post-client_id" => $client_id, "title" => app_lang('add_task')));
+            }
+            ?>
         </div>
     </div>
     <div class="table-responsive">
@@ -24,7 +28,7 @@
         }
 
         $("#task-table").appTable({
-            source: '<?php echo_uri("tasks/list_data/lead/" . $client_id) ?>',
+            source: '<?php echo_uri("tasks/list_data/client/" . $client_id) ?>',
             order: [[0, "desc"]],
             serverSide: true,
             columns: [

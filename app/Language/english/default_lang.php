@@ -194,6 +194,25 @@ $lang["edit_unit"] = "Edit Unit";
 $lang["delete_unit"] = "Delete Unit";
 
 
+// Visitors:
+$lang["visitors"] = "Visitors";
+$lang["visitors_list"] = "Visitors List";
+$lang["visitor_info"] = "Visitor Info";
+$lang["visitor_details"] = "Visitor Details";
+$lang["visitor_name"] = "Visitor Name";
+$lang["visitor_type"] = "Visitors Type";
+$lang["visitor_email"] = "Visitor Email";
+$lang["visitor_phone"] = "Visitor Phone";
+$lang["visitor_description"] = "Visitor Description";
+$lang["type"] = "Type";
+$lang["email"] = "Email";
+$lang["phone"] = "Phone";
+$lang["description"] = "Description";
+$lang["add_visitor"] = "Add Visitor";
+$lang["edit_visitor"] = "Edit Visitor";
+$lang["delete_visitor"] = "Delete Visitor";
+
+
 // Payers:
 $lang["payer"] = "Payer";
 $lang["payers"] = "Payers";

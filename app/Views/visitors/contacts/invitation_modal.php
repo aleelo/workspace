@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("leads/send_invitation"), array("id" => "invitation-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("visitors/send_invitation"), array("id" => "invitation-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <br />
@@ -24,6 +24,7 @@
                 </div>
             </div>
         </div>
+        <br />
     </div>
 </div>
 

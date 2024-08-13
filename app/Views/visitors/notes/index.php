@@ -1,4 +1,4 @@
-<div class="card no-border-top-radius">
+<div class="card rounded-bottom">
     <div class="tab-title clearfix">
         <h4><?php echo app_lang('notes'); ?></h4>
         <div class="title-button-group">

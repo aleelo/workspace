@@ -1,55 +1,105 @@
 <div id="page-content" class="clearfix page-content">
-    <div class="container-fluid leads-details-view">
-        <div class="row">
+    <div class="container-fluid  full-width-button">
+        <div class="row clients-view-button">
             <div class="col-md-12">
-                <div class="page-title clearfix no-border no-border-top-radius no-bg leads-page-title">
+                <div class="page-title clearfix no-border no-border-top-radius no-bg">
                     <h1 class="pl0">
-                        <?php echo app_lang('lead_details') . " - " . $lead_info->company_name ?> 
+                        <?php echo app_lang('visitors_list') . " - " . $visitor_info->name ?>
+                        <span id="star-mark">
+                            <?php
+                            if ($is_starred) {
+                                echo view('visitors/star/starred', array("client_id" => $visitor_info->id));
+                            } else {
+                                echo view('visitors/star/not_starred', array("client_id" => $visitor_info->id));
+                            }
+                            ?>
+                        </span>
+
+                        <?php if ($visitor_info->lead_status_id) { ?>
+                            <?php $lead_information = app_lang("past_lead_information") . "<br />"; ?>
+                            <?php if ($visitor_info->created_date) { ?>
+                                <?php $lead_information .= app_lang("lead_created_at") . ": " . format_to_date($visitor_info->created_date, false) . "<br />"; ?>
+                            <?php } ?>
+                            <?php if ($visitor_info->client_migration_date && is_date_exists($visitor_info->client_migration_date)) { ?>
+                                <?php $lead_information .= app_lang("migrated_to_client_at") . ": " . format_to_date($visitor_info->client_migration_date, false) . "<br />"; ?>
+                            <?php } ?>
+                            <?php if ($visitor_info->last_lead_status) { ?>
+                                <?php $lead_information .= app_lang("last_status") . ": " . $visitor_info->last_lead_status . "<br />"; ?>
+                            <?php } ?>
+                            <?php if ($visitor_info->owner_id) { ?>
+                                <?php $lead_information .= app_lang("owner") . ": " . $visitor_info->owner_name; ?>
+                            <?php } ?>
+
+                            <span data-bs-toggle="tooltip" data-bs-html="true" title="<?php echo $lead_information; ?>"><i data-feather="help-circle" class="icon-16"></i></span>
+                        <?php } ?>
+
                     </h1>
-                    <div class="title-button-group mr0">
-                        <?php
-                        if (can_access_reminders_module()) {
-                            echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr10", "id" => "reminder-icon", "data-post-lead_id" => $lead_info->id, "data-post-reminder_view_type" => "client", "lead" => app_lang('reminders') . " (" . app_lang('private') . ")"));
-                        }
-                        ?>
-                        <?php echo modal_anchor(get_uri("documents/make_client_modal_form/") . $lead_info->id, "<i data-feather='briefcase' class='icon-16'></i> " . app_lang('make_client'), array("class" => "btn btn-primary float-end mr15", "title" => app_lang('make_client'))); ?>
-                    </div>
+
+                    <?php if (can_access_reminders_module()) { ?>
+                        <div class="title-button-group mr0 clients-view">
+                            <?php echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr0", "id" => "reminder-icon", "data-post-client_id" => $visitor_info->id, "data-post-reminder_view_type" => "client", "title" => app_lang('reminders') . " (" . app_lang('private') . ")")); ?>
+                        </div>
+                    <?php } ?>
                 </div>
 
-                <ul data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/contacts/" . $lead_info->id); ?>" data-bs-target="#lead-contacts"> <?php echo app_lang('contacts'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/company_info_tab/" . $lead_info->id); ?>" data-bs-target="#lead-info"> <?php echo app_lang('lead_info'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/tasks/" . $lead_info->id); ?>" data-bs-target="#lead-tasks"><?php echo app_lang('tasks'); ?></a></li>
+                <!-- <div>
+                    <?php// echo view("visitors/info_widgets/index"); ?>
+                </div> -->
 
+                <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
-                    <?php if ($show_estimate_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/estimates/" . $lead_info->id); ?>" data-bs-target="#lead-estimates"> <?php echo app_lang('estimates'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/company_info_tab/" . $visitor_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('visitor_info'); ?></a></li>
+
+                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contacts/" . $visitor_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
+
+                    <?php if ($show_project_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/projects/" . $visitor_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
                     <?php } ?>
-                    <?php if ($show_proposal_info) { ?>
-                        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/proposals/" . $lead_info->id); ?>" data-bs-target="#lead-proposals"> <?php echo app_lang('proposals'); ?></a></li>
-                    <?php } ?>
-                    <?php if ($show_estimate_request_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/estimate_requests/" . $lead_info->id); ?>" data-bs-target="#lead-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
+
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/tasks/" . $visitor_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
+
+                    <!-- <?php if ($show_invoice_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/invoices/" . $visitor_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/payments/" . $visitor_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
+                    <?php } ?> -->
+
+                    <!-- <?php if ($show_estimate_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/estimates/" . $visitor_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
+                    <?php } ?> -->
+
+                    <!-- <?php if ($show_order_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/orders/" . $visitor_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>
+                    <?php } ?> -->
+
+                    <!-- <?php if ($show_estimate_request_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/estimate_requests/" . $visitor_info->id); ?>" data-bs-target="#client-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_contract_info) { ?>
-                        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/contracts/" . $lead_info->id); ?>" data-bs-target="#lead-contracts"> <?php echo app_lang('contracts'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contracts/" . $visitor_info->id); ?>" data-bs-target="#client-contracts"> <?php echo app_lang('contracts'); ?></a></li>
                     <?php } ?>
-                    <?php if ($show_ticket_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/tickets/" . $lead_info->id); ?>" data-bs-target="#lead-tickets"> <?php echo app_lang('tickets'); ?></a></li>
+                    <?php if ($show_proposal_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/proposals/" . $visitor_info->id); ?>" data-bs-target="#client-proposals"> <?php echo app_lang('proposals'); ?></a></li>
+                    <?php } ?> -->
+
+                    <!-- <?php if ($show_ticket_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/tickets/" . $visitor_info->id); ?>" data-bs-target="#client-tickets"> <?php echo app_lang('tickets'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_note_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/notes/" . $lead_info->id); ?>" data-bs-target="#lead-notes"> <?php echo app_lang('notes'); ?></a></li>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/notes/" . $visitor_info->id); ?>" data-bs-target="#client-notes"> <?php echo app_lang('notes'); ?></a></li>
                     <?php } ?>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/files/" . $lead_info->id); ?>" data-bs-target="#lead-files"><?php echo app_lang('files'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/files/" . $visitor_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li> -->
 
-                    <?php if ($show_event_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("documents/events/" . $lead_info->id); ?>" data-bs-target="#lead-events"> <?php echo app_lang('events'); ?></a></li>
+                    <!-- <?php if ($show_event_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/events/" . $visitor_info->id); ?>" data-bs-target="#client-events"> <?php echo app_lang('events'); ?></a></li>
                     <?php } ?>
 
-           
+                    <?php if ($show_expense_info) { ?>
+                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/expenses/" . $visitor_info->id); ?>" data-bs-target="#client-expenses"> <?php echo app_lang('expenses'); ?></a></li>
+                    <?php } ?> -->
+
                     <?php
                     $hook_tabs = array();
-                    $hook_tabs = app_hooks()->apply_filters('app_filter_lead_details_ajax_tab', $hook_tabs, $lead_info->id);
+                    $hook_tabs = app_hooks()->apply_filters('app_filter_client_details_ajax_tab', $hook_tabs, $visitor_info->id);
                     $hook_tabs = is_array($hook_tabs) ? $hook_tabs : array();
                     foreach ($hook_tabs as $hook_tab) {
                         ?>
@@ -59,18 +109,22 @@
                     ?>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade" id="lead-projects"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-files"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-info"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-contacts"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-contracts"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-estimates"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-proposals"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-estimate-requests"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-tickets"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-notes"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="lead-tasks"></div>
-                    <div role="tabpanel" class="tab-pane" id="lead-events" style="min-height: 300px"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-projects"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-tasks"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-files"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-info"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-contacts"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-invoices"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-payments"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-estimates"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-orders"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-estimate-requests"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-contracts"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-proposals"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-tickets"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-notes"></div>
+                    <div role="tabpanel" class="tab-pane" id="client-events" style="min-height: 300px"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-expenses"></div>
                     <?php foreach ($hook_tabs as $hook_tab) { ?>
                         <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>
                     <?php } ?>
@@ -83,10 +137,20 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var tab = "<?php echo $tab; ?>";
-        if (tab === "info") {
-            $("[data-bs-target='#lead-info']").trigger("click");
-        }
+        setTimeout(function () {
+            var tab = "<?php echo $tab; ?>";
+            if (tab === "info") {
+                $("[data-bs-target='#client-info']").trigger("click");
+            } else if (tab === "projects") {
+                $("[data-bs-target='#client-projects']").trigger("click");
+            } else if (tab === "invoices") {
+                $("[data-bs-target='#client-invoices']").trigger("click");
+            } else if (tab === "payments") {
+                $("[data-bs-target='#client-payments']").trigger("click");
+            }
+        }, 210);
+
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
     });
 </script>
