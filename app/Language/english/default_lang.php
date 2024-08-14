@@ -129,6 +129,13 @@ $lang["add_trainer"] = "Add Trainer";
 $lang["delete_trainer"] = "Delete Trainer";
 $lang["edit_trainer"] = "Edit Trainer";
 
+// Trainers:
+$lang["training_location"] = "Training Location";
+$lang["training_locations"] = "Training Locations";
+$lang["add_training_location"] = "Add Training Location";
+$lang["edit_training_location"] = "Edit Training Location";
+$lang["delete_training_location"] = "Delete Training Location";
+
 // Training:
 $lang["training"] = "Training";
 $lang["training_name"] = "Training Name";
@@ -238,6 +245,10 @@ $lang["delete_partner"] = "Delete Partner";
 $lang["partner_details"] = "Partner Details";
 $lang["partner_info"] = "Partner Info";
 
+//Merchant Types:
+$lang["merchant_type"] = "Merchant Type";
+$lang["merchant_number"] = "Merchant Number";
+$lang["merchant_number"] = "Merchant Number";
 
 //Company:
 
@@ -245,8 +256,7 @@ $lang["new_payer_registered"] = "New Payer Registered";
 $lang["Registration_type"] = "Registration Type :";
 $lang["Registration_no"] = "Registration Number :";
 
-$lang["merchant_type"] = "Merchant Type";
-$lang["merchant_number"] = "Merchant Number";
+
 $lang["turnover_tax"] = "Turnover Tax :";
 $lang["number_of_employees"] = "Number Of Employees :";
 $lang["industries"] = "Industries :";
@@ -576,11 +586,15 @@ $lang["delete_bank_name"] = "Delete Bank Name";
 $lang["merchant_type"] = "Merchant Type";
 $lang["merchant_types"] = "Merchant Types";
 $lang["add_merchant_type"] = "Add Merchant Type";
+$lang["edit_merchant_type"] = "Edit Merchant Type";
+$lang["delete_merchant_type"] = "Delete Merchant Type";
 
 /* Field of Study */
 $lang["field_of_study"] = "Field of Study";
 $lang["field_of_studies"] = "Field of Studies";
 $lang["add_field_of_study"] = "Add Field of Study";
+$lang["edit_field_of_study"] = "Edit Field of Study";
+$lang["delete_field_of_study"] = "Delete Field of Study";
 
 /* Job Location */
 $lang["job_location"] = "Job Location";

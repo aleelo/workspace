@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Merchant_types extends Security_Controller {
+class Training_locations extends Security_Controller {
 
     function __construct() {
         parent::__construct();
@@ -11,13 +11,13 @@ class Merchant_types extends Security_Controller {
 
     //load leave type list view
     function index() {
-        return $this->template->rander("merchant_types/index");
+        return $this->template->rander("training_locations/index");
     }
 
     //load leave type add/edit form
     function modal_form() {
-        $view_data['model_info'] = $this->Merchant_types_model->get_one($this->request->getPost('id'));
-        return $this->template->view('merchant_types/modal_form', $view_data);
+        $view_data['model_info'] = $this->Training_locations_model->get_one($this->request->getPost('id'));
+        return $this->template->view('training_locations/modal_form', $view_data);
     }
 
     //save leave type
@@ -25,17 +25,17 @@ class Merchant_types extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "merchant_type" => "required"
+            "training_location" => "required"
         ));
 
         $id = $this->request->getPost('id');
 
         $data = array(
-            "merchant_type" => $this->request->getPost('merchant_type'),
+            "location" => $this->request->getPost('training_location'),
            
         );
 
-        $save_id = $this->Merchant_types_model->ci_save($data, $id);
+        $save_id = $this->Training_locations_model->ci_save($data, $id);
 
         if ($save_id) {
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
@@ -46,19 +46,21 @@ class Merchant_types extends Security_Controller {
 
     //delete/undo a leve type
     function delete() {
+
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
         $id = $this->request->getPost('id');
+
         if ($this->request->getPost('undo')) {
-            if ($this->Merchant_types_model->delete($id, true)) {
+            if ($this->Training_locations_model->delete($id, true)) {
                 echo json_encode(array("success" => true, "data" => $this->_row_data($id), "message" => app_lang('record_undone')));
             } else {
                 echo json_encode(array("success" => false, app_lang('error_occurred')));
             }
         } else {
-            if ($this->Merchant_types_model->delete($id)) {
+            if ($this->Training_locations_model->delete($id)) {
                 echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
             } else {
                 echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -68,7 +70,7 @@ class Merchant_types extends Security_Controller {
 
     //prepare leave types list data for datatable
     function list_data() {
-        $list_data = $this->Merchant_types_model->get_details()->getResult();
+        $list_data = $this->Training_locations_model->get_details()->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
@@ -79,7 +81,7 @@ class Merchant_types extends Security_Controller {
     //get a row of leave types row
     private function _row_data($id) {
         $options = array("id" => $id);
-        $data = $this->Merchant_types_model->get_details($options)->getRow();
+        $data = $this->Training_locations_model->get_details($options)->getRow();
         return $this->_make_row($data);
     }
 
@@ -87,9 +89,9 @@ class Merchant_types extends Security_Controller {
     private function _make_row($data) {
         return array(
 
-            $data->merchant_type,
-            modal_anchor(get_uri("merchant_types/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_merchant_type'), "data-post-id" => $data->id))
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_merchant_type'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("merchant_types/delete"), "data-action" => "delete"))
+            $data->location,
+            modal_anchor(get_uri("training_locations/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_training_location'), "data-post-id" => $data->id))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_training_location'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training_locations/delete"), "data-action" => "delete"))
 
         );
     }

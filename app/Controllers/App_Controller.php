@@ -110,6 +110,7 @@ class App_Controller extends Controller {
     public $Partners_model;
     public $Grades_model;
     public $Trainers_model;
+    public $Training_locations_model;
     public $Sections_model;
     public $Units_model;
     public $Training_model;
@@ -250,7 +251,8 @@ class App_Controller extends Controller {
             'Partners_model',
             'Grades_model',
             'Trainers_model',
-            'Sections_model',
+            'Trainers_model',
+            'Training_locations_model',
             'Units_model',
             'Training_model',
             'Appointments_model',

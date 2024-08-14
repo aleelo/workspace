@@ -90,8 +90,8 @@ class Field_of_study extends Security_Controller {
 
             $data->name,
             $data->remarks,
-            modal_anchor(get_uri("field_of_study/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_bank_name'), "data-post-id" => $data->id))
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_bank_name'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("field_of_study/delete"), "data-action" => "delete"))
+            modal_anchor(get_uri("field_of_study/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_field_of_study'), "data-post-id" => $data->id))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_field_of_study'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("field_of_study/delete"), "data-action" => "delete"))
 
         );
     }
