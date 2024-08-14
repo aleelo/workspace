@@ -109,32 +109,11 @@
     </div>
 </div>
 
-<!----------------------------------------- Training Participant  ------------------------------------>
-
-
-
-<div class="form-group">
-    <div class="row">
-        <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Related to'; ?></label>
-        <div class=" col-md-9">
-            <?php
-            $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
-            echo form_dropdown(array(
-                "id" => "training_participant",
-                "name" => "training_participant",
-                "class" => "form-control select2",
-                "placeholder" => 'Related to',
-                "autocomplete" => "off"
-            ),$participant,[$model_info->type]);
-            ?>
-        </div>
-    </div>
-</div>
 
 
 <!----------------------------------------- Number of Employee  ------------------------------------>
 
-
+<!-- 
 <div class="form-group">
     <div class="row">
         <label for="num_employee" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('num_employee'); ?></label>
@@ -150,7 +129,7 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <!----------------------------------------- Trainer  ------------------------------------>
@@ -172,6 +151,28 @@
     </div>
 </div>
 
+
+<!----------------------------------------- Training Participant  ------------------------------------>
+
+
+
+<div class="form-group">
+    <div class="row">
+        <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Related to'; ?></label>
+        <div class=" col-md-9">
+            <?php
+            $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
+            echo form_dropdown(array(
+                "id" => "training_participant",
+                "name" => "training_participant",
+                "class" => "form-control select2",
+                "placeholder" => 'Related to',
+                "autocomplete" => "off"
+            ),$participant,[$model_info->participant]);
+            ?>
+        </div>
+    </div>
+</div>
 
 <!----------------------------------------- Department  ------------------------------------>
 
