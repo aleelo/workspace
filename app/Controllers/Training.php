@@ -191,6 +191,7 @@ class Training extends Security_Controller {
         $view_data['model_info'] = $this->Training_model->get_one($training_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
+        $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
         $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
         $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
@@ -273,7 +274,7 @@ class Training extends Security_Controller {
             "training_name" => $training_name,
             "start_date" => $this->request->getPost('training_start_date'),
             "end_date" => $this->request->getPost('training_end_date'), 
-            "training_location" => $this->request->getPost('Training_location'),
+            "training_location_id" => $this->request->getPost('training_location_id'),
             "type" => $this->request->getPost('Training_Type'),
             "participant" => $this->request->getPost('training_participant'),
             "num_employee" => $this->request->getPost('num_employee'),
@@ -434,7 +435,7 @@ class Training extends Security_Controller {
             anchor(get_uri("training/view/" . $data->id), $data->training_name),
             $data->start_date,
             $data->end_date,
-            $data->training_location,
+            $data->location,
             $data->type,
             $data->trainer_name,
             $data->num_employee,
@@ -1058,6 +1059,7 @@ class Training extends Security_Controller {
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
+            $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 

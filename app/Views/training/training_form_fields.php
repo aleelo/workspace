@@ -72,16 +72,16 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="Training_location" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
+        <label for="training_location_id" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
-            echo form_input(array(
-                "id" => "Training_location",
-                "name" => "Training_location",
-                "value" => $model_info->training_location,
-                "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('Training_location'),
-            ));
+            echo form_dropdown(array(
+                "id" => "training_location_id",
+                "name" => "training_location_id",
+                "class" => "form-control select2",
+                "placeholder" => 'Training Location',
+                "autocomplete" => "off"
+            ),$training_location,[$model_info->training_location_id]);
             ?>
         </div>
     </div>

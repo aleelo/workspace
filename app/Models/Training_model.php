@@ -14,6 +14,7 @@ class Training_model extends Crud_model {
     function get_details($options = array()) {
         $training_table = $this->db->prefixTable('training');
         $trainers_table = $this->db->prefixTable('trainers');
+        $training_locations_table = $this->db->prefixTable('training_locations');
         $departments_table = $this->db->prefixTable('departments');
         $sections_table = $this->db->prefixTable('sections');
         $units_table = $this->db->prefixTable('units');
@@ -156,12 +157,13 @@ class Training_model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $training_table.*, $trainers_table.trainer as trainer_name, $departments_table.nameSo as Department_name,
-        $sections_table.nameSo as Section_name, $units_table.nameSo as Unit_name
+        $sections_table.nameSo as Section_name, $units_table.nameSo as Unit_name, $training_locations_table.location as location
         FROM $training_table
         LEFT JOIN $trainers_table ON $trainers_table.id = $training_table.trainer_id
         LEFT JOIN $departments_table ON $departments_table.id = $training_table.department_id
         LEFT JOIN $sections_table ON $sections_table.id = $training_table.section_id
         LEFT JOIN $units_table ON $units_table.id = $training_table.unit_id
+        LEFT JOIN $training_locations_table ON $training_locations_table.id = $training_table.training_location_id
         $join_custom_fieds               
         WHERE $training_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
