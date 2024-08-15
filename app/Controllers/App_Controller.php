@@ -115,6 +115,7 @@ class App_Controller extends Controller {
     public $Units_model;
     public $Training_model;
     public $Appointments_model;
+    public $Compliance_model;
     
     public function __construct() {
         //main template to make frame of this app
@@ -256,6 +257,7 @@ class App_Controller extends Controller {
             'Units_model',
             'Training_model',
             'Appointments_model',
+            'Compliance_model',
         );
     }
 
