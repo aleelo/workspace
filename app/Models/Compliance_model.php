@@ -7,12 +7,12 @@ class Compliance_model extends Crud_model {
     protected $table = null;
 
     function __construct() {
-        $this->table = 'units';
+        $this->table = 'compliance';
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $units_table = $this->db->prefixTable('units');
+        $compliance_table = $this->db->prefixTable('compliance');
         $sections_table = $this->db->prefixTable('sections');
         $departments_table = $this->db->prefixTable('departments');
 
@@ -31,7 +31,7 @@ class Compliance_model extends Crud_model {
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
-            $where .= " AND $units_table.id=$id";
+            $where .= " AND $compliance_table.id=$id";
         }
 
         $custom_field_type = "clients";
@@ -39,63 +39,63 @@ class Compliance_model extends Crud_model {
         $leads_only = $this->_get_clean_value($options, "leads_only");
         if ($leads_only) {
             $custom_field_type = "leads";
-            $where .= " AND $units_table.is_lead=1";
+            $where .= " AND $compliance_table.is_lead=1";
         }
 
         $status = $this->_get_clean_value($options, "status");
         if ($status) {
-            $where .= " AND $units_table.lead_status_id='$status'";
+            $where .= " AND $compliance_table.lead_status_id='$status'";
         }
 
         $source = $this->_get_clean_value($options, "source");
         if ($source) {
-            $where .= " AND $units_table.lead_source_id='$source'";
+            $where .= " AND $compliance_table.lead_source_id='$source'";
         }
 
         $owner_id = $this->_get_clean_value($options, "owner_id");
         if ($owner_id) {
-            $where .= " AND $units_table.owner_id=$owner_id";
+            $where .= " AND $compliance_table.owner_id=$owner_id";
         }
 
         $created_by = $this->_get_clean_value($options, "created_by");
         if ($created_by) {
-            $where .= " AND $units_table.created_by=$created_by";
+            $where .= " AND $compliance_table.created_by=$created_by";
         }
 
         $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
         if ($show_own_clients_only_user_id) {
-            $where .= " AND ($units_table.created_by=$show_own_clients_only_user_id OR $units_table.owner_id=$show_own_clients_only_user_id)";
+            $where .= " AND ($compliance_table.created_by=$show_own_clients_only_user_id OR $compliance_table.owner_id=$show_own_clients_only_user_id)";
         }
 
 
         $quick_filter = $this->_get_clean_value($options, "quick_filter");
         if ($quick_filter) {
-            $where .= $this->make_quick_filter_query($quick_filter, $units_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
+            $where .= $this->make_quick_filter_query($quick_filter, $compliance_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
         }
 
         $start_date = $this->_get_clean_value($options, "start_date");
         if ($start_date) {
-            $where .= " AND DATE($units_table.created_date)>='$start_date'";
+            $where .= " AND DATE($compliance_table.created_date)>='$start_date'";
         }
         $end_date = $this->_get_clean_value($options, "end_date");
         if ($end_date) {
-            $where .= " AND DATE($units_table.created_date)<='$end_date'";
+            $where .= " AND DATE($compliance_table.created_date)<='$end_date'";
         }
 
         $label_id = $this->_get_clean_value($options, "label_id");
         if ($label_id) {
-            $where .= " AND (FIND_IN_SET('$label_id', $units_table.labels)) ";
+            $where .= " AND (FIND_IN_SET('$label_id', $compliance_table.labels)) ";
         }
 
         $select_labels_data_query = $this->get_labels_data_query();
 
         $client_groups = $this->_get_clean_value($options, "client_groups");
-        $where .= $this->prepare_allowed_client_groups_query($units_table, $client_groups);
+        $where .= $this->prepare_allowed_client_groups_query($compliance_table, $client_groups);
 
         //prepare custom fild binding query
         $custom_fields = get_array_value($options, "custom_fields");
         $custom_field_filter = get_array_value($options, "custom_field_filter");
-        $custom_field_query_info = $this->prepare_custom_field_query_string($custom_field_type, $custom_fields, $units_table, $custom_field_filter);
+        $custom_field_query_info = $this->prepare_custom_field_query_string($custom_field_type, $custom_fields, $compliance_table, $custom_field_filter);
         $select_custom_fieds = get_array_value($custom_field_query_info, "select_string");
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
@@ -112,9 +112,9 @@ class Compliance_model extends Crud_model {
 
 
         $available_order_by_list = array(
-            "id" => $units_table . ".id",
-            "company_name" => $units_table . ".company_name",
-            "created_date" => $units_table . ".created_date",
+            "id" => $compliance_table . ".id",
+            "company_name" => $compliance_table . ".company_name",
+            "created_date" => $compliance_table . ".created_date",
             "primary_contact" => $users_table . ".first_name",
             "status" => "lead_status_title",
             "primary_contact" => "primary_contact",
@@ -137,30 +137,29 @@ class Compliance_model extends Crud_model {
             $labels_table = $this->db->prefixTable("labels");
 
             $where .= " AND (";
-            $where .= " $units_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $units_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $compliance_table.id LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $compliance_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $units_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $compliance_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
             if ($leads_only) {
                 $where .= " OR $lead_status_table.title LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= $this->get_custom_field_search_query($units_table, "leads", $search_by);
+                $where .= $this->get_custom_field_search_query($compliance_table, "leads", $search_by);
             } else {
-                $where .= $this->get_custom_field_search_query($units_table, "clients", $search_by);
+                $where .= $this->get_custom_field_search_query($compliance_table, "clients", $search_by);
             }
 
             $where .= " )";
         }
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $units_table.*, $departments_table.nameSo as DepNameSo, $sections_table.nameSo as SecNameSo,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as UnitHead
-        FROM $units_table
-        LEFT JOIN $users_table ON $users_table.id = $units_table.unit_head_id
-        LEFT JOIN $departments_table ON $departments_table.id = $units_table.department_id
-        LEFT JOIN $sections_table ON $sections_table.id = $units_table.section_id
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $compliance_table.*,
+        CONCAT($users_table.first_name,' ',$users_table.last_name) as reporter,
+        CONCAT($users_table.first_name,' ',$users_table.last_name) as being_reported
+        FROM $compliance_table
+        LEFT JOIN $users_table ON $users_table.id = $compliance_table.unit_head_id
         $join_custom_fieds               
-        WHERE $units_table.deleted=0 $where $custom_fields_where  
+        WHERE $compliance_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
 
         $raw_query = $this->db->query($sql);
