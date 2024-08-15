@@ -154,10 +154,9 @@ class Compliance_model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $compliance_table.*,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as reporter,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as being_reported
+        CONCAT($users_table.first_name,' ',$users_table.last_name) as reporter
         FROM $compliance_table
-        LEFT JOIN $users_table ON $users_table.id = $compliance_table.unit_head_id
+        LEFT JOIN $users_table ON $users_table.id = $compliance_table.reporter_id
         $join_custom_fieds               
         WHERE $compliance_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";

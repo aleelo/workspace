@@ -575,6 +575,15 @@ $lang["education_info"] = "Education Info";
 $lang["Bank_details"] = "Bank Details";
 
 
+/* Compliance */
+$lang["compliance"] = "Compliance";
+$lang["reporter"] = "Reporter";
+$lang["being_reported"] = "Being Reported";
+$lang["report"] = "Report";
+$lang["evidence"] = "Evidence";
+$lang["compliance_list"] = "Compliance List";
+$lang["add_compliance"] = "Add Compliance";
+
 /* Bank Names */
 $lang["bank_names"] = "Bank Names";
 $lang["bank_name"] = "Bank Name";

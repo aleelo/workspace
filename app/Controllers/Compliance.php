@@ -40,7 +40,7 @@ class Compliance extends Security_Controller {
 
         
 
-        return $this->template->rander("units/index", $view_data);
+        return $this->template->rander("compliance/index", $view_data);
     }
 
   
@@ -48,8 +48,8 @@ class Compliance extends Security_Controller {
 
     function modal_form() {
         
-        $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        $compliance_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($compliance_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -65,12 +65,15 @@ class Compliance extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Units_model->get_one($Units_id);
+        $view_data['model_info'] = $this->Compliance_model->get_one($compliance_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['Departments'] = array("" => " -- Choose Unit Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = array("" => " -- Choose Unit Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Unit_heads'] = array("" => " -- Choose Unit Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+
+        $view_data['reporter'] = array("" => " -- Choose a Reporter -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['being_reported'] = array("" => " -- Choose Being Reported -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -85,9 +88,9 @@ class Compliance extends Security_Controller {
         //prepare label suggestions
 
         //get custom fields
-        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Units_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $compliance_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('units/modal_form', $view_data);
+        return $this->template->view('compliance/modal_form', $view_data);
     }
 
    
@@ -96,26 +99,21 @@ class Compliance extends Security_Controller {
     
     function save() {
         
-        $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        $compliance_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($compliance_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
 
-        $unit_name_so = $this->request->getPost('unit_name_so');
+        $reporter_id = $this->request->getPost('reporter_id');
 
         $data = array(
-            "nameSo" => $unit_name_so,
-            "short_name_SO" => $this->request->getPost('short_name_so'),
-            "nameEn" => $this->request->getPost('unit_name_en'), 
-            "short_name_EN" => $this->request->getPost('short_name_en'),
-            "email" => $this->request->getPost('unit_email'),
-            "department_id" => $this->request->getPost('unit_department'),
-            "section_id" => $this->request->getPost('unit_section'),
-            "unit_head_id" => $this->request->getPost('unit_head'),
-            "remarks" => $this->request->getPost('unit_remarks'),
+            "reporter_id" => $reporter_id,
+            "being_reported_id" => $this->request->getPost('being_reported_id'),
+            "report" => $this->request->getPost('report'), 
+            "evidence" => $this->request->getPost('evidence'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -123,7 +121,7 @@ class Compliance extends Security_Controller {
         }
 
 
-        if (!$Units_id) {
+        if (!$compliance_id) {
             $data["created_at"] = get_current_utc_time();
         }
 
@@ -134,9 +132,9 @@ class Compliance extends Security_Controller {
         //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
 
         //     //check if the currency is editable
-        //     if ($Units_id) {
-        //         $client_info = $this->Clients_model->get_one($Units_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Units_id)) {
+        //     if ($compliance_id) {
+        //         $client_info = $this->Clients_model->get_one($compliance_id);
+        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($compliance_id)) {
         //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
         //             exit();
         //         }
@@ -146,7 +144,7 @@ class Compliance extends Security_Controller {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$Units_id) {
+        } else if (!$compliance_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -154,21 +152,21 @@ class Compliance extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $Units_id)) {
+        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $compliance_id)) {
         //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
         //     exit();
         // }
 
-        $save_id = $this->Units_model->ci_save($data, $Units_id);
+        $save_id = $this->Compliance_model->ci_save($data, $compliance_id);
      
 
         if ($save_id) {
 
-            if(!$Units_id){
+            if(!$compliance_id){
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Units_model->get_details($options)->getRow();
+                $partner = $this->Compliance_model->get_details($options)->getRow();
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
 
@@ -179,7 +177,7 @@ class Compliance extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("Units_id" => $save_id);
+                $ticket_data = array("compliance_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
@@ -199,7 +197,7 @@ class Compliance extends Security_Controller {
             "id" => "required|numeric"
         ));
 
-        if ($this->Units_model->delete($id)) {
+        if ($this->Compliance_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -227,7 +225,7 @@ class Compliance extends Security_Controller {
 
         $all_options = append_server_side_filtering_commmon_params($options);
 
-        $result = $this->Units_model->get_details($all_options);
+        $result = $this->Compliance_model->get_details($all_options);
 
         //by this, we can handel the server side or client side from the app table prams.
         if (get_array_value($all_options, "server_side")) {
@@ -255,7 +253,7 @@ class Compliance extends Security_Controller {
             "id" => $id,
             "custom_fields" => $custom_fields
         );
-        $data = $this->Units_model->get_details($options)->getRow();
+        $data = $this->Compliance_model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
     }
 
@@ -266,16 +264,9 @@ class Compliance extends Security_Controller {
 
         $row_data = array($data->id,
 
-            anchor(get_uri("units/view/" . $data->id), $data->nameSo),
-            $data->short_name_SO,
-            $data->nameEn,
-            $data->short_name_EN,
-            $data->email,
-            $data->DepNameSo,
-            $data->SecNameSo,
-            $data->UnitHead,
-            $data->remarks,
-            
+            anchor(get_uri("compliance/view/" . $data->id), $data->reporter),
+            $data->report,
+            $data->evidence,
         );
 
         foreach ($custom_fields as $field) {
@@ -283,8 +274,8 @@ class Compliance extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("units/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_unit'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_unit'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("units/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("compliance/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_unit'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_unit'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("compliance/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -314,14 +305,14 @@ class Compliance extends Security_Controller {
 
     /* load client details view */
 
-    function view($Units_id = 0, $tab = "") {
+    function view($compliance_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($Units_id);
+        $this->_validate_client_view_access($compliance_id);
 
-        if ($Units_id) {
-            $options = array("id" => $Units_id);
-            $section_info = $this->Units_model->get_details($options)->getRow();
-            if ($section_info && !$section_info->is_lead) {
+        if ($compliance_id) {
+            $options = array("id" => $compliance_id);
+            $compliance_info = $this->Compliance_model->get_details($options)->getRow();
+            if ($compliance_info && !$compliance_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
@@ -331,9 +322,9 @@ class Compliance extends Security_Controller {
                 $access_info = $this->get_access_info("expense");
                 $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
 
-                $view_data['section_info'] = $section_info;
+                $view_data['compliance_info'] = $compliance_info;
 
-                $view_data["is_starred"] = strpos($section_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
+                $view_data["is_starred"] = strpos($compliance_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
 
                 $view_data["tab"] = clean_data($tab);
 
@@ -342,7 +333,7 @@ class Compliance extends Security_Controller {
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
-                return $this->template->rander("units/view", $view_data);
+                return $this->template->rander("compliance/view", $view_data);
             } else {
                 show_404();
             }
@@ -359,17 +350,17 @@ class Compliance extends Security_Controller {
 
             if ($type === "add") {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "add");
-                return $this->template->view('units/star/starred', $view_data);
+                return $this->template->view('compliance/star/starred', $view_data);
             } else {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "remove");
-                return $this->template->view('units/star/not_starred', $view_data);
+                return $this->template->view('compliance/star/not_starred', $view_data);
             }
         }
     }
 
     function show_my_starred_clients() {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
-        return $this->template->view('units/star/clients_list', $view_data);
+        return $this->template->view('compliance/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
@@ -383,7 +374,7 @@ class Compliance extends Security_Controller {
 
         $view_data['client_id'] = clean_data($client_id);
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
-        return $this->template->view("units/projects/index", $view_data);
+        return $this->template->view("compliance/projects/index", $view_data);
     }
 
     /* load payments tab  */
@@ -394,7 +385,7 @@ class Compliance extends Security_Controller {
         if ($client_id) {
             $view_data["client_info"] = $this->Clients_model->get_one($client_id);
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("units/payments/index", $view_data);
+            return $this->template->view("compliance/payments/index", $view_data);
         }
     }
 
@@ -411,7 +402,7 @@ class Compliance extends Security_Controller {
 
             $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
-            return $this->template->view("units/tickets/index", $view_data);
+            return $this->template->view("compliance/tickets/index", $view_data);
         }
     }
 
@@ -436,7 +427,7 @@ class Compliance extends Security_Controller {
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
-            return $this->template->view("units/invoices/index", $view_data);
+            return $this->template->view("compliance/invoices/index", $view_data);
         }
     }
 
@@ -452,7 +443,7 @@ class Compliance extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("estimates", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("estimates", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("units/estimates/estimates", $view_data);
+            return $this->template->view("compliance/estimates/estimates", $view_data);
         }
     }
 
@@ -468,7 +459,7 @@ class Compliance extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("orders", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("orders", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("units/orders/orders", $view_data);
+            return $this->template->view("compliance/orders/orders", $view_data);
         }
     }
 
@@ -479,7 +470,7 @@ class Compliance extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("units/estimates/estimate_requests", $view_data);
+            return $this->template->view("compliance/estimates/estimate_requests", $view_data);
         }
     }
 
@@ -490,7 +481,7 @@ class Compliance extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("units/notes/index", $view_data);
+            return $this->template->view("compliance/notes/index", $view_data);
         }
     }
 
@@ -523,9 +514,9 @@ class Compliance extends Security_Controller {
 
         if ($view_type == "page_view") {
             $view_data['page_view'] = true;
-            return $this->template->rander("units/files/index", $view_data);
+            return $this->template->rander("compliance/files/index", $view_data);
         } else {
-            return $this->template->view("units/files/index", $view_data);
+            return $this->template->view("compliance/files/index", $view_data);
         }
     }
 
@@ -539,7 +530,7 @@ class Compliance extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data['client_id'] = $client_id;
-        return $this->template->view('units/files/modal_form', $view_data);
+        return $this->template->view('compliance/files/modal_form', $view_data);
     }
 
     /* save file data and move temp file to parmanent file directory */
@@ -620,7 +611,7 @@ class Compliance extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("units/view_file/" . $data->id)));
+                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("compliance/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -628,10 +619,10 @@ class Compliance extends Security_Controller {
             $description .= "</div>";
         }
 
-        $options = anchor(get_uri("units/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
+        $options = anchor(get_uri("compliance/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
 
         if ($this->login_user->user_type == "staff") {
-            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("units/delete_file"), "data-action" => "delete-confirmation"));
+            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("compliance/delete_file"), "data-action" => "delete-confirmation"));
         }
 
 
@@ -669,7 +660,7 @@ class Compliance extends Security_Controller {
 
             $view_data["file_info"] = $file_info;
             $view_data['file_id'] = clean_data($file_id);
-            return $this->template->view("units/files/view", $view_data);
+            return $this->template->view("compliance/files/view", $view_data);
         } else {
             show_404();
         }
@@ -742,7 +733,7 @@ class Compliance extends Security_Controller {
             $view_data['show_cotact_info'] = true;
             $view_data['show_social_links'] = true;
             $view_data['social_link'] = $this->Social_links_model->get_one($contact_id);
-            return $this->template->rander("units/contacts/view", $view_data);
+            return $this->template->rander("compliance/contacts/view", $view_data);
         } else {
             show_404();
         }
@@ -769,7 +760,7 @@ class Compliance extends Security_Controller {
 
         $view_data["hidden_topbar_menus_dropdown"] = $this->get_hidden_topbar_menus_dropdown();
 
-        return $this->template->view("units/contacts/my_preferences", $view_data);
+        return $this->template->view("compliance/contacts/my_preferences", $view_data);
     }
 
     function save_my_preferences() {
@@ -842,7 +833,7 @@ class Compliance extends Security_Controller {
 
         $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-        return $this->template->view("units/contacts/index", $view_data);
+        return $this->template->view("compliance/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -858,7 +849,7 @@ class Compliance extends Security_Controller {
         $this->_validate_client_manage_access($view_data['model_info']->Sections_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-        return $this->template->view('units/contacts/modal_form', $view_data);
+        return $this->template->view('compliance/contacts/modal_form', $view_data);
     }
 
     /* load contact's general info tab view */
@@ -874,7 +865,7 @@ class Compliance extends Security_Controller {
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients($view_data['model_info']->client_id);
-            return $this->template->view('units/contacts/contact_general_info_tab', $view_data);
+            return $this->template->view('compliance/contacts/contact_general_info_tab', $view_data);
         }
     }
 
@@ -884,7 +875,7 @@ class Compliance extends Security_Controller {
         if ($Sections_id) {
             $this->_validate_client_view_access($Sections_id);
 
-            $view_data['model_info'] = $this->Units_model->get_one($Sections_id);
+            $view_data['model_info'] = $this->Compliance_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -906,14 +897,17 @@ class Compliance extends Security_Controller {
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
 
             $view_data['Departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Unit_heads'] = array("" => " -- Choose Unit Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Unit_heads'] = array("" => " -- Choose Unit Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
+            $view_data['reporter'] = array("" => " -- Choose a Reporter -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['being_reported'] = array("" => " -- Choose Being Reported -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
             $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
-            return $this->template->view('units/contacts/company_info_tab', $view_data);
+            return $this->template->view('compliance/contacts/company_info_tab', $view_data);
         }
     }
 
@@ -984,7 +978,7 @@ class Compliance extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Units_model->get_primary_contact($Sections_id);
+        $primary_contact = $this->Compliance_model->get_primary_contact($Sections_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1286,7 +1280,7 @@ class Compliance extends Security_Controller {
             $removal_request_pending = "<span class='bg-danger badge'>" . app_lang("removal_request_pending") . "</span>";
         }
 
-        $contact_link = anchor(get_uri("units/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
+        $contact_link = anchor(get_uri("compliance/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
         if ($this->login_user->user_type === "client") {
             $contact_link = $full_name; //don't show clickable link to client
         }
@@ -1296,7 +1290,7 @@ class Compliance extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("units/view/" . $data->Sections_id), $client_info->company_name),
+            anchor(get_uri("compliance/view/" . $data->Sections_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
@@ -1308,7 +1302,7 @@ class Compliance extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("units/delete_contact"), "data-action" => "delete"));
+        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("compliance/delete_contact"), "data-action" => "delete"));
 
         return $row_data;
     }
@@ -1328,7 +1322,7 @@ class Compliance extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-        return $this->template->view('units/contacts/invitation_modal', $view_data);
+        return $this->template->view('compliance/contacts/invitation_modal', $view_data);
     }
 
     //send a team member invitation to an email address
@@ -1386,7 +1380,7 @@ class Compliance extends Security_Controller {
     function users() {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
-            return $this->template->rander("units/contacts/users", $view_data);
+            return $this->template->rander("compliance/contacts/users", $view_data);
         }
     }
 
@@ -1403,7 +1397,7 @@ class Compliance extends Security_Controller {
     function import_clients_modal_form() {
         $this->_validate_client_manage_access();
 
-        return $this->template->view("units/import_clients_modal_form");
+        return $this->template->view("compliance/import_clients_modal_form");
     }
 
     private function _prepare_client_data($data_row, $allowed_headers) {
@@ -1839,7 +1833,7 @@ class Compliance extends Security_Controller {
 
     function gdpr() {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
-        return $this->template->view("units/contacts/gdpr", $view_data);
+        return $this->template->view("compliance/contacts/gdpr", $view_data);
     }
 
     function export_my_data() {
@@ -1933,7 +1927,7 @@ class Compliance extends Security_Controller {
             log_notification("client_contact_requested_account_removal", array("client_id" => $client_id), $user_id);
 
             $this->session->setFlashdata("success_message", app_lang("estimate_submission_message"));
-            app_redirect("units/contact_profile/$user_id/gdpr");
+            app_redirect("compliance/contact_profile/$user_id/gdpr");
         }
     }
 
@@ -1950,7 +1944,7 @@ class Compliance extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("units/expenses/index", $view_data);
+            return $this->template->view("compliance/expenses/index", $view_data);
         }
     }
 
@@ -1964,11 +1958,11 @@ class Compliance extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("units/contracts/contracts", $view_data);
+            return $this->template->view("compliance/contracts/contracts", $view_data);
         }
     }
 
-    function units_list() {
+    function compliance_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -1982,7 +1976,7 @@ class Compliance extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("units/units_list", $view_data);
+        return $this->template->view("compliance/compliance_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {
@@ -2023,7 +2017,7 @@ class Compliance extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("proposals", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("proposals", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("units/proposals/proposals", $view_data);
+            return $this->template->view("compliance/proposals/proposals", $view_data);
         }
     }
 
@@ -2060,7 +2054,7 @@ class Compliance extends Security_Controller {
         $view_data["can_create_task"] = $this->can_edit_clients();
 
         $view_data['client_id'] = clean_data($client_id);
-        return $this->template->view("units/tasks/index", $view_data);
+        return $this->template->view("compliance/tasks/index", $view_data);
     }
 }
 
