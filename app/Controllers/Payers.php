@@ -266,6 +266,7 @@ class Payers extends Security_Controller {
                        'REG_NO'=>$payer->Reg_NO,
                        'PAYER_EMAIL'=>$payer_info->email,
                        'REGISTERER_EMAIL'=>$registerer_email,
+                       'REGISTERER_NAME'=>$registerer_name,
                        'START_DATE'=>$payer->Start_Date,  
                        'END_DATE'=>$payer->End_Date,  
                    ];

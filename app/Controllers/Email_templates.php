@@ -118,7 +118,7 @@ class Email_templates extends Security_Controller {
         );
         
         $templates_array["payers"] = array(
-            "new_payer_registered_to_registerer" => array("PAYER_ID", "PAYER_NAME", "REG_NO", "START_DATE", "END_DATE", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
+            "new_payer_registered_to_registerer" => array("REGISTERER_NAME","PAYER_ID", "PAYER_NAME", "REG_NO", "START_DATE", "END_DATE", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
             "new_payer_registered_to_new_payer" => array("PAYER_ID", "PAYER_NAME", "REG_NO", "START_DATE", "END_DATE", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
           );
 
