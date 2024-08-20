@@ -210,7 +210,7 @@ class Payers extends Security_Controller {
 
         $save_id = $this->Clients_model->ci_save($data, $client_id);
 
-        $payer_info = $this->db->query("SELECT * FROM rise_users u WHERE u.id = $save_id")->getRow();
+        $payer_info = $this->db->query("SELECT * FROM rise_clients c WHERE c.id = $save_id")->getRow();
         
         $merchant_type = $this->request->getPost('merchant_type');
         $merchant_number = $this->request->getPost('merchant_number');
