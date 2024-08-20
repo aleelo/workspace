@@ -94,10 +94,11 @@ class Payers extends Security_Controller {
     
     public function send_new_payer_email($data = array()) {
         
-        // $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
+        $registerer_email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_registerer", true);
         $payer_email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_new_payer", true);
 
         $payer_email = $data['PAYER_EMAIL'];
+        $registerer_email = $data['REGISTERER_EMAIL'];
 
         $parser_data["PAYER_ID"] = $data['PAYER_ID'];
         $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
@@ -112,18 +113,26 @@ class Payers extends Security_Controller {
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
-        // $message =  get_array_value($payer_email_template, "message_default");
-        // $subject =  get_array_value($payer_email_template, "subject_default");
-        // $message = $this->parser->setData($parser_data)->renderString($message);
-        // $subject = $this->parser->setData($parser_data)->renderString($subject);
+        // Registerer
+        $registerer_message =  get_array_value($registerer_email_template, "message_default");
+        $registerer_subject =  get_array_value($registerer_email_template, "subject_default");
 
+        $registerer_message = $this->parser->setData($parser_data)->renderString($registerer_message);
+        $registerer_subject = $this->parser->setData($parser_data)->renderString($registerer_subject);
+
+        // Payer
         $payer_message =  get_array_value($payer_email_template, "message_default");
         $payer_subject =  get_array_value($payer_email_template, "subject_default");
+
         $payer_message = $this->parser->setData($parser_data)->renderString($payer_message);
         $payer_subject = $this->parser->setData($parser_data)->renderString($payer_subject);
 
         if(!empty($payer_email)){
             $payer_email =  send_app_mail($payer_email, $payer_subject, $payer_message);
+        }
+
+        if(!empty($registerer_email)){
+            $registerer_email =  send_app_mail($registerer_email, $payer_subject, $payer_message);
         }
 
         // if (send_app_mail($email, $subject, $message)) {
@@ -211,6 +220,8 @@ class Payers extends Security_Controller {
         $save_id = $this->Clients_model->ci_save($data, $client_id);
 
         $payer_info = $this->db->query("SELECT * FROM rise_clients c WHERE c.id = $save_id")->getRow();
+        $registerer_email = $this->login_user->private_email;
+        $registerer_name = $this->login_user->first_name.' '.$this->login_user->last_name;
         
         $merchant_type = $this->request->getPost('merchant_type');
         $merchant_number = $this->request->getPost('merchant_number');
@@ -254,6 +265,7 @@ class Payers extends Security_Controller {
                        'PAYER_NAME' => $payer->company_name,
                        'REG_NO'=>$payer->Reg_NO,
                        'PAYER_EMAIL'=>$payer_info->email,
+                       'REGISTERER_EMAIL'=>$registerer_email,
                        'START_DATE'=>$payer->Start_Date,  
                        'END_DATE'=>$payer->End_Date,  
                    ];
