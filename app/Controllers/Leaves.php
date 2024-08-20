@@ -526,11 +526,6 @@ class Leaves extends Security_Controller {
 
             $r = $this->send_leave_request_email($leave_email_data);
 
-
-
-            // var_dump($res);
-            // die();
-
         }
 
 
