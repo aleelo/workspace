@@ -163,11 +163,11 @@ class Payers extends Security_Controller {
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
         // Registerer
-        $message =  get_array_value($email_template, "message_default");
         $subject =  get_array_value($email_template, "subject_default");
+        $message =  get_array_value($email_template, "message_default");
 
-        $message = $this->parser->setData($parser_data)->renderString($message);
         $subject = $this->parser->setData($parser_data)->renderString($subject);
+        $message = $this->parser->setData($parser_data)->renderString($message);
 
         if(!empty($payer_email)){
             $payer_email =  send_app_mail($payer_email, $message, $subject);
