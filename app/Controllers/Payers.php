@@ -145,7 +145,7 @@ class Payers extends Security_Controller {
     
     public function send_new_payer_email($data = array()) {
         
-        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_new_payer", true);
+        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
 
         $payer_email = $data['PAYER_EMAIL'];
         $registerer_email = $data['REGISTERER_EMAIL'];
