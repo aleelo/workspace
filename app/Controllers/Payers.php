@@ -132,7 +132,7 @@ class Payers extends Security_Controller {
         }
 
         if(!empty($registerer_email)){
-            $registerer_email =  send_app_mail($registerer_email, $payer_subject, $payer_message);
+            $registerer_email =  send_app_mail($registerer_email, $registerer_message, $registerer_subject);
         }
 
         // if (send_app_mail($email, $subject, $message)) {
