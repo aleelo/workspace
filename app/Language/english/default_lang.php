@@ -252,6 +252,7 @@ $lang["merchant_number"] = "Merchant Number";
 
 //Company:
 
+$lang["new_payer_registered"] = "New Payer Registered";
 $lang["new_payer_registered_to_registerer"] = "New Payer Registered to the Registerer";
 $lang["new_payer_registered_to_new_payer"] = "New Payer Registered to New Payer";
 $lang["Registration_type"] = "Registration Type :";

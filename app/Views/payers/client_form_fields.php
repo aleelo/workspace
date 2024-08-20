@@ -309,12 +309,12 @@
 
 <div class="form-group ">
     <hr class="mt-4 mb-4">
-    <button type="button" class="btn btn-success float-end" id="add_visitor_btn"><i data-feather="plus-circle" class='icon'></i> Add Merchant</button>
+    <button type="button" class="btn btn-success float-end" id="add_payer_btn"><i data-feather="plus-circle" class='icon'></i> Add Merchant</button>
 
 </div>
 <div class="form-group mt-4" style="clear: both;">
     <div class="row">
-        <table class="table" id="add_visitors_table">
+        <table class="table" id="add_payers_table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -337,23 +337,24 @@
 
 
 <script type="text/javascript">
+
     var k=1;
     $(document).ready(function () {
 
-        //start 
-        $('#add_visitors_table').hide();
+        // Instert new Data 
 
+        $('#add_payers_table').hide();
 
         $('.modal-dialog').removeClass('modal-lg').addClass('modal-xl');
-        // add visitor table
-        $('#add_visitor_btn').on('click', function(){
+        // add Payers table
+        $('#add_payer_btn').on('click', function(){
 
-            $('#add_visitors_table').show();
+            $('#add_payers_table').show();
 
             //remove button
             var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
 
-            $('#add_visitors_table tbody').append(
+            $('#add_payers_table tbody').append(
                 "<tr class=''>"+
                 "<td>" + k + "</td>"+
                     "<td><input type='text' class='form-control' data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='merchant_type[]'></td>"+
@@ -374,60 +375,64 @@
             k = k+1;
         });
 
-        //end
+        // End Insert Data
 
-        // if ($('#id').val() != '') {
-        //     var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
+        // Update Date
 
-        //     $.ajax({
-        //         url: 'payers/merchant_details/' + $('#id').val(),
-        //         cache: false,
-        //         type: 'GET',
-        //         success: function(data) {
+        var payer_id = "<?php echo $model_info?->id; ?>";
+        if (payer_id != '') {
+            var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
 
-        //             $('#add_members_table').show();
-        //             $('#add_members_table tbody').html('');
-        //             data = JSON.parse(data);
-        //             console.log(data[0].name);
-        //             console.log(data[1].name);
+            $('#add_payers_table').show();
+            $.ajax({
+                url: 'payers/merchant_details/' + payer_id,
+                cache: false,
+                type: 'GET',
+                success: function(data) {
 
-        //             if (data.length > 0 && data[0].name != null) {
-        //                 for (let i = 0; i < data.length; i++) {
+                    $('#add_members_table').show();
+                    $('#add_members_table tbody').html('');
+                    data = JSON.parse(data);
+                    console.log(data[0].name);
+                    console.log(data[1].name);
 
-        //                     $('#add_visitors_table tbody').append(
-        //                         "<tr class=''>"+
-        //                         "<td>" + k + "</td>"+
-        //                             "<td><input type='text' class='form-control' value='" + data[i].name + " data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='merchant_type[]'></td>"+
-        //                             "<td><input type='text' class='form-control'  id='merchant_number" + k + "' placeholder='Merchant Number'  name='merchant_number[]'></td>"+
-        //                             "<td style='width: 110px;'>" + actions + "</td>"+
-        //                         "</tr>"
-        //                     );
+                    if (data.length > 0 && data[0].name != null) {
+                        for (let i = 0; i < data.length; i++) {
+
+                            $('#add_payers_table tbody').append(
+                                "<tr class=''>"+
+                                "<td>" + k + "</td>"+
+                                    "<td><input type='text' class='form-control' value='" + data[i].name + "' data-rule-required data-msg-required='This field is required.' id='merchant_type" + k + "' placeholder='Merchant Type' name='merchant_type[]'></td>"+
+                                    "<td><input type='text' class='form-control' value='" + data[i].merchant_number + "'  id='merchant_number" + k + "' placeholder='Merchant Number'  name='merchant_number[]'></td>"+
+                                    "<td style='width: 110px;'>" + actions + "</td>"+
+                                "</tr>"
+                            );
                             
-        //                     $("#merchant_type"+k).select2({data: <?php echo json_encode($Merchant_types_dropdown_js); ?>});
-        //                     $("#merchant_type"+k).val(data[i].merchant_id).trigger('change');
+                            $("#merchant_type"+k).select2({data: <?php echo json_encode($Merchant_types_dropdown_js); ?>});
+                            $("#merchant_type"+k).val(data[i].merchant_id).trigger('change');
            
-        //                     k = k + 1;
-        //                 }
-        //             }
+                            k = k + 1;
+                        }
+                    }
 
-        //             feather.replace();
-        //         },
-        //         statusCode: {
-        //             403: function() {
-        //                 console.log("403: Session expired.");
-        //                 window.location.reload();
-        //             },
-        //             404: function() {
-        //                 appLoader.hide();
-        //                 appAlert.error("404: Page not found.");
-        //             }
-        //         },
-        //         error: function() {
-        //             appLoader.hide();
-        //             appAlert.error("500: Internal Server Error.");
-        //         }
-        //     });
-        // }
+                    feather.replace();
+                },
+                statusCode: {
+                    403: function() {
+                        console.log("403: Session expired.");
+                        window.location.reload();
+                    },
+                    404: function() {
+                        appLoader.hide();
+                        appAlert.error("404: Page not found.");
+                    }
+                },
+                error: function() {
+                    appLoader.hide();
+                    appAlert.error("500: Internal Server Error.");
+                }
+            });
+        }
 
         setDatePicker("#Start_Date")
         setDatePicker("#End_Date")

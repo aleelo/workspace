@@ -48,6 +48,7 @@ class Payers extends Security_Controller {
 
     function modal_form() {
         $client_id = $this->request->getPost('id');
+        // die($client_id);
         $this->_validate_client_manage_access($client_id);
 
         $this->validate_submitted_data(array(
@@ -92,9 +93,9 @@ class Payers extends Security_Controller {
     }
 
     
-    public function send_new_payer_email($data = array()) {
+    public function send_new_payer_email_both($data = array()) {
         
-        $registerer_email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_registerer", true);
+        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_registerer", true);
         $payer_email_template = $this->Email_templates_model->get_final_template("new_payer_registered_to_new_payer", true);
 
         $payer_email = $data['PAYER_EMAIL'];
@@ -106,7 +107,7 @@ class Payers extends Security_Controller {
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
 
-        $parser_data["SIGNATURE"] = get_array_value($registerer_email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["SIGNATURE"] = get_array_value($payer_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
@@ -114,11 +115,11 @@ class Payers extends Security_Controller {
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
         // Registerer
-        $registerer_message =  get_array_value($registerer_email_template, "message_default");
-        $registerer_subject =  get_array_value($registerer_email_template, "subject_default");
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
 
-        $registerer_message = $this->parser->setData($parser_data)->renderString($registerer_message);
-        $registerer_subject = $this->parser->setData($parser_data)->renderString($registerer_subject);
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
 
         // Payer
         $payer_message =  get_array_value($payer_email_template, "message_default");
@@ -132,7 +133,7 @@ class Payers extends Security_Controller {
         }
 
         if(!empty($registerer_email)){
-            $registerer_email =  send_app_mail($registerer_email, $registerer_message, $registerer_subject);
+            $registerer_email =  send_app_mail($registerer_email, $message, $subject);
         }
 
         // if (send_app_mail($email, $subject, $message)) {
@@ -140,6 +141,43 @@ class Payers extends Security_Controller {
         // } else {
         //     return false;
         // }
+    }
+    
+    public function send_new_payer_email($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
+
+        $payer_email = $data['PAYER_EMAIL'];
+        $registerer_email = $data['REGISTERER_EMAIL'];
+
+        $parser_data["PAYER_ID"] = $data['PAYER_ID'];
+        $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
+        $parser_data["REG_NO"] = $data['REG_NO'];
+        $parser_data["START_DATE"] = $data['START_DATE'];
+        $parser_data["END_DATE"] = $data['END_DATE'];
+
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($payer_email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        // Registerer
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if(!empty($payer_email)){
+            $payer_email =  send_app_mail($payer_email, $message, $subject);
+        }
+
+        if(!empty($registerer_email)){
+            $registerer_email =  send_app_mail($registerer_email, $message, $subject);
+        }
+
     }
 
     // /* insert or update a client */
@@ -290,16 +328,20 @@ class Payers extends Security_Controller {
         }
     }
 
-    // public function merchant_details($id) {
+    public function merchant_details($id) {
 
-    //     $detail_info = $this->db->query("SELECT t.merchant_type as name,d.* from rise_merchant_types t 
-    //                 left join rise_merchant_details d on t.id=d.merchant_id
-    //                 left join rise_clients c on c.id = d.payer_id
+        // $detail_info = $this->db->query("SELECT d.*,t.merchant_type as name FROM rise_merchant_details d 
+        // LEFT JOIN rise_clients p on p.id = d.payer_id
+        // LEFT JOIN rise_merchant_types t ON t.id = d.merchant_id
+        // WHERE p.i = $id")->getResult();
 
-    //                 where c.id = $id")->getResult();
+        $detail_info = $this->db->query("SELECT t.merchant_type as name,d.* from rise_merchant_types t 
+        left join rise_clients c on c.id = d.payer_id
+        left join rise_merchant_details d on t.id = d.merchant_id
+        where c.id = $id")->getResult();
 
-    //     return json_encode($detail_info);
-    // }
+        return json_encode($detail_info);
+    }
 
     /* delete or undo a client */
 
@@ -494,6 +536,7 @@ class Payers extends Security_Controller {
                 $view_data["tab"] = clean_data($tab);
 
                 $view_data["view_type"] = "";
+                
 
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
@@ -1044,6 +1087,7 @@ class Payers extends Security_Controller {
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
 
+            
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
