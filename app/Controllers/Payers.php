@@ -260,17 +260,6 @@ class Payers extends Security_Controller {
 
                    $r = $this->send_new_payer_email($payer_email_data);
 
-                    //send email to the user 
-                   $payer_email_data = [
-                       'PAYER_ID'=>$save_id,
-                       'PAYER_NAME' => $payer->company_name,
-                       'REG_NO'=>$payer->Reg_NO,
-                       'START_DATE'=>$payer->Start_Date,  
-                       'END_DATE'=>$payer->End_Date,  
-                       'email'=>$user_info->private_email,                 
-                   ];
-
-                   $r = $this->send_new_payer_email($payer_email_data);
             }
 
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
