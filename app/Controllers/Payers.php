@@ -114,13 +114,11 @@ class Payers extends Security_Controller {
 
         // $message =  get_array_value($payer_email_template, "message_default");
         // $subject =  get_array_value($payer_email_template, "subject_default");
-
         // $message = $this->parser->setData($parser_data)->renderString($message);
         // $subject = $this->parser->setData($parser_data)->renderString($subject);
 
         $payer_message =  get_array_value($payer_email_template, "message_default");
         $payer_subject =  get_array_value($payer_email_template, "subject_default");
-
         $payer_message = $this->parser->setData($parser_data)->renderString($payer_message);
         $payer_subject = $this->parser->setData($parser_data)->renderString($payer_subject);
 
@@ -255,7 +253,7 @@ class Payers extends Security_Controller {
                        'PAYER_ID'=>$save_id,
                        'PAYER_NAME' => $payer->company_name,
                        'REG_NO'=>$payer->Reg_NO,
-                       'PAYER_EMAIL'=>$payer_info->private_email,
+                       'PAYER_EMAIL'=>$payer_info->email,
                        'START_DATE'=>$payer->Start_Date,  
                        'END_DATE'=>$payer->End_Date,  
                    ];
