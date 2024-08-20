@@ -157,7 +157,6 @@ class Payers extends Security_Controller {
         $parser_data["END_DATE"] = $data['END_DATE'];
 
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
-        $parser_data["SIGNATURE"] = get_array_value($payer_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
