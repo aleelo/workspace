@@ -177,6 +177,12 @@ class Payers extends Security_Controller {
             $registerer_email =  send_app_mail($registerer_email, $message, $subject);
         }
 
+        if (send_app_mail($payer_email, $subject, $message)) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     // /* insert or update a client */
