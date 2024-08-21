@@ -177,10 +177,10 @@ class Payers extends Security_Controller {
             $payer_email =  send_app_mail($payer_email, $subject, $message);
         }
 
-        if(!empty($registerer_email)){
+        // if(!empty($registerer_email)){
 
-            $registerer_email =  send_app_mail($registerer_email, $subject, $message);
-        }
+        //     $registerer_email =  send_app_mail($registerer_email, $subject, $message);
+        // }
 
         
 
@@ -203,6 +203,8 @@ class Payers extends Security_Controller {
         $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
 
         $registerer_email = $data['REGISTERER_EMAIL'];
+        $payer_email = $data['PAYER_EMAIL'];
+
 
         $parser_data["PAYER_ID"] = $data['PAYER_ID'];
         $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
@@ -239,7 +241,7 @@ class Payers extends Security_Controller {
         //     return false;
         // }
 
-        if ($payer_email) {
+        if ($registerer_email) {
             return true;
         }else{
             return false;
