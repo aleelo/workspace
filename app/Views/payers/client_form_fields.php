@@ -1,5 +1,5 @@
 
-<input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+<input type="hidden" name="id" id="id" value="<?php echo $model_info->id; ?>" />
 <input type="hidden" name="view" value="<?php echo isset($view) ? $view : ""; ?>" />
 
 
@@ -377,9 +377,9 @@
 
         // End Insert Data
 
-        // Update Date
+        // Reading Data
 
-        var payer_id = "<?php echo $model_info?->id; ?>";
+        var payer_id = $('#id').val();
         if (payer_id != '') {
             var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
 

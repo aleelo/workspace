@@ -180,6 +180,7 @@ class Clients_model extends Crud_model {
         $join_custom_fieds               
         WHERE $clients_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
+        // die($sql);
 
         $raw_query = $this->db->query($sql);
 

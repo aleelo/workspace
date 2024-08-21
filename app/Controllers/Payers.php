@@ -142,7 +142,7 @@ class Payers extends Security_Controller {
         //     return false;
         // }
     }
-    
+
     public function send_new_payer_email($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
@@ -156,34 +156,48 @@ class Payers extends Security_Controller {
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
 
+        $parser_data["LEAVE_URL"] = get_uri('payers');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
 
-        // Registerer
-        $subject =  get_array_value($email_template, "subject_default");
         $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
 
-        $subject = $this->parser->setData($parser_data)->renderString($subject);
         $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        //$info_email = send_app_mail($info_email, $subject, $message);
+        //$mof_email = send_app_mail($mof_email, $subject, $message);
 
         if(!empty($payer_email)){
-            $payer_email =  send_app_mail($payer_email, $message, $subject);
+
+            $payer_email =  send_app_mail($payer_email, $subject, $message);
         }
 
         if(!empty($registerer_email)){
-            $registerer_email =  send_app_mail($registerer_email, $message, $subject);
+
+            $registerer_email =  send_app_mail($registerer_email, $subject, $message);
         }
 
-        // if (send_app_mail($payer_email, $subject, $message)) {
+        
+
+        // if ($hrm_email || $head_department_email || $private_email) {
         //     return true;
-        // } else {
+        // }else{
         //     return false;
         // }
 
+        if ($payer_email) {
+            return true;
+        }else{
+            return false;
+        }
+
     }
+  
 
     // /* insert or update a client */
     
@@ -302,7 +316,6 @@ class Payers extends Security_Controller {
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $payer?->created_by")->getRow();
 
-                //     //send email to the administration
                    $payer_email_data = [
                        'PAYER_ID'=>$save_id,
                        'PAYER_NAME' => $payer->company_name,
@@ -335,15 +348,17 @@ class Payers extends Security_Controller {
 
     public function merchant_details($id) {
 
-        // $detail_info = $this->db->query("SELECT d.*,t.merchant_type as name FROM rise_merchant_details d 
-        // LEFT JOIN rise_clients p on p.id = d.payer_id
-        // LEFT JOIN rise_merchant_types t ON t.id = d.merchant_id
-        // WHERE p.i = $id")->getResult();
+        // print_r($id);die;
 
-        $detail_info = $this->db->query("SELECT t.merchant_type as name,d.* from rise_merchant_types t 
-        left join rise_clients c on c.id = d.payer_id
-        left join rise_merchant_details d on t.id = d.merchant_id
-        where c.id = $id")->getResult();
+        $detail_info = $this->db->query("SELECT d.*,t.merchant_type as name FROM rise_merchant_details d 
+        LEFT JOIN rise_clients p on p.id = d.payer_id
+        LEFT JOIN rise_merchant_types t ON t.id = d.merchant_id
+        WHERE p.id = $id")->getResult();
+
+        // $detail_info = $this->db->query("SELECT t.merchant_type as name,d.* from rise_merchant_types t 
+        // left join rise_clients c on c.id = d.payer_id
+        // left join rise_merchant_details d on d.id = d.merchant_id
+        // where c.id = $id")->getResult();
 
         return json_encode($detail_info);
     }
@@ -524,6 +539,7 @@ class Payers extends Security_Controller {
         if ($client_id) {
             $options = array("id" => $client_id);
             $client_info = $this->Clients_model->get_details($options)->getRow();
+           
             if ($client_info && !$client_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
@@ -542,6 +558,8 @@ class Payers extends Security_Controller {
 
                 $view_data["view_type"] = "";
                 
+                $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
+                 $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
 
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
