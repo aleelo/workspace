@@ -143,7 +143,7 @@ class Payers extends Security_Controller {
         // }
     }
 
-    public function send_new_payer_email($data = array()) {
+    public function send_email_to_new_payer($data = array()) {
         
         $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
 
@@ -176,6 +176,55 @@ class Payers extends Security_Controller {
 
             $payer_email =  send_app_mail($payer_email, $subject, $message);
         }
+
+        if(!empty($registerer_email)){
+
+            $registerer_email =  send_app_mail($registerer_email, $subject, $message);
+        }
+
+        
+
+        // if ($hrm_email || $head_department_email || $private_email) {
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+
+        if ($payer_email) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function send_email_to_new_payer_registerer($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("new_payer_registered", true);
+
+        $registerer_email = $data['REGISTERER_EMAIL'];
+
+        $parser_data["PAYER_ID"] = $data['PAYER_ID'];
+        $parser_data["PAYER_NAME"] = $data['PAYER_NAME'];
+        $parser_data["REG_NO"] = $data['REG_NO'];
+        $parser_data["START_DATE"] = $data['START_DATE'];
+        $parser_data["END_DATE"] = $data['END_DATE'];
+
+        $parser_data["LEAVE_URL"] = get_uri('payers');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        //$info_email = send_app_mail($info_email, $subject, $message);
+        //$mof_email = send_app_mail($mof_email, $subject, $message);
 
         if(!empty($registerer_email)){
 
@@ -327,7 +376,8 @@ class Payers extends Security_Controller {
                        'END_DATE'=>$payer->End_Date,  
                    ];
 
-                   $r = $this->send_new_payer_email($payer_email_data);
+                   $r = $this->send_email_to_new_payer($payer_email_data);
+                   $r = $this->send_email_to_new_payer_registerer($payer_email_data);
 
             }
 
