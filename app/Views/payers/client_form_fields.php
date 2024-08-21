@@ -379,54 +379,14 @@
 
         // Reading Data
 
-       
-
-        setDatePicker("#Start_Date")
-        setDatePicker("#End_Date")
-        
-        $('[data-bs-toggle="tooltip"]').tooltip();
-
-<?php if (isset($currency_dropdown)) { ?>
-            if ($('#currency').length) {
-                $('#currency').select2({data: <?php echo json_encode($currency_dropdown); ?>});
-            }
-<?php } ?>
-
-<?php if (isset($groups_dropdown)) { ?>
-            $("#group_ids").select2({
-                multiple: true,
-                data: <?php echo json_encode($groups_dropdown); ?>
-            });
-<?php } ?>
-
-<?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
-            $('#created_by').select2({data: <?php echo $team_members_dropdown; ?>});
-<?php } ?>
-
-<?php if ($login_user->user_type === "staff") { ?>
-            $("#client_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
-<?php } ?>
-        $('.account_type').click(function () {
-            var inputValue = $(this).attr("value");
-            if (inputValue === "person") {
-                $(".company_name_section").html("Name");
-                $(".company_name_input_section").attr("placeholder", "Name");
-            } else {
-                $(".company_name_section").html("Company name");
-                $(".company_name_input_section").attr("placeholder", "Company name");
-            }
-        });
-
-        $("#client-form .select2").select2();
-
         var payer_id = $('#id').val();
         if (payer_id != '') {
             var actions = "<button type='button' class='btn btn-danger btn-sm mt-2  round ml-2 p-1 ' onclick='$(this).parent().parent().remove();k--;'><i data-feather='minus-circle' class='icon'></i></button>";
+            var host = "<?php echo base_url() ?>";
 
-                            alert('inside');
             $('#add_payers_table').show();
             $.ajax({
-                url: 'payers/merchant_details/' + payer_id,
+                url: host + 'payers/merchant_details/' + payer_id,
                 cache: false,
                 type: 'GET',
                 success: function(data) {
@@ -473,5 +433,45 @@
                 }
             });
         }
+       
+
+        setDatePicker("#Start_Date")
+        setDatePicker("#End_Date")
+        
+        $('[data-bs-toggle="tooltip"]').tooltip();
+
+<?php if (isset($currency_dropdown)) { ?>
+            if ($('#currency').length) {
+                $('#currency').select2({data: <?php echo json_encode($currency_dropdown); ?>});
+            }
+<?php } ?>
+
+<?php if (isset($groups_dropdown)) { ?>
+            $("#group_ids").select2({
+                multiple: true,
+                data: <?php echo json_encode($groups_dropdown); ?>
+            });
+<?php } ?>
+
+<?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
+            $('#created_by').select2({data: <?php echo $team_members_dropdown; ?>});
+<?php } ?>
+
+<?php if ($login_user->user_type === "staff") { ?>
+            $("#client_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
+<?php } ?>
+        $('.account_type').click(function () {
+            var inputValue = $(this).attr("value");
+            if (inputValue === "person") {
+                $(".company_name_section").html("Name");
+                $(".company_name_input_section").attr("placeholder", "Name");
+            } else {
+                $(".company_name_section").html("Company name");
+                $(".company_name_input_section").attr("placeholder", "Company name");
+            }
+        });
+
+        $("#client-form .select2").select2();
+
     });
 </script>
