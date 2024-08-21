@@ -155,6 +155,7 @@ class Payers extends Security_Controller {
         $parser_data["REG_NO"] = $data['REG_NO'];
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
+        $parser_data["REGISTERER_NAME"] = $data['REGISTERER_NAME'];
 
         $parser_data["LEAVE_URL"] = get_uri('payers');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
@@ -211,6 +212,7 @@ class Payers extends Security_Controller {
         $parser_data["REG_NO"] = $data['REG_NO'];
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
+        $parser_data["REGISTERER_NAME"] = $data['REGISTERER_NAME'];
 
         $parser_data["LEAVE_URL"] = get_uri('payers');
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
