@@ -394,8 +394,6 @@
                     $('#add_members_table').show();
                     $('#add_members_table tbody').html('');
                     data = JSON.parse(data);
-                    console.log(data[0].name);
-                    console.log(data[1].name);
 
                     if (data.length > 0 && data[0].name != null) {
                         for (let i = 0; i < data.length; i++) {
