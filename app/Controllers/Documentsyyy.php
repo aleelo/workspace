@@ -126,7 +126,7 @@ class Documents extends Security_Controller
             $temp_array = ['' => 'Choose Template'];
         }
 
-        $templates = $this->db->query("SELECT * FROM rise_templates where department like '$dept_id' and destination_folder != 'Leave'")->getResult();
+        $templates = $this->db->query("SELECT * FROM rise_templates where department like '$dept_id'")->getResult();
 
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
@@ -340,137 +340,6 @@ class Documents extends Security_Controller
         }
     }
 
-    // /* insert or update a lead */
-    // public function save()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     // $this->validate_lead_access($id);
-
-    //     $this->validate_submitted_data(array(
-    //         "id" => "numeric",
-    //         "document_title" => "required",
-    //         // "ref_number" => "required",
-    //         "template" => "required",
-    //     ));
-    //     $template_id = $this->request->getPost('template');
-
-    //     // `document_title`,`created_by`, `ref_number`, `depertment`, `template`, `item_id`, `created_at`
-    //     $input = array(
-    //         'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
-    //         "document_title" => $this->request->getPost('document_title'),
-    //         "ref_number" => $this->request->getPost('ref_number'),
-    //         "depertment" => $this->get_user_department_id(),
-    //         "template" => $template_id,
-    //         "item_id" => $this->request->getPost('zip'),
-    //         "created_by" => $this->request->getPost('owner_id') ? $this->request->getPost('owner_id') : $this->login_user->id,
-    //         "created_at" => date('Y-m-d'),
-    //     );
-
-    //     $input = clean_data($input);
-    //     $save_id = null;
-    //     $webUrl = null;
-
-    //     if (!$id) {
-
-    //         $save_id = $this->Documents_model->ci_save($input);
-
-    //         $t = $this->Templates_model->get_one($template_id);
-    //         $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template_id");
-    //         $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template_id")->getRow()->sqn;
-    //         $template_name = $t->path;
-    //         $input['template'] = $template_name;
-    //         $input['id'] = $save_id;
-
-    //         //get document row
-    //         $doc = $this->db->query("select d.*,t.name as template,t.ref_prefix,t.destination_folder as folder,concat(u.first_name,' ',u.last_name) user from rise_documents d
-    //         LEFT JOIN rise_users u on d.created_by = u.id
-    //         LEFT JOIN rise_templates t on d.template = t.id
-    //         where d.deleted=0 and d.id =$save_id");
-
-    //         $input['folder'] = $doc->getRow()->folder;
-    //         $input['uuid'] = $doc->getRow()->uuid;
-    //         $input['ref_number'] = $doc->getRow()->ref_prefix . '/' . $sqn . '/' . date('m') . '/' . date('y');
-    //         $token = $this->AccesToken();
-
-    //         //create/save doc
-    //         $docPath = $this->createDoc($input);
-
-    //         //upload to sharepoint
-    //         $data = $this->uploadDoc($token, $input, $docPath);
-
-    //         // var_dump($data);
-    //         // die();
-    //         print_r($data);die;
-    //         if (isset($data['error'])) {
-
-    //             // var_dump($data['error']['code'] . ', ' . $data['error']['message']);
-    //             if ($data['error']['code'] == "notAllowed") {
-    //                 $msg = $data['error']['code'] . ', ' . $data['error']['message']; //"The file is being edited by another user";
-    //             } else {
-    //                 $msg = $data['error']['code'] . ', ' . $data['error']['message'];
-    //             }
-
-    //             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred') . ', ' . $msg));
-    //             exit;
-
-    //         } else {
-
-    //             // Get the web URL of the file from the array
-    //             $webUrl = $data["webUrl"];
-    //             $itemId = $data["id"];
-    //             $drive_ref = $data['parentReference'];
-
-    //             //update item id and web url
-    //             $u_data = array('item_id' => $itemId, 'webUrl' => $webUrl, 'ref_number' => $input['ref_number'], 'drive_info' => @serialize($drive_ref));
-
-    //             $this->Documents_model->ci_save($u_data, $doc->getRow()->id);
-
-    //             // echo $webUrl;
-    //             // die();
-
-    //         }
-
-    //     } else {
-    //         $input = array(
-    //             "document_title" => $this->request->getPost('document_title'),
-    //             "ref_number" => $this->request->getPost('ref_number'),
-    //             // "depertment" => $this->request->getPost('depertment'),
-    //             "template" => $this->request->getPost('template'),
-    //         );
-
-    //         $updated = $this->Documents_model->ci_save($input, $id);
-    //         //get document row
-    //         $doc = $this->db->query("select d.*,t.name as template,t.destination_folder as folder,concat(u.first_name,' ',u.last_name) user from rise_documents d
-    //                 LEFT JOIN rise_users u on d.created_by = u.id
-    //                 LEFT JOIN rise_templates t on d.template = t.id
-    //                 where d.deleted=0 and d.id =$id");
-    //     }
-
-    //     if ($save_id || $updated) {
-    //         // save_custom_fields("leads", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
-
-    //         if (!$id) { //create operation
-
-    //             log_notification("document_created", array("document_id" => $save_id), $this->login_user->id);
-
-    //             echo json_encode(array("success" => true, "data" => $this->_make_row($doc->getRow(), null), 'webUrl' => $webUrl, 'id' => $save_id, 'view' => $this->request->getPost('view'),
-    //                 'message' => app_lang('record_saved')));
-    //         } else { //update operation
-
-    //             log_notification("document_updated", array("document_id" => $id), $this->login_user->id);
-
-    //             // var_dump($doc->getRowArray());
-    //             // die();
-
-    //             echo json_encode(array("success" => true, "data" => $this->_make_row($doc->getRow(), null), 'id' => $id, 'view' => $this->request->getPost('view'),
-    //                 'message' => app_lang('record_updated')));
-    //         }
-
-    //     } else {
-    //         echo json_encode(array("success" => false, 'message' => app_lang('error_occurred') . ', Document not saved.'));
-    //     }
-    // }
-
     // Creates the Document Using the Provided Template
     public function createDoc($data = array())
     {
@@ -482,8 +351,7 @@ class Documents extends Security_Controller
         $template = new \PhpOffice\PhpWord\TemplateProcessor(APPPATH . 'Views/documents/' . $data['template']);
 
         $ext = pathinfo(APPPATH . 'Views/documents/' . $data['template'], PATHINFO_EXTENSION);
-        $document_title = $data['document_title'];
-        $save_as_name = toSnakeCase($document_title).'_('.$data['id'] . ')_' . date('d').'_' . date('m') . '_' . date('Y') . '.' . $ext;
+        $save_as_name = $data['id'] . '_' . date('m') . '_' . date('Y') . '.' . $ext;
 
         $path_absolute = APPPATH . 'Views/documents/' . $save_as_name;
         // var_dump($data);
@@ -540,10 +408,9 @@ class Documents extends Security_Controller
         $fileContents = file_get_contents(APPPATH . 'Views/documents/' . $path); // Read the contents of the image file
 
         $curl = curl_init();
-        // $driveId = getenv('DRIVE_ID');
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://graph.microsoft.com/v1.0/drives/b!X_xvU3N240692qSfTZ2Na364nv7jDv9LuXkLsi8LBiGdq9wS-BfPRIXygwFLGyh2/root:/".$data['folder'].'/' . $path . ':/content',
+            CURLOPT_URL => 'https://graph.microsoft.com/v1.0/drives/b!8MDhRyTZNU-uuvRbSUgUjcJUZG2EIXtMhNwacBvbWpuUVVst2_9nR6TKaoBmnYQq/root:/' . $data['folder'] . '/' . $path . ':/content',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -702,75 +569,6 @@ class Documents extends Security_Controller
         echo json_encode($result);
     }
 
-
-    /* return a row of lead list table */
-
-    private function _row_data($id)
-    {
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
-        
-        $options = array(
-            "id" => $id,
-            "custom_fields" => $custom_fields,
-            // "leads_only" => true
-        );
-        $data = $this->Documents_model->get_one($id)->getRow();
-        return $this->_make_row($data, $custom_fields);
-    }
-
-    /* prepare a row of lead list table */
-
-    private function _make_row($data, $custom_fields)
-    {
-        //primary contact
-        // $image_url = get_avatar($data->contact_avatar);
-        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-        // $primary_contact = get_lead_contact_profile_link($data->primary_contact_id, $contact);
-
-        // `document_title`, `ref_number`, `depertment`, `template`, `item_id`,`created_by`, `created_at`
-        //lead owner
-        $owner = "-";
-        if ($data->created_by) {
-            // $owner_image_url = get_avatar($data->owner_avatar);
-            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-            $owner = $data->user; //$this->db->query("select * from rise_users where id = $data->created_by");
-
-        }
-
-        // $lead_labels = make_labels_view_data($data->labels_list, true);
-
-        $row_data = array(
-            $data->id,
-            modal_anchor(get_uri("documents/modal_form"), $data->document_title, array("class" => "edit", "title" => app_lang('edit_lead'), "data-post-id" => $data->id)),
-            // anchor(get_uri("documents/view/" . $data->id), ),
-            $data->ref_number,
-            $data->depertment,
-            $data->template,
-            // $data->item_id,
-            $owner,
-            format_to_date($data->created_at, false),
-        );
-
-        // $row_data[] = js_anchor($data->document_title, array("style" => "background-color: green;",
-        // "class" => "badge", "data-id" => $data->id, "data-value" => $data->id, "data-act" => "update-lead-status"));
-
-        // foreach ($custom_fields as $field) {
-        //     $cf_id = "cfv_" . $field->id;
-        //     $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
-        // }
-        //open doc link:
-        $link = "<a href='$data->webUrl' class='btn btn-success' target='_blank' title='Open Document' style='background: #1cc976;color: white'><i data-feather='eye' class='icon-16'></i>";
-
-        $row_data[] = modal_anchor(get_uri("documents/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit",
-            "title" => app_lang('edit_lead'), "data-post-id" => $data->id))
-        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_lead'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("documents/delete"), "data-action" => "delete-confirmation"))
-            . $link;
-
-        return $row_data;
-    }
-
-
     public function templates_list_data()
     {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
@@ -857,7 +655,72 @@ class Documents extends Security_Controller
         // die();
         echo json_encode($result);
     }
-    
+
+    /* return a row of lead list table */
+
+    private function _row_data($id)
+    {
+        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
+        $options = array(
+            "id" => $id,
+            "custom_fields" => $custom_fields,
+            // "leads_only" => true
+        );
+        $data = $this->Documents_model->get_one($id)->getRow();
+        return $this->_make_row($data, $custom_fields);
+    }
+
+    /* prepare a row of lead list table */
+
+    private function _make_row($data, $custom_fields)
+    {
+        //primary contact
+        // $image_url = get_avatar($data->contact_avatar);
+        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
+        // $primary_contact = get_lead_contact_profile_link($data->primary_contact_id, $contact);
+
+        // `document_title`, `ref_number`, `depertment`, `template`, `item_id`,`created_by`, `created_at`
+        //lead owner
+        $owner = "-";
+        if ($data->created_by) {
+            // $owner_image_url = get_avatar($data->owner_avatar);
+            // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
+            // $owner = get_team_member_profile_link($data->created_by, $owner_user);
+            $owner = $data->user; //$this->db->query("select * from rise_users where id = $data->created_by");
+
+        }
+
+        // $lead_labels = make_labels_view_data($data->labels_list, true);
+
+        $row_data = array(
+            $data->id,
+            modal_anchor(get_uri("documents/modal_form"), $data->document_title, array("class" => "edit", "title" => app_lang('edit_lead'), "data-post-id" => $data->id)),
+            // anchor(get_uri("documents/view/" . $data->id), ),
+            $data->ref_number,
+            $data->depertment,
+            $data->template,
+            // $data->item_id,
+            $owner,
+            format_to_date($data->created_at, false),
+        );
+
+        // $row_data[] = js_anchor($data->document_title, array("style" => "background-color: green;",
+        // "class" => "badge", "data-id" => $data->id, "data-value" => $data->id, "data-act" => "update-lead-status"));
+
+        // foreach ($custom_fields as $field) {
+        //     $cf_id = "cfv_" . $field->id;
+        //     $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
+        // }
+        //open doc link:
+        $link = "<a href='$data->webUrl' class='btn btn-success' target='_blank' title='Open Document' style='background: #1cc976;color: white'><i data-feather='eye' class='icon-16'></i>";
+
+        $row_data[] = modal_anchor(get_uri("documents/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit",
+            "title" => app_lang('edit_lead'), "data-post-id" => $data->id))
+        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_lead'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("documents/delete"), "data-action" => "delete-confirmation"))
+            . $link;
+
+        return $row_data;
+    }
     private function template_row_data($id)
     {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
@@ -882,7 +745,7 @@ class Documents extends Security_Controller
             $data->ref_prefix,
             $data->destination_folder,
             $data->department,
-            // $data->description,
+            $data->description,
             format_to_date($data->created_at, false),
         );
 
@@ -934,8 +797,6 @@ class Documents extends Security_Controller
         $sufix = '';
         $sufix2 = '';
 
-        // print_r($files && get_array_value($files, 0));
-        // print_r($files);die;
         //process the fiiles which has been uploaded by dropzone
         if ($files && get_array_value($files, 0)) {
             foreach ($files as $file) {
