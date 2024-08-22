@@ -258,7 +258,7 @@ class Documents extends Security_Controller
 
             $input['folder'] = $doc->getRow()->folder;
             $input['uuid'] = $doc->getRow()->uuid;
-            $input['ref_number'] = $doc->getRow()->ref_prefix . '/' . $sqn . '/' . date('m') . '/' . date('y');
+            $input['ref_number'] = $doc->getRow()->ref_prefix . $sqn . '/' . date('m') . '/' . date('y');
             $token = $this->AccesToken();
 
             //create/save doc
