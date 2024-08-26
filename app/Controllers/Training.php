@@ -121,62 +121,62 @@ class Training extends Security_Controller {
             "id" => "numeric"
         ));
 
-        // $model_info = $this->Tasks_model->get_one($id);
+        $model_info = $this->Tasks_model->get_one($training_id);
 
-        // $contexts = $this->_get_accessible_contexts();
-        // $selected_context = get_array_value($contexts, 0);
-        // $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
+        $contexts = $this->_get_accessible_contexts();
+        $selected_context = get_array_value($contexts, 0);
+        $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
 
-        // $selected_context_id = 0;
+        $selected_context_id = 0;
 
-        // foreach ($this->get_context_id_pairs() as $obj) {
-        //     $context_id_key = get_array_value($obj, "id_key");
+        foreach ($this->get_context_id_pairs() as $obj) {
+            $context_id_key = get_array_value($obj, "id_key");
 
-        //     $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
-        //     $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
+            $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
+            $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
             
-        //     if ($value) {
-        //         $selected_context = get_array_value($obj, "context");
-        //         $selected_context_id = $value;
-        //         $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
-        //     }
-        // }
+            if ($value) {
+                $selected_context = get_array_value($obj, "context");
+                $selected_context_id = $value;
+                $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
+            }
+        }
 
-        // $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
+        $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
 
-        // $view_data = array_merge($view_data, $dropdowns);
+        $view_data = array_merge($view_data, $dropdowns);
         
-        // if ($id) {
-        //     if (!$this->can_edit_tasks($model_info)) {
-        //         app_redirect("forbidden");
-        //     }
-        //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
-        //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
-        // } else {
-        //     //Going to create new task. Check if the user has access in any context
-        //     if (!$this->can_create_tasks()) {
-        //         app_redirect("forbidden");
-        //     }
-        // }
+        if ($id) {
+            if (!$this->can_edit_tasks($model_info)) {
+                app_redirect("forbidden");
+            }
+            $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        }
 
-        // $view_data['selected_context'] = $selected_context;
-        // $view_data['contexts'] = $contexts;
-        // $view_data['model_info'] = $model_info;
-        // $view_data["add_type"] = $add_type;
-        // $view_data['is_clone'] = $this->request->getPost('is_clone');
-        // $view_data['view_type'] = $this->request->getPost("view_type");
+        $view_data['selected_context'] = $selected_context;
+        $view_data['contexts'] = $contexts;
+        $view_data['model_info'] = $model_info;
+        $view_data["add_type"] = $add_type;
+        $view_data['is_clone'] = $this->request->getPost('is_clone');
+        $view_data['view_type'] = $this->request->getPost("view_type");
 
-        // $view_data['show_assign_to_dropdown'] = true;
-        // if ($this->login_user->user_type == "client") {
-        //     if (!get_setting("client_can_assign_tasks")) {
-        //         $view_data['show_assign_to_dropdown'] = false;
-        //     }
-        // } else {
-        //     //set default assigne to for new tasks
-        //     if (!$id && !$view_data['model_info']->assigned_to) {
-        //         $view_data['model_info']->assigned_to = $this->login_user->id;
-        //     }
-        // }
+        $view_data['show_assign_to_dropdown'] = true;
+        if ($this->login_user->user_type == "client") {
+            if (!get_setting("client_can_assign_tasks")) {
+                $view_data['show_assign_to_dropdown'] = false;
+            }
+        } else {
+            //set default assigne to for new tasks
+            if (!$id && !$view_data['model_info']->assigned_to) {
+                $view_data['model_info']->assigned_to = $this->login_user->id;
+            }
+        }
 
         $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
@@ -193,6 +193,7 @@ class Training extends Security_Controller {
 
         $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
         $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
+
         $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
@@ -228,7 +229,8 @@ class Training extends Security_Controller {
         }
 
         //get project members and collaborators dropdown
-        if ($context == "employee" && $context_id) {
+        if ($context === "employee" && !$return_empty_context) {
+
            
             $options = array("status" => "active", "user_type" => "staff");
             $employee_members = $this->Users_model->get_details($options)->getResult();
@@ -244,13 +246,70 @@ class Training extends Security_Controller {
             $employee_dropdown[] = array("id" => $user_id, "text" => $member_name);
         }
 
+        //depts
+        $departments_dropdown = array('id' => '---Choose Department---');
+
+        if ($context === "department" && !$return_empty_context) {
+            $depts = $this->Departments_model->get_details();
         
+            if(!$depts){
+                return [];
+            }else{
+                
+                $depts = $depts->getResult();
+                foreach($depts as $d){
+                    $departments_dropdown[] = array('id' => $d->id, 'text' =>$d->nameSo);
+                }
+
+            }
+
+        }
+
+        //sections
+        
+        $sections_dropdown = array('id' => '---Choose Section---');
+        
+        if ($context === "section" && !$return_empty_context) {
+            $sections = $this->Sections_model->get_details();
+            if(!$sections){
+                return [];
+            }else{
+                
+                $sections = $sections->getResult();
+                foreach($sections as $s){
+                    $sections_dropdown[] = array('id' => $s->id, 'text' =>$s->nameSo);
+                }
+
+            }
+        }
+
+        //units
+        
+        $units_dropdown = array('id' => '---Choose Unit---');
+
+        if ($context === "unit" && !$return_empty_context) {
+        
+            $units = $this->Units_model->get_details();
+            if(!$units){
+                return [];
+            }else{
+                
+                $units = $units->getResult();
+                foreach($units as $s){
+                    $units_dropdown[] = array('id' => $s->id, 'text' =>$s->nameSo);
+                }
+
+            }
+        }
 
         return array(
             "milestones_dropdown" => $milestones_dropdown,
             // "assign_to_dropdown" => $assign_to_dropdown,
-            "employees_dropdown" => $employees_dropdown
-           
+            "employees_dropdown" => $employees_dropdown,
+            "departments_dropdown" => $departments_dropdown,
+            "sections_dropdown" => $sections_dropdown,
+            "units_dropdown" => $units_dropdown,
+            
         );
     }
 

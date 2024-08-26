@@ -70,6 +70,8 @@ class Appointments extends Security_Controller {
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
         $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
+        // $view_data['host'] = dp_head_name_dropdown();
+
         $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
         $view_data['guests'] = array("" => " -- choose a visitor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 

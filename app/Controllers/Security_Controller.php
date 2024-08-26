@@ -85,6 +85,29 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     }
 
+    public function dp_head_name_dropdown() {
+
+        $login_id = $this->login_user->id;
+
+        $head_department = $this->db->query("SELECT concat(hd.first_name,' ',hd.last_name) AS full_name FROM rise_users su 
+            LEFT JOIN rise_departments dp on dp.id = su.department_id 
+            LEFT JOIN rise_users hd on hd.id = dp.dep_head_id 
+            WHERE su.id = $login_id")->getResult();
+        
+        // $bane_names = $this->db->query("SELECT id, bank_name FROM rise_bank_names WHERE deleted=0")->getResult();
+        // $temp_array = array('' => '---Choose Bank Name---');
+
+        if(!$head_department){
+            return null;
+        }
+  
+        foreach($head_department as $hd){
+            $temp_array[$hd->id] = $hd->full_name;
+        }
+
+        return $temp_array;
+    }
+
     public function get_job_locations_dropdown_list() {
         
         $job_lo = $this->db->query("SELECT id, name FROM rise_job_locations WHERE deleted=0")->getResult();

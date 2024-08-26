@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Departments_model extends Crud_model {
+class Departmentssss_model extends Crud_model {
 
     protected $table = 'departments';
 
