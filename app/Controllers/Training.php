@@ -146,37 +146,24 @@ class Training extends Security_Controller {
 
         $view_data = array_merge($view_data, $dropdowns);
         
-        if ($id) {
-            if (!$this->can_edit_tasks($model_info)) {
-                app_redirect("forbidden");
-            }
-            $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
-            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
-        } else {
-            //Going to create new task. Check if the user has access in any context
-            if (!$this->can_create_tasks()) {
-                app_redirect("forbidden");
-            }
-        }
+        // if ($id) {
+        //     if (!$this->can_edit_tasks($model_info)) {
+        //         app_redirect("forbidden");
+        //     }
+        //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+        //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        // } else {
+        //     //Going to create new task. Check if the user has access in any context
+        //     if (!$this->can_create_tasks()) {
+        //         app_redirect("forbidden");
+        //     }
+        // }
 
         $view_data['selected_context'] = $selected_context;
         $view_data['contexts'] = $contexts;
         $view_data['model_info'] = $model_info;
         $view_data["add_type"] = $add_type;
-        $view_data['is_clone'] = $this->request->getPost('is_clone');
         $view_data['view_type'] = $this->request->getPost("view_type");
-
-        $view_data['show_assign_to_dropdown'] = true;
-        if ($this->login_user->user_type == "client") {
-            if (!get_setting("client_can_assign_tasks")) {
-                $view_data['show_assign_to_dropdown'] = false;
-            }
-        } else {
-            //set default assigne to for new tasks
-            if (!$id && !$view_data['model_info']->assigned_to) {
-                $view_data['model_info']->assigned_to = $this->login_user->id;
-            }
-        }
 
         $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
@@ -206,7 +193,7 @@ class Training extends Security_Controller {
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
 
-        $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
+        // $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
 
         //prepare label suggestions
 
@@ -219,37 +206,29 @@ class Training extends Security_Controller {
 
     private function _get_task_related_dropdowns($context = "", $context_id = 0, $return_empty_context = false) {
 
-        //get milestone dropdown
-        $milestones_dropdown = array(array("id" => "", "text" => "-"));
-        if ($context == "project" && $context_id) {
-            $milestones = $this->Milestones_model->get_details(array("project_id" => $context_id, "deleted" => 0))->getResult();
-            foreach ($milestones as $milestone) {
-                $milestones_dropdown[] = array("id" => $milestone->id, "text" => $milestone->title);
-            }
-        }
-
         //get project members and collaborators dropdown
-        if ($context === "employee" && !$return_empty_context) {
+        
+        $employee_dropdown = array('id' => '---Choose Employee---');
+        if ($context === "employee" && $context_id) {
 
            
             $options = array("status" => "active", "user_type" => "staff");
             $employee_members = $this->Users_model->get_details($options)->getResult();
-        }
 
-
-        $assign_to_dropdown = array(array("id" => "", "text" => "-"));
-        $collaborators_dropdown = array();
-        foreach ($employee_members as $member) {
-            $user_id = $member->id;
-            $member_name = ($member->first_name . " " . $member->last_name);
-            // $assign_to_dropdown[] = array("id" => $user_id, "text" => $member_name);
-            $employee_dropdown[] = array("id" => $user_id, "text" => $member_name);
+            // $assign_to_dropdown = array(array("id" => "", "text" => "-"));
+            // $collaborators_dropdown = array();
+            foreach ($employee_members as $member) {
+                $user_id = $member->id;
+                $member_name = ($member->first_name . " " . $member->last_name);
+                // $assign_to_dropdown[] = array("id" => $user_id, "text" => $member_name);
+                $employee_dropdown[] = array("id" => $user_id, "text" => $member_name);
+            }
         }
 
         //depts
         $departments_dropdown = array('id' => '---Choose Department---');
 
-        if ($context === "department" && !$return_empty_context) {
+        if ($context === "department" && $context_id) {
             $depts = $this->Departments_model->get_details();
         
             if(!$depts){
@@ -269,7 +248,7 @@ class Training extends Security_Controller {
         
         $sections_dropdown = array('id' => '---Choose Section---');
         
-        if ($context === "section" && !$return_empty_context) {
+        if ($context === "section" && $context_id) {
             $sections = $this->Sections_model->get_details();
             if(!$sections){
                 return [];
@@ -287,7 +266,7 @@ class Training extends Security_Controller {
         
         $units_dropdown = array('id' => '---Choose Unit---');
 
-        if ($context === "unit" && !$return_empty_context) {
+        if ($context === "unit" && $context_id) {
         
             $units = $this->Units_model->get_details();
             if(!$units){
@@ -303,7 +282,6 @@ class Training extends Security_Controller {
         }
 
         return array(
-            "milestones_dropdown" => $milestones_dropdown,
             // "assign_to_dropdown" => $assign_to_dropdown,
             "employees_dropdown" => $employees_dropdown,
             "departments_dropdown" => $departments_dropdown,

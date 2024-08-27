@@ -297,7 +297,7 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if ($this->module_group === "lead" && $this->access_type === "own") {
+        } else if ($this->module_group === "lead" && ($this->access_type === "own" || $this->access_type === "specific")) {
             return true; //can access if it's leads module and user has access to own leads
         } else if ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true;  //can access if it's clients module and user has a pertial access

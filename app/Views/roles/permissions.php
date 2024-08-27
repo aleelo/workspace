@@ -756,6 +756,21 @@
                             ?>
                             <label for="lead_yes"><?php echo app_lang("yes_all_leads"); ?></label>
                         </div>
+                        <div class="form-group pb0 mb0 no-border">
+                            <?php
+                            echo form_radio(array(
+                                "id" => "lead_permission_specific",
+                                "name" => "lead_permission",
+                                "value" => "specific",
+                                "class" => "lead_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "specific") ? true : false);
+                            ?>
+                            <label for="lead_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_their_documents") . ")"; ?>:</label>
+                            <div class="specific_dropdown">
+                                <input type="text" value="<?php echo $lead_specific; ?>" name="lead_permission_specific" id="lead_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />    
+                            </div>
+
+                        </div>
                         <div>
                             <?php
                             echo form_radio(array(
@@ -1117,7 +1132,7 @@
             }
         });
 
-        $("#leave_specific_dropdown, #attendance_specific_dropdown, #timesheet_manage_permission_specific_dropdown, #timesheet_manage_permission_specific_excluding_own_dropdown, #team_member_update_permission_specific_dropdown, #message_permission_specific_dropdown, #timeline_permission_specific_dropdown").select2({
+        $("#leave_specific_dropdown, #lead_specific_dropdown, #attendance_specific_dropdown, #timesheet_manage_permission_specific_dropdown, #timesheet_manage_permission_specific_excluding_own_dropdown, #team_member_update_permission_specific_dropdown, #message_permission_specific_dropdown, #timeline_permission_specific_dropdown").select2({
             multiple: true,
             formatResult: teamAndMemberSelect2Format,
             formatSelection: teamAndMemberSelect2Format,

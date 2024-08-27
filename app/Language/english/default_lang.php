@@ -1057,6 +1057,7 @@ $lang["choose_members_and_or_teams"] = "Choose members and / or teams";
 $lang["choose_ticket_types"] = "Choose ticket types";
 $lang["excluding_his_her_time_cards"] = "Excluding his/her own time cards";
 $lang["excluding_his_her_leaves"] = "Excluding his/her own leaves";
+$lang["excluding_their_documents"] = "Excluding their own documents";
 $lang["can_manage_team_members_leave"] = "Can manage employee leaves?";
 $lang["can_manage_team_members_timecards"] = "Can manage employee time cards?";
 $lang["can_access_invoices"] = "Can access invoices?";

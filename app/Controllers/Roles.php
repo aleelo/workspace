@@ -58,6 +58,7 @@ class Roles extends Security_Controller {
 
             $view_data['leave'] = get_array_value($permissions, "leave");
             $view_data['leave_specific'] = get_array_value($permissions, "leave_specific");
+            $view_data['lead_specific'] = get_array_value($permissions, "lead_specific");
             $view_data['attendance_specific'] = get_array_value($permissions, "attendance_specific");
 
             $view_data['attendance'] = get_array_value($permissions, "attendance");
@@ -176,10 +177,17 @@ class Roles extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
+
         $leave = $this->request->getPost('leave_permission');
         $leave_specific = "";
         if ($leave === "specific") {
             $leave_specific = $this->request->getPost('leave_permission_specific');
+        }
+
+        $lead = $this->request->getPost('lead_permission');
+        $lead_specific = "";
+        if ($lead === "specific") {
+            $lead_specific = $this->request->getPost('lead_permission_specific');
         }
 
         $attendance = $this->request->getPost('attendance_permission');
@@ -196,7 +204,6 @@ class Roles extends Security_Controller {
         $expense = $this->request->getPost('expense_permission');
         $order = $this->request->getPost('order_permission');
         $client = $this->request->getPost('client_permission');
-        $lead = $this->request->getPost('lead_permission');
         $visitor = $this->request->getPost('visitor_permission');
         $fuel = $this->request->getPost('fuel_permission');
 
@@ -304,6 +311,8 @@ class Roles extends Security_Controller {
         $permissions = array(
             "leave" => $leave,
             "leave_specific" => $leave_specific,
+            "lead" => $lead,
+            "lead_specific" => $lead_specific,
             "attendance" => $attendance,
             "attendance_specific" => $attendance_specific,
             "invoice" => $invoice,
@@ -315,7 +324,6 @@ class Roles extends Security_Controller {
             "order" => $order,
             "client" => $client,
             "client_specific" => $client_specific,
-            "lead" => $lead,
             "visitor" => $visitor,
             "fuel" => $fuel,
             "ticket" => $ticket,
