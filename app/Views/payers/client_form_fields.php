@@ -8,7 +8,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="payer_name" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('payer_name'); ?></label>
+        <label for="payer_name" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('payer_name_l'); ?></label>
         <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_input(array(
@@ -16,7 +16,7 @@
                 "name" => "company_name",
                 "value" => $model_info->company_name,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('payer_name'),
+                "placeholder" => app_lang('payer_name_p'),
                 //"autofocus" => true,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
@@ -32,23 +32,21 @@
 
     <div class="row">
 
-        <label for="type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_type'); ?></label>
+        <label for="type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_type_l'); ?></label>
 
         <div class="<?php echo $field_column_2; ?>">
             <?php
+            
             echo form_dropdown(array(
                 "id" => "type",
                 "name" => "type",
-                "value" => $model_info->type,
                 "class" => "form-control select2",
-                "placeholder" => app_lang('payer_type')
-            ),[''=>'', 'Corporate'=>'Corporate','Limited Liability Company (LLC)'=>'Limited Liability Company (LLC)', 'Partnership'=>'Partnership', 'Non-Profit Organization'=>'Non-Profit Organization', 'Trust'=>'Trust', 
-            'Estate'=>'Estate', 'Public Limited Company (PLC)'=>'Public Limited Company (PLC)', 'Private Limited Company (Ltd)'=>'Private Limited Company (Ltd)', 'Cooperative (Co-op)'=>'Cooperative (Co-op)', 'Joint Venture (JV)'=>'Joint Venture (JV)',  ],[$model_info->type]
-             );
+                "placeholder" => app_lang('payer_type_p')
+            ),$payer_type,[$model_info->type]);
             ?>
         </div>
 
-        <label for="payer_size" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_segment'); ?></label>
+        <label for="payer_size" class="<?php echo $label_column_2; ?>"><?php echo app_lang('payer_segment_l'); ?></label>
 
         <div class=" col-md-4">
             <?php
@@ -90,22 +88,21 @@
 
     <div class="row">
 
-        <label for="Reg_Type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('Registration_type'); ?></label>
+        <label for="Reg_Type" class="<?php echo $label_column_2; ?>"><?php echo app_lang('registration_type_l'); ?></label>
 
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "Reg_Type",
                 "name" => "Reg_Type",
-                "value" => $model_info->Reg_Type,
                 "class" => "form-control select2",
-                "placeholder" => app_lang('Registration_type')
-            ),[''=>'','New'=>'New','Renew'=>'Renew)'],[$model_info->Reg_Type]
+                "placeholder" => app_lang('registration_type_p')
+            ),[''=>' - ','New'=>'New','Renew'=>'Renew'],[$model_info->Reg_Type]
             );
             ?>
         </div>
 
-        <label for="Reg_NO" class="<?php echo $label_column_2; ?>"><?php echo app_lang('Registration_no'); ?></label>
+        <label for="Reg_NO" class="<?php echo $label_column_2; ?>"><?php echo app_lang('registration_no_l'); ?></label>
 
         <div class="<?php echo $field_column_2; ?>">
             <?php
@@ -114,7 +111,7 @@
                 "name" => "Reg_NO",
                 "value" => $model_info->Reg_NO,
                 "class" => "form-control",
-                "placeholder" => app_lang('Registration_no')
+                "placeholder" => app_lang('registration_no_p')
             ));
             ?>
         </div>
@@ -130,7 +127,7 @@
 
     <div class="row">
 
-        <label for="Start_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('start_date'); ?></label>
+        <label for="Start_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('start_date_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -138,12 +135,12 @@
                 "name" => "Start_Date",
                 "value" => $model_info->Start_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('start_date')
+                "placeholder" => app_lang('start_date_p')
             ));
             ?>
         </div>
 
-        <label for="End_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('end_date'); ?></label>
+        <label for="End_Date" class="<?php echo $label_column_2; ?>"><?php echo app_lang('end_date_l'); ?></label>
 
         <div class="<?php echo $field_column_2; ?>">
             <?php
@@ -152,7 +149,7 @@
                 "name" => "End_Date",
                 "value" => $model_info->End_Date,
                 "class" => "form-control date",
-                "placeholder" => app_lang('end_date')
+                "placeholder" => app_lang('end_date_p')
             ));
             ?>
         </div>
@@ -161,13 +158,25 @@
 
 </div>
 
-<!-----------------------------------------   Turnover Tax & Number of EMployees  ------------------------------------>
+<!-----------------------------------------   District & Turnover Tax  ------------------------------------>
 
 <div class="form-group">
 
     <div class="row">
+
+        <label for="district" class="<?php echo $label_column_2; ?>"><?php echo app_lang('district_l'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "district",
+                "name" => "district",
+                "class" => "form-control select2",
+                "placeholder" => app_lang('district_p')
+            ),$districts,[$model_info->district]);
+            ?>
+        </div>
         
-        <label for="turnover_tax" class="<?php echo $label_column_2; ?>"><?php echo app_lang('turnover_tax'); ?></label>
+        <label for="turnover_tax" class="<?php echo $label_column_2; ?>"><?php echo app_lang('turnover_tax_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -175,12 +184,22 @@
                 "name" => "turnover_tax",
                 "value" => $model_info->turnover_tax,
                 "class" => "form-control",
-                "placeholder" => app_lang('turnover_tax')
+                "placeholder" => app_lang('turnover_tax_p')
             ));
             ?>
         </div>
 
-        <label for="number_of_employees" class="<?php echo $label_column_2; ?>"><?php echo app_lang('number_of_employees'); ?></label>
+        
+
+    </div>
+</div>
+
+<!-----------------------------------------  Number of EMployees & Industries ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+
+        <label for="number_of_employees" class="<?php echo $label_column_2; ?>"><?php echo app_lang('number_of_employees_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -188,20 +207,12 @@
                 "name" => "number_of_employees",
                 "value" => $model_info->number_of_employees,
                 "class" => "form-control",
-                "placeholder" => app_lang('number_of_employees')
+                "placeholder" => app_lang('number_of_employees_p')
             ));
             ?>
         </div>
-
-    </div>
-</div>
-
-<!-----------------------------------------  Industries & TIN ------------------------------------>
-
-<div class="form-group">
-    <div class="row">
-
-        <label for="industries" class="<?php echo $label_column_2; ?>"><?php echo app_lang('industries'); ?></label>
+        
+        <label for="industries" class="<?php echo $label_column_2; ?>"><?php echo app_lang('industries_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -209,20 +220,28 @@
                 "name" => "industries",
                 "value" => $model_info->industries,
                 "class" => "form-control",
-                "placeholder" => app_lang('industries')
+                "placeholder" => app_lang('industries_p')
             ));
             ?>
         </div>
 
-        <label for="TIN" class="<?php echo $label_column_2; ?>"><?php echo app_lang('tin'); ?></label>
-        <div class="<?php echo $field_column_2; ?>">
+    </div>
+</div>
+
+<!-----------------------------------------  TIN ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+
+        <label for="TIN" class="<?php echo $label_column_2; ?>"><?php echo app_lang('tin_l'); ?></label>
+        <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_input(array(
                 "id" => "TIN",
                 "name" => "TIN",
                 "value" => $model_info->TIN,
                 "class" => "form-control",
-                "placeholder" => app_lang('tin')
+                "placeholder" => app_lang('tin_P')
             ));
             ?>
         </div>
@@ -230,12 +249,13 @@
 </div>
 
 
-<!-----------------------------------------   Contact Name & Phone Number  ------------------------------------>
+<!-----------------------------------------   Contact Name & Gender  ------------------------------------>
 
 <div class="form-group">
+
     <div class="row">
 
-        <label for="Contact_Name" class="<?php echo $label_column_2; ?>"><?php echo app_lang('contact_name'); ?></label>
+        <label for="Contact_Name" class="<?php echo $label_column_2; ?>"><?php echo app_lang('contact_name_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -243,12 +263,83 @@
                 "name" => "Contact_Name",
                 "value" => $model_info->Contact_Name,
                 "class" => "form-control",
-                "placeholder" => app_lang('contact_name')
+                "placeholder" => app_lang('contact_name_p')
             ));
             ?>
         </div>
 
-        <label for="phone" class="<?php echo $label_column_2; ?>"><?php echo app_lang('phone_number'); ?></label>
+        <label for="gender" class="<?php echo $label_column_2; ?>"><?php echo app_lang('gender_l'); ?></label>
+
+        <div class=" col-md-4">
+            <?php
+            echo form_radio(array(
+                "id" => "male",
+                "name" => "gender",
+                "class" => "form-check-input",
+                    ), "male", $model_info->gender == 'male'? true : false, "class='form-check-input'");
+            ?>
+            <label for="male" class="mr15 p0"><?php echo app_lang('male'); ?></label> 
+
+            <?php
+            echo form_radio(array(
+                "id" => "female",
+                "name" => "gender",
+                "class" => "form-check-input",
+                    ), "female" , $model_info?->id ? ($model_info->gender == 'female' ? true: false) : true, "class='form-check-input'");
+            ?>
+            <label for="female" class="p0 mr15"><?php echo app_lang('female'); ?></label>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-----------------------------------------  Nationality & Date of Birth  ------------------------------------>
+
+<div class="form-group">
+
+    <div class="row">
+
+        <label for="nationality" class="<?php echo $label_column_2; ?>"><?php echo app_lang('nationality_l'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "nationality",
+                "name" => "nationality",
+                "class" => "form-control select2",
+                "placeholder" => app_lang('nationality_p')
+            ),$nationalities,[$model_info->nationality]);
+            
+            ?>
+        </div>
+
+        <label for="date_of_birth" class="<?php echo $label_column_2; ?>"><?php echo app_lang('date_of_birth_l'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "date_of_birth",
+                "name" => "date_of_birth",
+                "value" => $model_info->date_of_birth,
+                "class" => "form-control date",
+                "placeholder" => app_lang('date_of_birth_p')
+            ));
+            ?>
+        </div>
+
+    </div>
+
+</div>
+
+<!-----------------------------------------  Phone & Email  ------------------------------------>
+
+<div class="form-group">
+
+    <div class="row">
+
+        
+
+        <label for="phone" class="<?php echo $label_column_2; ?>"><?php echo app_lang('phone_number_l'); ?></label>
         <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
@@ -256,19 +347,33 @@
                 "name" => "phone",
                 "value" => $model_info->phone,
                 "class" => "form-control",
-                "placeholder" => app_lang('phone_number')
+                "placeholder" => app_lang('phone_number_p')
+            ));
+            ?>
+        </div>
+
+        <label for="email" class="<?php echo $label_column_2; ?>"><?php echo app_lang('email_l'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "email",
+                "name" => "email",
+                "value" => $model_info->email,
+                "class" => "form-control",
+                "placeholder" => app_lang('email_p')
             ));
             ?>
         </div>
 
     </div>
+
 </div>
 
 <!-----------------------------------------  Address  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="address" class="<?php echo $label_column_2; ?>"><?php echo app_lang('address'); ?></label>
+        <label for="address" class="<?php echo $label_column_2; ?>"><?php echo app_lang('address_l'); ?></label>
         <div class="<?php echo $field_column_3; ?>">
             <?php
             echo form_textarea(array(
@@ -276,7 +381,7 @@
                 "name" => "address",
                 "value" => $model_info->address ? $model_info->address : "",
                 "class" => "form-control",
-                "placeholder" => app_lang('address')
+                "placeholder" => app_lang('address_p')
             ));
             ?>
 
@@ -289,18 +394,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="email" class="<?php echo $label_column_2; ?>"><?php echo app_lang('email'); ?></label>
-        <div class="<?php echo $field_column_3; ?>">
-            <?php
-            echo form_input(array(
-                "id" => "email",
-                "name" => "email",
-                "value" => $model_info->email,
-                "class" => "form-control",
-                "placeholder" => app_lang('email')
-            ));
-            ?>
-        </div>
+        
     </div>
 </div>
 
@@ -435,6 +529,7 @@
 
         setDatePicker("#Start_Date")
         setDatePicker("#End_Date")
+        setDatePicker("#date_of_birth")
         
         $('[data-bs-toggle="tooltip"]').tooltip();
 
