@@ -71,10 +71,26 @@
             echo form_dropdown(array(
                 "id" => "department",
                 "name" => "department",
-                // "value" => $model_info->department,
                 "class" => "form-control select2",
                 "placeholder" => app_lang('depertment')
             ),$departments,[$model_info->department],"style='display:block';");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="form-group" style="display:block;">
+    <div class="row">
+        <label for="section" class="col-3"><?php echo app_lang('section'); ?>
+        </label>
+        <div class="col-9">
+            <?php
+            echo form_dropdown(array(
+                "id" => "section",
+                "name" => "section",
+                "class" => "form-control select2",
+                "placeholder" => app_lang('section')
+            ),$sections,[$model_info->section],"style='display:block';");
             ?>
         </div>
     </div>

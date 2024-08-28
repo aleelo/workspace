@@ -748,6 +748,40 @@
                         <div>
                             <?php
                             echo form_radio(array(
+                                "id" => "yes_unit_leads",
+                                "name" => "lead_permission",
+                                "value" => "unit_leads",
+                                "class" => "form-check-input",
+                                    ), $lead, ($lead === "unit_leads") ? true : false);
+                            ?>
+                            <label for="yes_unit_leads"><?php echo app_lang("yes_own_unit_leads"); ?></label>
+                            
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "yes_section_leads",
+                                "name" => "lead_permission",
+                                "value" => "section_leads",
+                                "class" => "form-check-input",
+                                    ), $lead, ($lead === "section_leads") ? true : false);
+                            ?>
+                            <label for="yes_section_leads"><?php echo app_lang("yes_own_section_leads"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "yes_department_leads",
+                                "name" => "lead_permission",
+                                "value" => "department_leads",
+                                "class" => "form-check-input",
+                                    ), $lead, ($lead === "department_leads") ? true : false);
+                            ?>
+                            <label for="yes_department_leads"><?php echo app_lang("yes_own_department_leads"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
                                 "id" => "lead_yes",
                                 "name" => "lead_permission",
                                 "value" => "all",
@@ -756,21 +790,7 @@
                             ?>
                             <label for="lead_yes"><?php echo app_lang("yes_all_leads"); ?></label>
                         </div>
-                        <div class="form-group pb0 mb0 no-border">
-                            <?php
-                            echo form_radio(array(
-                                "id" => "lead_permission_specific",
-                                "name" => "lead_permission",
-                                "value" => "specific",
-                                "class" => "lead_permission toggle_specific form-check-input",
-                                    ), $leave, ($leave === "specific") ? true : false);
-                            ?>
-                            <label for="lead_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_their_documents") . ")"; ?>:</label>
-                            <div class="specific_dropdown">
-                                <input type="text" value="<?php echo $lead_specific; ?>" name="lead_permission_specific" id="lead_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />    
-                            </div>
-
-                        </div>
+                       
                         <div>
                             <?php
                             echo form_radio(array(

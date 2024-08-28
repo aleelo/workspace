@@ -1051,6 +1051,7 @@ $lang["use_seetings_from"] = "Use settings from";
 $lang["permissions"] = "Permissions";
 $lang["yes_all_members"] = "Yes, all members";
 $lang["yes_specific_members_or_teams"] = "Yes, specific members or teams";
+$lang["yes_specific_documents"] = "Yes, specific Documents";
 $lang["yes_specific_ticket_types"] = "Yes, specific ticket types";
 $lang["select_a_role"] = "Select a role";
 $lang["choose_members_and_or_teams"] = "Choose members and / or teams";
@@ -2270,6 +2271,9 @@ $lang["notification_order_status_updated"] = "Order status has been updated.";
 $lang["add_more_items"] = "Add more items";
 
 $lang["yes_only_own_leads"] = "Yes, only own Documents";
+$lang["yes_own_unit_leads"] = "Yes, own Unit Documents";
+$lang["yes_own_section_leads"] = "Yes, own Section Documents";
+$lang["yes_own_department_leads"] = "Yes, own Department Documents";
 $lang["yes_all_leads"] = "Yes, all Documents";
 
 $lang["yes_only_own_clients"] = "Yes, only own clients";
