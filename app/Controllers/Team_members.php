@@ -642,7 +642,6 @@ class Team_members extends Security_Controller {
                     $view_data["show_notes"] = true;
                 }
 
-               
                 return $this->template->rander("team_members/view", $view_data);
             } else {
                 show_404();
@@ -693,6 +692,7 @@ class Team_members extends Security_Controller {
         $view_data['job_info']->job_title = $user_info->job_title;
 
         $view_data['can_manage_team_members_job_information'] = $this->has_job_info_manage_permission();
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("team_members/job_info", $view_data);
     }
@@ -778,13 +778,14 @@ class Team_members extends Security_Controller {
         $this->update_only_allowed_members($user_id);
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        // array_unshift($view_data['departments'],'Choose Department');
         $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("team_members/general_info", $view_data);
     }
@@ -851,6 +852,7 @@ class Team_members extends Security_Controller {
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("team_members/education_info", $view_data);
     }
@@ -901,6 +903,7 @@ class Team_members extends Security_Controller {
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("team_members/bank_details", $view_data);
     }
@@ -986,6 +989,7 @@ class Team_members extends Security_Controller {
 
         $view_data['user_id'] = $user_id;
         $view_data['model_info'] = $this->Social_links_model->get_one($user_id);
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
         
         return $this->template->view("users/social_links", $view_data);
     }
@@ -1035,6 +1039,7 @@ class Team_members extends Security_Controller {
         }
         $view_data['role_dropdown'] = $this->_get_roles_dropdown();
         $view_data['can_activate_deactivate_team_members'] = $this->_can_activate_deactivate_team_member($view_data['user_info']);
+        $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("users/account_settings", $view_data);
     }

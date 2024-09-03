@@ -68,6 +68,22 @@ class Security_Controller extends App_Controller {
         return $temp_array;
     
     }
+    
+    public function get_section_heads_dropdown() {
+        $section_head = $this->db->query("SELECT us.id, concat(us.first_name,' ',us.last_name) AS name FROM rise_users us LEFT JOIN rise_roles ro on ro.id = us.role_id WHERE ro.title = 'Section Head'")->getResult();
+        $temp_array[] = array('id' =>'', 'text' => '');
+
+        if(!$section_head){
+            return null;
+        }
+  
+        foreach($section_head as $e){
+            $temp_array[] = array('id'=> $e->id,'text' =>$e->name);
+        }
+
+        return $temp_array;
+    
+    }
 
     public function get_bank_name_dropdown() {
         
@@ -925,6 +941,12 @@ class Security_Controller extends App_Controller {
         if ($this->can_edit_clients($client_id)) {
             return true;
         } else if (get_array_value($this->login_user->permissions, "client") === "read_only") {
+            return true;
+        }
+    }
+
+    protected function can_edit_profile() {
+        if ($this->login_user->user_type === "staff" && !$this->login_user->is_admin && get_array_value($this->login_user->permissions, "cant_edit_profile") == "1") {
             return true;
         }
     }

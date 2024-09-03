@@ -257,14 +257,6 @@
                         </div>
                     </div>
 
-                    <div>
-                        <?php
-                        // echo 'read_only_profile: ';die($read_only_profile);
-                        echo form_checkbox("cant_edit_profile_checkbox", "1", $cant_edit_profile ? true : false, "id='cant_edit_profile' class='form-check-input'");
-                        ?>
-                        <label for="cant_edit_profile"><?php echo app_lang("cant_edit_profile"); ?></label>
-                    </div>
-
                 </li>
                 <?php if (get_setting("module_message")) { ?>
                     <li>
@@ -775,7 +767,20 @@
                                     ), $lead, ($lead === "section_leads") ? true : false);
                             ?>
                             <label for="yes_section_leads"><?php echo app_lang("yes_own_section_leads"); ?></label>
+
+                            <div id="exclude_these_section_heads_area" class="form-group <?php echo ($message_permission == "no") ? "hide" : ""; ?>">
+                                <?php
+                                echo form_checkbox("exclude_these_section_heads_checkbox", "1", ($message_permission == "section_leads") ? true : false, "id='exclude_these_section_heads_checkbox' class='exclude_these_section_heads toggle_specific form-check-input'");
+                                ?>
+                                <label for="exclude_these_section_heads_checkbox"><?php echo app_lang("exclude_these_section_heads"); ?></label>
+                                <div class="specific_dropdown">
+                                    <input type="text" value="<?php echo $exclude_these_section_heads; ?>" name="exclude_these_section_heads" id="exclude_these_section_heads_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_section_head_to_exclude'); ?>"  />    
+                                </div>
+                            </div>
+
+                            
                         </div>
+
                         <div>
                             <?php
                             echo form_radio(array(
@@ -810,6 +815,7 @@
                             ?>
                             <label for="lead_yes_own"><?php echo app_lang("yes_only_own_leads"); ?></label>
                         </div>
+
                     </li>
                 <?php } ?>
 
@@ -1160,7 +1166,7 @@
             }
         });
 
-        $("#leave_specific_dropdown, #lead_specific_dropdown, #attendance_specific_dropdown, #timesheet_manage_permission_specific_dropdown, #timesheet_manage_permission_specific_excluding_own_dropdown, #team_member_update_permission_specific_dropdown, #message_permission_specific_dropdown, #timeline_permission_specific_dropdown").select2({
+        $("#leave_specific_dropdown, #lead_specific_dropdown, #exclude_these_section_heads_dropdown, #attendance_specific_dropdown, #timesheet_manage_permission_specific_dropdown, #timesheet_manage_permission_specific_excluding_own_dropdown, #team_member_update_permission_specific_dropdown, #message_permission_specific_dropdown, #timeline_permission_specific_dropdown").select2({
             multiple: true,
             formatResult: teamAndMemberSelect2Format,
             formatSelection: teamAndMemberSelect2Format,
@@ -1201,16 +1207,7 @@
 
         }
 
-        //show/hide message permission checkbox
-        $("#message_permission_no").click(function () {
-            if ($(this).is(":checked")) {
-                $("#message_permission_specific_area").addClass("hide");
-            } else {
-                $("#message_permission_specific_area").removeClass("hide");
-            }
-
-            toggle_specific_dropdown();
-        });
+        
 
         //show/hide role permission setting
         $("#can_manage_all_kinds_of_settings").click(function () {
@@ -1275,6 +1272,10 @@
         $("#client_groups_specific_dropdown").select2({
             multiple: true,
             data: <?php echo ($client_groups_dropdown); ?>
+        });
+        $("#exclude_these_section_heads_dropdown").select2({
+            multiple: true,
+            data: <?php echo ($section_heads); ?>
         });
 
         $("#can_manage_all_projects").click(function () {

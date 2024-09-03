@@ -53,14 +53,14 @@
 
         <?php if ($show_account_settings) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/bank_details/" . $user_info->id); ?>" data-bs-target="#tab-bank-details"> <?php echo app_lang('bank_details'); ?></a></li>
-        <?php } ?> -->
+        <?php } ?>
 
-        <?php if ($login_user->id == $user_info->id) { ?>
+        <!-- <?php// if ($login_user->id == $user_info->id) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
-        <?php } ?>
-        <?php if ($login_user->id == $user_info->id) { ?>
+        <?php// } ?> -->
+        <!-- <?php //if ($login_user->id == $user_info->id) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("left_menus/index/user"); ?>" data-bs-target="#tab-user-left-menu"> <?php echo app_lang('left_menu'); ?></a></li>
-        <?php } ?>
+        <?php //} ?> -->
 
         <?php if ($show_general_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/files/" . $user_info->id); ?>" data-bs-target="#tab-files"> <?php echo app_lang('files'); ?></a></li>

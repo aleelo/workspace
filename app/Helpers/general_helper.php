@@ -1259,6 +1259,17 @@ if (!function_exists('get_team_members_and_teams_select2_data_list')) {
 }
 
 
+if (!function_exists('can_view_profile')) {
+
+ function can_view_profile() {
+
+    $ci = new Security_Controller(false);
+
+    if (get_array_value($ci->login_user->permissions, "cant_edit_profile") === "1") {
+         return true;
+     }
+ }
+}
 
 /**
  * submit data for notification

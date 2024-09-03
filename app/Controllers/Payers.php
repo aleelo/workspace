@@ -475,8 +475,8 @@ class Payers extends Security_Controller {
     
     function save() {
         
-        $client_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($client_id);
+        $payer_id = $this->request->getPost('id');
+        $this->_validate_client_manage_access($payer_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -514,7 +514,7 @@ class Payers extends Security_Controller {
         }
 
 
-        if (!$client_id) {
+        if (!$payer_id) {
             $data["created_date"] = get_current_utc_time();
         }
 
@@ -525,9 +525,9 @@ class Payers extends Security_Controller {
             $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
 
             //check if the currency is editable
-            if ($client_id) {
-                $client_info = $this->Clients_model->get_one($client_id);
-                if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($client_id)) {
+            if ($payer_id) {
+                $client_info = $this->Clients_model->get_one($payer_id);
+                if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($payer_id)) {
                     echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
                     exit();
                 }
@@ -537,7 +537,7 @@ class Payers extends Security_Controller {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$client_id) {
+        } else if (!$payer_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -545,12 +545,12 @@ class Payers extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $client_id)) {
+        if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $payer_id)) {
             echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
             exit();
         }
 
-        $save_id = $this->Clients_model->ci_save($data, $client_id);
+        $save_id = $this->Clients_model->ci_save($data, $payer_id);
 
         $payer_info = $this->db->query("SELECT * FROM rise_clients c WHERE c.id = $save_id")->getRow();
         $registerer_email = $this->login_user->private_email;
@@ -559,7 +559,7 @@ class Payers extends Security_Controller {
         $merchant_type = $this->request->getPost('merchant_type');
         $merchant_number = $this->request->getPost('merchant_number');
 
-        if($save_id && $merchant_type && !$client_id){
+        if($save_id && $merchant_type && !$payer_id){
             foreach($merchant_type as $k => $v){
                 
                 $this->db->query("INSERT INTO rise_merchant_details(payer_id,merchant_id,merchant_number)
@@ -567,11 +567,11 @@ class Payers extends Security_Controller {
                 // $insert_id = $this->db->insertID();
 
             }
-        }else if($client_id && $merchant_type){
+        }else if($payer_id && $merchant_type){
             // var_dump($member_names);die;
 
             //delete the old member
-            $this->db->query("delete from rise_merchant_details where payer_id =  $client_id");
+            $this->db->query("delete from rise_merchant_details where payer_id =  $payer_id");
             // insert the new members
             foreach($merchant_type as $k => $v){
                 
@@ -584,7 +584,7 @@ class Payers extends Security_Controller {
 
         if ($save_id) {
 
-            if(!$client_id){
+            if(!$payer_id){
                     
                 $options = array('id'=>$save_id);
 
@@ -2723,6 +2723,7 @@ class Payers extends Security_Controller {
 
         $access_contract = $this->get_access_info("contract");
         $view_data["show_contract_info"] = (get_setting("module_contract") && $access_contract->access_type == "all") ? true : false;
+        
         $view_data["show_project_info"] = !$this->has_all_projects_restricted_role();
 
         return $view_data;

@@ -2310,9 +2310,12 @@ $lang["add_more_items"] = "Add more items";
 
 $lang["yes_only_own_leads"] = "Yes, only own Documents";
 $lang["yes_own_unit_leads"] = "Yes, own Unit Documents";
+$lang["exclude_these_section_heads"] = "Exclude These Section Heads";
+$lang["choose_section_head_to_exclude"] = "Choose Section Heads to Exclude";
 $lang["yes_own_section_leads"] = "Yes, own Section Documents";
 $lang["yes_own_department_leads"] = "Yes, own Department Documents";
 $lang["yes_all_leads"] = "Yes, all Documents";
+$lang["cant_edit_profile"] = "Can't edit Profile";
 
 $lang["yes_only_own_clients"] = "Yes, only own clients";
 $lang["yes_all_clients"] = "Yes, all clients";

@@ -17,6 +17,8 @@ class Roles extends Security_Controller {
         return $this->template->rander("roles/index");
     }
 
+    
+
     //load the role add/edit modal
     function modal_form() {
 
@@ -36,6 +38,7 @@ class Roles extends Security_Controller {
             $view_data['model_info'] = $this->Roles_model->get_one($role_id);
 
             $view_data['members_and_teams_dropdown'] = json_encode(get_team_members_and_teams_select2_data_list());
+            $view_data['section_heads'] = json_encode($this->get_section_heads_dropdown());
             $ticket_types_dropdown = array();
             $ticket_types = $this->Ticket_types_model->get_all_where(array("deleted" => 0))->getResult();
             foreach ($ticket_types as $type) {
@@ -56,6 +59,8 @@ class Roles extends Security_Controller {
                 $permissions = array();
             }
 
+            $view_data['exclude_these_section_heads'] = get_array_value($permissions, "exclude_these_section_heads");
+            $view_data['cant_edit_profile'] = get_array_value($permissions, "cant_edit_profile");
             $view_data['leave'] = get_array_value($permissions, "leave");
             $view_data['leave_specific'] = get_array_value($permissions, "leave_specific");
             $view_data['lead_specific'] = get_array_value($permissions, "lead_specific");
@@ -185,9 +190,11 @@ class Roles extends Security_Controller {
         }
 
         $lead = $this->request->getPost('lead_permission');
-        $lead_specific = "";
-        if ($lead === "specific") {
-            $lead_specific = $this->request->getPost('lead_permission_specific');
+        $exclude_these_section_heads_checkbox = $this->request->getPost('exclude_these_section_heads_checkbox');
+        $exclude_these_section_heads = "";
+        
+        if ($lead === "section_leads" && $exclude_these_section_heads_checkbox == 1) {
+            $exclude_these_section_heads = $this->request->getPost('exclude_these_section_heads');
         }
 
         $attendance = $this->request->getPost('attendance_permission');
@@ -220,6 +227,7 @@ class Roles extends Security_Controller {
         }
 
 
+        $cant_edit_profile = $this->request->getPost('cant_edit_profile_checkbox');
         $do_not_show_projects = $this->request->getPost('do_not_show_projects');
         $can_manage_all_projects = $this->request->getPost('can_manage_all_projects');
         $can_create_projects = $this->request->getPost('can_create_projects');
@@ -310,9 +318,10 @@ class Roles extends Security_Controller {
 
         $permissions = array(
             "leave" => $leave,
+            "cant_edit_profile" => $cant_edit_profile,
             "leave_specific" => $leave_specific,
             "lead" => $lead,
-            "lead_specific" => $lead_specific,
+            "exclude_these_section_heads" => $exclude_these_section_heads,
             "attendance" => $attendance,
             "attendance_specific" => $attendance_specific,
             "invoice" => $invoice,
