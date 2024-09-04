@@ -82,6 +82,7 @@ class Roles extends Security_Controller {
             $view_data['ticket'] = get_array_value($permissions, "ticket");
             $view_data['ticket_specific'] = get_array_value($permissions, "ticket_specific");
             $view_data['client_specific'] = get_array_value($permissions, "client_specific");
+            $view_data['can_manage_own_section'] = get_array_value($permissions, "can_manage_own_section");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
             $view_data['help_and_knowledge_base'] = get_array_value($permissions, "help_and_knowledge_base");
@@ -255,6 +256,7 @@ class Roles extends Security_Controller {
         $help_and_knowledge_base = $this->request->getPost('help_and_knowledge_base');
 
         $can_view_team_members_contact_info = $this->request->getPost('can_view_team_members_contact_info');
+        $can_manage_own_section = $this->request->getPost('can_manage_own_section_checkbox');
         $can_view_team_members_social_links = $this->request->getPost('can_view_team_members_social_links');
         $team_member_update_permission = $this->request->getPost('team_member_update_permission');
         $team_member_update_permission_specific = $this->request->getPost('team_member_update_permission_specific');
@@ -358,6 +360,7 @@ class Roles extends Security_Controller {
             "can_delete_milestones" => $can_delete_milestones,
             "can_delete_files" => $can_delete_files,
             "can_view_team_members_contact_info" => $can_view_team_members_contact_info,
+            "can_manage_own_section" => $can_manage_own_section,
             "can_view_team_members_social_links" => $can_view_team_members_social_links,
             "team_member_update_permission" => $team_member_update_permission,
             "team_member_update_permission_specific" => $team_member_update_permission_specific,

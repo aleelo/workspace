@@ -62,7 +62,7 @@ class Departments_model extends Crud_model {
 
         $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
         if ($show_own_clients_only_user_id) {
-            $where .= " AND ($departments_table.created_by=$show_own_clients_only_user_id OR $departments_table.owner_id=$show_own_clients_only_user_id)";
+            $where .= " AND $departments_table.dep_head_id=$show_own_clients_only_user_id";
         }
 
 

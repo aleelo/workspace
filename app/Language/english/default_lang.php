@@ -2316,6 +2316,7 @@ $lang["yes_own_section_leads"] = "Yes, own Section Documents";
 $lang["yes_own_department_leads"] = "Yes, own Department Documents";
 $lang["yes_all_leads"] = "Yes, all Documents";
 $lang["cant_edit_profile"] = "Can't edit Profile";
+$lang["can_manage_own_section"] = "Can Manage Own Section";
 
 $lang["yes_only_own_clients"] = "Yes, only own clients";
 $lang["yes_all_clients"] = "Yes, all clients";

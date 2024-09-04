@@ -819,6 +819,11 @@ class Security_Controller extends App_Controller {
             return get_array_value($this->login_user->permissions, "client") == "own" ? $this->login_user->id : false;
         }
     }
+    protected function show_own_section_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "can_manage_own_section") == "1" ? $this->login_user->id : false;
+        }
+    }
 
     protected function check_profile_image_dimension($image_file_name = "") {
         if (!$image_file_name) {
