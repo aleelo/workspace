@@ -250,9 +250,19 @@ class Users_model extends Crud_model {
             $where .= " AND $users_table.client_id IN(SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 AND $clients_table.created_by=$show_own_clients_only_user_id)";
         }
 
+        $show_own_unit_only_user_id = $this->_get_clean_value($options, "show_own_unit_only_user_id");
+        if ($show_own_unit_only_user_id) {
+            $where .= " AND ($units_table.unit_head_id=$show_own_unit_only_user_id)";
+        }
+        
         $show_own_section_only_user_id = $this->_get_clean_value($options, "show_own_section_only_user_id");
         if ($show_own_section_only_user_id) {
             $where .= " AND ($sections_table.section_head_id=$show_own_section_only_user_id)";
+        }
+
+        $show_own_department_only_user_id = $this->_get_clean_value($options, "show_own_department_only_user_id");
+        if ($show_own_department_only_user_id) {
+            $where .= " AND ($department_table.dep_head_id=$show_own_department_only_user_id)";
         }
 
         $quick_filter = $this->_get_clean_value($options, "quick_filter");
@@ -358,14 +368,15 @@ class Users_model extends Crud_model {
             LEFT JOIN $users_table as users_dp ON users_dp.id = $department_table.dep_head_id
             LEFT JOIN $sections_table ON $sections_table.id = $team_member_job_info_table.section_id
             LEFT JOIN $users_table as users_se ON users_se.id = $sections_table.section_head_id
-            LEFT JOIN $units_table ON $department_table.id = $team_member_job_info_table.unit_id
+            LEFT JOIN $units_table ON $units_table.id = $team_member_job_info_table.unit_id
             LEFT JOIN $users_table as users_un ON users_un.id = $units_table.unit_head_id
             $join_custom_fieds    
             WHERE $users_table.deleted=0 $where $custom_fields_where
             $order $limit_offset";
            
-// print_r($sql);
-// die();
+        // print_r($sql);
+        // die();
+        
             $raw_query = $this->db->query($sql);
 
             $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();

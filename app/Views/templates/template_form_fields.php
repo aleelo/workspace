@@ -73,7 +73,7 @@
                 "name" => "department",
                 "class" => "form-control select2",
                 "placeholder" => app_lang('depertment')
-            ),$departments,[$model_info->department],"style='display:block';");
+            ),$departments,[$model_info->department_id],"style='display:block';");
             ?>
         </div>
     </div>
@@ -90,7 +90,7 @@
                 "name" => "section",
                 "class" => "form-control select2",
                 "placeholder" => app_lang('section')
-            ),$sections,[$model_info->section],"style='display:block';");
+            ),$sections,[$model_info->section_id],"style='display:block';");
             ?>
         </div>
     </div>

@@ -83,6 +83,8 @@ class Roles extends Security_Controller {
             $view_data['ticket_specific'] = get_array_value($permissions, "ticket_specific");
             $view_data['client_specific'] = get_array_value($permissions, "client_specific");
             $view_data['can_manage_own_section'] = get_array_value($permissions, "can_manage_own_section");
+            $view_data['can_manage_employee_for'] = get_array_value($permissions, "can_manage_employee_for");
+            $view_data['document'] = get_array_value($permissions, "document");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
             $view_data['help_and_knowledge_base'] = get_array_value($permissions, "help_and_knowledge_base");
@@ -194,9 +196,7 @@ class Roles extends Security_Controller {
         $exclude_these_section_heads_checkbox = $this->request->getPost('exclude_these_section_heads_checkbox');
         $exclude_these_section_heads = "";
         
-        if ($lead === "section_leads" && $exclude_these_section_heads_checkbox == 1) {
-            $exclude_these_section_heads = $this->request->getPost('exclude_these_section_heads');
-        }
+        
 
         $attendance = $this->request->getPost('attendance_permission');
         $attendance_specific = "";
@@ -257,6 +257,8 @@ class Roles extends Security_Controller {
 
         $can_view_team_members_contact_info = $this->request->getPost('can_view_team_members_contact_info');
         $can_manage_own_section = $this->request->getPost('can_manage_own_section_checkbox');
+        $can_manage_employee_for = $this->request->getPost('can_manage_employee_for');
+        $document = $this->request->getPost('document_permission');
         $can_view_team_members_social_links = $this->request->getPost('can_view_team_members_social_links');
         $team_member_update_permission = $this->request->getPost('team_member_update_permission');
         $team_member_update_permission_specific = $this->request->getPost('team_member_update_permission_specific');
@@ -361,6 +363,8 @@ class Roles extends Security_Controller {
             "can_delete_files" => $can_delete_files,
             "can_view_team_members_contact_info" => $can_view_team_members_contact_info,
             "can_manage_own_section" => $can_manage_own_section,
+            "can_manage_employee_for" => $can_manage_employee_for,
+            "document" => $document,
             "can_view_team_members_social_links" => $can_view_team_members_social_links,
             "team_member_update_permission" => $team_member_update_permission,
             "team_member_update_permission_specific" => $team_member_update_permission_specific,

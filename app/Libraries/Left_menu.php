@@ -31,8 +31,10 @@ class Left_menu {
             $access_ticket = get_array_value($permissions, "ticket");
             $access_client = get_array_value($permissions, "client");
             $access_lead = get_array_value($permissions, "lead");
+            $access_document = get_array_value($permissions, "document");
             $access_timecard = get_array_value($permissions, "attendance");
             $access_leave = get_array_value($permissions, "leave");
+            $access_announcement = get_array_value($permissions, "announcement");
             $access_estimate = get_array_value($permissions, "estimate");
             $access_contract = get_array_value($permissions, "contract");
             $access_subscription = get_array_value($permissions, "subscription");
@@ -132,7 +134,7 @@ class Left_menu {
 
             $sidebar_menu["tasks"] = array("name" => "tasks", "url" => "tasks/all_tasks", "class" => "check-circle");
 
-            if (get_setting("module_lead") == "1" && ($this->ci->login_user->is_admin || $access_lead) && ($role != "Employee")) {
+            if (get_setting("module_document") == "1" && ($this->ci->login_user->is_admin || $access_document) && ($role != "Employee")) {
                 //was leads changed to: 'documents'
                 $sidebar_menu["leads"] = array("name" => "leads", "url" => "documents", "class" => "layers");
             }
@@ -229,7 +231,7 @@ class Left_menu {
             }
 
 
-            if (get_setting("module_announcement") == "1") {
+            if (get_setting("module_announcement") == "1" && ($this->ci->login_user->is_admin || $access_announcement)) {
                 $team_submenu["announcements"] = array("name" => "announcements", "url" => "announcements", "class" => "bell");
             }
 

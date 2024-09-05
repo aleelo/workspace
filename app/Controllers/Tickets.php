@@ -33,6 +33,7 @@ class Tickets extends Security_Controller {
     // load ticket list view
     function index($status = "", $ticket_type_id = 0) {
         $this->check_module_availability("module_ticket");
+        $this->access_only_allowed_members();
 
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tickets", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tickets", $this->login_user->is_admin, $this->login_user->user_type);

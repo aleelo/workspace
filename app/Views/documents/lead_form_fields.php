@@ -47,7 +47,7 @@
             echo form_input(array(
                 "id" => "depertment",
                 "name" => "depertment",
-                "value" => $model_info->depertment,
+                "value" => $model_info->department,
                 "class" => "form-control",
                 "placeholder" => app_lang('depertment')
             ),'',"style='display:none';");

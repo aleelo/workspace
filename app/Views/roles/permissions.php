@@ -190,11 +190,68 @@
                     </div>
 
                     <div id="individual_team_members_permission_area" class="<?php echo $hide_team_members_list ? "hide" : ""; ?>">
-                        <div>
-                            <?php
-                            echo form_checkbox("can_manage_own_section_checkbox", "1", $can_manage_own_section ? true : false, "id='can_manage_own_section' class='form-check-input'");
-                            ?>
-                            <label for="can_manage_own_section"><?php echo app_lang("can_manage_own_section"); ?></label>
+                        <div class="ml20">
+                            <label for="can_manage"><?php echo app_lang("can_manage"); ?></label>
+                            <div class="ml10">
+                                <div>
+                                    <?php
+                                    if (is_null($can_manage_employee_for)) {
+                                        $can_manage_employee_for = "";
+                                    }
+                                    echo form_radio(array(
+                                        "id" => "can_manage_employee_for_no",
+                                        "name" => "can_manage_employee_for",
+                                        "value" => "",
+                                        "class" => "can_manage_employee_for toggle_specific form-check-input",
+                                            ), $can_manage_employee_for, ($can_manage_employee_for === "") ? true : false);
+                                    ?>
+                                    <label for="can_manage_employee_for_no"><?php echo app_lang("no"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "can_manage_employee_for_own_unit",
+                                        "name" => "can_manage_employee_for",
+                                        "value" => "own_unit",
+                                        "class" => "can_manage_employee_for toggle_specific form-check-input",
+                                            ), $can_manage_employee_for, ($can_manage_employee_for === "own_unit") ? true : false);
+                                    ?>
+                                    <label for="can_manage_employee_for_own_unit"><?php echo app_lang("own_unit_employees"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "can_manage_employee_for_own_section",
+                                        "name" => "can_manage_employee_for",
+                                        "value" => "own_section",
+                                        "class" => "can_manage_employee_for toggle_specific form-check-input",
+                                            ), $can_manage_employee_for, ($can_manage_employee_for === "own_section") ? true : false);
+                                    ?>
+                                    <label for="can_manage_employee_for_own_section"><?php echo app_lang("own_section_employees"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "can_manage_employee_for_own_department",
+                                        "name" => "can_manage_employee_for",
+                                        "value" => "own_department",
+                                        "class" => "can_manage_employee_for toggle_specific form-check-input",
+                                            ), $can_manage_employee_for, ($can_manage_employee_for === "own_department") ? true : false);
+                                    ?>
+                                    <label for="can_manage_employee_for_own_department"><?php echo app_lang("own_department_employees"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "can_manage_employee_for_all",
+                                        "name" => "can_manage_employee_for",
+                                        "value" => "all",
+                                        "class" => "can_manage_employee_for toggle_specific form-check-input",
+                                            ), $can_manage_employee_for, ($can_manage_employee_for === "all") ? true : false);
+                                    ?>
+                                    <label for="can_manage_employee_for_all"><?php echo app_lang("all"); ?></label>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <?php
@@ -746,75 +803,104 @@
                         <span data-feather="key" class="icon-14 ml-20"></span>
                         <h5><?php echo app_lang("can_access_leads_information"); ?></h5>
                         <div>
-                            <?php
-                            if (is_null($lead)) {
-                                $lead = "";
-                            }
-                            echo form_radio(array(
-                                "id" => "lead_no",
-                                "name" => "lead_permission",
-                                "value" => "",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "") ? true : false);
-                            ?>
-                            <label for="lead_no"><?php echo app_lang("no"); ?> </label>
+                            <div>
+                                <div>
+                                    <?php
+                                    if (is_null($document)) {
+                                        $document = "";
+                                    }
+                                    echo form_radio(array(
+                                        "id" => "document_no",
+                                        "name" => "document_permission",
+                                        "value" => "",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "") ? true : false);
+                                    ?>
+                                    <label for="document_no"><?php echo app_lang("no"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "document_yes_own_unit",
+                                        "name" => "document_permission",
+                                        "value" => "own_unit",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "own_unit") ? true : false);
+                                    ?>
+                                    <label for="document_yes_own_unit"><?php echo app_lang("yes_own_unit_documents"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "document_yes_own_section",
+                                        "name" => "document_permission",
+                                        "value" => "own_section",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "own_section") ? true : false);
+                                    ?>
+                                    <label for="document_yes_own_section"><?php echo app_lang("yes_own_section_documents"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "document_yes_own_department",
+                                        "name" => "document_permission",
+                                        "value" => "own_department",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "own_department") ? true : false);
+                                    ?>
+                                    <label for="document_yes_own_department"><?php echo app_lang("yes_own_department_documents"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "document_yes_all",
+                                        "name" => "document_permission",
+                                        "value" => "all",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "all") ? true : false);
+                                    ?>
+                                    <label for="document_yes_all"><?php echo app_lang("yes_all_documents"); ?></label>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "yes_unit_leads",
-                                "name" => "lead_permission",
-                                "value" => "unit_leads",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "unit_leads") ? true : false);
-                            ?>
-                            <label for="yes_unit_leads"><?php echo app_lang("yes_own_unit_leads"); ?></label>
-                            
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "yes_section_leads",
-                                "name" => "lead_permission",
-                                "value" => "section_leads",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "section_leads") ? true : false);
-                            ?>
-                            <label for="yes_section_leads"><?php echo app_lang("yes_own_section_leads"); ?></label>
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "yes_department_leads",
-                                "name" => "lead_permission",
-                                "value" => "department_leads",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "department_leads") ? true : false);
-                            ?>
-                            <label for="yes_department_leads"><?php echo app_lang("yes_own_department_leads"); ?></label>
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "lead_yes",
-                                "name" => "lead_permission",
-                                "value" => "all",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "all") ? true : false);
-                            ?>
-                            <label for="lead_yes"><?php echo app_lang("yes_all_leads"); ?></label>
-                        </div>
-                       
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "lead_yes_own",
-                                "name" => "lead_permission",
-                                "value" => "own",
-                                "class" => "form-check-input",
-                                    ), $lead, ($lead === "own") ? true : false);
-                            ?>
-                            <label for="lead_yes_own"><?php echo app_lang("yes_only_own_leads"); ?></label>
+                        <div class="ml20">
+                            <div>
+                                <?php
+                                if (is_null($lead)) {
+                                    $lead = "";
+                                }
+                                echo form_radio(array(
+                                    "id" => "lead_no",
+                                    "name" => "lead_permission",
+                                    "value" => "",
+                                    "class" => "form-check-input",
+                                        ), $lead, ($lead === "") ? true : false);
+                                ?>
+                                <label for="lead_no"><?php echo app_lang("no"); ?> </label>
+                            </div>
+                            <div>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "lead_yes",
+                                    "name" => "lead_permission",
+                                    "value" => "all",
+                                    "class" => "form-check-input",
+                                        ), $lead, ($lead === "all") ? true : false);
+                                ?>
+                                <label for="lead_yes"><?php echo app_lang("yes_all_leads"); ?></label>
+                            </div>
+                            <div>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "lead_yes_own",
+                                    "name" => "lead_permission",
+                                    "value" => "own",
+                                    "class" => "form-check-input",
+                                        ), $lead, ($lead === "own") ? true : false);
+                                ?>
+                                <label for="lead_yes_own"><?php echo app_lang("yes_only_own_leads"); ?></label>
+                            </div>
                         </div>
                     </li>
                 <?php } ?>

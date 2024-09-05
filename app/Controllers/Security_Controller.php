@@ -313,7 +313,9 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if ($this->module_group === "lead" && ($this->access_type === "own" || $this->access_type === "specific")) {
+        } else if ($this->module_group === "document" && ($this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
+            return true;  //can access if it's document module and user has a pertial access
+        } else if ($this->module_group === "lead" && $this->access_type === "own" ) {
             return true; //can access if it's leads module and user has access to own leads
         } else if ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true;  //can access if it's clients module and user has a pertial access
@@ -819,9 +821,41 @@ class Security_Controller extends App_Controller {
             return get_array_value($this->login_user->permissions, "client") == "own" ? $this->login_user->id : false;
         }
     }
+    
+    protected function show_own_unit_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "can_manage_employee_for") == "own_unit" ? $this->login_user->id : false;
+        }
+    }
+
     protected function show_own_section_only_user_id() {
         if ($this->login_user->user_type === "staff") {
-            return get_array_value($this->login_user->permissions, "can_manage_own_section") == "1" ? $this->login_user->id : false;
+            return get_array_value($this->login_user->permissions, "can_manage_employee_for") == "own_section" ? $this->login_user->id : false;
+        }
+    }
+    
+    protected function show_own_department_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "can_manage_employee_for") == "own_department" ? $this->login_user->id : false;
+        }
+    }
+    
+    protected function show_own_unit_documents_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "document") == "own_unit" ? $this->login_user->id : false;
+        }
+    }
+
+    protected function show_own_section_documents_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "document") == "own_section" ? $this->login_user->id : false;
+        }
+    }
+
+
+    protected function show_own_department_documents_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "document") == "own_department" ? $this->login_user->id : false;
         }
     }
 
@@ -1019,21 +1053,12 @@ class Security_Controller extends App_Controller {
         if ($this->login_user->is_admin || $role == 'Administrator'  || $role == 'Access Control' || $role == 'HRM' || $perm == "all") {
             $created_by = '%';
             $dept_id = '%';
-        } else if ($role == 'Director') {
-
-             if(!empty($dr_dp_id)){
-                 $dept_id = $dr_dp_id;
-                 $created_by = '%';
-             }else{
-                $created_by = $this->login_user->id;
-             }
-
-        } else if ($role == 'Secretary') {
+        } else if ($role == 'Director' || $role == 'Secretary' || $role == 'Section Head' || $role == 'Unit Head') {
             $created_by = '%';
+            $dept_id = '%';
         } else if ($perm == "own" || $role == 'Employee') {
             $created_by = $this->login_user->id;
         }else{
-            
             app_redirect("forbidden");
         }
 

@@ -415,7 +415,9 @@ class Team_members extends Security_Controller {
             'created_by'=>$created_by,
             'department_id'=> $this->request->getPost("department_id") ? $this->request->getPost("department_id") : $department_id,
             "status" => $this->request->getPost("status"),
+            "show_own_unit_only_user_id" => $this->show_own_unit_only_user_id(),
             "show_own_section_only_user_id" => $this->show_own_section_only_user_id(),
+            "show_own_department_only_user_id" => $this->show_own_department_only_user_id(),
             "user_type" => "staff",
             "custom_fields" => $custom_fields,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)

@@ -1918,7 +1918,8 @@ $lang["the_invoices_id_must_be_larger_then_last_invoice_id"] = "The invoices ID 
 $lang["client_dashboard_help_message"] = "This will be the default dashboard for all clients. Please note that, the information you're seeing here in the widgets, isn't any actual infromation of clients.";
 
 $lang["send_to_lead"] = "Send to document";
-$lang["lead"] = "Document";
+$lang["lead"] = "Lead";
+$lang["document"] = "Document";
 $lang["leads"] = "Documents";
 $lang["add_lead"] = "Add Document";
 $lang["edit_lead"] = "Edit Document";
@@ -2317,6 +2318,16 @@ $lang["yes_own_department_leads"] = "Yes, own Department Documents";
 $lang["yes_all_leads"] = "Yes, all Documents";
 $lang["cant_edit_profile"] = "Can't edit Profile";
 $lang["can_manage_own_section"] = "Can Manage Own Section";
+$lang["can_manage"] = "Can Manage";
+$lang["no"] = "No";
+$lang["own_unit_employees"] = "Own Unit Employees";
+$lang["own_section_employees"] = "Own Section Employees";
+$lang["own_department_employees"] = "Own Department Employees";
+$lang["all"] = "All";
+$lang["yes_own_unit_documents"] = "Yes, own Unit Documents";
+$lang["yes_own_section_documents"] = "Yes, own Section Documents";
+$lang["yes_own_department_documents"] = "Yes, own Department Documents";
+$lang["yes_all_documents"] = "Yes, All Documents";
 
 $lang["yes_only_own_clients"] = "Yes, only own clients";
 $lang["yes_all_clients"] = "Yes, all clients";

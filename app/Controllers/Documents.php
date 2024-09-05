@@ -44,8 +44,8 @@ class Documents extends Security_Controller
 
     public function index()
     {
-
-        $res = $this->check_access('lead');
+        $res = $this->check_access('document');
+        $this->access_only_allowed_members();
         $role = get_array_value($res, 'role');
         $can_add_template = $role == 'admin';
         $view_data["can_add_template"] = $can_add_template;
@@ -126,7 +126,7 @@ class Documents extends Security_Controller
             $temp_array = ['' => 'Choose Template'];
         }
 
-        $templates = $this->db->query("SELECT * FROM rise_templates where department like '$dept_id' and destination_folder != 'Leave'")->getResult();
+        $templates = $this->db->query("SELECT * FROM rise_templates where department_id like '$dept_id' and destination_folder != 'Leave'")->getResult();
 
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
@@ -228,7 +228,7 @@ class Documents extends Security_Controller
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             "document_title" => $this->request->getPost('document_title'),
             "ref_number" => $this->request->getPost('ref_number'),
-            "depertment" => $this->get_user_department_id(),
+            "department" => $this->get_user_department_id(),
             "template" => $template_id,
             "item_id" => $this->request->getPost('zip'),
             "created_by" => $this->request->getPost('owner_id') ? $this->request->getPost('owner_id') : $this->login_user->id,
@@ -609,7 +609,53 @@ class Documents extends Security_Controller
 
     /* list of leads, prepared for datatable  */
 
-    public function list_data()
+    function list_data() {
+
+        if (!$this->can_view_team_members_list()) {
+            app_redirect("forbidden");
+        }
+
+        $result = $this->check_access('lead');//here means documents for us.
+
+        $role = get_array_value($result,'role');
+        $department_id = get_array_value($result,'department_id');
+        $created_by = get_array_value($result,'created_by');
+
+        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
+        $options = array(
+            'role'=>$role,
+            'created_by'=>$created_by,
+            'department_id'=> $this->request->getPost("department_id") ? $this->request->getPost("department_id") : $department_id,
+            "status" => $this->request->getPost("status"),
+            "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
+            "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
+            "show_own_department_documents_only_user_id" => $this->show_own_department_documents_only_user_id(),
+            "user_type" => "staff",
+            "custom_fields" => $custom_fields,
+            "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)
+        );
+
+        // var_dump($this->request->getPost("department_id"));
+        // var_dump($options);
+        // die();
+
+        $list_data = $this->Documents_model->get_details($options);
+        
+        $list_data = get_array_value($list_data,'data') ? get_array_value($list_data,'data') : $list_data->getResult(); 
+        $recordsTotal =  get_array_value($list_data,'recordsTotal');
+        $recordsFiltered =  get_array_value($list_data,'recordsFiltered');
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_row($data, $custom_fields);
+        }
+        echo json_encode(array("data" => $result,
+                        'recordsTotal'=>$recordsTotal,
+                        'recordsFiltered'=>$recordsFiltered
+                    ));
+    }
+
+    public function list_dataa()
     {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
 
@@ -745,7 +791,8 @@ class Documents extends Security_Controller
             modal_anchor(get_uri("documents/modal_form"), $data->document_title, array("class" => "edit", "title" => app_lang('edit_lead'), "data-post-id" => $data->id)),
             // anchor(get_uri("documents/view/" . $data->id), ),
             $data->ref_number,
-            $data->depertment,
+            $data->section,
+            $data->department,
             $data->template,
             // $data->item_id,
             $owner,
@@ -823,28 +870,28 @@ class Documents extends Security_Controller
             }
 
             $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section from rise_templates d
-            LEFT JOIN rise_departments dp on d.department = dp.id
-            LEFT JOIN rise_sections s on d.department = s.id
-            where d.department LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
+            LEFT JOIN rise_departments dp on d.department_id = dp.id
+            LEFT JOIN rise_sections s on d.section_id = s.id
+            where d.department_id LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
-            LEFT JOIN rise_departments dp on d.department = dp.id
-            LEFT JOIN rise_sections s on d.department = s.id
-            where department LIKE '$department_id' and d.deleted=0 $extraWhere")->getRow()->affected;
+            LEFT JOIN rise_departments dp on d.department_id = dp.id
+            LEFT JOIN rise_sections s on d.section_id = s.id
+            where d.department_id LIKE '$department_id' and d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
 
         } else {
             $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section from rise_templates d
-            LEFT JOIN rise_departments dp on d.department = dp.id
-            LEFT JOIN rise_sections s on d.department = s.id
-            where  d.department LIKE '$department_id' and  d.deleted=0 $extraWhere");
+            LEFT JOIN rise_departments dp on d.department_id = dp.id
+            LEFT JOIN rise_sections s on d.section_id = s.id
+            where d.department_id LIKE '$department_id' and  d.deleted=0 $extraWhere");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
-            LEFT JOIN rise_departments dp on d.department = dp.id
-            LEFT JOIN rise_sections s on d.department = s.id
-            where   department LIKE '$department_id' and  d.deleted=0 $extraWhere")->getRow()->affected;
+            LEFT JOIN rise_departments dp on d.department_id = dp.id
+            LEFT JOIN rise_sections s on d.section_id = s.id
+            where d.department_id LIKE '$department_id' and  d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
         }
 
@@ -885,8 +932,8 @@ class Documents extends Security_Controller
             // anchor(get_uri("documents/view/" . $data->id), ),
             $data->ref_prefix,
             $data->destination_folder,
-            $data->department,
             $data->section,
+            $data->department,
             // $data->description,
             format_to_date($data->created_at, false),
         );
@@ -959,8 +1006,8 @@ class Documents extends Security_Controller
 
                     $data = array(
                         "name" => $this->request->getPost('name') . $sufix2,
-                        "department" => $this->request->getPost('department'), //$job_info->department_id,
-                        "section" => $this->request->getPost('section'),
+                        "department_id" => $this->request->getPost('department'), //$job_info->department_id,
+                        "section_id" => $this->request->getPost('section'),
                         "ref_prefix" => $this->request->getPost('ref_prefix'),
                         "destination_folder" => $this->request->getPost('destination_folder'),
                         "description" => $this->request->getPost('description_' . $file),
@@ -979,8 +1026,8 @@ class Documents extends Security_Controller
             $id = $this->request->getPost('id');
             $data = array(
                 "name" => $this->request->getPost('name'),
-                "department" => $this->request->getPost('department'), //$job_info->department_id,
-                "section" => $this->request->getPost('section'),
+                "department_id" => $this->request->getPost('department'), //$job_info->department_id,
+                "section_id" => $this->request->getPost('section'),
                 "ref_prefix" => $this->request->getPost('ref_prefix'),
                 "destination_folder" => $this->request->getPost('destination_folder')
 
