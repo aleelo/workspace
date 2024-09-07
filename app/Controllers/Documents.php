@@ -124,23 +124,39 @@ class Documents extends Security_Controller
         $temp_array = ['-'];
         // $temp_array = ['' => 'Choose Template'];
         
+        $dp_sec = '';
         $dept_id = '';
         $section_id = '';
 
-        if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "all"){
+        if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "document") == "all"){
+            // $dp_sec = "Admin Section ";
             $dept_id = '%';
             $section_id = '%';
-        }else if (!$this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "own_department"){
+        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document") == "own_department"){
+            // $dp_sec = "Department Section ";
             $dept_id = get_user_department_head_id();
-            $section_id = get_user_section_head_id();
-        }else if (!$this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "own_section"){
+            $section_id = '';
+        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document") == "own_section"){
+            // $dp_sec = "Section Section ";
             $dept_id = get_user_department_head_id();
             $section_id = get_user_section_head_id();
         }
 
-        print_r($dept_id);
-        print_r($section_id);
-        die();
+        // print_r($dp_sec);
+        // print_r($dept_id);
+        // print_r($section_id);
+        // die();
+
+        // $templates = $this->db->query("SELECT * 
+        //     FROM rise_templates 
+        //     WHERE (
+        //         (department_id = '$dept_id' AND (section_id IS NULL OR section_id = '')) OR 
+        //         (section_id = '$section_id' AND (department_id IS NULL OR department_id = '')) OR 
+        //         (department_id = '$dept_id' AND section_id != '') OR 
+        //         (section_id = '$section_id' AND department_id != '')
+        //     ) 
+        //     AND destination_folder != 'Leave' 
+        //     AND deleted = 0")->getResult();
 
         $templates = $this->db->query("SELECT * FROM rise_templates 
         where (department_id LIKE '$dept_id' OR section_id LIKE '$section_id') 
