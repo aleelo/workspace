@@ -2026,6 +2026,17 @@ if (!function_exists('get_user_department_id')) {
 
 }
 
+if (!function_exists('get_user_section_id')) {
+
+    function get_user_section_id() {
+        $ci = new Security_Controller(false);      
+        $section_id = $ci->get_user_section_id();
+
+        return $section_id;
+    }
+
+}
+
 if (!function_exists('get_dept_id_of_Head_list')) {
 
     function get_dept_id_of_Head_list() {

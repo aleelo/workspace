@@ -153,6 +153,17 @@ class Security_Controller extends App_Controller {
         
         return $job_info?->department_id;
     }
+    
+    public function get_user_section_id(){
+        $user_id = $this->login_user->id;
+        $job_info = $this->db->query("SELECT d.section_id  from rise_team_member_job_info t 
+        left join rise_departments d on d.id=t.department_id 
+        left join rise_users u on u.id=t.user_id 
+        left join rise_sections s on s.id=d.section_id where t.user_id = $user_id
+        ")->getRow();
+        
+        return $job_info?->section_id;
+    }
 
     public function get_merchant_types_dropdown() {
         

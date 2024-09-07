@@ -120,13 +120,43 @@ class Documents extends Security_Controller
 
         $dept_id = $this->get_user_department_id();
         $role = $this->get_user_role();
-        $temp_array = [];
-        if ($role == "admin") {
+       
+        $temp_array = ['' => 'Choose Template'];
+        
+        $dept_id = '';
+        $section_id = '';
+        // $unit_id = '%';
+        $own_id = '';  
+
+        if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "all"){
             $dept_id = '%';
-            $temp_array = ['' => 'Choose Template'];
+            $section_id = '%';
+            $own_id = '%';            
+        }else if (!$this->login_user->is_admin &&  get_array_value($this->login_user->permissions, "document_permission") === "own_department"){
+            $own_id = '%';
+            $dept_id = get_user_department_id();
+            $section_id = '%';
+            // $unit_id = '%';
+             $own_id = '%';       
+        
+        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document_permission") === "own_section"){
+            
+            $dept_id = get_user_department_id();
+            $section_id = get_user_section_id();
+            // die($section_id);
+            // $unit_id = '%';
+            $own_id = '%';       
+        
+        }else if (!$this->login_user->is_admin &&  get_array_value($this->login_user->permissions, "document_permission") === "own"){
+            $dept_id = '%';
+            $section_id = '%';
+            // $unit_id = '%';     
+            $own_id = '%';
         }
 
-        $templates = $this->db->query("SELECT * FROM rise_templates where department_id like '$dept_id' and destination_folder != 'Leave'")->getResult();
+        $templates = $this->db->query("SELECT * FROM rise_templates 
+                    where department_id like '$dept_id' and section_id like '$section_id' 
+                    and destination_folder != 'Leave' ")->getResult();
 
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
