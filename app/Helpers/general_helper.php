@@ -2026,11 +2026,33 @@ if (!function_exists('get_user_department_id')) {
 
 }
 
+if (!function_exists('get_user_department_head_id')) {
+
+    function get_user_department_head_id() {
+        $ci = new Security_Controller(false);      
+        $dept = $ci->get_user_department_head_id();
+
+        return $dept;
+    }
+
+}
+
 if (!function_exists('get_user_section_id')) {
 
     function get_user_section_id() {
         $ci = new Security_Controller(false);      
         $section_id = $ci->get_user_section_id();
+
+        return $section_id;
+    }
+
+}
+
+if (!function_exists('get_user_section_head_id')) {
+
+    function get_user_section_head_id() {
+        $ci = new Security_Controller(false);      
+        $section_id = $ci->get_user_section_head_id();
 
         return $section_id;
     }

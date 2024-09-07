@@ -153,16 +153,26 @@ class Security_Controller extends App_Controller {
         
         return $job_info?->department_id;
     }
-    
-    public function get_user_section_id(){
+
+    public function get_user_department_head_id(){
         $user_id = $this->login_user->id;
-        $job_info = $this->db->query("SELECT d.section_id  from rise_team_member_job_info t 
-        left join rise_departments d on d.id=t.department_id 
-        left join rise_users u on u.id=t.user_id 
-        left join rise_sections s on s.id=d.section_id where t.user_id = $user_id
+        $job_info = $this->db->query("SELECT t.id,t.name,t.department_id FROM rise_templates t 
+        LEFT JOIN rise_departments dp ON dp.id = t.department_id 
+        LEFT JOIN rise_users us ON us.id = dp.dep_head_id 
+        WHERE dp.dep_head_id = $user_id")->getRow();
+        
+        return $job_info?->department_id;
+    }
+    
+    public function get_user_section_head_id(){
+        $user_id = $this->login_user->id;
+        $template_info = $this->db->query("SELECT t.id,t.name,t.section_id FROM rise_templates t 
+        LEFT JOIN rise_sections se on se.id = t.section_id 
+        LEFT JOIN rise_users us ON us.id = se.section_head_id 
+        WHERE se.section_head_id = $user_id
         ")->getRow();
         
-        return $job_info?->section_id;
+        return $template_info?->section_id;
     }
 
     public function get_merchant_types_dropdown() {

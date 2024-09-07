@@ -214,11 +214,11 @@ class Documents_model extends Crud_model {
             LEFT JOIN $templates_table ON $templates_table.id = $documents_table.template
             LEFT JOIN $users_table ON $users_table.id = $documents_table.created_by
             LEFT JOIN $department_table ON $department_table.id = $templates_table.department_id
-            LEFT JOIN $users_table as users_dp ON users_dp.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp ON us_dp.id = $department_table.dep_head_id
             LEFT JOIN $sections_table ON $sections_table.id = $templates_table.section_id
-            LEFT JOIN $users_table as users_se ON users_se.id = $sections_table.section_head_id
+            LEFT JOIN $users_table as us_se ON us_se.id = $sections_table.section_head_id
             LEFT JOIN $units_table ON $units_table.id = $templates_table.unit_id
-            LEFT JOIN $users_table as users_un ON users_un.id = $units_table.unit_head_id
+            LEFT JOIN $users_table as us_un ON us_un.id = $units_table.unit_head_id
               
             WHERE $documents_table.deleted=0 $where 
             $limit_offset";

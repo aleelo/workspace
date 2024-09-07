@@ -118,46 +118,36 @@ class Documents extends Security_Controller
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("leads", $lead_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        $dept_id = $this->get_user_department_id();
+        // $dept_id = $this->get_user_department_id();
         $role = $this->get_user_role();
        
-        $temp_array = ['' => 'Choose Template'];
+        $temp_array = ['-'];
+        // $temp_array = ['' => 'Choose Template'];
         
         $dept_id = '';
         $section_id = '';
-        // $unit_id = '%';
-        $own_id = '';  
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "all"){
             $dept_id = '%';
             $section_id = '%';
-            $own_id = '%';            
-        }else if (!$this->login_user->is_admin &&  get_array_value($this->login_user->permissions, "document_permission") === "own_department"){
-            $own_id = '%';
-            $dept_id = get_user_department_id();
-            $section_id = '%';
-            // $unit_id = '%';
-             $own_id = '%';       
-        
-        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document_permission") === "own_section"){
-            
-            $dept_id = get_user_department_id();
-            $section_id = get_user_section_id();
-            // die($section_id);
-            // $unit_id = '%';
-            $own_id = '%';       
-        
-        }else if (!$this->login_user->is_admin &&  get_array_value($this->login_user->permissions, "document_permission") === "own"){
-            $dept_id = '%';
-            $section_id = '%';
-            // $unit_id = '%';     
-            $own_id = '%';
+        }else if (!$this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "own_department"){
+            $dept_id = get_user_department_head_id();
+            $section_id = get_user_section_head_id();
+        }else if (!$this->login_user->is_admin || get_array_value($this->login_user->permissions, "document_permission") === "own_section"){
+            $dept_id = get_user_department_head_id();
+            $section_id = get_user_section_head_id();
         }
 
-        $templates = $this->db->query("SELECT * FROM rise_templates 
-                    where department_id like '$dept_id' and section_id like '$section_id' 
-                    and destination_folder != 'Leave' ")->getResult();
+        print_r($dept_id);
+        print_r($section_id);
+        die();
 
+        $templates = $this->db->query("SELECT * FROM rise_templates 
+        where (department_id LIKE '$dept_id' OR section_id LIKE '$section_id') 
+        AND destination_folder != 'Leave' AND deleted = 0")->getResult();
+
+        
+        
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
         }
@@ -248,7 +238,6 @@ class Documents extends Security_Controller
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "document_title" => "required",
-            // "ref_number" => "required",
             "template" => "required",
         ));
         $template_id = $this->request->getPost('template');
@@ -996,7 +985,6 @@ class Documents extends Security_Controller
             "destination_folder" => "required",
             "ref_prefix" => "required",
             "department" => "required",
-            "section" => "required",
         ));
 
         $id = $this->request->getPost('id');
