@@ -108,6 +108,11 @@ class Documents_model extends Crud_model {
         //     $where .= " AND $documents_table.client_id IN(SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 AND $clients_table.created_by=$show_own_clients_only_user_id)";
         // }
 
+        $show_own_documents_only_user_id = $this->_get_clean_value($options, "show_own_documents_only_user_id");
+        if ($show_own_documents_only_user_id) {
+            $where .= " AND ($documents_table.created_by=$show_own_documents_only_user_id)";
+        }
+
         $show_own_unit_documents_only_user_id = $this->_get_clean_value($options, "show_own_unit_documents_only_user_id");
         if ($show_own_unit_documents_only_user_id) {
             $where .= " AND ($units_table.unit_head_id=$show_own_unit_documents_only_user_id)";
@@ -220,7 +225,7 @@ class Documents_model extends Crud_model {
             LEFT JOIN $units_table ON $units_table.id = $templates_table.unit_id
             LEFT JOIN $users_table as us_un ON us_un.id = $units_table.unit_head_id
               
-            WHERE $documents_table.deleted=0 $where 
+            WHERE $documents_table.deleted=0 AND $documents_table.template != '25' $where 
             $limit_offset";
            
         // print_r($sql);

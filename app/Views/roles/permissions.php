@@ -821,6 +821,17 @@
                                 <div>
                                     <?php
                                     echo form_radio(array(
+                                        "id" => "document_yes_own",
+                                        "name" => "document_permission",
+                                        "value" => "own",
+                                        "class" => "document_permission toggle_specific form-check-input",
+                                            ), $document, ($document === "own") ? true : false);
+                                    ?>
+                                    <label for="document_yes_own"><?php echo app_lang("yes_own_documents"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
                                         "id" => "document_yes_own_unit",
                                         "name" => "document_permission",
                                         "value" => "own_unit",

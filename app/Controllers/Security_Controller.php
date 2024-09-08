@@ -865,6 +865,12 @@ class Security_Controller extends App_Controller {
         }
     }
     
+    protected function show_own_documents_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "document") == "own" ? $this->login_user->id : false;
+        }
+    }
+    
     protected function show_own_unit_documents_only_user_id() {
         if ($this->login_user->user_type === "staff") {
             return get_array_value($this->login_user->permissions, "document") == "own_unit" ? $this->login_user->id : false;

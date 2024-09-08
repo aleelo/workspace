@@ -2324,6 +2324,7 @@ $lang["own_unit_employees"] = "Own Unit Employees";
 $lang["own_section_employees"] = "Own Section Employees";
 $lang["own_department_employees"] = "Own Department Employees";
 $lang["all"] = "All";
+$lang["yes_own_documents"] = "Yes, own Documents";
 $lang["yes_own_unit_documents"] = "Yes, own Unit Documents";
 $lang["yes_own_section_documents"] = "Yes, own Section Documents";
 $lang["yes_own_department_documents"] = "Yes, own Department Documents";

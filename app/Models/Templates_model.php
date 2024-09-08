@@ -14,15 +14,17 @@ class Templates_model extends Crud_model {
 
     function get_templates_dropdown_permission($options = array()) {
         $templates_table = $this->db->prefixTable('templates');
-        $documents_table = $this->db->prefixTable('documents');
+        $department_table = $this->db->prefixTable('departments');
+        $sections_table = $this->db->prefixTable('sections');
+        $units_table = $this->db->prefixTable('units');
         $users_table = $this->db->prefixTable('users');
+        
+
+        $documents_table = $this->db->prefixTable('documents');
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $clients_table = $this->db->prefixTable('clients');
         $partners_table = $this->db->prefixTable('partners');
         $roles_table = $this->db->prefixTable('roles');
-        $department_table = $this->db->prefixTable('departments');
-        $sections_table = $this->db->prefixTable('sections');
-        $units_table = $this->db->prefixTable('units');
         
         $Users_model = model("App\Models\Users_model");
         $login_user_id = $Users_model->login_user_id();

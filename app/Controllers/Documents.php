@@ -142,26 +142,6 @@ class Documents extends Security_Controller
             $section_id = get_user_section_head_id();
         }
 
-        // print_r($dp_sec);
-        // print_r($dept_id);
-        // print_r($section_id);
-        // die();
-
-        // $templates = $this->db->query("SELECT * 
-        //     FROM rise_templates 
-        //     WHERE (
-        //         (department_id = '$dept_id' AND (section_id IS NULL OR section_id = '')) OR 
-        //         (section_id = '$section_id' AND (department_id IS NULL OR department_id = '')) OR 
-        //         (department_id = '$dept_id' AND section_id != '') OR 
-        //         (section_id = '$section_id' AND department_id != '')
-        //     ) 
-        //     AND destination_folder != 'Leave' 
-        //     AND deleted = 0")->getResult();
-
-        // $templates = $this->db->query("SELECT * FROM rise_templates 
-        // where (department_id LIKE '$dept_id' OR section_id LIKE '$section_id') 
-        // AND destination_folder != 'Leave' AND deleted = 0")->getResult();
-
         $options = array(
             'role'=>$role,
             "status" => $this->request->getPost("status"),
@@ -181,14 +161,7 @@ class Documents extends Security_Controller
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
         }
-        // echo json_encode(array("data" => $result,
-        //                 'recordsTotal'=>$recordsTotal,
-        //                 'recordsFiltered'=>$recordsFiltered
-        //             ));
 
-
-        // var_dump( $temp_array);
-        // die();
 
         $view_data["templates"] = $temp_array;
         return $view_data;
@@ -394,136 +367,6 @@ class Documents extends Security_Controller
         }
     }
 
-    // /* insert or update a lead */
-    // public function save()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     // $this->validate_lead_access($id);
-
-    //     $this->validate_submitted_data(array(
-    //         "id" => "numeric",
-    //         "document_title" => "required",
-    //         // "ref_number" => "required",
-    //         "template" => "required",
-    //     ));
-    //     $template_id = $this->request->getPost('template');
-
-    //     // `document_title`,`created_by`, `ref_number`, `depertment`, `template`, `item_id`, `created_at`
-    //     $input = array(
-    //         'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
-    //         "document_title" => $this->request->getPost('document_title'),
-    //         "ref_number" => $this->request->getPost('ref_number'),
-    //         "depertment" => $this->get_user_department_id(),
-    //         "template" => $template_id,
-    //         "item_id" => $this->request->getPost('zip'),
-    //         "created_by" => $this->request->getPost('owner_id') ? $this->request->getPost('owner_id') : $this->login_user->id,
-    //         "created_at" => date('Y-m-d'),
-    //     );
-
-    //     $input = clean_data($input);
-    //     $save_id = null;
-    //     $webUrl = null;
-
-    //     if (!$id) {
-
-    //         $save_id = $this->Documents_model->ci_save($input);
-
-    //         $t = $this->Templates_model->get_one($template_id);
-    //         $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template_id");
-    //         $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template_id")->getRow()->sqn;
-    //         $template_name = $t->path;
-    //         $input['template'] = $template_name;
-    //         $input['id'] = $save_id;
-
-    //         //get document row
-    //         $doc = $this->db->query("select d.*,t.name as template,t.ref_prefix,t.destination_folder as folder,concat(u.first_name,' ',u.last_name) user from rise_documents d
-    //         LEFT JOIN rise_users u on d.created_by = u.id
-    //         LEFT JOIN rise_templates t on d.template = t.id
-    //         where d.deleted=0 and d.id =$save_id");
-
-    //         $input['folder'] = $doc->getRow()->folder;
-    //         $input['uuid'] = $doc->getRow()->uuid;
-    //         $input['ref_number'] = $doc->getRow()->ref_prefix . '/' . $sqn . '/' . date('m') . '/' . date('y');
-    //         $token = $this->AccesToken();
-
-    //         //create/save doc
-    //         $docPath = $this->createDoc($input);
-
-    //         //upload to sharepoint
-    //         $data = $this->uploadDoc($token, $input, $docPath);
-
-    //         // var_dump($data);
-    //         // die();
-    //         print_r($data);die;
-    //         if (isset($data['error'])) {
-
-    //             // var_dump($data['error']['code'] . ', ' . $data['error']['message']);
-    //             if ($data['error']['code'] == "notAllowed") {
-    //                 $msg = $data['error']['code'] . ', ' . $data['error']['message']; //"The file is being edited by another user";
-    //             } else {
-    //                 $msg = $data['error']['code'] . ', ' . $data['error']['message'];
-    //             }
-
-    //             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred') . ', ' . $msg));
-    //             exit;
-
-    //         } else {
-
-    //             // Get the web URL of the file from the array
-    //             $webUrl = $data["webUrl"];
-    //             $itemId = $data["id"];
-    //             $drive_ref = $data['parentReference'];
-
-    //             //update item id and web url
-    //             $u_data = array('item_id' => $itemId, 'webUrl' => $webUrl, 'ref_number' => $input['ref_number'], 'drive_info' => @serialize($drive_ref));
-
-    //             $this->Documents_model->ci_save($u_data, $doc->getRow()->id);
-
-    //             // echo $webUrl;
-    //             // die();
-
-    //         }
-
-    //     } else {
-    //         $input = array(
-    //             "document_title" => $this->request->getPost('document_title'),
-    //             "ref_number" => $this->request->getPost('ref_number'),
-    //             // "depertment" => $this->request->getPost('depertment'),
-    //             "template" => $this->request->getPost('template'),
-    //         );
-
-    //         $updated = $this->Documents_model->ci_save($input, $id);
-    //         //get document row
-    //         $doc = $this->db->query("select d.*,t.name as template,t.destination_folder as folder,concat(u.first_name,' ',u.last_name) user from rise_documents d
-    //                 LEFT JOIN rise_users u on d.created_by = u.id
-    //                 LEFT JOIN rise_templates t on d.template = t.id
-    //                 where d.deleted=0 and d.id =$id");
-    //     }
-
-    //     if ($save_id || $updated) {
-    //         // save_custom_fields("leads", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
-
-    //         if (!$id) { //create operation
-
-    //             log_notification("document_created", array("document_id" => $save_id), $this->login_user->id);
-
-    //             echo json_encode(array("success" => true, "data" => $this->_make_row($doc->getRow(), null), 'webUrl' => $webUrl, 'id' => $save_id, 'view' => $this->request->getPost('view'),
-    //                 'message' => app_lang('record_saved')));
-    //         } else { //update operation
-
-    //             log_notification("document_updated", array("document_id" => $id), $this->login_user->id);
-
-    //             // var_dump($doc->getRowArray());
-    //             // die();
-
-    //             echo json_encode(array("success" => true, "data" => $this->_make_row($doc->getRow(), null), 'id' => $id, 'view' => $this->request->getPost('view'),
-    //                 'message' => app_lang('record_updated')));
-    //         }
-
-    //     } else {
-    //         echo json_encode(array("success" => false, 'message' => app_lang('error_occurred') . ', Document not saved.'));
-    //     }
-    // }
 
     // Creates the Document Using the Provided Template
     public function createDoc($data = array())
@@ -681,6 +524,7 @@ class Documents extends Security_Controller
             'created_by'=>$created_by,
             'department_id'=> $this->request->getPost("department_id") ? $this->request->getPost("department_id") : $department_id,
             "status" => $this->request->getPost("status"),
+            "show_own_documents_only_user_id" => $this->show_own_documents_only_user_id(),
             "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
             "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
             "show_own_department_documents_only_user_id" => $this->show_own_department_documents_only_user_id(),
