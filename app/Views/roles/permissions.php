@@ -921,7 +921,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ml20">
+                        <!-- <div class="ml20">
                             <div>
                                 <?php
                                 if (is_null($lead)) {
@@ -958,7 +958,7 @@
                                 ?>
                                 <label for="lead_yes_own"><?php echo app_lang("yes_only_own_leads"); ?></label>
                             </div>
-                        </div>
+                        </div> -->
                     </li>
                 <?php } ?>
 

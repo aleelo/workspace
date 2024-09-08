@@ -302,6 +302,8 @@ class Security_Controller extends App_Controller {
                 }
             } else if ($module_permission === "own" || $module_permission === "read_only" || $module_permission === "assigned_only" || $module_permission === "own_project_members" || $module_permission === "own_project_members_excluding_own") {
                 $info->access_type = $module_permission;
+            }else if ($module_permission === "own_unit" || $module_permission === "own_section" || $module_permission === "own_department") {
+                $info->access_type = $module_permission;
             }
         }
         return $info;
@@ -338,7 +340,7 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if ($this->module_group === "document" && ($this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
+        } else if ($this->module_group === "document" && ($this->access_type === "own" || $this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
             return true;  //can access if it's document module and user has a pertial access
         } else if ($this->module_group === "lead" && $this->access_type === "own" ) {
             return true; //can access if it's leads module and user has access to own leads
@@ -1100,6 +1102,29 @@ class Security_Controller extends App_Controller {
 
         return $data;
 
+    }
+
+    protected function can_access_this_document($document_id = 0) {
+        $permissions = $this->login_user->permissions;
+
+        // var_dump(get_array_value($permissions, "lead"));
+        // var_dump($document_id);
+        // var_dump(!$document_id);
+        // die();
+        
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "document") == "all") {
+            return true;
+        } else if (!$document_id && get_array_value($permissions, "document")) {
+            return true;
+        } else if ($document_id) {
+            $lead_info = $this->Documents_model->get_one($document_id); 
+            
+            if ($lead_info->id && get_array_value($permissions, "document") == "own" && $lead_info->created_by == $this->login_user->id) {
+                return true;
+            }
+        }
     }
 
     protected function can_access_this_lead($lead_id = 0) {

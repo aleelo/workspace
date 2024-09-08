@@ -18,7 +18,6 @@ class Documents_model extends Crud_model {
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $clients_table = $this->db->prefixTable('clients');
         $partners_table = $this->db->prefixTable('partners');
-        $roles_table = $this->db->prefixTable('roles');
         $department_table = $this->db->prefixTable('departments');
         $sections_table = $this->db->prefixTable('sections');
         $units_table = $this->db->prefixTable('units');
@@ -27,31 +26,8 @@ class Documents_model extends Crud_model {
         $login_user_id = $Users_model->login_user_id();
         $user = $Users_model->get_access_info($login_user_id);
 
-        $Roles_model = model("App\Models\Roles_model");
-        
-        $r = $Roles_model->get_one($user->role_id);
-
-        if($user->is_admin){
-            $role = 'Admin';
-        }else{
-            $role = $r->title;
-        }
-
-        $role = get_array_value($options,'role') ?? '%';
         $created_by = get_array_value($options,'created_by') ?? '%';
         $department_id = get_array_value($options,'department_id') ?? '%';
-
-        
-        // if($role == 'Head Department'){
-        //     $department_id = get_user_department_id();
-        //     $created_by = "%";
-        // }
-
-        // if($role == 'Head Department'){
-        //     $department_id = get_dept_id_of_Head_list();
-        //     $created_by = "%";
-        // }
-
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -209,7 +185,7 @@ class Documents_model extends Crud_model {
        
         //prepare full query string
 
-        //if( $role == 'Head Department'){
+        
 
             $sql = "SELECT SQL_CALC_FOUND_ROWS $documents_table.*,$templates_table.name as template,$department_table.nameSo as department,
             $sections_table.nameSo as section,

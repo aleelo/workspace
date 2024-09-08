@@ -28,7 +28,7 @@ class Documents extends Security_Controller
 
     private function validate_lead_access($lead_id)
     {
-        if (!$this->can_access_this_lead($lead_id)) {
+        if (!$this->can_access_this_document($lead_id)) {
             app_redirect("forbidden");
         }
     }
@@ -49,8 +49,10 @@ class Documents extends Security_Controller
         $role = get_array_value($res, 'role');
         $can_add_template = $role == 'admin';
         $view_data["can_add_template"] = $can_add_template;
-        // $this->access_only_allowed_members();
-        // $this->check_module_availability("module_lead");
+        
+        if($this->login_user->user_type === "staff"){
+            $view_data["can_add_document"] = get_array_value($this->login_user->permissions, "document") == "own" ? false : true;
+        }
 
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("leads", $this->login_user->is_admin, $this->login_user->user_type);
@@ -118,32 +120,7 @@ class Documents extends Security_Controller
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("leads", $lead_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        // $dept_id = $this->get_user_department_id();
-        $role = $this->get_user_role();
-       
-        $temp_array = ['-'];
-        // $temp_array = ['' => 'Choose Template'];
-        
-        $dp_sec = '';
-        $dept_id = '';
-        $section_id = '';
-
-        if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "document") == "all"){
-            // $dp_sec = "Admin Section ";
-            $dept_id = '%';
-            $section_id = '%';
-        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document") == "own_department"){
-            // $dp_sec = "Department Section ";
-            $dept_id = get_user_department_head_id();
-            $section_id = '';
-        }else if (!$this->login_user->is_admin && get_array_value($this->login_user->permissions, "document") == "own_section"){
-            // $dp_sec = "Section Section ";
-            $dept_id = get_user_department_head_id();
-            $section_id = get_user_section_head_id();
-        }
-
         $options = array(
-            'role'=>$role,
             "status" => $this->request->getPost("status"),
             "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
             "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
@@ -157,6 +134,8 @@ class Documents extends Security_Controller
         $recordsTotal =  get_array_value($templates,'recordsTotal');
         $recordsFiltered =  get_array_value($templates,'recordsFiltered');
 
+        $temp_array = ['-'];
+        
         $result = array();
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
