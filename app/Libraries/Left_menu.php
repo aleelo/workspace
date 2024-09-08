@@ -68,7 +68,7 @@ class Left_menu {
                 $sidebar_menu["payers"] = array("name" => "payers", "url" => "payers", "class" => "briefcase");
             }
             
-            if ($this->ci->login_user->is_admin || $access_can_manage_departments_sections_units) {
+            if ($this->ci->login_user->is_admin || $access_client) {
                 $sidebar_menu["partners"] = array("name" => "partners", "url" => "partners", "class" => "briefcase");
             }
 
