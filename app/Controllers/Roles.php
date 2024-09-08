@@ -85,6 +85,7 @@ class Roles extends Security_Controller {
             $view_data['can_manage_own_section'] = get_array_value($permissions, "can_manage_own_section");
             $view_data['can_manage_employee_for'] = get_array_value($permissions, "can_manage_employee_for");
             $view_data['document'] = get_array_value($permissions, "document");
+            $view_data['department'] = get_array_value($permissions, "department");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
             $view_data['help_and_knowledge_base'] = get_array_value($permissions, "help_and_knowledge_base");
@@ -259,6 +260,7 @@ class Roles extends Security_Controller {
         $can_manage_own_section = $this->request->getPost('can_manage_own_section_checkbox');
         $can_manage_employee_for = $this->request->getPost('can_manage_employee_for');
         $document = $this->request->getPost('document_permission');
+        $department = $this->request->getPost('department_permission');
         $can_view_team_members_social_links = $this->request->getPost('can_view_team_members_social_links');
         $team_member_update_permission = $this->request->getPost('team_member_update_permission');
         $team_member_update_permission_specific = $this->request->getPost('team_member_update_permission_specific');
@@ -365,6 +367,7 @@ class Roles extends Security_Controller {
             "can_manage_own_section" => $can_manage_own_section,
             "can_manage_employee_for" => $can_manage_employee_for,
             "document" => $document,
+            "department" => $department,
             "can_view_team_members_social_links" => $can_view_team_members_social_links,
             "team_member_update_permission" => $team_member_update_permission,
             "team_member_update_permission_specific" => $team_member_update_permission_specific,

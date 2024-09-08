@@ -17,6 +17,36 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div class="row">
+                            <label for="module_department" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('department'); ?></label>
+                            <div class="col-md-10 col-xs-4 col-sm-8">
+                                <?php
+                                echo form_checkbox("module_department", "1", get_setting("module_department") ? true : false, "id='module_department' class='form-check-input ml15'");
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="module_section" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('section'); ?></label>
+                            <div class="col-md-10 col-xs-4 col-sm-8">
+                                <?php
+                                echo form_checkbox("module_section", "1", get_setting("module_section") ? true : false, "id='module_section' class='form-check-input ml15'");
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="module_unit" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('unit'); ?></label>
+                            <div class="col-md-10 col-xs-4 col-sm-8">
+                                <?php
+                                echo form_checkbox("module_unit", "1", get_setting("module_unit") ? true : false, "id='module_unit' class='form-check-input ml15'");
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
                             <label for="module_timeline" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('timeline'); ?></label>
                             <div class="col-md-10 col-xs-4 col-sm-8">
                                 <?php

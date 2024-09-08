@@ -329,6 +329,52 @@
                     </div>
 
                 </li>
+                <?php if (get_setting("module_department")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_departments"); ?></h5>
+                        <div>
+                            <div>
+                                <div>
+                                    <?php
+                                    if (is_null($department)) {
+                                        $department = "";
+                                    }
+                                    echo form_radio(array(
+                                        "id" => "department_no",
+                                        "name" => "department_permission",
+                                        "value" => "",
+                                        "class" => "department_permission toggle_specific form-check-input",
+                                            ), $department, ($department === "") ? true : false);
+                                    ?>
+                                    <label for="department_no"><?php echo app_lang("no"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "department_yes_own",
+                                        "name" => "department_permission",
+                                        "value" => "own_department",
+                                        "class" => "department_permission toggle_specific form-check-input",
+                                            ), $department, ($department === "own_department") ? true : false);
+                                    ?>
+                                    <label for="department_yes_own"><?php echo app_lang("yes_own_departments"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "department_yes_all",
+                                        "name" => "department_permission",
+                                        "value" => "all",
+                                        "class" => "department_permission toggle_specific form-check-input",
+                                            ), $department, ($department === "all") ? true : false);
+                                    ?>
+                                    <label for="department_yes_all"><?php echo app_lang("yes_all_departments"); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
                 <?php if (get_setting("module_message")) { ?>
                     <li>
                         <span data-feather="key" class="icon-14 ml-20"></span>

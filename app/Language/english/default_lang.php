@@ -1925,6 +1925,9 @@ $lang["add_lead"] = "Add Document";
 $lang["edit_lead"] = "Edit Document";
 $lang["delete_lead"] = "Delete Document";
 $lang["lead_details"] = "Document details";
+$lang["can_manage_departments"] = "Can manage Departments?";
+$lang["yes_own_departments"] = "Yes, own Departments";
+$lang["yes_all_departments"] = "Yes, all Departments";
 $lang["can_access_leads_information"] = "Can access document's information?";
 $lang["lead_info"] = "Document info";
 
