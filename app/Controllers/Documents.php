@@ -539,9 +539,14 @@ class Documents extends Security_Controller
         $limit = get_array_value($options_all,'limit');
 
         $list_data_all = $this->Documents_model->get_details($options_all);
-        
+        if($limit){
+
+            $list_data = get_array_value($list_data_all,'data'); 
+        }else{
+            $list_data = $list_data_all->getResult();
+        }
+
         // print_r($list_data);die;
-        $list_data = get_array_value($list_data_all,'data') ? get_array_value($list_data_all,'data') : $list_data_all->getResult(); 
         $recordsTotal =  get_array_value($list_data_all,'recordsTotal');
         $recordsFiltered =  get_array_value($list_data_all,'recordsFiltered');
 
