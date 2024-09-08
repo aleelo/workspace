@@ -1929,14 +1929,15 @@ $lang["can_manage_departments"] = "Can manage Departments?";
 $lang["yes_own_departments"] = "Yes, own Departments";
 $lang["yes_all_departments"] = "Yes, all Departments";
 $lang["can_manage_documents"] = "Can managa Documents?";
-$lang["can_manage_sections"] = "Can managa Sectionss?";
+$lang["can_manage_sections"] = "Can managa Sections?";
 $lang["yes_own_sections"] = "Yes, own Section";
 $lang["yes_all_sections"] = "Yes, all Sections";
 $lang["can_manage_units"] = "Can managa Units?";
 $lang["yes_own_units"] = "Yes, own Unit";
 $lang["yes_all_units"] = "Yes, all Units";
 $lang["lead_info"] = "Document info";
-$lang["can_manage_departments_sections_units"] = "can manage Documents, Sections & Units";
+$lang["can_manage_departments_sections_units"] = "can manage Documents, Sections & Units?";
+$lang["yes_all"] = "Yes, can manage all.";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";
