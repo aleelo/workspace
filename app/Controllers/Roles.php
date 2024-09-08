@@ -86,6 +86,8 @@ class Roles extends Security_Controller {
             $view_data['can_manage_employee_for'] = get_array_value($permissions, "can_manage_employee_for");
             $view_data['document'] = get_array_value($permissions, "document");
             $view_data['department'] = get_array_value($permissions, "department");
+            $view_data['section'] = get_array_value($permissions, "section");
+            $view_data['unit'] = get_array_value($permissions, "unit");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
             $view_data['help_and_knowledge_base'] = get_array_value($permissions, "help_and_knowledge_base");
@@ -135,6 +137,7 @@ class Roles extends Security_Controller {
             $view_data['can_manage_all_kinds_of_settings'] = get_array_value($permissions, "can_manage_all_kinds_of_settings");
             $view_data['can_manage_user_role_and_permissions'] = get_array_value($permissions, "can_manage_user_role_and_permissions");
             $view_data['can_add_or_invite_new_team_members'] = get_array_value($permissions, "can_add_or_invite_new_team_members");
+            $view_data['can_manage_departments_sections_units'] = get_array_value($permissions, "can_manage_departments_sections_units");
             $view_data['can_activate_deactivate_team_members'] = get_array_value($permissions, "can_activate_deactivate_team_members");
             $view_data['can_delete_team_members'] = get_array_value($permissions, "can_delete_team_members");
 
@@ -250,6 +253,7 @@ class Roles extends Security_Controller {
         $can_create_milestones = $this->request->getPost('can_create_milestones');
         $can_edit_milestones = $this->request->getPost('can_edit_milestones');
         $can_delete_milestones = $this->request->getPost('can_delete_milestones');
+        $can_manage_departments_sections_units = $this->request->getPost('can_manage_departments_sections_units');
 
         $can_delete_files = $this->request->getPost('can_delete_files');
 
@@ -261,6 +265,8 @@ class Roles extends Security_Controller {
         $can_manage_employee_for = $this->request->getPost('can_manage_employee_for');
         $document = $this->request->getPost('document_permission');
         $department = $this->request->getPost('department_permission');
+        $section = $this->request->getPost('section_permission');
+        $unit = $this->request->getPost('unit_permission');
         $can_view_team_members_social_links = $this->request->getPost('can_view_team_members_social_links');
         $team_member_update_permission = $this->request->getPost('team_member_update_permission');
         $team_member_update_permission_specific = $this->request->getPost('team_member_update_permission_specific');
@@ -368,6 +374,8 @@ class Roles extends Security_Controller {
             "can_manage_employee_for" => $can_manage_employee_for,
             "document" => $document,
             "department" => $department,
+            "section" => $section,
+            "unit" => $unit,
             "can_view_team_members_social_links" => $can_view_team_members_social_links,
             "team_member_update_permission" => $team_member_update_permission,
             "team_member_update_permission_specific" => $team_member_update_permission_specific,
@@ -382,6 +390,7 @@ class Roles extends Security_Controller {
             "can_manage_all_kinds_of_settings" => $can_manage_all_kinds_of_settings,
             "can_manage_user_role_and_permissions" => $can_manage_user_role_and_permissions,
             "can_add_or_invite_new_team_members" => $can_add_or_invite_new_team_members,
+            "can_manage_departments_sections_units" => $can_manage_departments_sections_units,
             "can_activate_deactivate_team_members" => $can_activate_deactivate_team_members,
             "can_delete_team_members" => $can_delete_team_members,
             "timeline_permission" => $timeline_permission,

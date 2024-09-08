@@ -32,6 +32,10 @@ class Left_menu {
             $access_client = get_array_value($permissions, "client");
             $access_lead = get_array_value($permissions, "lead");
             $access_document = get_array_value($permissions, "document");
+            $access_can_manage_departments_sections_units = get_array_value($permissions, "can_manage_departments_sections_units");
+            $access_department = get_array_value($permissions, "department");
+            $access_section = get_array_value($permissions, "section");
+            $access_unit = get_array_value($permissions, "unit");
             $access_timecard = get_array_value($permissions, "attendance");
             $access_leave = get_array_value($permissions, "leave");
             $access_announcement = get_array_value($permissions, "announcement");
@@ -64,25 +68,25 @@ class Left_menu {
                 $sidebar_menu["payers"] = array("name" => "payers", "url" => "payers", "class" => "briefcase");
             }
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_can_manage_departments_sections_units) {
                 $sidebar_menu["partners"] = array("name" => "partners", "url" => "partners", "class" => "briefcase");
             }
 
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_can_manage_departments_sections_units) {
                 $sidebar_menu["departments"] = array("name" => "departments", "url" => "", "class" => "briefcase");
             }
 
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_department) {
                 $sidebar_menu["department"] = array("name" => "department", "url" => "departments", "class" => "briefcase");
             }
             
 
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_section) {
                 $sidebar_menu["sections"] = array("name" => "sections", "url" => "sections", "class" => "briefcase");
             }
 
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_unit) {
                 $sidebar_menu["units"] = array("name" => "units", "url" => "units", "class" => "briefcase");
             }
             

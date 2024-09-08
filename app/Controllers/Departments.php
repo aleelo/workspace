@@ -8,7 +8,7 @@ class Departments extends Security_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("client");
+        $this->init_permission_checker("department");
     }
 
     private function _validate_client_manage_access($client_id = 0) {

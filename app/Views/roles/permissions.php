@@ -335,6 +335,7 @@
                         <h5><?php echo app_lang("can_manage_departments"); ?></h5>
                         <div>
                             <div>
+                            
                                 <div>
                                     <?php
                                     if (is_null($department)) {
@@ -371,6 +372,108 @@
                                     ?>
                                     <label for="department_yes_all"><?php echo app_lang("yes_all_departments"); ?></label>
                                 </div>
+                                <div>
+                                    <?php
+                                    echo form_checkbox("can_manage_departments_sections_units", "1", $can_manage_departments_sections_units ? true : false, "id='can_manage_departments_sections_units' class='form-check-input'");
+                                    ?>      
+                                    <label for="can_manage_departments_sections_units"><?php echo app_lang("can_manage_departments_sections_units"); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
+                <?php if (get_setting("module_section")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_sections"); ?></h5>
+                        <div>
+                            <div>
+                            
+                                <div>
+                                    <?php
+                                    if (is_null($section)) {
+                                        $section = "";
+                                    }
+                                    echo form_radio(array(
+                                        "id" => "section_no",
+                                        "name" => "section_permission",
+                                        "value" => "",
+                                        "class" => "section_permission toggle_specific form-check-input",
+                                            ), $section, ($section === "") ? true : false);
+                                    ?>
+                                    <label for="section_no"><?php echo app_lang("no"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "section_yes_own",
+                                        "name" => "section_permission",
+                                        "value" => "own_section",
+                                        "class" => "section_permission toggle_specific form-check-input",
+                                            ), $section, ($section === "own_section") ? true : false);
+                                    ?>
+                                    <label for="section_yes_own"><?php echo app_lang("yes_own_sections"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "section_yes_all",
+                                        "name" => "section_permission",
+                                        "value" => "all",
+                                        "class" => "section_permission toggle_specific form-check-input",
+                                            ), $section, ($section === "all") ? true : false);
+                                    ?>
+                                    <label for="section_yes_all"><?php echo app_lang("yes_all_sections"); ?></label>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
+                <?php if (get_setting("module_unit")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_units"); ?></h5>
+                        <div>
+                            <div>
+                            
+                                <div>
+                                    <?php
+                                    if (is_null($unit)) {
+                                        $unit = "";
+                                    }
+                                    echo form_radio(array(
+                                        "id" => "unit_no",
+                                        "name" => "unit_permission",
+                                        "value" => "",
+                                        "class" => "unit_permission toggle_specific form-check-input",
+                                            ), $unit, ($unit === "") ? true : false);
+                                    ?>
+                                    <label for="unit_no"><?php echo app_lang("no"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "unit_yes_own",
+                                        "name" => "unit_permission",
+                                        "value" => "own_unit",
+                                        "class" => "unit_permission toggle_specific form-check-input",
+                                            ), $unit, ($unit === "own_unit") ? true : false);
+                                    ?>
+                                    <label for="unit_yes_own"><?php echo app_lang("yes_own_units"); ?></label>
+                                </div>
+                                <div>
+                                    <?php
+                                    echo form_radio(array(
+                                        "id" => "unit_yes_all",
+                                        "name" => "unit_permission",
+                                        "value" => "all",
+                                        "class" => "unit_permission toggle_specific form-check-input",
+                                            ), $unit, ($unit === "all") ? true : false);
+                                    ?>
+                                    <label for="unit_yes_all"><?php echo app_lang("yes_all_units"); ?></label>
+                                </div>
+                                
                             </div>
                         </div>
                     </li>
@@ -847,7 +950,7 @@
                 <?php if (get_setting("module_lead")) { ?>
                     <li>
                         <span data-feather="key" class="icon-14 ml-20"></span>
-                        <h5><?php echo app_lang("can_access_leads_information"); ?></h5>
+                        <h5><?php echo app_lang("can_manage_documents"); ?></h5>
                         <div>
                             <div>
                                 <div>
