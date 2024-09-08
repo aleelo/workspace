@@ -23,7 +23,7 @@ class Documents extends Security_Controller
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("lead");
+        $this->init_permission_checker("document");
     }
 
     private function validate_lead_access($lead_id)
@@ -66,7 +66,7 @@ class Documents extends Security_Controller
     public function templates()
     {
 
-        $res = $this->check_access('lead');
+        $res = $this->check_access('document');
         $role = get_array_value($res, 'role');
         $can_add_template = $role == 'admin';
         $view_data["can_add_template"] = $can_add_template;
@@ -512,7 +512,7 @@ class Documents extends Security_Controller
             app_redirect("forbidden");
         }
 
-        $result = $this->check_access('lead');//here means documents for us.
+        $result = $this->check_access('document');//here means documents for us.
 
         $role = get_array_value($result,'role');
         $department_id = get_array_value($result,'department_id');
@@ -637,7 +637,7 @@ class Documents extends Security_Controller
 
         // $show_own_leads_only_user_id = $this->show_own_leads_only_user_id();
 
-        $result = $this->check_access('lead'); //here means documents for us.
+        $result = $this->check_access('document'); //here means documents for us.
 
         $role = get_array_value($result, 'role');
         $department_id = get_array_value($result, 'department_id');
