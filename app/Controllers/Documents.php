@@ -158,15 +158,34 @@ class Documents extends Security_Controller
         //     AND destination_folder != 'Leave' 
         //     AND deleted = 0")->getResult();
 
-        $templates = $this->db->query("SELECT * FROM rise_templates 
-        where (department_id LIKE '$dept_id' OR section_id LIKE '$section_id') 
-        AND destination_folder != 'Leave' AND deleted = 0")->getResult();
+        // $templates = $this->db->query("SELECT * FROM rise_templates 
+        // where (department_id LIKE '$dept_id' OR section_id LIKE '$section_id') 
+        // AND destination_folder != 'Leave' AND deleted = 0")->getResult();
 
+        $options = array(
+            'role'=>$role,
+            "status" => $this->request->getPost("status"),
+            "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
+            "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
+            "show_own_department_documents_only_user_id" => $this->show_own_department_documents_only_user_id(),
+            "user_type" => "staff",
+        );
+
+        $templates = $this->Templates_model->get_templates_dropdown_permission($options);
         
-        
+        $templates = get_array_value($templates,'data') ? get_array_value($templates,'data') : $templates->getResult(); 
+        $recordsTotal =  get_array_value($templates,'recordsTotal');
+        $recordsFiltered =  get_array_value($templates,'recordsFiltered');
+
+        $result = array();
         foreach ($templates as $t) {
             $temp_array[$t->id] = $t->name;
         }
+        // echo json_encode(array("data" => $result,
+        //                 'recordsTotal'=>$recordsTotal,
+        //                 'recordsFiltered'=>$recordsFiltered
+        //             ));
+
 
         // var_dump( $temp_array);
         // die();
@@ -669,10 +688,6 @@ class Documents extends Security_Controller
             "custom_fields" => $custom_fields,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)
         );
-
-        // var_dump($this->request->getPost("department_id"));
-        // var_dump($options);
-        // die();
 
         $list_data = $this->Documents_model->get_details($options);
         
