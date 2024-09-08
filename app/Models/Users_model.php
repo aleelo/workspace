@@ -356,7 +356,8 @@ class Users_model extends Crud_model {
 
         //if( $role == 'Head Department'){
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*,$department_table.nameSo as dp_name_so,$department_table.short_name_SO as dp_short_name_so,$department_table.nameEn as dp_name_en,
+            $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*,$sections_table.nameSo as sc_name_so,
+            $department_table.nameSo as dp_name_so,$department_table.short_name_SO as dp_short_name_so,$department_table.nameEn as dp_name_en,
             $department_table.short_name_EN as dp_short_name_en, $roles_table.title AS role_title, $team_member_job_info_table.date_of_hire, $team_member_job_info_table.place_of_work,
             $team_member_job_info_table.signature, $team_member_job_info_table.salary, $team_member_job_info_table.salary_term $select_custom_fieds
             FROM $users_table

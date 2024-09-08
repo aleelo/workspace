@@ -49,6 +49,7 @@
                 {title: "<?php echo app_lang("employee_id") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("name") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("job_title") ?>", "class": "w15p"},
+                {title: "<?php echo app_lang("section_name_so") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("department_name_so") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("shot_name_so") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("department_name_en") ?>", "class": "w200 all"},

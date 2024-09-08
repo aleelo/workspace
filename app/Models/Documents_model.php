@@ -162,41 +162,40 @@ class Documents_model extends Crud_model {
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
 
-        // $available_order_by_list = array(
-        //     "fullName" => $cardholders_table . ".fullName",
-        //     "CID" => $cardholders_table . ".CID",
-        //     "titleEng" => $cardholders_table . ".titleEng",
-        //     "titleSom" => $cardholders_table . ".titleSom",
-        //     "status" => $cardholders_table . ".status"
-        // );
+        $available_order_by_list = array(
+            "id" => $documents_table . ".id",
+            "document_title" => $documents_table . ".document_title",
+            "ref_number" => $documents_table . ".ref_number",
+            "nameSo" => $sections_table . ".nameSo",
+            "department" => $documents_table . ".department",
+            "template" => $documents_table . ".template",
+            "created_by" => $documents_table . ".created_by",
+            "created_at" => $documents_table . ".created_at",
+        );
 
 
-        // $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
+        $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
 
-        // $order = "ORDER BY $documents_table.document_title";
+        $order = "ORDER BY $documents_table.document_title";
 
-        // if ($order_by) {
-        //     $order_dir = $this->_get_clean_value($options, "order_dir");
-        //     $order = " ORDER BY $order_by $order_dir ";
-        // }
+        if ($order_by) {
+            $order_dir = $this->_get_clean_value($options, "order_dir");
+            $order = " ORDER BY $order_by $order_dir ";
+        }
 
         $search_by = get_array_value($options, "search_by");
         if ($search_by) {
             $search_by = $this->db->escapeLikeString($search_by);
 
             $where .= " AND (";
-            $where .= " $documents_table.job_title LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $documents_table.email LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $documents_table.private_email LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $documents_table.phone LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $documents_table.skype LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " $documents_table.bachelor_degree LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " $documents_table.master_degree LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " $documents_table.employee_id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " $documents_table.age_level LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $clients_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR CONCAT($documents_table.first_name, ' ', $documents_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= $this->get_custom_field_search_query($documents_table, "client_contacts", $search_by);
+            $where .= " $documents_table.id LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $documents_table.document_title LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $documents_table.ref_number LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $department_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $templates_table.name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $documents_table.created_at LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " )";
         }
 
@@ -226,7 +225,7 @@ class Documents_model extends Crud_model {
             LEFT JOIN $users_table as us_un ON us_un.id = $units_table.unit_head_id
               
             WHERE $documents_table.deleted=0 AND $documents_table.template != '25' $where 
-            $limit_offset";
+            $order $limit_offset";
            
         // print_r($sql);
         // die();

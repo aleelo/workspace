@@ -1084,7 +1084,7 @@ class Security_Controller extends App_Controller {
         if ($this->login_user->is_admin || $role == 'Administrator'  || $role == 'Access Control' || $role == 'HRM' || $perm == "all") {
             $created_by = '%';
             $dept_id = '%';
-        } else if ($role == 'Director' || $role == 'Secretary' || $role == 'Section Head' || $role == 'Unit Head') {
+        } else if ($role == 'Director' || $role == 'Secretary' || $role == 'Section Head' || $role == 'Supper Section head' || $role == 'Unit Head') {
             $created_by = '%';
             $dept_id = '%';
         } else if ($perm == "own" || $role == 'Employee') {

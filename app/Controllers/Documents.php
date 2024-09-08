@@ -533,11 +533,17 @@ class Documents extends Security_Controller
             "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-        $list_data = $this->Documents_model->get_details($options);
         
-        $list_data = get_array_value($list_data,'data') ? get_array_value($list_data,'data') : $list_data->getResult(); 
-        $recordsTotal =  get_array_value($list_data,'recordsTotal');
-        $recordsFiltered =  get_array_value($list_data,'recordsFiltered');
+        $options_all = append_server_side_filtering_commmon_params($options);
+
+        $limit = get_array_value($options_all,'limit');
+
+        $list_data_all = $this->Documents_model->get_details($options_all);
+        
+        // print_r($list_data);die;
+        $list_data = get_array_value($list_data_all,'data') ? get_array_value($list_data_all,'data') : $list_data_all->getResult(); 
+        $recordsTotal =  get_array_value($list_data_all,'recordsTotal');
+        $recordsFiltered =  get_array_value($list_data_all,'recordsFiltered');
 
         $result = array();
         foreach ($list_data as $data) {
@@ -549,98 +555,6 @@ class Documents extends Security_Controller
                     ));
     }
 
-    public function list_dataa()
-    {
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("leads", $this->login_user->is_admin, $this->login_user->user_type);
-
-        // $show_own_leads_only_user_id = $this->show_own_leads_only_user_id();
-
-        $result = $this->check_access('lead'); //here means documents for us.
-
-        $role = get_array_value($result, 'role');
-        $department_id = get_array_value($result, 'department_id');
-        $created_by = get_array_value($result, 'created_by');
-
-        $options = append_server_side_filtering_commmon_params([]);
-
-        $extraWhere = " AND t.destination_folder NOT LIKE 'Visitor' AND t.destination_folder NOT LIKE 'Leave'";
-        //by this, we can handel the server side or client side from the app table prams.
-        if (get_array_value($options, "server_side")) {
-            $order_by = $options['order_by'];
-            $order_direction = $options['order_dir'];
-            $search_by = $options["search_by"];
-            $skip = $options["skip"];
-
-            $limit_offset = "";
-            $limit = $options['limit'] ?? 10;
-            $where = "d.deleted=0";
-
-            if ($limit) {
-
-                $offset = $skip ? $skip : 0;
-                $limit_offset = " LIMIT $limit OFFSET $offset ";
-            }
-
-            if ($order_by) {
-                $order_by = "$order_by $order_direction ";
-            }
-
-            if ($search_by) {
-                $search_by = $this->db->escapeLikeString($search_by);
-
-                // `document_title`, `ref_number`, `depertment`, `template`, `item_id`,`created_by`, `created_at`
-                $where .= " AND (";
-                $where .= " d.id LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.document_title LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.ref_number LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.depertment LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.template LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.item_id LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR u.first_name LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR u.last_name LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR d.created_at LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " )";
-            }
-
-            $result = $this->db->query("select d.*,t.name as template,dp.nameSo as depertment,concat(u.first_name,' ',u.last_name) user from rise_documents d
-            LEFT JOIN rise_users u on d.created_by = u.id
-            LEFT JOIN rise_templates t on d.template = t.id
-            LEFT JOIN rise_departments dp on d.depertment = dp.id
-            where d.created_by LIKE '$created_by' and d.depertment LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
-
-            $list_data = $result->getResult();
-            $total_rows = $this->db->query("select count(*) as affected from rise_documents d
-            LEFT JOIN rise_templates t on d.template = t.id
-            where created_by LIKE '$created_by' and depertment LIKE '$department_id' and d.deleted=0 $extraWhere")->getRow()->affected;
-            $result = array();
-
-        } else {
-            $result = $this->db->query("select d.*,t.name as template,dp.nameSo as depertment,concat(u.first_name,' ',u.last_name) user from rise_documents d
-            LEFT JOIN rise_users u on d.created_by = u.id
-            LEFT JOIN rise_templates t on d.template = t.id
-            LEFT JOIN rise_departments dp on d.depertment = dp.id
-            where d.created_by LIKE '$created_by' and d.depertment LIKE '$department_id' and  d.deleted=0 $extraWhere");
-
-            $list_data = $result->getResult();
-            $total_rows = $this->db->query("select count(*) as affected from rise_documents d
-            LEFT JOIN rise_templates t on d.template = t.id
-            where created_by LIKE '$created_by' and depertment LIKE '$department_id' and  d.deleted=0 $extraWhere")->getRow()->affected;
-            $result = array();
-        }
-
-        $result_data = array();
-        foreach ($list_data as $data) {
-            $result_data[] = $this->_make_row($data, $custom_fields);
-        }
-
-        $result["data"] = $result_data;
-        $result["recordsTotal"] = $total_rows;
-        $result["recordsFiltered"] = $total_rows;
-
-        // var_dump($result);
-        // die();
-        echo json_encode($result);
-    }
 
 
     /* return a row of lead list table */

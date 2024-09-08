@@ -481,6 +481,7 @@ class Team_members extends Security_Controller {
             $data->employee_id,
             get_team_member_profile_link($data->id, $full_name),
             $data->job_title,
+            $data->sc_name_so,
             $data->dp_name_so,
             $data->dp_short_name_so,
             $data->dp_name_en,
