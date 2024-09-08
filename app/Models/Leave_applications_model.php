@@ -205,4 +205,13 @@ class Leave_applications_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    public function get_allowed_days_by_type($leave_type_id) {
+        $this->db->select('allowed_days');
+        $this->db->where('id', $leave_type_id);
+        $query = $this->db->get('rise_leave_types');
+        $result = $query->row();
+        
+        return isset($result->allowed_days) ? $result->allowed_days : 0;
+    }
+
 }

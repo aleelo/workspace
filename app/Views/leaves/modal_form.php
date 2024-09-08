@@ -142,6 +142,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="remaining_days"><?php echo app_lang('remaining_days'); ?></label>
+                    <div class="remaining-days"> <!-- Halkan waxaa lagu soo bandhigi doonaa remaining days -->
+
+                    </div> 
+                </div>
             </div>
 
             <div id="hours_section" class="hide date_section">
@@ -261,6 +267,50 @@
                 
                 location.reload();
             }
+        });
+
+    // Marka leave type la doorto
+        $('#leave_type_id').change(function () {
+            var leave_type_id = $(this).val();
+
+            // U dir codsi AJAX ah si loo helo allowed days ee fasaxa la doortay
+            $.ajax({
+                url: "<?php echo get_uri('leaves/get_allowed_days'); ?>",
+                type: "POST",
+                data: {leave_type_id: leave_type_id},
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    var allowed_days = data.allowed_days;  // allowed days from backend
+                    
+                    // Marka la dooranayo maalmaha fasaxa (start date & end date)
+                    $('#start_date, #end_date').change(function () {
+                        var start_date = $('#start_date').val();
+                        var end_date = $('#end_date').val();
+
+                        // Hubi haddii labada taariikh la doortay
+                        if (start_date && end_date) {
+                            // Xisaabi total days (faraqa u dhexeeya start date iyo end date)
+                            var total_days = moment(end_date).diff(moment(start_date), 'days') + 1; // +1 to include start day
+
+                            // Ku soo bandhig total days
+                            $('div.total-days').html('Total Days: ' + total_days);
+
+                            // Xisaabi maalmaha haray
+                            var remaining_days = allowed_days - total_days;
+                            console.log('Remaining Days: ', remaining_days);
+
+                            // Ku soo bandhig maalmaha haray iyo validation
+                            if (remaining_days >= 0) {
+                                $('div.remaining-days').html('Remaining Days: ' + remaining_days).css('color', 'green');
+                                $('#submit_button').prop('disabled', false);  // Enable submit button
+                            } else {
+                                $('div.remaining-days').html('Remaining Days: ' + remaining_days + ' (You have exceeded the allowed days)').css('color', 'red');
+                                $('#submit_button').prop('disabled', true);  // Disable submit button
+                            }
+                        }
+                    });
+                }
+            });
         });
 
         setDatePicker("#start_date, #end_date");

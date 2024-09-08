@@ -3055,6 +3055,7 @@ $lang["ticket_statistics"] = "Ticket Statistics";
 
 $lang["can_activate_deactivate_team_members"] = "Can activate deactivate employees?";
 $lang["can_delete_team_members"] = "Can delete employees?";
+$lang["remaining_days"] = "Remaining days";
 
 $lang["project_settings"] = "Project settings";
 $lang["project_status"] = "Project Status";

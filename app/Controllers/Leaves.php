@@ -668,7 +668,16 @@ class Leaves extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
+    public function get_allowed_days() {
+        $leave_type_id = $this->request->getPost('leave_type_id');
+        // $this->load->model('Leave_model');
 
+        // Hel allowed days ee fasaxa la doortay
+        $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
+
+        // Soo dir xogta
+        echo json_encode(array('allowed_days' => $allowed_days));
+    }
 
     /**
      * start document functions
