@@ -255,6 +255,7 @@ class Security_Controller extends App_Controller {
 
     //initialize the login user's permissions with readable format
     protected function init_permission_checker($module) {
+        $this->check_module_availability('module_'.$module);
         $info = $this->get_access_info($module);
         $this->access_type = $info->access_type;
         $this->allowed_members = $info->allowed_members;
@@ -300,7 +301,7 @@ class Security_Controller extends App_Controller {
                     //check the accessable client groups
                     $info->allowed_client_groups = $permissions;
                 }
-            } else if ($module_permission === "own" || $module_permission === "read_only" || $module_permission === "assigned_only" || $module_permission === "own_project_members" || $module_permission === "own_project_members_excluding_own") {
+            } else if ($module_permission === "own" || $module_permission === "read_only" || $module_permission === "assigned_only" || $module_permission === "own_project_members" || $module_permission === "own_project_members_excluding_own" || $module_permission === "specific") {
                 $info->access_type = $module_permission;
             }else if ($module_permission === "own_unit" || $module_permission === "own_section" || $module_permission === "own_department") {
                 $info->access_type = $module_permission;
@@ -338,7 +339,15 @@ class Security_Controller extends App_Controller {
         // die();
         if ($this->access_type === "all") {
             return true; //can access if user has permission
+        } else if ($this->module_group === "department" && $this->access_type === "own_department") {
+            return true;  //can access if it's document module and user has a pertial access
+        } else if ($this->module_group === "section" && $this->access_type === "own_section") {
+            return true;  //can access if it's document module and user has a pertial access
+        } else if ($this->module_group === "unit" && $this->access_type === "own_unit") {
+            return true;  //can access if it's document module and user has a pertial access
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
+            return true; //can access if it's tickets module and user has a pertial access
+        } else if ($this->module_group === "attendance" && $this->access_type === "specific") {
             return true; //can access if it's tickets module and user has a pertial access
         } else if ($this->module_group === "document" && ($this->access_type === "own" || $this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
             return true;  //can access if it's document module and user has a pertial access

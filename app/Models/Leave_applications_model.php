@@ -205,13 +205,47 @@ class Leave_applications_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    
     public function get_allowed_days_by_type($leave_type_id) {
-        $this->db->select('allowed_days');
-        $this->db->where('id', $leave_type_id);
-        $query = $this->db->get('rise_leave_types');
-        $result = $query->row();
-        
-        return isset($result->allowed_days) ? $result->allowed_days : 0;
+        // Define the query with a placeholder for the leave_type_id
+        $sql = "SELECT lt.allowed_days FROM rise_leave_types lt WHERE lt.id = ?";
+    
+        // Execute the query
+        $query = $this->db->query($sql, array($leave_type_id));
+    
+        if ($query && $query->getNumRows() > 0) {  
+            $result = $query->getRow();  
+    
+            return isset($result->allowed_days) ? $result->allowed_days : 0;
+        } else {
+            
+            log_message('error', 'Query failed or no rows found for leave_type_id: ' . $leave_type_id);
+            return 0;
+        }
     }
+
+    public function get_taken_days_by_type($user_id, $leave_type_id) {
+        // Define the query with a placeholder for the leave_type_id
+        $sql = "SELECT SUM(la.total_days) AS total_days FROM rise_leave_applications la WHERE la.applicant_id = ? AND la.leave_type_id = ?";
+    
+        // Execute the query
+        $query = $this->db->query($sql, array($user_id, $leave_type_id));
+    
+        // Check if the query executed successfully and returned any rows
+        if ($query && $query->getNumRows() > 0) {  // Use getNumRows() in CodeIgniter 4
+            // Fetch the result row
+            $result = $query->getRow();  // Also, use getRow() instead of row()
+    
+            // Return the allowed_days if it exists, otherwise return 0
+            return isset($result->total_days) ? $result->total_days : 0;
+        } else {
+            // If query fails or no rows are found, log the error and return 0
+            log_message('error', 'Query failed or no rows found for leave_type_id: ' . $leave_type_id);
+            return 0;
+        }
+    }
+
+    
+    
 
 }

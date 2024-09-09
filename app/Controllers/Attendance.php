@@ -42,7 +42,7 @@ class Attendance extends Security_Controller {
 
     //show attendance list view
     function index($tab = "") {
-        $this->check_module_availability("module_attendance");
+        $this->access_only_allowed_members();
 
         $view_data['team_members_dropdown'] = json_encode($this->_get_members_dropdown_list_for_filter());
         $view_data['tab'] = clean_data($tab); //selected tab

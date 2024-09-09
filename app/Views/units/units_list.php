@@ -37,32 +37,32 @@
             {name: "quick_filter", class: "w200", options: quick_filters_dropdown},
         <?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
                 {name: "created_by", class: "w200", options: <?php echo $team_members_dropdown; ?>},
-<?php } ?>
+    <?php } ?>
             {name: "group_id", class: "w200", options: <?php echo $groups_dropdown; ?>},
             {name: "label_id", class: "w200", options: <?php echo $labels_dropdown; ?>},
-<?php echo $custom_field_filters; ?>
-            ],
-            columns: [
-            {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("unit_name_so") ?>", "class": "all", order_by: "nameSo"},
-            {title: "<?php echo app_lang("short_name_so") ?>", order_by: "short_name_SO"},
-            {title: "<?php echo app_lang("unit_name_en") ?>", order_by: "nameEn"},
-            {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
-            {title: "<?php echo app_lang("unit_email") ?>", order_by: "email"},
-            {title: "<?php echo app_lang("unit_department") ?>", order_by: "DepNameSo"},
-            {title: "<?php echo app_lang("unit_section") ?>", order_by: "SecNameSo"},
-            {title: "<?php echo app_lang("unit_head") ?>", order_by: "UnitHead"},
-            {title: "<?php echo app_lang("unit_remarks") ?>", order_by: "remarks"}
+    <?php echo $custom_field_filters; ?>
+                ],
+                columns: [
+                {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
+                {title: "<?php echo app_lang("unit_name_so") ?>", "class": "all", order_by: "nameSo"},
+                {title: "<?php echo app_lang("short_name_so") ?>", order_by: "short_name_SO"},
+                {title: "<?php echo app_lang("unit_name_en") ?>", order_by: "nameEn"},
+                {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
+                {title: "<?php echo app_lang("unit_email") ?>", order_by: "email"},
+                {title: "<?php echo app_lang("unit_department") ?>", order_by: "DepNameSo"},
+                {title: "<?php echo app_lang("unit_section") ?>", order_by: "SecNameSo"},
+                {title: "<?php echo app_lang("unit_head") ?>", order_by: "UnitHead"},
+                {title: "<?php echo app_lang("unit_remarks") ?>", order_by: "remarks"}
 
-            
-<?php echo $custom_field_headers; ?>,
-            {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100", visible: showOptions}
-            ],
-            printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>')
-    });
-    };
-    $(document).ready(function () {
-    loadClientsTable("#client-table");
-    });
+                
+    <?php echo $custom_field_headers; ?>,
+                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100", visible: showOptions}
+                ],
+                printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>'),
+                xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>')
+        });
+        };
+        $(document).ready(function () {
+        loadClientsTable("#client-table");
+        });
 </script>

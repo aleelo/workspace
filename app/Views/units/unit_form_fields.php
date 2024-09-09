@@ -231,7 +231,7 @@
             }
         });
 
-        $("#client-form .select2").select2();
+        $("#unit-form .select2").select2();
 
     });
 </script>

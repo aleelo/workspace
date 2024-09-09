@@ -76,17 +76,17 @@ class Left_menu {
                 $sidebar_menu["departments"] = array("name" => "departments", "url" => "", "class" => "briefcase");
             }
 
-            if ($this->ci->login_user->is_admin || $access_department) {
+            if (get_setting("module_department") == "1" && ($this->ci->login_user->is_admin || $access_department)) {
                 $sidebar_menu["department"] = array("name" => "department", "url" => "departments", "class" => "briefcase");
             }
             
 
-            if ($this->ci->login_user->is_admin || $access_section) {
+            if (get_setting("module_section") == "1" && ($this->ci->login_user->is_admin || $access_section)) {
                 $sidebar_menu["sections"] = array("name" => "sections", "url" => "sections", "class" => "briefcase");
             }
 
             
-            if ($this->ci->login_user->is_admin || $access_unit) {
+            if (get_setting("module_unit") == "1" && ($this->ci->login_user->is_admin || $access_unit)) {
                 $sidebar_menu["units"] = array("name" => "units", "url" => "units", "class" => "briefcase");
             }
             
@@ -220,14 +220,10 @@ class Left_menu {
 
             if (get_setting("module_attendance") == "1" && ($this->ci->login_user->is_admin || $access_timecard)) {
                 $team_submenu["attendance"] = array("name" => "attendance", "url" => "attendance", "class" => "clock");
-            } else if (get_setting("module_attendance") == "1") {
-                $team_submenu["attendance"] = array("name" => "attendance", "url" => "attendance/attendance_info", "class" => "clock");
-            }
+            } 
 
             if (get_setting("module_leave") == "1" && ($this->ci->login_user->is_admin || $access_leave)) {
                 $team_submenu["leaves"] = array("name" => "leaves", "url" => "leaves", "class" => "log-out");
-            } else if (get_setting("module_leave") == "1") {
-                $team_submenu["leaves"] = array("name" => "leaves", "url" => "leaves/leave_info", "class" => "log-out");
             }
 
             if (get_setting("module_timeline") == "1" && $access_timeline) {

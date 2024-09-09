@@ -8,7 +8,7 @@ class Units extends Security_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("client");
+        $this->init_permission_checker("unit");
     }
 
     private function _validate_client_manage_access($client_id = 0) {
@@ -49,7 +49,7 @@ class Units extends Security_Controller {
     function modal_form() {
         
         $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        // $this->_validate_client_manage_access($Units_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -97,7 +97,7 @@ class Units extends Security_Controller {
     function save() {
         
         $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        // $this->_validate_client_manage_access($Units_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -316,7 +316,7 @@ class Units extends Security_Controller {
 
     function view($Units_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($Units_id);
+        // $this->_validate_client_view_access($Units_id);
 
         if ($Units_id) {
             $options = array("id" => $Units_id);
@@ -882,7 +882,7 @@ class Units extends Security_Controller {
 
     function company_info_tab($Sections_id = 0) {
         if ($Sections_id) {
-            $this->_validate_client_view_access($Sections_id);
+            // $this->_validate_client_view_access($Sections_id);
 
             $view_data['model_info'] = $this->Units_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();

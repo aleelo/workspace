@@ -49,7 +49,7 @@ class Departments extends Security_Controller {
     function modal_form() {
         
         $Deparment_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Deparment_id);
+        // $this->_validate_client_manage_access($Deparment_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -94,7 +94,7 @@ class Departments extends Security_Controller {
     function save() {
         
         $Deparment_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Deparment_id);
+        // $this->_validate_client_manage_access($Deparment_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -356,7 +356,7 @@ class Departments extends Security_Controller {
 
     function view($Deparment_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($Deparment_id);
+        // $this->_validate_client_view_access($Deparment_id);
 
         if ($Deparment_id) {
             $options = array("id" => $Deparment_id);
@@ -922,7 +922,7 @@ class Departments extends Security_Controller {
 
     function company_info_tab($Deparment_id = 0) {
         if ($Deparment_id) {
-            $this->_validate_client_view_access($Deparment_id);
+            // $this->_validate_client_view_access($Deparment_id);
 
             $view_data['model_info'] = $this->Departments_model->get_one($Deparment_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();

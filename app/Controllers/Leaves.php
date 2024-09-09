@@ -36,7 +36,7 @@ class Leaves extends Security_Controller {
     }
 
     function index($tab = "") {
-        $this->check_module_availability("module_leave");
+        $this->access_only_allowed_members();
 
         $role = $this->get_user_role();
 
@@ -116,7 +116,7 @@ class Leaves extends Security_Controller {
 
                 $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
                 
-                $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
+                $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.dep_head_id = hdu.id WHERE la.id = $save_id")->getRow();
                 
                 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
@@ -463,7 +463,7 @@ class Leaves extends Security_Controller {
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             'document_title' =>'Leave - '.$user_info->first_name.' '.$user_info->last_name,
             'ref_number' =>$template->ref_prefix.'/'.$sqn.'/'.date('m').'/'.date('y'),
-            "depertment" => $user_info->department_id,
+            "department" => $user_info->department_id,
             "template" => $template->id,
             "created_by" => $this->login_user->id,
             "created_at" => date('Y-m-d H:i:s')
@@ -548,8 +548,35 @@ class Leaves extends Security_Controller {
         $leave_data['applicant_id'] = $this->login_user->id;
         $leave_data['created_by'] = 0;
         $leave_data['checked_at'] = "0000:00:00";
+
+        $leave_type_id = $this->request->getPost('leave_type_id');
+        $start_date = $leave_data['start_date'];
+        $end_date = $leave_data['end_date'];
         // $leave_data['status'] = "pending";
+
         $applicant_id = $this->login_user->id;
+
+        $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
+        $taken_days = $this->Leave_applications_model->get_taken_days_by_type($applicant_id, $leave_type_id);
+
+        // // Calculate the number of requested days
+        // $requested_days = (strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1; // +1 to include the start day
+
+        // // Calculate remaining days
+        // $remaining_days = $allowed_days - $taken_days;
+
+        // // Check if the requested days are more than the remaining days
+        // if ($requested_days > $remaining_days) {
+        //     // Show an error message if the requested days exceed the remaining days
+        //     $this->session->set_flashdata('error', 'You only have ' . $remaining_days . ' days remaining for this leave type.');
+        //     redirect('leaves/apply');
+        // }
+
+        // // Check if the start date is before or equal to the end date
+        // if (strtotime($start_date) > strtotime($end_date)) {
+        //     $this->session->set_flashdata('error', 'Start date cannot be later than end date.');
+        //     redirect('leaves/apply');
+        // }
 
         $leave_data = clean_data($leave_data);
         
@@ -567,7 +594,7 @@ class Leaves extends Security_Controller {
         $save_id = $this->Leave_applications_model->ci_save($leave_data);
         
         $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
-        $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.head_id = hdu.id WHERE la.id = $save_id")->getRow();
+        $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.dep_head_id = hdu.id WHERE la.id = $save_id")->getRow();
         $leave_info = $this->db->query("SELECT l.*,t.title FROM rise_leave_applications l 
                         left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
 
@@ -595,7 +622,7 @@ class Leaves extends Security_Controller {
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             'document_title' =>'Leave - '.$user_info->first_name.' '.$user_info->last_name,
             'ref_number' =>$template->ref_prefix.'/'.$sqn.'/'.date('m').'/'.date('y'),
-            "depertment" => $user_info->department_id,
+            "department" => $user_info->department_id,
             "template" => $template->id,
             "created_by" => $this->login_user->id,
             "created_at" => date('Y-m-d H:i:s')
@@ -668,16 +695,31 @@ class Leaves extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
+
     public function get_allowed_days() {
         $leave_type_id = $this->request->getPost('leave_type_id');
-        // $this->load->model('Leave_model');
-
-        // Hel allowed days ee fasaxa la doortay
+        $user_id = $this->login_user->id ? $this->login_user->id : $this->request->getPost('applicant_id');  // Assuming the user ID is stored in session
+    
+        // Get allowed days for the selected leave type
         $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
-
-        // Soo dir xogta
-        echo json_encode(array('allowed_days' => $allowed_days));
+    
+        // Get the total days already taken by the user for the selected leave type
+        $taken_days = $this->Leave_applications_model->get_taken_days_by_type($user_id, $leave_type_id);
+    
+        // Return both allowed_days and taken_days
+        echo json_encode(array('allowed_days' => $allowed_days, 'taken_days' => $taken_days));
     }
+    
+    // public function get_allowed_dayss() {
+    //     $leave_type_id = $this->request->getPost('leave_type_id');
+    //     // $this->load->model('Leave_model');
+
+    //     // Hel allowed days ee fasaxa la doortay
+    //     $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
+
+    //     // Soo dir xogta
+    //     echo json_encode(array('allowed_days' => $allowed_days));
+    // }
 
     /**
      * start document functions

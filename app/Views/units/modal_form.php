@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("units/save"), array("id" => "client-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("units/save"), array("id" => "unit-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id; ?>" />
@@ -27,7 +27,7 @@
         
         var ticket_id = "<?php echo $ticket_id; ?>";
 
-        window.clientForm = $("#client-form").appForm({
+        window.clientForm = $("#unit-form").appForm({
             closeModalOnSuccess: false,
             onSuccess: function (result) {
                 var $addMultipleContactsLink = $("#link-of-add-contact-modal").find("a");

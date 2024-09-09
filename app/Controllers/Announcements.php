@@ -11,7 +11,6 @@ class Announcements extends Security_Controller {
 
     //show announcements list
     function index() {
-        $this->check_module_availability("module_announcement");
         $this->access_only_allowed_members();
 
         $view_data["show_add_button"] = true;
