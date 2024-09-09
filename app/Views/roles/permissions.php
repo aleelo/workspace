@@ -329,6 +329,138 @@
                     </div>
 
                 </li>
+                
+                <?php if (get_setting("module_attendance")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_team_members_timecards"); ?> <span class="help" data-bs-toggle="tooltip" title="Add, edit and delete time cards"><i data-feather="help-circle" class="icon-14"></i></span></h5>
+                        <div>
+                            <?php
+                            if (is_null($attendance)) {
+                                $attendance = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "attendance_permission_no",
+                                "name" => "attendance_permission",
+                                "value" => "",
+                                "class" => "attendance_permission toggle_specific form-check-input",
+                                    ), $attendance, ($attendance === "") ? true : false);
+                            ?>
+                            <label for="attendance_permission_no"><?php echo app_lang("no"); ?> </label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "attendance_permission_all",
+                                "name" => "attendance_permission",
+                                "value" => "all",
+                                "class" => "attendance_permission toggle_specific form-check-input",
+                                    ), $attendance, ($attendance === "all") ? true : false);
+                            ?>
+                            <label for="attendance_permission_all"><?php echo app_lang("yes_all_members"); ?></label>
+                        </div>
+                        <div class="form-group">
+                            <?php
+                            echo form_radio(array(
+                                "id" => "attendance_permission_specific",
+                                "name" => "attendance_permission",
+                                "value" => "specific",
+                                "class" => "attendance_permission toggle_specific form-check-input",
+                                    ), $attendance, ($attendance === "specific") ? true : false);
+                            ?>
+                            <label for="attendance_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_his_her_time_cards") . ")"; ?>:</label>
+                            <div class="specific_dropdown">
+                                <input type="text" value="<?php echo $attendance_specific; ?>" name="attendance_permission_specific" id="attendance_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />
+                            </div>
+                        </div>
+
+                    </li>
+                <?php } ?>
+                <?php if (get_setting("module_leave")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_team_members_leave"); ?> <span class="help" data-bs-toggle="tooltip" title="Assign, approve or reject leave applications"><span data-feather="help-circle" class="icon-14"></span></span> </h5>
+                        <div>
+                            <?php
+                            if (is_null($leave)) {
+                                $leave = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "leave_permission_no",
+                                "name" => "leave_permission",
+                                "value" => "",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "") ? true : false);
+                            ?>
+                            <label for="leave_permission_no"><?php echo app_lang("no"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "leave_permission_all",
+                                "name" => "leave_permission",
+                                "value" => "all",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "all") ? true : false);
+                            ?>
+                            <label for="leave_permission_all"><?php echo app_lang("yes_all_members"); ?></label>
+                        </div>
+                        <div class="form-group pb0 mb0 no-border">
+                            <?php
+                            echo form_radio(array(
+                                "id" => "leave_permission_specific",
+                                "name" => "leave_permission",
+                                "value" => "specific",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "specific") ? true : false);
+                            ?>
+                            <label for="leave_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_his_her_leaves") . ")"; ?>:</label>
+                            <div class="specific_dropdown">
+                                <input type="text" value="<?php echo $leave_specific; ?>" name="leave_permission_specific" id="leave_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />    
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <?php
+                                echo form_checkbox("can_delete_leave_application", "1", $can_delete_leave_application ? true : false, "id='can_delete_leave_application' class='form-check-input'");
+                                ?>
+                                <label for="can_delete_leave_application"><?php echo app_lang("can_delete_leave_application"); ?> <span class="help" data-bs-toggle="tooltip" title="Can delete based on his/her access permission"><i data-feather="help-circle" class="icon-14"></i></span></label>
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
+                <?php if (get_setting("module_announcement")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_announcements"); ?></h5>
+                        <div>
+                            <?php
+                            if (is_null($announcement)) {
+                                $announcement = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "announcement_no",
+                                "name" => "announcement_permission",
+                                "value" => "",
+                                "class" => "form-check-input",
+                                    ), $announcement, ($announcement === "") ? true : false);
+                            ?>
+                            <label for="announcement_no"><?php echo app_lang("no"); ?> </label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "announcement_yes",
+                                "name" => "announcement_permission",
+                                "value" => "all",
+                                "class" => "form-check-input",
+                                    ), $announcement, ($announcement === "all") ? true : false);
+                            ?>
+                            <label for="announcement_yes"><?php echo app_lang("yes"); ?></label>
+                        </div>
+                    </li>
+                <?php } ?>
                 <li>   
                     <span data-feather="key" class="icon-14 ml-20"></span>
                     <h5><?php echo app_lang("can_manage_departments_sections_units"); ?></h5>
@@ -479,137 +611,6 @@
                     <?php } ?>
                 </div>
                
-                <?php if (get_setting("module_attendance")) { ?>
-                    <li>
-                        <span data-feather="key" class="icon-14 ml-20"></span>
-                        <h5><?php echo app_lang("can_manage_team_members_timecards"); ?> <span class="help" data-bs-toggle="tooltip" title="Add, edit and delete time cards"><i data-feather="help-circle" class="icon-14"></i></span></h5>
-                        <div>
-                            <?php
-                            if (is_null($attendance)) {
-                                $attendance = "";
-                            }
-                            echo form_radio(array(
-                                "id" => "attendance_permission_no",
-                                "name" => "attendance_permission",
-                                "value" => "",
-                                "class" => "attendance_permission toggle_specific form-check-input",
-                                    ), $attendance, ($attendance === "") ? true : false);
-                            ?>
-                            <label for="attendance_permission_no"><?php echo app_lang("no"); ?> </label>
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "attendance_permission_all",
-                                "name" => "attendance_permission",
-                                "value" => "all",
-                                "class" => "attendance_permission toggle_specific form-check-input",
-                                    ), $attendance, ($attendance === "all") ? true : false);
-                            ?>
-                            <label for="attendance_permission_all"><?php echo app_lang("yes_all_members"); ?></label>
-                        </div>
-                        <div class="form-group">
-                            <?php
-                            echo form_radio(array(
-                                "id" => "attendance_permission_specific",
-                                "name" => "attendance_permission",
-                                "value" => "specific",
-                                "class" => "attendance_permission toggle_specific form-check-input",
-                                    ), $attendance, ($attendance === "specific") ? true : false);
-                            ?>
-                            <label for="attendance_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_his_her_time_cards") . ")"; ?>:</label>
-                            <div class="specific_dropdown">
-                                <input type="text" value="<?php echo $attendance_specific; ?>" name="attendance_permission_specific" id="attendance_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />
-                            </div>
-                        </div>
-
-                    </li>
-                <?php } ?>
-                <?php if (get_setting("module_leave")) { ?>
-                    <li>
-                        <span data-feather="key" class="icon-14 ml-20"></span>
-                        <h5><?php echo app_lang("can_manage_team_members_leave"); ?> <span class="help" data-bs-toggle="tooltip" title="Assign, approve or reject leave applications"><span data-feather="help-circle" class="icon-14"></span></span> </h5>
-                        <div>
-                            <?php
-                            if (is_null($leave)) {
-                                $leave = "";
-                            }
-                            echo form_radio(array(
-                                "id" => "leave_permission_no",
-                                "name" => "leave_permission",
-                                "value" => "",
-                                "class" => "leave_permission toggle_specific form-check-input",
-                                    ), $leave, ($leave === "") ? true : false);
-                            ?>
-                            <label for="leave_permission_no"><?php echo app_lang("no"); ?></label>
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "leave_permission_all",
-                                "name" => "leave_permission",
-                                "value" => "all",
-                                "class" => "leave_permission toggle_specific form-check-input",
-                                    ), $leave, ($leave === "all") ? true : false);
-                            ?>
-                            <label for="leave_permission_all"><?php echo app_lang("yes_all_members"); ?></label>
-                        </div>
-                        <div class="form-group pb0 mb0 no-border">
-                            <?php
-                            echo form_radio(array(
-                                "id" => "leave_permission_specific",
-                                "name" => "leave_permission",
-                                "value" => "specific",
-                                "class" => "leave_permission toggle_specific form-check-input",
-                                    ), $leave, ($leave === "specific") ? true : false);
-                            ?>
-                            <label for="leave_permission_specific"><?php echo app_lang("yes_specific_members_or_teams") . " (" . app_lang("excluding_his_her_leaves") . ")"; ?>:</label>
-                            <div class="specific_dropdown">
-                                <input type="text" value="<?php echo $leave_specific; ?>" name="leave_permission_specific" id="leave_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_members_and_or_teams'); ?>"  />    
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <div>
-                                <?php
-                                echo form_checkbox("can_delete_leave_application", "1", $can_delete_leave_application ? true : false, "id='can_delete_leave_application' class='form-check-input'");
-                                ?>
-                                <label for="can_delete_leave_application"><?php echo app_lang("can_delete_leave_application"); ?> <span class="help" data-bs-toggle="tooltip" title="Can delete based on his/her access permission"><i data-feather="help-circle" class="icon-14"></i></span></label>
-                            </div>
-                        </div>
-                    </li>
-                <?php } ?>
-                <?php if (get_setting("module_announcement")) { ?>
-                    <li>
-                        <span data-feather="key" class="icon-14 ml-20"></span>
-                        <h5><?php echo app_lang("can_manage_announcements"); ?></h5>
-                        <div>
-                            <?php
-                            if (is_null($announcement)) {
-                                $announcement = "";
-                            }
-                            echo form_radio(array(
-                                "id" => "announcement_no",
-                                "name" => "announcement_permission",
-                                "value" => "",
-                                "class" => "form-check-input",
-                                    ), $announcement, ($announcement === "") ? true : false);
-                            ?>
-                            <label for="announcement_no"><?php echo app_lang("no"); ?> </label>
-                        </div>
-                        <div>
-                            <?php
-                            echo form_radio(array(
-                                "id" => "announcement_yes",
-                                "name" => "announcement_permission",
-                                "value" => "all",
-                                "class" => "form-check-input",
-                                    ), $announcement, ($announcement === "all") ? true : false);
-                            ?>
-                            <label for="announcement_yes"><?php echo app_lang("yes"); ?></label>
-                        </div>
-                    </li>
-                <?php } ?>
                 <?php if (get_setting("module_message")) { ?>
                     <li>
                         <span data-feather="key" class="icon-14 ml-20"></span>
