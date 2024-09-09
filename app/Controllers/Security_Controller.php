@@ -255,7 +255,6 @@ class Security_Controller extends App_Controller {
 
     //initialize the login user's permissions with readable format
     protected function init_permission_checker($module) {
-        // $this->check_module_availability('module_'.$module);
         $info = $this->get_access_info($module);
         $this->access_type = $info->access_type;
         $this->allowed_members = $info->allowed_members;

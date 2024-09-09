@@ -36,6 +36,8 @@ class Leaves extends Security_Controller {
     }
 
     function index($tab = "") {
+
+        $this->check_module_availability("module_leave");
         $this->access_only_allowed_members();
 
         $role = $this->get_user_role();

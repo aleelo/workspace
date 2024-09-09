@@ -26,6 +26,8 @@ class Units extends Security_Controller {
     /* load clients list view */
 
     function index($tab = "") {
+
+        $this->check_module_availability("module_unit");
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();
