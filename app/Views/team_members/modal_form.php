@@ -13,15 +13,16 @@
             <div class="form-widget">
                 <div class="widget-title clearfix">
                     <div class="row">
-                        <div id="general-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('Profile_info'); ?></strong></div>
-                        <div id="education-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('education_info'); ?></strong></div>
-                        <div id="job-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('job_info'); ?></strong></div>
-                        <div id="account-info-label" class="col-sm-3"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('account_settings'); ?></strong></div> 
+                        <div id="general-info-label" class="col"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('Profile_info'); ?></strong></div>
+                        <div id="education-info-label" class="col"><i data-feather="circle" class="icon-16"></i><strong> <?php echo app_lang('education_info'); ?></strong></div>
+                        <div id="job-info-label" class="col"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('job_info'); ?></strong></div>
+                        <div id="bank-details-label" class="col"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('bank_details'); ?></strong></div>
+                        <div id="account-info-label" class="col"><i data-feather="circle" class="icon-16"></i><strong>  <?php echo app_lang('account_settings'); ?></strong></div> 
                     </div>
                 </div>
 
                 <div class="progress ml15 mr15">
-                    <div id="form-progress-bar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                    <div id="form-progress-bar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                     </div>
                 </div>
             </div>
@@ -47,7 +48,6 @@
                                         "name" => "first_name",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('first_name'),
-                                        "autofocus" => true,
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
                                     ));
@@ -277,7 +277,7 @@
             
             <!---------------------------------- Education Info Tab ----------------------------->
 
-                <div role="tabpanel" class="tab-pane active" id="education-info-tab">
+                <div role="tabpanel" class="tab-pane" id="education-info-tab">
 
                         <div class="my-4">
                             <h4 class="text-muted">Education Information</h4>
@@ -706,6 +706,71 @@
                     </div>
 
                 </div>
+            
+            <!---------------------------------- Bank Details Tab ----------------------------->
+                    
+                <div role="tabpanel" class="tab-pane" id="bank-details-tab">
+
+                    <div class="mb-4">
+                        <h4  class="text-muted">Bank Details</h4>
+                        <hr class="mt-0"/> 
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="bank_name" class=" col-md-3"><?php echo 'Bank Name'; ?></label>
+                            <div class=" col-md-9">
+                            <?php
+                            echo form_dropdown(array( 
+                                        'id'=> "bank_id",
+                                        'name'=> "bank_id",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Bank Name',
+                                        'autocomplete'=> "off",
+                                        // 'data-rule-required' => true,
+                                        // 'data-msg-required' =>   app_lang('field_required')
+                                    ),$bank_names_dropdown); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="bank_account" class=" col-md-3"><?php echo 'Bank Account'; ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_input(array(
+                                    "id" => "bank_account",
+                                    "name" => "bank_account",
+                                    "class" => "form-control",
+                                    "placeholder" => 'Bank Account',
+                                    "autocomplete" => "off",
+                                    // "data-rule-required" => true,
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="bank_registered_name" class=" col-md-3"><?php echo 'Bank Registered Name'; ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_input(array(
+                                    "id" => "bank_registered_name",
+                                    "name" => "bank_registered_name",
+                                    "class" => "form-control",
+                                    "placeholder" => 'Bank Registered Name',
+                                    "autocomplete" => "off",
+                                    // "data-rule-required" => true,
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
             <!---------------------------------- Account Settings Tab ----------------------------->
 
@@ -840,8 +905,6 @@
             }
         });
 
-        
-        
         $("#team_member-form input").keydown(function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
@@ -852,127 +915,139 @@
                 }
             }
         });
-        
-        setTimeout(function () {
-            $("#first_name").focus();
-        }, 200);
+
+        // setTimeout(function () {
+        //     $("#first_name").focus();
+        // }, 200);
 
         $("#team_member-form .select2").select2();
 
         setDatePicker("#date_of_hire");
         setDatePicker(".date_input");
 
-        
-
-        $("#form-previous").click(function () {
-
-            var $generalTab = $("#general-info-tab"),
-                $educationTab = $("#education-info-tab"),
-                $jobTab = $("#job-info-tab"),
-                $bankTab = $("#bank_details-tab"),
-                $accountTab = $("#account-info-tab"),
-
-                $previousButton = $("#form-previous"),
-                $nextButton = $("#form-next"),
-                $submitButton = $("#form-submit");
-
-            if ($educationTab.hasClass("active")) {
-
-                $educationTab.removeClass("active");
-                $generalTab.addClass("active");
-
-                $jobTab.addClass("hide");
-                $accountTab.addClass("hide");
-
-                $previousButton.removeClass("hide");
-                $nextButton.removeClass("hide");
-                $submitButton.addClass("hide");
-
-            } else if ($jobTab.hasClass("active")) {
-
-                $jobTab.removeClass("active");
-                $educationTab.addClass("active");
-
-                $generalTab.addClass("hide");
-                $accountTab.addClass("hide");
-
-                $previousButton.removeClass("hide");
-                $nextButton.removeClass("hide");
-                $submitButton.addClass("hide");
-
-            } else if($accountTab.hasClass("active")) {
-
-                $accountTab.removeClass("active");
-                $jobTab.addClass("active");
-
-                $previousButton.removeClass("hide");
-                $nextButton.removeClass("hide");
-                $submitButton.addClass("hide");
-            }
-           
-        });
+        function switchTab(activeTab, nextTab, progressBar, labelIcon, percentage) {
+            activeTab.removeClass("active");
+            nextTab.addClass("active");
+            $("#form-progress-bar").width(percentage);
+            labelIcon.find("svg").remove();
+            labelIcon.prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
+        }
 
         $("#form-next").click(function () {
 
-            var $generalTab = $("#general-info-tab"),
-                $educationInfoTab = $("#education-info-tab"),
-                $jobTab = $("#job-info-tab"),
-                $bankTab = $("#bank_details-tab"),
-                $accountTab = $("#account-info-tab"),
+        var $generalTab = $("#general-info-tab"),
+            $educationTab = $("#education-info-tab"),
+            $jobTab = $("#job-info-tab"),
+            $bankTab = $("#bank-details-tab"),
+            $accountTab = $("#account-info-tab"),
 
-                $previousButton = $("#form-previous"),
-                $nextButton = $("#form-next"),
-                $submitButton = $("#form-submit");
+            $previousButton = $("#form-previous"),
+            $nextButton = $("#form-next"),
+            $submitButton = $("#form-submit");
 
-            if (!$("#team_member-form").valid()) {
-                return false;
-            }
-            
-            if ($generalTab.hasClass("active")) {
+        if (!$("#team_member-form").valid()) {
+            return false;
+        }
 
-                $generalTab.removeClass("active");
-                $educationInfoTab.addClass("active");
+        if ($generalTab.hasClass("active")) {
+            // Move to Education tab
+            $generalTab.removeClass("active");
+            $educationTab.addClass("active");
+            $previousButton.removeClass("hide");
 
-                $previousButton.removeClass("hide");
+            $("#form-progress-bar").width("20%"); // 20% for the first tab completed
+            $("#general-info-label").find("svg").remove();
+            $("#general-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
 
-                $("#form-progress-bar").width("50%");
-                $("#general-info-label").find("svg").remove();
-                $("#general-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
-                feather.replace();
-                $("#team_member_id").focus();
-                $("#employee_type").focus();
+        } else if ($educationTab.hasClass("active")) {
+            // Move to Job Info tab
+            $educationTab.removeClass("active");
+            $jobTab.addClass("active");
 
-            } else if ($educationInfoTab.hasClass("active")) {
+            $("#form-progress-bar").width("40%"); // 40% after the second tab
+            $("#education-info-label").find("svg").remove();
+            $("#education-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
 
-                $educationInfoTab.removeClass("active");
-                $jobTab.addClass("active");
+        } else if ($jobTab.hasClass("active")) {
+            // Move to Bank Details tab
+            $jobTab.removeClass("active");
+            $bankTab.addClass("active");
 
-                $previousButton.removeClass("hide");
+            $("#form-progress-bar").width("60%"); // 60% after the third tab
+            $("#job-info-label").find("svg").remove();
+            $("#job-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
 
-                $("#form-progress-bar").width("75%");
-                $("#education-info-label").find("svg").remove();
-                $("#education-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
-                feather.replace();
-                $("#team_member_id").focus();
-                $("#employee_type").focus();
+        } else if ($bankTab.hasClass("active")) {
+            // Move to Account Settings tab
+            $bankTab.removeClass("active");
+            $accountTab.addClass("active");
 
-            } else if ($jobTab.hasClass("active")) {
+            $nextButton.addClass("hide");
+            $submitButton.removeClass("hide");
 
-                $jobTab.removeClass("active");
-                $accountTab.addClass("active");
+            $("#form-progress-bar").width("80%"); // 80% after the fourth tab
+            $("#bank-details-label").find("svg").remove();
+            $("#bank-details-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
 
-                $previousButton.removeClass("hide");
-                $nextButton.addClass("hide");
-                $submitButton.removeClass("hide");
-
-                $("#form-progress-bar").width("100%");
-                $("#job-info-label").find("svg").remove();
-                $("#job-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
-                feather.replace();
-                $("#employee_type").focus();
-                $("#email").focus();
-            } 
+        } else if ($accountTab.hasClass("active")) {
+            // All tabs completed
+            $("#form-progress-bar").width("100%"); // 100% after the last tab
+            $("#account-info-label").find("svg").remove();
+            $("#account-info-label").prepend('<i data-feather="check-circle" class="icon-16"></i>');
+            feather.replace();
+        }
         });
+
+        $("#form-previous").click(function () {
+
+        var $generalTab = $("#general-info-tab"),
+            $educationTab = $("#education-info-tab"),
+            $jobTab = $("#job-info-tab"),
+            $bankTab = $("#bank-details-tab"),
+            $accountTab = $("#account-info-tab"),
+
+            $previousButton = $("#form-previous"),
+            $nextButton = $("#form-next"),
+            $submitButton = $("#form-submit");
+
+        if ($accountTab.hasClass("active")) {
+            // Move back to Bank Details tab
+            $accountTab.removeClass("active");
+            $bankTab.addClass("active");
+
+            $("#form-progress-bar").width("60%"); // Back to 60%
+            $nextButton.removeClass("hide");
+            $submitButton.addClass("hide");
+
+        } else if ($bankTab.hasClass("active")) {
+            // Move back to Job Info tab
+            $bankTab.removeClass("active");
+            $jobTab.addClass("active");
+
+            $("#form-progress-bar").width("40%"); // Back to 40%
+
+        } else if ($jobTab.hasClass("active")) {
+            // Move back to Education Info tab
+            $jobTab.removeClass("active");
+            $educationTab.addClass("active");
+
+            $("#form-progress-bar").width("20%"); // Back to 20%
+
+        } else if ($educationTab.hasClass("active")) {
+            // Move back to General Info tab
+            $educationTab.removeClass("active");
+            $generalTab.addClass("active");
+
+            $("#form-progress-bar").width("0%"); // Back to 0%
+            $previousButton.addClass("hide");
+        }
+        });
+
 
         $("#form-submit").click(function () {
             $("#team_member-form").trigger('submit');
@@ -1015,23 +1090,5 @@
                 $("#password").removeAttr("data-msg-required");
             }
         });
-        //show/hide recurring fields
-        $("#hasSignature").click(function () {
-            if ($(this).is(":checked")) {
-                $("#hasSignatureFields").removeClass("hide");
-            } else {
-                $("#hasSignatureFields").addClass("hide");
-            }
-        });
-
-        //show/hide recurring fields
-        $("#event_recurring").click(function () {
-            if ($(this).is(":checked")) {
-                $("#recurring_fields").removeClass("hide");
-            } else {
-                $("#recurring_fields").addClass("hide");
-            }
-        });
-        
     });
 </script>
