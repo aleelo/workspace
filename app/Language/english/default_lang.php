@@ -1101,7 +1101,7 @@ $lang["can_manage_team_members_leave"] = "Can manage employee leaves?";
 $lang["can_manage_team_members_timecards"] = "Can manage employee time cards?";
 $lang["can_access_invoices"] = "Can access invoices?";
 $lang["can_access_expenses"] = "Can access expenses?";
-$lang["can_access_clients_information"] = "Can access client's information?";
+$lang["can_manage_payers"] = "Can manage Payers?";
 $lang["can_access_tickets"] = "Can access tickets?";
 $lang["can_manage_announcements"] = "Can manage announcements?";
 
@@ -1935,7 +1935,14 @@ $lang["yes_all_sections"] = "Yes, all Sections";
 $lang["can_manage_units"] = "Can managa Units?";
 $lang["yes_own_units"] = "Yes, own Unit";
 $lang["yes_all_units"] = "Yes, all Units";
+$lang["yes_own_tasks"] = "Yes, own Tasks";
+$lang["yes_all_tasks"] = "Yes, all Tasks";
 $lang["lead_info"] = "Document info";
+$lang["can_manage_projects"] = "can manage Projects?";
+$lang["yes_own_projects"] = "Yes, own Projects";
+$lang["yes_all_projects"] = "Yes, all Projects";
+$lang["yes_own_events"] = "Yes, own Events";
+$lang["yes_all_events"] = "Yes, all Events";
 $lang["can_manage_departments_sections_units"] = "can manage Documents, Sections & Units?";
 $lang["yes_all"] = "Yes, can manage all.";
 
@@ -2341,8 +2348,8 @@ $lang["yes_own_section_documents"] = "Yes, own Section Documents";
 $lang["yes_own_department_documents"] = "Yes, own Department Documents";
 $lang["yes_all_documents"] = "Yes, All Documents";
 
-$lang["yes_only_own_clients"] = "Yes, only own clients";
-$lang["yes_all_clients"] = "Yes, all clients";
+$lang["yes_only_own_payers"] = "Yes, only own Payers";
+$lang["yes_all_payers"] = "Yes, all Payers";
 
 $lang["recently_updated"] = "Recently updated";
 $lang["recently_moved_to"] = "Recently moved to";
@@ -2688,7 +2695,9 @@ $lang["reject_estimate"] = "Reject estimate";
 
 $lang["unknown_user"] = "Unknown user";
 
-$lang["yes_specific_client_groups"] = "Yes, specific client groups";
+$lang["yes_specific_payer_groups"] = "Yes, specific payer groups";
+$lang["can_manage_employees"] = "can manage Employees?";
+$lang["can_manage_tasks"] = "can manage Tasks?";
 
 /* Version 3.1 */
 

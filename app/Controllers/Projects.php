@@ -13,6 +13,8 @@ class Projects extends Security_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->init_permission_checker("project");
+        $this->check_module_availability("module_project");
         if ($this->has_all_projects_restricted_role()) {
             app_redirect("forbidden");
         }
@@ -185,10 +187,12 @@ class Projects extends Security_Controller {
     /* load project view */
 
     function index() {
+        
         app_redirect("projects/all_projects");
     }
 
     function all_projects($status_id = 0) {
+        $this->access_only_allowed_members();
         validate_numeric_value($status_id);
         $view_data['project_labels_dropdown'] = json_encode($this->make_labels_dropdown("project", "", true));
 

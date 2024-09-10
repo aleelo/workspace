@@ -30,6 +30,7 @@ class Left_menu {
             $access_invoice = get_array_value($permissions, "invoice");
             $access_ticket = get_array_value($permissions, "ticket");
             $access_client = get_array_value($permissions, "client");
+            $access_event = get_array_value($permissions, "event");
             $access_lead = get_array_value($permissions, "lead");
             $access_document = get_array_value($permissions, "document");
             $access_can_manage_departments_sections_units = get_array_value($permissions, "can_manage_departments_sections_units");
@@ -39,6 +40,8 @@ class Left_menu {
             $access_timecard = get_array_value($permissions, "attendance");
             $access_leave = get_array_value($permissions, "leave");
             $access_announcement = get_array_value($permissions, "announcement");
+            $access_task = get_array_value($permissions, "task");
+            $access_project = get_array_value($permissions, "project");
             $access_estimate = get_array_value($permissions, "estimate");
             $access_contract = get_array_value($permissions, "contract");
             $access_subscription = get_array_value($permissions, "subscription");
@@ -56,7 +59,7 @@ class Left_menu {
             $access_timeline = ($this->ci->login_user->is_admin || get_array_value($permissions, "timeline_permission") !== "no");
             $role = $this->ci->get_user_role();
 
-            if (get_setting("module_event") == "1") {
+            if (get_setting("module_event") || $access_event) {
                 $sidebar_menu["events"] = array("name" => "events", "url" => "events", "class" => "calendar");
             }
 
@@ -132,14 +135,15 @@ class Left_menu {
                 // $sidebar_menu["fuel_request"] = array("name" => "fuel_request", "url" => "fuel/request", "class" => "users");
             }
 
-            if ($this->ci->login_user->is_admin || !get_array_value($this->ci->login_user->permissions, "do_not_show_projects")) {
+            if (get_setting("module_project") == "1" && ($this->ci->login_user->is_admin || $access_project || !get_array_value($this->ci->login_user->permissions, "do_not_show_projects"))) {
                 $sidebar_menu["projects"] = array("name" => "projects", "url" => "projects/all_projects", "class" => "command");
             }
 
-            $sidebar_menu["tasks"] = array("name" => "tasks", "url" => "tasks/all_tasks", "class" => "check-circle");
+            if (get_setting("module_task") && ($this->ci->login_user->is_admin || $access_task)) {
+                $sidebar_menu["tasks"] = array("name" => "tasks", "url" => "tasks/all_tasks", "class" => "check-circle");
+            }
 
             if (get_setting("module_document") == "1" && ($this->ci->login_user->is_admin || $access_document) && ($role != "Employee")) {
-                //was leads changed to: 'documents'
                 $sidebar_menu["leads"] = array("name" => "leads", "url" => "documents", "class" => "layers");
             }
 

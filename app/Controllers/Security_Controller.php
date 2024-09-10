@@ -332,10 +332,7 @@ class Security_Controller extends App_Controller {
 
     //access only allowed team members
     protected function access_only_allowed_members() {
-
-        // var_dump($this->module_group);
-        // var_dump($this->access_type);
-        // die();
+        
         if ($this->access_type === "all") {
             return true; //can access if user has permission
         } else if ($this->module_group === "department" && $this->access_type === "own_department") {
@@ -355,6 +352,12 @@ class Security_Controller extends App_Controller {
         } else if ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true;  //can access if it's clients module and user has a pertial access
         } else if ($this->module_group === "estimate" && $this->access_type === "own") {
+            return true; //can access if it's estimates module and user has a pertial access
+        } else if ($this->module_group === "project" && $this->access_type === "own") {
+            return true; //can access if it's estimates module and user has a pertial access
+        } else if ($this->module_group === "task" && $this->access_type === "own") {
+            return true; //can access if it's estimates module and user has a pertial access
+        } else if ($this->module_group === "event" && $this->access_type === "own") {
             return true; //can access if it's estimates module and user has a pertial access
         } else {
             app_redirect("forbidden");

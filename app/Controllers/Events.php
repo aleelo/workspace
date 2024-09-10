@@ -11,12 +11,14 @@ class Events extends Security_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->init_permission_checker("event");
+        $this->check_module_availability("module_event");
         $this->Google_calendar_events = new Google_calendar_events();
     }
 
     //load calendar view
     function index($encrypted_event_id = "") {
-        $this->check_module_availability("module_event");
+        $this->access_only_allowed_members();
         $view_data['encrypted_event_id'] = clean_data($encrypted_event_id);
         $view_data['calendar_filter_dropdown'] = $this->get_calendar_filter_dropdown();
         $view_data['event_labels_dropdown'] = json_encode($this->make_labels_dropdown("event", "", true, app_lang("event_label")));

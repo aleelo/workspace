@@ -90,6 +90,9 @@ class Roles extends Security_Controller {
             $view_data['unit'] = get_array_value($permissions, "unit");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
+            $view_data['event'] = get_array_value($permissions, "event");
+            $view_data['project'] = get_array_value($permissions, "project");
+            $view_data['task'] = get_array_value($permissions, "task");
             $view_data['help_and_knowledge_base'] = get_array_value($permissions, "help_and_knowledge_base");
 
             $view_data['do_not_show_projects'] = get_array_value($permissions, "do_not_show_projects");
@@ -258,6 +261,9 @@ class Roles extends Security_Controller {
         $can_delete_files = $this->request->getPost('can_delete_files');
 
         $announcement = $this->request->getPost('announcement_permission');
+        $event = $this->request->getPost('event_permission');
+        $project = $this->request->getPost('project_permission');
+        $task = $this->request->getPost('task_permission');
         $help_and_knowledge_base = $this->request->getPost('help_and_knowledge_base');
 
         $can_view_team_members_contact_info = $this->request->getPost('can_view_team_members_contact_info');
@@ -350,6 +356,9 @@ class Roles extends Security_Controller {
             "ticket" => $ticket,
             "ticket_specific" => $ticket_specific,
             "announcement" => $announcement,
+            "event" => $event,
+            "project" => $project,
+            "task" => $task,
             "help_and_knowledge_base" => $help_and_knowledge_base,
             "do_not_show_projects" => $do_not_show_projects,
             "can_manage_all_projects" => $can_manage_all_projects,

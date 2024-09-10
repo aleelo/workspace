@@ -18,6 +18,7 @@ class Tasks extends Security_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->init_permission_checker("task");
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
         $this->Pin_comments_model = model('App\Models\Pin_comments_model');
@@ -2791,6 +2792,8 @@ class Tasks extends Security_Controller {
     }
 
     function all_tasks($tab = "", $status_id = 0, $priority_id = 0, $type = "") {
+        $this->check_module_availability("module_task");
+        $this->access_only_allowed_members();
         $this->access_only_team_members();
         $view_data['project_id'] = 0;
         $projects = $this->Tasks_model->get_my_projects_dropdown_list($this->login_user->id)->getResult();
