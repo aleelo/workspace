@@ -464,6 +464,7 @@
         setDatePicker("#graduation_date_foculty_2");
         setDatePicker("#graduation_date_master_1");
         setDatePicker("#graduation_date_master_2");
+        setDatePicker("#graduation_date_phd");
 
         // Initially hide all sections
         function hideAllSections() {

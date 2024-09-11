@@ -548,12 +548,12 @@
             
                 <div class="form-group">
                     <div class="row">
-                        <label for="un_name_foculty_2" class=" col-md-3"><?php echo 'University Name Faculty 2'; ?></label>
+                        <label for="university_name_foculty_2" class=" col-md-3"><?php echo 'University Name Faculty 2'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
-                                "id" => "un_name_foculty_2",
-                                "name" => "un_name_foculty_2",
+                                "id" => "university_name_foculty_2",
+                                "name" => "university_name_foculty_2",
                                 "class" => "form-control",
                                 "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Faculty 2',
@@ -603,12 +603,12 @@
             
                 <div class="form-group">
                     <div class="row">
-                        <label for="un_name_master_1" class=" col-md-3"><?php echo 'University Name Master'; ?></label>
+                        <label for="university_name_master_1" class=" col-md-3"><?php echo 'University Name Master'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
-                                "id" => "un_name_master_1",
-                                "name" => "un_name_master_1",
+                                "id" => "university_name_master_1",
+                                "name" => "university_name_master_1",
                                 "class" => "form-control",
                                 "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Master',
@@ -658,12 +658,12 @@
             
                 <div class="form-group">
                     <div class="row">
-                        <label for="un_name_master_2" class=" col-md-3"><?php echo 'University Name Master 2'; ?></label>
+                        <label for="university_name_master_2" class=" col-md-3"><?php echo 'University Name Master 2'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
-                                "id" => "un_name_master_2",
-                                "name" => "un_name_master_2",
+                                "id" => "university_name_master_2",
+                                "name" => "university_name_master_2",
                                 "class" => "form-control",
                                 "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Master 2',
@@ -713,12 +713,12 @@
             
                 <div class="form-group">
                     <div class="row">
-                        <label for="un_name_php" class=" col-md-3"><?php echo 'University Name PHD'; ?></label>
+                        <label for="university_name_phd" class=" col-md-3"><?php echo 'University Name PHD'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
-                                "id" => "un_name_php",
-                                "name" => "un_name_php",
+                                "id" => "university_name_phd",
+                                "name" => "university_name_phd",
                                 "class" => "form-control",
                                 "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name PHD',
@@ -731,12 +731,12 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="un_name_php" class=" col-md-3"><?php echo 'Field of Study PHD'; ?></label>
+                        <label for="field_of_study_phd" class=" col-md-3"><?php echo 'Field of Study PHD'; ?></label>
                         <div class=" col-md-9">
                         <?php 
                         echo form_dropdown(array( 
-                                'id'=> "un_name_php",
-                                'name'=> "un_name_php",
+                                'id'=> "field_of_study_phd",
+                                'name'=> "field_of_study_phd",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study PHD',
                             ),$field_of_study,[$model_info->education_field]); ?>
@@ -764,9 +764,7 @@
 
             </div>
 
-                       
-
-                        <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
+                 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
 
                 </div>
 
@@ -1436,6 +1434,8 @@
         setDatePicker("#graduation_date_foculty_2");
         setDatePicker("#graduation_date_master_1");
         setDatePicker("#graduation_date_master_2");
+        setDatePicker("#graduation_date_phd");
+
 
         // Initially hide all sections
         function hideAllSections() {
