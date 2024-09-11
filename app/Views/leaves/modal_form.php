@@ -7,7 +7,7 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="applicant_id" class=" col-md-3"><?php echo app_lang('team_member'); ?></label>
+                        <label for="applicant_id" class="col-md-3 text-right"><?php echo app_lang('team_member'); ?></label>
                         <div class=" col-md-9">
                             <?php
                             if (isset($team_members_info)) {
@@ -28,7 +28,7 @@
 
             <div class="form-group">
                 <div class="row">
-                    <label for="leave_type" class=" col-md-3"><?php echo app_lang('leave_type'); ?></label>
+                    <label for="leave_type" class=" col-md-3 text-right"><?php echo app_lang('leave_type'); ?></label>
                     <div class=" col-md-9">
                         <?php
                         echo form_dropdown("leave_type_id", $leave_types_dropdown, "", "class='select2 validate-hidden' id='leave_type_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
@@ -41,7 +41,7 @@
          
             <div class="form-group">
                 <div class="row">
-                    <label for="flight_included_no" class=" col-md-3"><?php echo app_lang('is_flight_included'); ?></label>
+                    <label for="flight_included_no" class="col-md-3 text-right"><?php echo app_lang('is_flight_included'); ?></label>
                     <div class=" col-md-9">
                     <?php
                         echo form_radio(array(
@@ -71,7 +71,7 @@
 
             <div class="form-group">
                 <div class="row">
-                    <label for="reason" class=" col-md-3"><?php echo app_lang('reason'); ?></label>
+                    <label for="reason" class=" col-md-3 text-right"><?php echo app_lang('reason'); ?></label>
                     <div class=" col-md-9">
                         <?php
                         echo form_textarea(array(
@@ -89,7 +89,7 @@
 
             <div class=" form-group">
                 <div class="row">
-                    <label for="duration" class=" col-md-3"><?php echo app_lang('duration'); ?></label>
+                    <label for="duration" class="col-md-3 text-right"><?php echo app_lang('duration'); ?></label>
                     <div class="col-md-9">
 
                         <?php
@@ -124,7 +124,7 @@
 
             <div id="single_day_section"  class="form-group date_section">
                 <div class="row">
-                    <label id="date_label" for="single_date" class=" col-md-3"><?php echo app_lang('date'); ?></label>
+                    <label id="date_label" for="single_date" class="col-md-3 text-right"><?php echo app_lang('date'); ?></label>
                     <div class="col-md-9">
                         <?php
                         echo form_input(array(
@@ -144,7 +144,7 @@
             <div id="multiple_days_section" class="hide date_section">
                 <div class="form-group">
                     <div class="row">
-                        <label for="start_date" class=" col-md-3"><?php echo app_lang('start_date'); ?></label>
+                        <label for="start_date" class="col-md-3 text-right"><?php echo app_lang('start_date'); ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -164,7 +164,7 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="end_date" class=" col-md-3"><?php echo app_lang('end_date'); ?></label>
+                        <label for="end_date" class="col-md-3 text-right"><?php echo app_lang('end_date'); ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(
@@ -188,8 +188,21 @@
             <div id="total_days_section" class="hide date_section">
 
                 <div class="form-group">
+                     <div class="row">
+                        <div class="col-md-3 text-right allowed-days-label">
+                        </div>
+                        <div class="col-md-3 allowed-days-display">
+                        </div>
+                        <div class="col-md-2 text-right taken-days-display-label">
+                        </div>
+                        <div class="col-md-2 taken-days-display">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <div class="row">
-                    <div class="col-md-3 total-days-label">
+                    <div class="col-md-3 text-right total-days-label">
                         </div>
                         <div class="col-md-9 total-days">
                         </div>
@@ -198,29 +211,13 @@
 
                 <div class="form-group">
                      <div class="row">
-                        <div class="col-md-3 remaining-days-label">
+                        <div class="col-md-3 text-right remaining-days-label">
                         </div>
                         <div class="col-md-9 remaining-days">
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                     <div class="row">
-                        <div class="col-md-3 taken-days-display-label">
-                        </div>
-                        <div class="col-md-9 taken-days-display">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                     <div class="row">
-                        <label for="total_days" class="col-md-3"><?php echo app_lang('allowed_days'); ?></label>
-                        <div class="col-md-9 allowed-days-display">
-                        </div>
-                    </div>
-                </div>
 
             </div>
 
@@ -308,6 +305,7 @@
                     taken_days = data.taken_days;      // Update the global taken_days variable
 
                     // Update the displayed allowed days
+                    $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
                     $('div.allowed-days-display').html(allowed_days + ' - Days').css('color', 'blue');
                     $('div.taken-days-display-label').html('Taken Days: ').css('color', 'purple');
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
@@ -336,7 +334,7 @@
                 var total_days = moment(end_date).diff(moment(start_date), 'days') + 1;  // +1 to include the start day
 
                 // Display total days
-                $('div.total-days-label').html('Total Days: ');
+                $('div.total-days-label').html('Requested Days: ');
                 $('div.total-days').html(total_days + ' - Days');
 
                 // Calculate remaining days by subtracting total days from allowed days minus taken days

@@ -132,10 +132,14 @@ class Team_members extends Security_Controller {
         $view_data['Units'] = array("" => " -- Choose Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
-        $view_data['education_levels'] = [''=>'-- Choose Education Level --','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
+        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
+        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
+        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from rise_education_industry where deleted=0")->getResult();
 
+        $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
 
         $age_levels = [
             ''=>'-- Choose Age Level --',
@@ -203,26 +207,32 @@ class Team_members extends Security_Controller {
         // new Data evilla:  `marital_status`, `emergency_name`, `emergency_phone`, `birth_date`, `birth_place`, `education_level`, `education_field`, `education_school`
         $user_data = array(
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
-            "email" => $this->request->getPost('email'),
-            "private_email" => $this->request->getPost('private_email'),
+
+            // Profile Info
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
-            "is_admin" => $this->request->getPost('is_admin'),
             "address" => $this->request->getPost('address'),
+            "alternative_address" => $this->request->getPost('alternative_address'),
             "phone" => $this->request->getPost('phone'),
-            "gender" => $this->request->getPost('gender'),
-            "job_title" => $this->request->getPost('job_title_en'),
-            "phone" => $this->request->getPost('phone'),
+            "alternative_phone" => $this->request->getPost('alternative_phone'),
+            "skype" => $this->request->getPost('skype'),
+            "ssn" => $this->request->getPost('ssn'),
             "gender" => $this->request->getPost('gender'),
             "marital_status" => $this->request->getPost('marital_status'),
-            "emergency_name" => $this->request->getPost('emergency_name'),
-            "emergency_phone" => $this->request->getPost('emergency_phone'),
+            "age_level" => $this->request->getPost('age_level'),
             "birth_date" => $this->request->getPost('birth_date'),
             "birth_place" => $this->request->getPost('birth_place'),
+            "passport_no" => $this->request->getPost('passport_no'),
+            "relevant_document_url" => $this->request->getPost('relevant_document_url'),
+            "emergency_name" => $this->request->getPost('emergency_name'),
+            "emergency_phone" => $this->request->getPost('emergency_phone'),
+
+            //
+            "is_admin" => $this->request->getPost('is_admin'),
+            "job_title" => $this->request->getPost('job_title_en'),
             "education_level" => $this->request->getPost('education_level'),
             "education_field" => $this->request->getPost('education_field'),
             "education_school" => $this->request->getPost('education_school'),
-            "age_level" => $this->request->getPost('age_level'),
             "faculty" => $this->request->getPost('faculty'),
             "faculty2" => $this->request->getPost('faculty2'),
             "bachelor_degree" => $this->request->getPost('bachelor_degree'),
@@ -230,9 +240,17 @@ class Team_members extends Security_Controller {
             "highest_school" => $this->request->getPost('highest_school'),
             "employee_id" => $this->request->getPost('employee_id'),
             "department_id" => $this->request->getPost('department_id'),
-            "relevant_document_url" => $this->request->getPost('relevant_document_url'),
             "user_type" => "staff",
-            "created_at" => get_current_utc_time()
+            "created_at" => get_current_utc_time(),
+
+             // Bank Details
+             "bank_id" => $this->request->getPost('bank_id'),
+             "bank_account" => $this->request->getPost('bank_account'),
+             "registered_name" => $this->request->getPost('bank_registered_name'),
+
+             // Account Settings
+            "email" => $this->request->getPost('email'),
+            "private_email" => $this->request->getPost('private_email'),
         );
 
         if ($password) {
@@ -688,8 +706,10 @@ class Team_members extends Security_Controller {
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
 
-        
-        $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
+        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
+        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
+        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
 
         // var_dump($view_data['departments']);
@@ -789,13 +809,27 @@ class Team_members extends Security_Controller {
         $this->update_only_allowed_members($user_id);
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary','Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
+        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
+        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
+        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
+        $age_levels = [
+            ''=>'-- Choose Age Level --',
+            '18 - 25' =>'18 - 25',
+            '26 - 35'=>'26 - 35',
+            '36 - 45'=>'36 - 45',
+            '46 -55'=>'46 -55',
+            '56 - 65'=>'56 - 65',
+            '66 ama kaweyn'=>'66 ama kaweyn'
+        ];
+
+        $view_data['age_levels'] = $age_levels;
         $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
         return $this->template->view("team_members/general_info", $view_data);
@@ -824,13 +858,13 @@ class Team_members extends Security_Controller {
             "ssn" => $this->request->getPost('ssn'),
             "gender" => $this->request->getPost('gender'),
             "marital_status" => $this->request->getPost('marital_status'),
-            "passport_no" => $this->request->getPost('passport_no'),
-            "emergency_name" => $this->request->getPost('emergency_name'),
-            "emergency_phone" => $this->request->getPost('emergency_phone'),
+            "age_level" => $this->request->getPost('age_level'),
             "birth_date" => $this->request->getPost('birth_date'),
             "birth_place" => $this->request->getPost('birth_place'),
-            "age_level" => $this->request->getPost('age_level'),
+            "passport_no" => $this->request->getPost('passport_no'),
             "relevant_document_url" => $this->request->getPost('relevant_document_url'),
+            "emergency_name" => $this->request->getPost('emergency_name'),
+            "emergency_phone" => $this->request->getPost('emergency_phone'),
             "dob" => $this->request->getPost('dob')
         );
 
@@ -853,13 +887,15 @@ class Team_members extends Security_Controller {
         $this->update_only_allowed_members($user_id);
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        // array_unshift($view_data['departments'],'Choose Department');
 
-        $view_data['education_levels'] = [''=>'Choose Education Level','Primary'=>'Primary','Secondary'=>'Secondary',
-        'Graduate'=>'Graduate','Bachelor'=>'Bachelor','Master'=>'Master','2 Bachelors'=>'2 Bachelors','2 Bachelors & Master'=>'2 Bachelors & Master',
-        '2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters','Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
+        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
+        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
+        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        // print_r($view_data['education_levels']);die();
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
+        $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();

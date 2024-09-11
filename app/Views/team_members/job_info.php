@@ -206,24 +206,6 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="place_of_work" class=" col-md-3"><?php echo 'Place of Work'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "place_of_work",
-                                "name" => "place_of_work",
-                                "class" => "form-control",
-                                'value'=> $job_info->place_of_work,
-                                "placeholder" => 'Enter Place of Work',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="row">
                         <label for="job_location" class=" col-md-3"><?php echo 'Job Location'; ?></label>
                         <div class=" col-md-9">
                         <?php 

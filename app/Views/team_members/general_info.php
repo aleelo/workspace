@@ -8,7 +8,7 @@
             
             <div class="form-group">
                 <div class="row">
-                    <label for="first_name" class=" col-md-2"><?php echo app_lang('first_name'); ?></label>
+                    <label for="first_name" class="col-md-2"><?php echo app_lang('first_name'); ?></label>
                     <div class=" col-md-10">
                         <?php
                         echo form_input(array(
@@ -195,58 +195,22 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <div class="row">
-                    <label for="passport_no" class=" col-md-2"><?php echo 'Passport Number'; ?></label>
-                    <div class="col-md-10">
-                        <?php
-                        echo form_input(array(
-                            "id" => "passport_no",
-                            "name" => "passport_no",
-                            "value" => $user_info->passport_no,
-                            "class" => "form-control",
-                            "placeholder" => 'Passport Number'
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
 
             <div class="form-group">
                 <div class="row">
-                    <label for="emergency_name" class=" col-md-2"><?php echo 'Emergency Contact Name'; ?></label>
+                    <label for="age_level" class=" col-md-2"><?php echo 'Age Level'; ?></label>
                     <div class=" col-md-10">
                         <?php
-                        echo form_input(array(
-                            "id" => "emergency_name",
-                            "name" => "emergency_name",
-                            "value" => $user_info->emergency_name,
-                            "class" => "form-control",
-                            "placeholder" => 'Emergency Contact Name'
-                        ));
+                        echo form_dropdown(array(
+                            "id" => "age_level",
+                            "name" => "age_level",
+                            "class" => "form-control select2",
+                            "placeholder" => 'Age Level'
+                        ),$age_levels,[$user_info->age_level]);
                         ?>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="emergency_phone" class=" col-md-2"><?php echo 'Emergency Contact Phone'; ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_input(array(
-                            "id" => "emergency_phone",
-                            "name" => "emergency_phone",
-                            "value" => $user_info->emergency_phone,
-                            "class" => "form-control",
-                            "placeholder" => 'Emergency Contact Phone'
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-                <!-- `marital_status`, `emergency_name`, `emergency_phone`, `birth_date`, `birth_place`, `education_level`, `education_field`, `education_school` -->
 
             <div class="form-group">
                 <div class="row">
@@ -281,6 +245,23 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <div class="row">
+                    <label for="passport_no" class=" col-md-2"><?php echo 'Passport Number'; ?></label>
+                    <div class="col-md-10">
+                        <?php
+                        echo form_input(array(
+                            "id" => "passport_no",
+                            "name" => "passport_no",
+                            "value" => $user_info->passport_no,
+                            "class" => "form-control",
+                            "placeholder" => 'Passport Number'
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="row">
@@ -299,6 +280,46 @@
                     </div>
                 </div>
             </div>
+
+            <div class="my-4">
+                            <h4 class="text-muted">Emergency Information</h4>
+                            <hr class="mt-0"/> 
+                        </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="emergency_name" class=" col-md-2"><?php echo 'Emergency Contact Name'; ?></label>
+                    <div class=" col-md-10">
+                        <?php
+                        echo form_input(array(
+                            "id" => "emergency_name",
+                            "name" => "emergency_name",
+                            "value" => $user_info->emergency_name,
+                            "class" => "form-control",
+                            "placeholder" => 'Emergency Contact Name'
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="emergency_phone" class=" col-md-2"><?php echo 'Emergency Contact Phone'; ?></label>
+                    <div class=" col-md-10">
+                        <?php
+                        echo form_input(array(
+                            "id" => "emergency_phone",
+                            "name" => "emergency_phone",
+                            "value" => $user_info->emergency_phone,
+                            "class" => "form-control",
+                            "placeholder" => 'Emergency Contact Phone'
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-2", "field_column" => " col-md-10")); ?> 
 
