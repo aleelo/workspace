@@ -6,7 +6,7 @@
         </div>
         <div class="card-body">
 
-            <div class="form-group">
+            <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                 <div class="row">
                     <label for="education_level" class="col-md-2"><?php echo 'Education Level'; ?></label>
                     <div class="col-md-10">
@@ -25,7 +25,7 @@
 
             <div id="primary_school_section">
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="primary_school_name" class="col-md-2"><?php echo 'Primary School Name'; ?></label>
                         <div class="col-md-10">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="primary_graduation_date" class="col-md-2"><?php echo 'Primary Graduation Date'; ?></label>
                         <div class=" col-md-10">
@@ -63,7 +63,7 @@
             
             <div id="secondary_school_section">
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="secondary_school_name" class="col-md-2"><?php echo 'Secondary School Name'; ?></label>
                         <div class=" col-md-10">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="secondary_graduation_date" class=" col-md-2"><?php echo 'Secondary Graduation Date'; ?></label>
                         <div class=" col-md-10">
@@ -101,7 +101,7 @@
 
             <div id="diploma_section">
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_diploma" class=" col-md-2"><?php echo 'University Name Diploma'; ?></label>
                         <div class=" col-md-10">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_diploma" class=" col-md-2"><?php echo 'Field of Study Diploma'; ?></label>
                         <div class=" col-md-10">
@@ -133,7 +133,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_diploma" class=" col-md-2"><?php echo 'Graduation Date Diploma'; ?></label>
                         <div class=" col-md-10">
@@ -155,7 +155,7 @@
 
             <div id="foculty_1_section">
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_foculty_1" class=" col-md-2"><?php echo 'University Name Foculty'; ?></label>
                         <div class=" col-md-10">
@@ -172,7 +172,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_foculty_1" class=" col-md-2"><?php echo 'Field of Study Foculty'; ?></label>
                         <div class=" col-md-10">
@@ -188,7 +188,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_foculty_1" class="col-md-2"><?php echo 'Graduation Date Foculty'; ?></label>
                         <div class="col-md-10">
@@ -210,7 +210,7 @@
 
             <div id="foculty_2_section">
             
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_foculty_2" class=" col-md-2"><?php echo 'University Name Faculty 2'; ?></label>
                         <div class=" col-md-10">
@@ -228,7 +228,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_foculty_2" class=" col-md-2"><?php echo 'Field of Study Foculty 2'; ?></label>
                         <div class=" col-md-10">
@@ -243,7 +243,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_foculty_2" class=" col-md-2"><?php echo 'Graduation Date Foculty 2'; ?></label>
                         <div class=" col-md-10">
@@ -265,7 +265,7 @@
 
             <div id="master_1_section">
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_master_1" class=" col-md-2"><?php echo 'University Name Master'; ?></label>
                         <div class=" col-md-10">
@@ -283,7 +283,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_master_1" class=" col-md-2"><?php echo 'Field of Study Master'; ?></label>
                         <div class=" col-md-10">
@@ -299,7 +299,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_master_1" class=" col-md-2"><?php echo 'Graduation Date Master'; ?></label>
                         <div class=" col-md-10">
@@ -321,7 +321,7 @@
 
             <div id="master_2_section">
             
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_master_2" class=" col-md-2"><?php echo 'University Name Master 2'; ?></label>
                         <div class=" col-md-10">
@@ -339,7 +339,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_master_2" class=" col-md-2"><?php echo 'Field of Study Master 2'; ?></label>
                         <div class=" col-md-10">
@@ -354,7 +354,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_master_2" class=" col-md-2"><?php echo 'Graduation Date Master 2'; ?></label>
                         <div class=" col-md-10">
@@ -376,7 +376,7 @@
 
             <div id="php_section">
             
-                <div class="form-group">
+            <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="university_name_phd" class=" col-md-2"><?php echo 'University Name PHD'; ?></label>
                         <div class=" col-md-10">
@@ -394,7 +394,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
                     <div class="row">
                         <label for="field_of_study_phd" class=" col-md-2"><?php echo 'Field of Study PHD'; ?></label>
                         <div class=" col-md-10">
@@ -409,7 +409,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
                     <div class="row">
                         <label for="graduation_date_phd" class=" col-md-2"><?php echo 'Graduation Date PHD'; ?></label>
                         <div class=" col-md-10">
