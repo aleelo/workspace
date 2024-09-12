@@ -96,6 +96,23 @@
     </div>
 </div>
 
+<div class="form-group" style="display:block;">
+    <div class="row">
+        <label for="unit" class="col-3"><?php echo app_lang('unit'); ?>
+        </label>
+        <div class="col-9">
+            <?php
+            echo form_dropdown(array(
+                "id" => "unit",
+                "name" => "unit",
+                "class" => "form-control select2",
+                "placeholder" => app_lang('unit')
+            ),$units,[$model_info->unit_id],"style='display:block';");
+            ?>
+        </div>
+    </div>
+</div>
+
 
 <div class="form-group">
     <div class="row">

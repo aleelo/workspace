@@ -1,5 +1,6 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("team_members/save_education_info/" . $user_info->id), array("id" => "education-info-form", "class" => "education-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("team_members/save_education_info/" . $education_info->id), array("id" => "education-info-form", "class" => "education-form dashed-row white", "role" => "form")); ?>
+    <input name="user_id" type="hidden" value="<?php echo $user_id; ?>" />
     <div class="card">
         <div class=" card-header">
             <h4> <?php echo app_lang('education_info'); ?></h4>
@@ -15,9 +16,9 @@
                             "id" => "education_level",
                             "name" => "education_level",
                             "class" => "form-control select2",
-                            "value" => $user_info->education_level,
+                            "value" => $education_info->education_level,
                             "placeholder" => 'Education Level'
-                        ),$education_levels, [$user_info->education_level =>$education_levels[$user_info->education_level]]);
+                        ),$education_levels);
                         ?>
                     </div>
                 </div>
@@ -34,7 +35,7 @@
                                 "id" => "primary_school_name",
                                 "name" => "primary_school_name",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty,
+                                "value" => $education_info->primary_school_name,
                                 "placeholder" => 'Primary School Name',
                             ));
                             ?>
@@ -51,7 +52,7 @@
                                 "id" => "primary_graduation_date",
                                 "name" => "primary_graduation_date",
                                 "class" => "form-control",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->primary_graduation_date,
                                 "placeholder" => 'Primary Graduation Date',
                             ));
                             ?>
@@ -72,7 +73,7 @@
                                 "id" => "secondary_school_name",
                                 "name" => "secondary_school_name",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty,
+                                "value" => $education_info->secondary_school_name,
                                 "placeholder" => 'Secondary School Name',
                             ));
                             ?>
@@ -89,7 +90,7 @@
                                 "id" => "secondary_graduation_date",
                                 "name" => "secondary_graduation_date",
                                 "class" => "form-control",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->secondary_graduation_date,
                                 "placeholder" => 'Secondary Graduation Date',
                             ));
                             ?>
@@ -110,7 +111,7 @@
                                 "id" => "university_name_diploma",
                                 "name" => "university_name_diploma",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty,
+                                "value" => $education_info->university_name_diploma,
                                 "placeholder" => 'University Name Diploma',
                             ));
                             ?>
@@ -128,7 +129,7 @@
                                 'name'=> "field_of_study_diploma",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Diploma',
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -142,7 +143,7 @@
                                 "id" => "graduation_date_diploma",
                                 "name" => "graduation_date_diploma",
                                 "class" => "form-control date",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_diploma,
                                 "placeholder" => 'Graduation Date Diploma',
                                 "autocomplete" => "off"
                             ));
@@ -164,7 +165,7 @@
                                 "id" => "university_name_foculty_1",
                                 "name" => "university_name_foculty_1",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty,
+                                "value" => $education_info->university_name_foculty_1,
                                 "placeholder" => 'University Name Foculty',
                             ));
                             ?>
@@ -183,7 +184,7 @@
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Foculty',
                                 "autocomplete" => "off"
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -197,7 +198,7 @@
                                 "id" => "graduation_date_foculty_1",
                                 "name" => "graduation_date_foculty_1",
                                 "class" => "form-control",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_foculty_1,
                                 "placeholder" => 'Graduation Date Foculty',
                                 "autocomplete" => "off"
                             ));
@@ -219,7 +220,7 @@
                                 "id" => "university_name_foculty_2",
                                 "name" => "university_name_foculty_2",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty2,
+                                "value" => $education_info->university_name_foculty_2,
                                 "placeholder" => 'University Name Faculty 2',
                                 "autocomplete" => "off",
                             ));
@@ -238,7 +239,7 @@
                                 'name'=> "field_of_study_foculty_2",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Foculty 2',
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -252,7 +253,7 @@
                                 "id" => "graduation_date_foculty_2",
                                 "name" => "graduation_date_foculty_2",
                                 "class" => "form-control date",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_foculty_2,
                                 "placeholder" => 'Graduation Date Foculty 2',
                                 "autocomplete" => "off"
                             ));
@@ -274,7 +275,7 @@
                                 "id" => "university_name_master_1",
                                 "name" => "university_name_master_1",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty2,
+                                "value" => $education_info->university_name_master_1,
                                 "placeholder" => 'University Name Master',
                                 "autocomplete" => "off",
                             ));
@@ -294,7 +295,7 @@
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Master',
                                 "autocomplete" => "off"
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -308,7 +309,7 @@
                                 "id" => "graduation_date_master_1",
                                 "name" => "graduation_date_master_1",
                                 "class" => "form-control date",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_master_1,
                                 "placeholder" => 'Graduation Date Master',
                                 "autocomplete" => "off"
                             ));
@@ -330,7 +331,7 @@
                                 "id" => "university_name_master_2",
                                 "name" => "university_name_master_2",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty2,
+                                "value" => $education_info->university_name_master_2,
                                 "placeholder" => 'University Name Master 2',
                                 "autocomplete" => "off",
                             ));
@@ -349,7 +350,7 @@
                                 'name'=> "field_of_study_master_2",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Master 2',
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -363,7 +364,7 @@
                                 "id" => "graduation_date_master_2",
                                 "name" => "graduation_date_master_2",
                                 "class" => "form-control date",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_master_2,
                                 "placeholder" => 'Graduation Date Master 2',
                                 "autocomplete" => "off"
                             ));
@@ -385,7 +386,7 @@
                                 "id" => "university_name_phd",
                                 "name" => "university_name_phd",
                                 "class" => "form-control",
-                                "value" => $user_info->faculty2,
+                                "value" => $education_info->university_name_phd,
                                 "placeholder" => 'University Name PHD',
                                 "autocomplete" => "off",
                             ));
@@ -404,7 +405,7 @@
                                 'name'=> "field_of_study_phd",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study PHD',
-                            ),$field_of_study,[$user_info->education_field]); ?>
+                            ),$field_of_study,[$education_info->education_level]); ?>
                         </div>
                     </div>
                 </div> 
@@ -418,7 +419,7 @@
                                 "id" => "graduation_date_phd",
                                 "name" => "graduation_date_phd",
                                 "class" => "form-control date",
-                                'value'=> $user_info->date_of_foculty,
+                                'value'=> $education_info->graduation_date_phd,
                                 "placeholder" => 'Graduation Date PHD',
                                 "autocomplete" => "off"
                             ));
@@ -450,7 +451,7 @@
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
                 setTimeout(function () {
-                    window.location.href = "<?php echo get_uri("team_members/view/" . $user_info->id); ?>" + "/education_info";
+                    window.location.href = "<?php echo get_uri("team_members/view/" . $education_info->id); ?>" + "/education_info";
                 }, 500);
             }
         });

@@ -741,14 +741,11 @@ class Team_members extends Security_Controller {
         if (!($this->login_user->is_admin || $this->has_job_info_manage_permission())) {
             app_redirect("forbidden");
         }
-        
-        // var_dump($this->request->getPost());
-        // die();
-
 
         $this->validate_submitted_data(array(
             "user_id" => "required|numeric"
         ));
+
         $user_id = $this->request->getPost('user_id');
 
         $target_path = get_setting("signature_file_path");
@@ -776,7 +773,6 @@ class Team_members extends Security_Controller {
         );
 
        
-        //we'll save the job title in users table
         $user_data = array(
             "job_title" => $this->request->getPost('job_title_en'),
             "employee_id" => $this->request->getPost('employee_id'),
@@ -785,12 +781,12 @@ class Team_members extends Security_Controller {
 
         if ($user_id) {
             $user_j0b_info = $this->Users_model->get_details(['id'=>$user_id])->getRow();
-            // print_r($user_j0b_info);die;
             $timeline_file_path = get_setting("signature_file_path");
             $new_files = update_saved_files($timeline_file_path, $user_j0b_info->signature, $new_files);
         }
 
-            $job_data["signature"] = serialize($new_files);
+        
+        $job_data["signature"] = serialize($new_files);
 
 
         $this->Users_model->ci_save($user_data, $user_id);
@@ -897,7 +893,12 @@ class Team_members extends Security_Controller {
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
         $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
 
-        $view_data['user_info'] = $this->Users_model->get_one($user_id);
+        // $options = array("id" => $user_id);
+        // $user_info = $this->Users_model->get_details($options)->getRow();
+
+        $view_data['user_id'] = $user_id;
+        $view_data['education_info'] = $this->Users_model->get_education_info($user_id);
+
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
         $view_data['can_edit_profile']  = !$this->can_edit_profile();
 
@@ -907,35 +908,87 @@ class Team_members extends Security_Controller {
 
     //save general information of a team member
     function save_education_info($user_id) {
+
         
-        validate_numeric_value($user_id);
-        $this->update_only_allowed_members($user_id);
+        $user_id = $this->request->getPost('user_id');
 
-
-        $user_data = array(
-
+        
+        $education_data = array(
+            "user_id" => $user_id,
             "education_level" => $this->request->getPost('education_level'),
-            "education_field" => $this->request->getPost('education_field'),
-            "faculty" => $this->request->getPost('faculty'),
-            "faculty2" => $this->request->getPost('faculty2'),
-            "education_school" => $this->request->getPost('education_school'),
-            // "highest_school" => $this->request->getPost('highest_school'),
-            "bachelor_degree" => $this->request->getPost('bachelor_degree'),
-            "master_degree" => $this->request->getPost('master_degree'),
-
+            "primary_school_name" => $this->request->getPost('primary_school_name'),
+            "primary_graduation_date" => $this->request->getPost('primary_graduation_date'),
+            "secondary_school_name" => $this->request->getPost('secondary_school_name'),
+            "secondary_graduation_date" => $this->request->getPost('secondary_graduation_date'),
+            "university_name_diploma" => $this->request->getPost('university_name_diploma'),
+            "field_of_study_diploma" => $this->request->getPost('field_of_study_diploma'),
+            "graduation_date_diploma" => $this->request->getPost('graduation_date_diploma'),
+            "university_name_foculty_1" => $this->request->getPost('university_name_foculty_1'),
+            "field_of_study_foculty_1" => $this->request->getPost('field_of_study_foculty_1'),
+            "graduation_date_foculty_1" => $this->request->getPost('graduation_date_foculty_1'),         
+            "university_name_foculty_2" => $this->request->getPost('university_name_foculty_2'),
+            "field_of_study_foculty_2" => $this->request->getPost('field_of_study_foculty_2'),
+            "graduation_date_foculty_2" => $this->request->getPost('graduation_date_foculty_2'),
+            "university_name_master_1" => $this->request->getPost('university_name_master_1'),
+            "field_of_study_master_1" => $this->request->getPost('field_of_study_master_1'),
+            "graduation_date_master_1" => $this->request->getPost('graduation_date_master_1'),
+            "university_name_master_2" => $this->request->getPost('university_name_master_2'),
+            "field_of_study_master_2" => $this->request->getPost('field_of_study_master_2'),
+            "graduation_date_master_2" => $this->request->getPost('graduation_date_master_2'),
+            "university_name_phd" => $this->request->getPost('university_name_phd'),
+            "field_of_study_phd" => $this->request->getPost('field_of_study_phd'),
+            "graduation_date_phd" => $this->request->getPost('graduation_date_phd'),
         );
 
-        $user_data = clean_data($user_data);
+       
 
-        $user_info_updated = $this->Users_model->ci_save($user_data, $user_id);
+        // if ($user_id) {
+        //     $user_j0b_info = $this->Users_model->get_details(['id'=>$user_id])->getRow();
+        //     // print_r($user_j0b_info);die;
+        //     $timeline_file_path = get_setting("signature_file_path");
+        //     $new_files = update_saved_files($timeline_file_path, $user_j0b_info->signature, $new_files);
+        // }
 
-        save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
+        //     $job_data["signature"] = serialize($new_files);
 
-        if ($user_info_updated) {
+
+        // $this->Users_model->ci_save($user_data, $user_id);
+
+        if ($this->Users_model->save_education_info($education_data)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
+
+        // education
+        
+        // validate_numeric_value($user_id);
+        // $this->update_only_allowed_members($user_id);
+
+
+        // $user_data = array(
+
+        //     "education_level" => $this->request->getPost('education_level'),
+        //     "education_field" => $this->request->getPost('education_field'),
+        //     "faculty" => $this->request->getPost('faculty'),
+        //     "faculty2" => $this->request->getPost('faculty2'),
+        //     "education_school" => $this->request->getPost('education_school'),
+        //     "bachelor_degree" => $this->request->getPost('bachelor_degree'),
+        //     "master_degree" => $this->request->getPost('master_degree'),
+
+        // );
+
+        // $user_data = clean_data($user_data);
+
+        // $user_info_updated = $this->Users_model->ci_save($user_data, $user_id);
+
+        // save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
+
+        // if ($user_info_updated) {
+        //     echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
+        // } else {
+        //     echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        // }
     }
 
      //show general information of a team member
@@ -981,52 +1034,6 @@ class Team_members extends Security_Controller {
         }
     }
     // //show social links of a team member
-    // function bank_detailsssss($user_id) {
-    //     validate_numeric_value($user_id);
-    //     $this->update_only_allowed_members($user_id);
-
-    //     // $view_data['user_id'] = $user_id;
-    //     // $view_data['model_info'] = $this->Bank_details_model->get_one($user_id);
-    //     $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
-
-    //     $view_data['user_info'] = $this->Users_model->get_one($user_id);
-    //     $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-
-    //     // print_r($user_id);
-    //     // die();
-    //     return $this->template->view("users/bank_details", $view_data);
-    // }
-
-    
-    // //save social links of a team member
-    // function save_Bank_detailssss($user_id) {
-        
-    //     validate_numeric_value($user_id);
-    //     $this->update_only_allowed_members($user_id);
-    //     $options=['user_id' => $user_id];
-
-    //     $id = 0;
-    //     // $has_banka_account = $this->db->query("SELECT b.* FROM rise_bank_details b LEFT JOIN rise_users u ON b.user_id = u.id WHERE u.id = $user_id")->getRow();
-    //     $has_banka_account = $this->Bank_details_model->get_one($user_id);
-
-    //     if (isset($has_banka_account->id)) {
-    //         $id = $has_banka_account->id;
-    //     }
-
-    //     $bank_details_data = array(
-    //         "bank_id" => $this->request->getPost('bank_id'),
-    //         "bank_account" => $this->request->getPost('bank_account'),
-    //         "registered_name" => $this->request->getPost('registered_name'),
-    //         "user_id" => $user_id,
-    //         "id" => $id ? $id : $user_id
-            
-    //     );
-
-    //     $bank_details_data = clean_data($bank_details_data);
-
-    //     $this->Bank_details_model->ci_save($bank_details_data, $id);
-    //     echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
-    // }
 
     //show social links of a team member
     function social_links($user_id) {

@@ -661,28 +661,32 @@ class Documents extends Security_Controller
                 $where .= " )";
             }
 
-            $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section from rise_templates d
+            $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section,u.nameSo as unit from rise_templates d
             LEFT JOIN rise_departments dp on d.department_id = dp.id
             LEFT JOIN rise_sections s on d.section_id = s.id
+            LEFT JOIN rise_units u on d.unit_id = u.id
             where d.department_id LIKE '$department_id' and $where $extraWhere order by $order_by $limit_offset");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
             LEFT JOIN rise_departments dp on d.department_id = dp.id
             LEFT JOIN rise_sections s on d.section_id = s.id
+            LEFT JOIN rise_units u on d.unit_id = u.id
             where d.department_id LIKE '$department_id' and d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
 
         } else {
-            $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section from rise_templates d
+            $result = $this->db->query("select d.*,dp.nameSo as department,s.nameSo as section,u.nameSo as unit from rise_templates d
             LEFT JOIN rise_departments dp on d.department_id = dp.id
             LEFT JOIN rise_sections s on d.section_id = s.id
+            LEFT JOIN rise_units u on d.unit_id = u.id
             where d.department_id LIKE '$department_id' and  d.deleted=0 $extraWhere");
 
             $list_data = $result->getResult();
             $total_rows = $this->db->query("select count(*) as affected from rise_templates d
             LEFT JOIN rise_departments dp on d.department_id = dp.id
             LEFT JOIN rise_sections s on d.section_id = s.id
+            LEFT JOIN rise_units u on d.unit_id = u.id
             where d.department_id LIKE '$department_id' and  d.deleted=0 $extraWhere")->getRow()->affected;
             $result = array();
         }
@@ -724,6 +728,7 @@ class Documents extends Security_Controller
             // anchor(get_uri("documents/view/" . $data->id), ),
             $data->ref_prefix,
             $data->destination_folder,
+            $data->unit,
             $data->section,
             $data->department,
             // $data->description,
@@ -745,6 +750,7 @@ class Documents extends Security_Controller
 
         $view_data['departments'] = $this->get_departments_for_select();
         $view_data['sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['units'] = array("" => " -- Choose Section -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
 
         $view_data['model_info'] = $this->Templates_model->get_one($this->request->getPost('id'));
         return $this->template->view('templates/modal_form', $view_data);
@@ -757,7 +763,6 @@ class Documents extends Security_Controller
             "name" => "required",
             "destination_folder" => "required",
             "ref_prefix" => "required",
-            "department" => "required",
         ));
 
         $id = $this->request->getPost('id');
@@ -799,6 +804,7 @@ class Documents extends Security_Controller
                         "name" => $this->request->getPost('name') . $sufix2,
                         "department_id" => $this->request->getPost('department'), //$job_info->department_id,
                         "section_id" => $this->request->getPost('section'),
+                        "unit_id" => $this->request->getPost('unit'),
                         "ref_prefix" => $this->request->getPost('ref_prefix'),
                         "destination_folder" => $this->request->getPost('destination_folder'),
                         "description" => $this->request->getPost('description_' . $file),
@@ -819,6 +825,7 @@ class Documents extends Security_Controller
                 "name" => $this->request->getPost('name'),
                 "department_id" => $this->request->getPost('department'), //$job_info->department_id,
                 "section_id" => $this->request->getPost('section'),
+                "unit_id" => $this->request->getPost('unit'),
                 "ref_prefix" => $this->request->getPost('ref_prefix'),
                 "destination_folder" => $this->request->getPost('destination_folder')
 

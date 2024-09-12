@@ -552,6 +552,26 @@ class Users_model extends Crud_model {
         }
     }
 
+    function get_education_info($user_id) {
+        parent::use_table("team_education_info");
+        return parent::get_one_where(array("user_id" => $user_id));
+    }
+
+    function save_education_info($data) {
+        parent::use_table("team_education_info");
+
+        //check if job info already exists
+        $where = array("user_id" => $this->_get_clean_value($data, "user_id"));
+        $exists = parent::get_one_where($where);
+        if ($exists->user_id) {
+            //job info found. update the record
+            return parent::update_where($data, $where);
+        } else {
+            //insert new one
+            return parent::ci_save($data);
+        }
+    }
+
     function get_team_members($member_ids = "") {
         $users_table = $this->db->prefixTable('users');
         $sql = "SELECT $users_table.*

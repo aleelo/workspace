@@ -51,6 +51,7 @@
             {title: "<?php echo app_lang("name") ?>", "class": "all", order_by: "name"},
             {title: "<?php echo app_lang("ref_prefix") ?>", order_by: "ref_prefix"},
             {title: "<?php echo app_lang("destination_folder") ?>", order_by: "destination_folder"},
+            {title: "<?php echo app_lang("unit") ?>", order_by: "unit"},
             {title: "<?php echo app_lang("section") ?>", order_by: "section"},
             {title: "<?php echo app_lang("depertment") ?>", order_by: "department"},
             // {title: "<?php //echo app_lang("description") ?>", order_by: "description"},
