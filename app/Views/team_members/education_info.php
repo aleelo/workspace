@@ -1,5 +1,5 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("team_members/save_education_info/" . $education_info->id), array("id" => "education-info-form", "class" => "education-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("team_members/save_education_info/" . $user_id), array("id" => "education-info-form", "class" => "education-form dashed-row white", "role" => "form")); ?>
     <input name="user_id" type="hidden" value="<?php echo $user_id; ?>" />
     <div class="card">
         <div class=" card-header">
@@ -18,7 +18,7 @@
                             "class" => "form-control select2",
                             "value" => $education_info->education_level,
                             "placeholder" => 'Education Level'
-                        ),$education_levels);
+                        ),$education_levels,[$education_info->education_level =>$education_levels[$education_info->education_level]]);//$education_levels[$user_info->education_level]);
                         ?>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                                 'name'=> "field_of_study_diploma",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Diploma',
-                            ),$field_of_study,[$education_info->education_level]); ?>
+                            ),$field_of_study,[$education_info->field_of_study_diploma]); ?>
                         </div>
                     </div>
                 </div> 
@@ -184,7 +184,7 @@
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Foculty',
                                 "autocomplete" => "off"
-                            ),$field_of_study,[$education_info->education_level]); ?>
+                            ),$field_of_study,[$education_info->field_of_study_foculty_1]); ?>
                         </div>
                     </div>
                 </div> 
@@ -239,7 +239,7 @@
                                 'name'=> "field_of_study_foculty_2",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Foculty 2',
-                            ),$field_of_study,[$education_info->education_level]); ?>
+                            ),$field_of_study,[$education_info->field_of_study_foculty_2]); ?>
                         </div>
                     </div>
                 </div> 
@@ -295,7 +295,7 @@
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Master',
                                 "autocomplete" => "off"
-                            ),$field_of_study,[$education_info->education_level]); ?>
+                            ),$field_of_study,[$education_info->field_of_study_master_1]); ?>
                         </div>
                     </div>
                 </div> 
@@ -350,7 +350,7 @@
                                 'name'=> "field_of_study_master_2",
                                 'class' => "form-control select2",
                                 'placeholder' => 'Field of Study Master 2',
-                            ),$field_of_study,[$education_info->education_level]); ?>
+                            ),$field_of_study,[$education_info->field_of_study_master_2]); ?>
                         </div>
                     </div>
                 </div> 
@@ -451,8 +451,10 @@
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
                 setTimeout(function () {
-                    window.location.href = "<?php echo get_uri("team_members/view/" . $education_info->id); ?>" + "/education_info";
+                    window.location.href = "<?php echo get_uri("team_members/view/" . $education_info->user_id); ?>" + "/education_info";
+                    // window.location.reload();
                 }, 500);
+
             }
         });
         

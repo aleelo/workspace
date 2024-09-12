@@ -1,5 +1,5 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("team_members/save_job_info"), array("id" => "job-info-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("team_members/save_job_info/". $user_id), array("id" => "job-info-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
 
     <input name="user_id" type="hidden" value="<?php echo $user_id; ?>" />
 <div id="team-dropzone" class="post-dropzone">
