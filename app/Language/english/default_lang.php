@@ -1922,6 +1922,7 @@ $lang["lead"] = "Lead";
 $lang["document"] = "Document";
 $lang["leads"] = "Documents";
 $lang["add_lead"] = "Add Document";
+$lang["secretary"] = "Secretary";
 $lang["edit_lead"] = "Edit Document";
 $lang["delete_lead"] = "Delete Document";
 $lang["lead_details"] = "Document details";

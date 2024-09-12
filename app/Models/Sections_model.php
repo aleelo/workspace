@@ -153,9 +153,11 @@ class Sections_model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $sections_table.*, $departments_table.nameSo as DepNameSo,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as SectionHead
+        CONCAT($users_table.first_name,' ',$users_table.last_name) as SectionHead,
+        CONCAT(sec.first_name,' ',sec.last_name) as secretary
         FROM $sections_table
         LEFT JOIN $users_table ON $users_table.id = $sections_table.section_head_id
+        LEFT JOIN $users_table as sec ON sec.id = $sections_table.secretary_id
         LEFT JOIN $departments_table ON $departments_table.id = $sections_table.department_id
         $join_custom_fieds               
         WHERE $sections_table.deleted=0 $where $custom_fields_where  

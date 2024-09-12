@@ -71,6 +71,7 @@ class Departments extends Security_Controller {
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
 
         $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
@@ -112,6 +113,7 @@ class Departments extends Security_Controller {
             "short_name_EN" => $this->request->getPost('short_name_en'),
             "email" => $this->request->getPost('department_email'),
             "dep_head_id" => $this->request->getPost('department_head'),
+            "secretary_id" => $this->request->getPost('secretary'),
             "remarks" => $this->request->getPost('section_remarks'),
         );
 
@@ -307,6 +309,7 @@ class Departments extends Security_Controller {
             $data->short_name_EN,
             $data->email,
             $data->DeptHead,
+            $data->secretary,
             $data->remarks,
             
 

@@ -72,6 +72,7 @@ class Sections extends Security_Controller {
 
         $view_data['departments'] = array("" => " -- Choose Section Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -115,6 +116,7 @@ class Sections extends Security_Controller {
             "email" => $this->request->getPost('email'),
             "department_id" => $this->request->getPost('section_department'),
             "section_head_id" => $this->request->getPost('section_head'),
+            "secretary_id" => $this->request->getPost('secretary'),
             "remarks" => $this->request->getPost('section_remarks'),
         );
 
@@ -313,6 +315,7 @@ class Sections extends Security_Controller {
             // $data->section_head_id,
             $data->DepNameSo,
             $data->SectionHead,
+            $data->secretary,
             $data->remarks,
             
 

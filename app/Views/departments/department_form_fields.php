@@ -127,6 +127,25 @@
     </div>
 </div>
 
+<!----------------------------------------- Secretary  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="secretary" class=" <?php echo $label_column; ?>"><?php echo 'Secretary'; ?></label>
+        <div class=" col-md-9">
+            <?php
+            echo form_dropdown(array(
+                "id" => "secretary",
+                "name" => "secretary",
+                "class" => "form-department_head select2",
+                "placeholder" => 'Secretary',
+                "autocomplete" => "off"
+            ),$secretary,[$model_info->secretary_id]);
+            ?>
+        </div>
+    </div>
+</div>
+
 <!----------------------------------------- Section Remarks  ------------------------------------>
 
 <div class="form-group">

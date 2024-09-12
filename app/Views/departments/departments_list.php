@@ -50,6 +50,7 @@
             {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
             {title: "<?php echo app_lang("department_email") ?>", order_by: "email"},
             {title: "<?php echo app_lang("department_head") ?>", order_by: "DeptHead"},
+            {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
             {title: "<?php echo app_lang("remarks") ?>", order_by: "remarks"}
 
             

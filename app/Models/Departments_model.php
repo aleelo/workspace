@@ -152,9 +152,11 @@ class Departments_model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $departments_table.*, 
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as DeptHead
+        CONCAT($users_table.first_name,' ',$users_table.last_name) as DeptHead,
+        CONCAT(sec.first_name,' ',sec.last_name) as secretary
         FROM $departments_table
         LEFT JOIN $users_table ON $users_table.id = $departments_table.dep_head_id
+        LEFT JOIN $users_table as sec ON sec.id = $departments_table.secretary_id
         $join_custom_fieds               
         WHERE $departments_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";

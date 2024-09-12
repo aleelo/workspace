@@ -9,6 +9,7 @@ $lang["text_direction"] = "ltr"; //supported value ltr/rtl
 
 /* common */
 $lang["add"] = "Dodaj";
+$lang["secretary"] = "Secretary";
 $lang["edit"] = "Edytuj";
 $lang["close"] = "Zamknij";
 $lang["cancel"] = "Anuluj";
