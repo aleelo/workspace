@@ -451,7 +451,7 @@
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
                 setTimeout(function () {
-                    window.location.href = "<?php echo get_uri("team_members/view/" . $education_info->user_id); ?>" + "/education_info";
+                    window.location.href = "<?php echo get_uri("team_members/view/" . $user_id); ?>" + "/education_info";
                     // window.location.reload();
                 }, 500);
 

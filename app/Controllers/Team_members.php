@@ -559,7 +559,7 @@ class Team_members extends Security_Controller {
 
     //show team member's details view
     function view($id = 0, $tab = "") {
-        if ($id * 1) {
+        if ((int)$id * 1) {
             validate_numeric_value($id);
 
             //if team member's list is disabled, but the user can see his/her own profile.
