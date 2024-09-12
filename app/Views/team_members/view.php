@@ -27,33 +27,18 @@
 
     <ul id="team-member-view-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs rounded-0" role="tablist">
 
-        <?php if ($show_timeline) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#tab-timeline"> <?php echo app_lang('timeline'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_general_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/general_info/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('profile_info'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_general_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/education_info/" . $user_info->id); ?>" data-bs-target="#tab-education-info"> <?php echo app_lang('education_info'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_general_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/social_links/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_job_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/job_info/" . $user_info->id); ?>" data-bs-target="#tab-job-info"> <?php echo app_lang('job_info'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_account_settings) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/bank_details/" . $user_info->id); ?>" data-bs-target="#tab-bank-details"> <?php echo app_lang('bank_details'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_account_settings) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
-        <?php } ?>
 
         <!-- <?php// if ($login_user->id == $user_info->id) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
@@ -62,21 +47,15 @@
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("left_menus/index/user"); ?>" data-bs-target="#tab-user-left-menu"> <?php echo app_lang('left_menu'); ?></a></li>
         <?php //} ?> -->
 
-        <?php if ($show_general_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/files/" . $user_info->id); ?>" data-bs-target="#tab-files"> <?php echo app_lang('files'); ?></a></li>
-        <?php } ?>
 
-        <?php if ($show_projects) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/projects_info/" . $user_info->id); ?>" data-bs-target="#tab-projects-info"><?php echo app_lang('projects'); ?></a></li>
-        <?php } ?> 
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/projects_info/" . $user_info->id); ?>" data-bs-target="#tab-projects-info"><?php echo app_lang('projects'); ?></a></li> -->
 
         <?php if ($show_attendance) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/attendance_info/" . $user_info->id); ?>" data-bs-target="#tab-attendance-info"> <?php echo app_lang('attendance'); ?></a></li>
         <?php } ?>
 
-        <?php if ($show_leave) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/leave_info/" . $user_info->id); ?>" data-bs-target="#tab-leave-info"><?php echo app_lang('leaves'); ?></a></li>
-        <?php } ?>
         <?php if ($show_expense_info) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/expense_info/" . $user_info->id); ?>" data-bs-target="#tab-expense-info"><?php echo app_lang('expenses'); ?></a></li>
         <?php } ?>
