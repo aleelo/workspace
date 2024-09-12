@@ -85,8 +85,10 @@ class Documents extends Security_Controller
 
     public function modal_form()
     {
+        $this->access_only_allowed_members();
+
         $lead_id = $this->request->getPost('id');
-        $this->validate_lead_access($lead_id);
+        // $this->validate_lead_access($lead_id);
         $view_data = $this->make_lead_modal_form_data($lead_id);
 
         return $this->template->view('documents/modal_form', $view_data);
