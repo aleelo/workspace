@@ -262,7 +262,8 @@ class Users_model extends Crud_model {
 
         $show_own_department_only_user_id = $this->_get_clean_value($options, "show_own_department_only_user_id");
         if ($show_own_department_only_user_id) {
-            $where .= " AND ($department_table.dep_head_id=$show_own_department_only_user_id)";
+            $where .= " AND ($department_table.dep_head_id=$show_own_department_only_user_id";
+            $where .= " OR $department_table.secretary_id=$show_own_department_only_user_id)";
         }
 
         $quick_filter = $this->_get_clean_value($options, "quick_filter");
@@ -367,6 +368,7 @@ class Users_model extends Crud_model {
             LEFT JOIN $roles_table ON $roles_table.id = $users_table.role_id
             LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id
             LEFT JOIN $users_table as users_dp ON users_dp.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp_secretray ON us_dp_secretray.id = $department_table.secretary_id
             LEFT JOIN $sections_table ON $sections_table.id = $team_member_job_info_table.section_id
             LEFT JOIN $users_table as users_se ON users_se.id = $sections_table.section_head_id
             LEFT JOIN $units_table ON $units_table.id = $team_member_job_info_table.unit_id
