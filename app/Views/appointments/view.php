@@ -50,11 +50,6 @@
                     
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/company_info_tab/" . $appointments_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('appointment_info'); ?></a></li>
 
-                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/contacts/" . $appointments_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
-
-                    <?php if ($show_project_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/projects/" . $appointments_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
-                    <?php } ?>
 
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tasks/" . $appointments_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
 

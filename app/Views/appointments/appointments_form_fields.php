@@ -133,20 +133,156 @@
     </div>
 </div>
 
-<!----------------------------------------- Appointment Guest  ------------------------------------>
+<!----------------------------------------- Appointment Meeting With  ------------------------------------>
+
 
 <div class="form-group">
     <div class="row">
-        <label for="appointment_visitor_id" class=" <?php echo $label_column; ?>"><?php echo 'Visitor'; ?></label>
+        <label for="meeting_with" class="<?php echo $label_column; ?>"><?php echo 'Meeting With'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            $meetingWith = [''=>' - ','Department'=>'Department','Section'=>'Section','Unit'=>'Unit','Payers'=>'Payers',
+            'Partners'=>'Partners','Visitor'=>'Visitor','Employee'=>'Employee'];
+            echo form_dropdown(array(
+                "id" => "meeting_with",
+                "name" => "meeting_with",
+                "class" => "form-control select2",
+                "placeholder" => 'Meeting With',
+                "autocomplete" => "off"
+            ),$meetingWith,[$model_info->meeting_with]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Departments  ------------------------------------>
+
+<div class="form-group" id="departments_section">
+    <div class="row">
+        <label for="appointment_department_ids" class=" <?php echo $label_column; ?>"><?php echo 'Departments'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "appointment_visitor_id",
-                "name" => "appointment_visitor_id",
+                "id" => "appointment_department_ids",
+                "name" => "appointment_department_ids",
                 "class" => "form-control select2",
-                "placeholder" => 'Visitor',
+                "placeholder" => 'Departments',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->visitor_id]);
+            ),$guests,[$model_info->department_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Sections  ------------------------------------>
+
+<div class="form-group" id="sections_section">
+    <div class="row">
+        <label for="appointment_section_ids" class=" <?php echo $label_column; ?>"><?php echo 'Sections'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_section_ids",
+                "name" => "appointment_section_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Sections',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->section_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Units  ------------------------------------>
+
+<div class="form-group" id="units_section">
+    <div class="row">
+        <label for="appointment_unit_ids" class=" <?php echo $label_column; ?>"><?php echo 'Units'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_unit_ids",
+                "name" => "appointment_unit_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Units',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->unit_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Payers  ------------------------------------>
+
+<div class="form-group" id="payers_section">
+    <div class="row">
+        <label for="appointment_payer_ids" class=" <?php echo $label_column; ?>"><?php echo 'Payers'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_payer_ids",
+                "name" => "appointment_payer_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Payers',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->payer_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Partners  ------------------------------------>
+
+<div class="form-group" id="partners_section">
+    <div class="row">
+        <label for="appointment_partner_ids" class=" <?php echo $label_column; ?>"><?php echo 'Partners'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_partner_ids",
+                "name" => "appointment_partner_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Partners',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->partner_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Visitors  ------------------------------------>
+
+<div class="form-group" id="visitors_section">
+    <div class="row">
+        <label for="appointment_visitor_ids" class=" <?php echo $label_column; ?>"><?php echo 'Visitors'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_visitor_ids",
+                "name" => "appointment_visitor_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Visitors',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->visitor_ids]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Appointment Emplyees  ------------------------------------>
+
+<div class="form-group" id="employees_section">
+    <div class="row">
+        <label for="appointment_employee_ids" class=" <?php echo $label_column; ?>"><?php echo 'Employees'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "appointment_employee_ids",
+                "name" => "appointment_employee_ids",
+                "class" => "form-control select2",
+                "placeholder" => 'Employees',
+                "autocomplete" => "off"
+            ),$guests,[$model_info->employee_ids]);
             ?>
         </div>
     </div>

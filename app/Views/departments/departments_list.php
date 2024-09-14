@@ -1,6 +1,6 @@
 <div class="card">
     <div class="table-responsive">
-        <table id="client-table" class="display" cellspacing="0" width="100%">            
+        <table id="department-table" class="display" cellspacing="0" width="100%">            
         </table>
     </div>
 </div>
@@ -13,9 +13,9 @@
     }
 
     var showOptions = true;
-    if (!"<?php echo $can_edit_clients; ?>") {
-    showOptions = false;
-    }
+    // if (!"<?php //echo $can_edit_clients; ?>") {
+    // showOptions = false;
+    // }
 
     var ignoreSavedFilter = false;
     var quick_filters_dropdown = <?php echo view("departments/quick_filters_dropdown"); ?>;
@@ -62,6 +62,6 @@
     });
     };
     $(document).ready(function () {
-    loadClientsTable("#client-table");
+    loadClientsTable("#department-table");
     });
 </script>

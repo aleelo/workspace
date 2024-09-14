@@ -1,6 +1,6 @@
 <div class="card">
     <div class="table-responsive">
-        <table id="client-table" class="display" cellspacing="0" width="100%">            
+        <table id="section-table" class="display" cellspacing="0" width="100%">            
         </table>
     </div>
 </div>
@@ -63,6 +63,6 @@
     });
     };
     $(document).ready(function () {
-    loadClientsTable("#client-table");
+    loadClientsTable("#section-table");
     });
 </script>

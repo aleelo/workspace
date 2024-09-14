@@ -32,7 +32,7 @@ class Appointments extends Security_Controller {
 
         $view_data = $this->make_access_permissions_view_data();
 
-        $view_data['can_edit_clients'] = $this->can_edit_clients();
+        // $view_data['can_edit_clients'] = $this->can_edit_clients();
         $view_data["show_project_info"] = $this->can_manage_all_projects() && !$this->has_all_projects_restricted_role();
 
         $view_data["show_own_clients_only_user_id"] = $this->show_own_clients_only_user_id();
@@ -51,7 +51,7 @@ class Appointments extends Security_Controller {
     function modal_form() {
         
         $appointments_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($appointments_id);
+        // $this->_validate_client_manage_access($appointments_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -102,7 +102,7 @@ class Appointments extends Security_Controller {
     function save() {
         
         $appointments_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($appointments_id);
+        // $this->_validate_client_manage_access($appointments_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -118,7 +118,7 @@ class Appointments extends Security_Controller {
             "room" => $this->request->getPost('appointment_room'),
             "note" => $this->request->getPost('appointment_note'),
             "host_id" => $this->request->getPost('appointment_host_id'),
-            "visitor_id" => $this->request->getPost('appointment_visitor_id'),
+            "visitor_ids" => $this->request->getPost('appointment_visitor_ids'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -316,8 +316,6 @@ class Appointments extends Security_Controller {
 
     function view($appointments_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($appointments_id);
-
         if ($appointments_id) {
             $options = array("id" => $appointments_id);
             $appointments_info = $this->Appointments_model->get_details($options)->getRow();
@@ -882,7 +880,7 @@ class Appointments extends Security_Controller {
 
     function company_info_tab($Sections_id = 0) {
         if ($Sections_id) {
-            $this->_validate_client_view_access($Sections_id);
+            // $this->_validate_client_view_access($Sections_id);
 
             $view_data['model_info'] = $this->Appointments_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();

@@ -32,7 +32,7 @@ class Departments extends Security_Controller {
 
         $view_data = $this->make_access_permissions_view_data();
 
-        $view_data['can_edit_clients'] = $this->can_edit_clients();
+        // $view_data['can_edit_clients'] = $this->can_edit_clients();
         $view_data["show_project_info"] = $this->can_manage_all_projects() && !$this->has_all_projects_restricted_role();
 
         $view_data["show_own_clients_only_user_id"] = $this->show_own_clients_only_user_id();

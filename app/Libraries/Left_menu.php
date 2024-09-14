@@ -29,6 +29,7 @@ class Left_menu {
             $access_expense = get_array_value($permissions, "expense");
             $access_invoice = get_array_value($permissions, "invoice");
             $access_ticket = get_array_value($permissions, "ticket");
+            $access_appointment = get_array_value($permissions, "appointment");
             $access_client = get_array_value($permissions, "client");
             $access_event = get_array_value($permissions, "event");
             $access_lead = get_array_value($permissions, "lead");
@@ -97,15 +98,15 @@ class Left_menu {
                 $sidebar_menu["training"] = array("name" => "training", "url" => "training", "class" => "briefcase");
             }
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if (get_setting("module_appointment") == "1" && ($this->ci->login_user->is_admin || $access_appointment)) {
                 $sidebar_menu["appointments"] = array("name" => "appointments", "url" => "", "class" => "book-open");
             }
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if (get_setting("module_appointment") == "1" && ($this->ci->login_user->is_admin || $access_appointment)) {
                 $sidebar_menu["appointment"] = array("name" => "appointment", "url" => "appointments", "class" => "book-open");
             }
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if (get_setting("module_appointment") == "1" && ($this->ci->login_user->is_admin || $access_appointment)) {
                 $sidebar_menu["visitors"] = array("name" => "visitors", "url" => "visitors", "class" => "briefcase");
             }
             
