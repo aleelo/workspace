@@ -101,7 +101,8 @@ class Documents_model extends Crud_model {
 
         $show_own_department_documents_only_user_id = $this->_get_clean_value($options, "show_own_department_documents_only_user_id");
         if ($show_own_department_documents_only_user_id) {
-            $where .= " AND ($department_table.dep_head_id=$show_own_department_documents_only_user_id)";
+            $where .= " AND ($department_table.dep_head_id=$show_own_department_documents_only_user_id";
+            $where .= " OR $department_table.secretary_id=$show_own_department_documents_only_user_id)";
         }
 
         $quick_filter = $this->_get_clean_value($options, "quick_filter");
@@ -194,7 +195,8 @@ class Documents_model extends Crud_model {
             LEFT JOIN $templates_table ON $templates_table.id = $documents_table.template
             LEFT JOIN $users_table ON $users_table.id = $documents_table.created_by
             LEFT JOIN $department_table ON $department_table.id = $templates_table.department_id
-            LEFT JOIN $users_table as us_dp ON us_dp.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp_head ON us_dp_head.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp_secretray ON us_dp_secretray.id = $department_table.secretary_id
             LEFT JOIN $sections_table ON $sections_table.id = $templates_table.section_id
             LEFT JOIN $users_table as us_se ON us_se.id = $sections_table.section_head_id
             LEFT JOIN $units_table ON $units_table.id = $templates_table.unit_id

@@ -8,7 +8,7 @@ class Appointments extends Security_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("client");
+        $this->init_permission_checker("appointment");
     }
 
     private function _validate_client_manage_access($client_id = 0) {
@@ -26,6 +26,8 @@ class Appointments extends Security_Controller {
     /* load clients list view */
 
     function index($tab = "") {
+
+        $this->check_module_availability("module_appointment");
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();

@@ -92,7 +92,8 @@ class Templates_model extends Crud_model {
 
         $show_own_department_documents_only_user_id = $this->_get_clean_value($options, "show_own_department_documents_only_user_id");
         if ($show_own_department_documents_only_user_id) {
-            $where .= " AND ($department_table.dep_head_id=$show_own_department_documents_only_user_id)";
+            $where .= " AND ($department_table.dep_head_id=$show_own_department_documents_only_user_id";
+            $where .= " OR $department_table.secretary_id=$show_own_department_documents_only_user_id)";
         }
 
         $limit_offset = "";
@@ -110,6 +111,7 @@ class Templates_model extends Crud_model {
             FROM $templates_table
             LEFT JOIN $department_table ON $department_table.id = $templates_table.department_id
             LEFT JOIN $users_table as us_dp ON us_dp.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp_secretray ON us_dp_secretray.id = $department_table.secretary_id
             LEFT JOIN $sections_table ON $sections_table.id = $templates_table.section_id
             LEFT JOIN $users_table as us_se ON us_se.id = $sections_table.section_head_id
             LEFT JOIN $units_table ON $units_table.id = $templates_table.unit_id

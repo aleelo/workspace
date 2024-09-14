@@ -1946,6 +1946,7 @@ $lang["yes_own_events"] = "Yes, own Events";
 $lang["yes_all_events"] = "Yes, all Events";
 $lang["can_manage_departments_sections_units"] = "can manage Documents, Sections & Units?";
 $lang["yes_all"] = "Yes, can manage all.";
+$lang["can_manage_appointment"] = "can manage Appointments?";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";

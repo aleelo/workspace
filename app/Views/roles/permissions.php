@@ -177,72 +177,116 @@
 
                 </li>
 
-                
-                <li>
-                    <span data-feather="key" class="icon-14 ml-20"></span>
-                    <h5><?php echo app_lang("can_manage_payers"); ?> <span class="help" data-bs-toggle="tooltip" title="Hides all information of clients except company name."><i data-feather="help-circle" class="icon-14"></i></span></h5>
-                    <div>
-                        <?php
-                        if (is_null($client)) {
-                            $client = "";
-                        }
-                        echo form_radio(array(
-                            "id" => "client_no",
-                            "name" => "client_permission",
-                            "value" => "",
-                            "class" => "client_permission toggle_specific form-check-input",
-                                ), $client, ($client === "") ? true : false);
-                        ?>
-                        <label for="client_no"><?php echo app_lang("no"); ?> </label>
-                    </div>
-                    <div>
-                        <?php
-                        echo form_radio(array(
-                            "id" => "client_yes",
-                            "name" => "client_permission",
-                            "value" => "all",
-                            "class" => "client_permission toggle_specific form-check-input",
-                                ), $client, ($client === "all") ? true : false);
-                        ?>
-                        <label for="client_yes"><?php echo app_lang("yes_all_payers"); ?></label>
-                    </div>
-                    <div>
-                        <?php
-                        echo form_radio(array(
-                            "id" => "client_yes_own",
-                            "name" => "client_permission",
-                            "value" => "own",
-                            "class" => "client_permission toggle_specific form-check-input",
-                                ), $client, ($client === "own") ? true : false);
-                        ?>
-                        <label for="client_yes_own"><?php echo app_lang("yes_only_own_payers"); ?></label>
-                    </div>
-                    <div>
-                        <?php
-                        echo form_radio(array(
-                            "id" => "client_read_only",
-                            "name" => "client_permission",
-                            "value" => "read_only",
-                            "class" => "client_permission toggle_specific form-check-input",
-                                ), $client, ($client === "read_only") ? true : false);
-                        ?>
-                        <label for="client_read_only"><?php echo app_lang("read_only"); ?></label>
-                    </div>
-                    <div class="form-group">
-                        <?php
-                        echo form_radio(array(
-                            "id" => "client_specific",
-                            "name" => "client_permission",
-                            "value" => "specific",
-                            "class" => "client_permission toggle_specific form-check-input",
-                                ), $client, ($client === "specific") ? true : false);
-                        ?>
-                        <label for="client_specific"><?php echo app_lang("yes_specific_payer_groups"); ?>:</label>
-                        <div class="specific_dropdown">
-                            <input type="text" value="<?php echo $client_specific; ?>" name="client_permission_specific" id="client_groups_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_client_groups'); ?>"  />
+                <?php if (get_setting("module_appointment")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_appointment"); ?> <span class="help" data-bs-toggle="tooltip" title="Hides all information of appointments except company name."><i data-feather="help-circle" class="icon-14"></i></span></h5>
+                        <div>
+                            <?php
+                            if (is_null($appointment)) {
+                                $appointment = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "appointment_no",
+                                "name" => "appointment_permission",
+                                "value" => "",
+                                "class" => "appointment_permission toggle_specific form-check-input",
+                                    ), $appointment, ($appointment === "") ? true : false);
+                            ?>
+                            <label for="appointment_no"><?php echo app_lang("no"); ?> </label>
                         </div>
-                    </div>
-                </li>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "appointment_yes_own_department",
+                                "name" => "appointment_permission",
+                                "value" => "own_department",
+                                "class" => "appointment_permission toggle_specific form-check-input",
+                                    ), $appointment, ($appointment === "own_department") ? true : false);
+                            ?>
+                            <label for="appointment_yes_own_department"><?php echo app_lang("yes_own_departments"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "appointment_yes_all",
+                                "name" => "appointment_permission",
+                                "value" => "all",
+                                "class" => "appointment_permission toggle_specific form-check-input",
+                                    ), $appointment, ($appointment === "all") ? true : false);
+                            ?>
+                            <label for="appointment_yes_all"><?php echo app_lang("yes_all_departments"); ?></label>
+                        </div>
+                    </li>
+                <?php } ?>
+
+                <?php if (get_setting("module_client")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_payers"); ?> <span class="help" data-bs-toggle="tooltip" title="Hides all information of clients except company name."><i data-feather="help-circle" class="icon-14"></i></span></h5>
+                        <div>
+                            <?php
+                            if (is_null($client)) {
+                                $client = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "client_no",
+                                "name" => "client_permission",
+                                "value" => "",
+                                "class" => "client_permission toggle_specific form-check-input",
+                                    ), $client, ($client === "") ? true : false);
+                            ?>
+                            <label for="client_no"><?php echo app_lang("no"); ?> </label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "client_yes",
+                                "name" => "client_permission",
+                                "value" => "all",
+                                "class" => "client_permission toggle_specific form-check-input",
+                                    ), $client, ($client === "all") ? true : false);
+                            ?>
+                            <label for="client_yes"><?php echo app_lang("yes_all_payers"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "client_yes_own",
+                                "name" => "client_permission",
+                                "value" => "own",
+                                "class" => "client_permission toggle_specific form-check-input",
+                                    ), $client, ($client === "own") ? true : false);
+                            ?>
+                            <label for="client_yes_own"><?php echo app_lang("yes_only_own_payers"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "client_read_only",
+                                "name" => "client_permission",
+                                "value" => "read_only",
+                                "class" => "client_permission toggle_specific form-check-input",
+                                    ), $client, ($client === "read_only") ? true : false);
+                            ?>
+                            <label for="client_read_only"><?php echo app_lang("read_only"); ?></label>
+                        </div>
+                        <div class="form-group">
+                            <?php
+                            echo form_radio(array(
+                                "id" => "client_specific",
+                                "name" => "client_permission",
+                                "value" => "specific",
+                                "class" => "client_permission toggle_specific form-check-input",
+                                    ), $client, ($client === "specific") ? true : false);
+                            ?>
+                            <label for="client_specific"><?php echo app_lang("yes_specific_payer_groups"); ?>:</label>
+                            <div class="specific_dropdown">
+                                <input type="text" value="<?php echo $client_specific; ?>" name="client_permission_specific" id="client_groups_specific_dropdown" class="w100p validate-hidden"  data-rule-required="true" data-msg-required="<?php echo app_lang('field_required'); ?>" placeholder="<?php echo app_lang('choose_client_groups'); ?>"  />
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
 
                 <li>   
                     <span data-feather="key" class="icon-14 ml-20"></span>
