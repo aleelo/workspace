@@ -71,7 +71,7 @@ class Leaves extends Security_Controller {
         
         if($role === "HRM" && $status === "approved"){
             $status = 'approved';
-        }elseif(($role == "Director" || $role === "HRM") && $status === "pending"){
+        }elseif(($role == "Section Head" || $role === "HRM") && $status === "pending"){
             $status = 'pending';
         }
 
@@ -1238,7 +1238,19 @@ class Leaves extends Security_Controller {
         $end_date = $this->request->getPost('end_date');
         $applicant_id = $this->request->getPost('applicant_id');
 
-        $options = array("start_date" => $start_date, "end_date" => $end_date, "applicant_id" => $applicant_id, "login_user_id" => $this->login_user->id, "access_type" => $this->access_type, "allowed_members" => $this->allowed_members);
+        $options = array(
+            "start_date" => $start_date, 
+            "end_date" => $end_date, 
+            "applicant_id" => $applicant_id, 
+            "login_user_id" => $this->login_user->id, 
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
+            "access_type" => $this->access_type, 
+            "allowed_members" => $this->allowed_members
+        );
+
         $list_data = $this->Leave_applications_model->get_list($options)->getResult();
         $result = array();
         foreach ($list_data as $data) {
@@ -1287,7 +1299,7 @@ class Leaves extends Security_Controller {
         $can_approve_leaves = $role != 'Employee';
 
         $can_manage_application = false;
-        if ($this->access_type === "all" && $can_approve_leaves) {
+        if ($this->access_type === "own_section" || $this->access_type === "all" && $can_approve_leaves) {
             $can_manage_application = true;
             $actions .= modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
             // $actions .= modal_anchor(get_uri("clients/application_details"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
@@ -1393,14 +1405,14 @@ class Leaves extends Security_Controller {
 
         //checking the user permissiton to show/hide reject and approve button
         $can_manage_application = false;
-        if ($this->access_type === "all") {
+        if ($this->access_type === "own_section" || $this->access_type === "all") {
             $can_manage_application = true;
         } else if (array_search($info->applicant_id, $this->allowed_members) && $info->applicant_id !== $this->login_user->id) {
             $can_manage_application = true;
         }
 
         $role = $this->get_user_role();
-        $view_data['show_approve_reject'] = $role === 'admin' || $role === 'HRM' || $role === 'Director' || $role === 'Administrator';
+        $view_data['show_approve_reject'] = $role === 'admin' || $role === 'HRM' || $role === 'Director' || $role === 'Section Head'|| $role === 'Administrator';
 
         //has permission to manage the appliation? or is it own application?
         if (!$can_manage_application && $info->applicant_id !== $this->login_user->id) {

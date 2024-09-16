@@ -172,6 +172,9 @@ class Leave_applications_model extends Crud_model {
             
             WHERE $leave_applications_table.deleted=0 $where order by start_date desc";
 
+            // print_r($sql);
+            // die();
+
         return $this->db->query($sql);
 
     }
