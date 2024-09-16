@@ -49,7 +49,8 @@
             {title: "<?php echo app_lang("time") ?>", order_by: "time"},
             {title: "<?php echo app_lang("room") ?>", order_by: "room"},
             {title: "<?php echo app_lang("note") ?>", order_by: "note"},
-            {title: "<?php echo app_lang("host_name") ?>", order_by: "HostName"}
+            {title: "<?php echo app_lang("host_name") ?>", order_by: "HostName"},
+            {title: "<?php echo app_lang("meeting_with") ?>", order_by: "meeting_with"}
 
             
 <?php echo $custom_field_headers; ?>,

@@ -937,6 +937,8 @@ class Departments extends Security_Controller {
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
+            $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Deparment_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 

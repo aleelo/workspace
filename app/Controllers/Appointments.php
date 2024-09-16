@@ -74,14 +74,14 @@ class Appointments extends Security_Controller {
 
         // $view_data['host'] = dp_head_name_dropdown();
 
-        $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-        $view_data['departments'] = array("" => " -- Choose Departments -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Sections'] = array("" => " -- Choose Sections -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Units'] = array("" => " -- Choose Units -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['payers'] = array("" => " -- Choose Payers -- ") + $this->Clients_model->get_dropdown_list(array("Contact_Name"), "id");
-        $view_data['partners'] = array("" => " -- Choose Partners -- ") + $this->Partners_model->get_dropdown_list(array("contact_name"), "id");
-        $view_data['guests'] = array("" => " -- choose visitors -- ") + $this->Visitors_model->get_dropdown_list(array("name"), "id");
-        $view_data['employees'] = array("" => " -- choose Employees -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['host'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['payers'] = $this->Clients_model->get_dropdown_list(array("Contact_Name"), "id");
+        $view_data['partners'] = $this->Partners_model->get_dropdown_list(array("contact_name"), "id");
+        $view_data['guests'] = $this->Visitors_model->get_dropdown_list(array("name"), "id");
+        $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -115,24 +115,35 @@ class Appointments extends Security_Controller {
             "id" => "numeric",
         ));
 
-        $appointment_title = $this->request->getPost('appointment_title');
+        $meeting_with = $this->request->getPost('meeting_with');
 
+          // Capture only the relevant dropdown values based on "Meeting With"
+        $department_ids = ($meeting_with === 'Departments') ? implode(',', $this->request->getPost('appointment_department_ids')) : null;
+        $section_ids = ($meeting_with === 'Sections') ? implode(',', $this->request->getPost('appointment_section_ids')) : null;
+        $unit_ids = ($meeting_with === 'Units') ? implode(',', $this->request->getPost('appointment_unit_ids')) : null;
+        $payer_ids = ($meeting_with === 'Payers') ? implode(',', $this->request->getPost('appointment_payer_ids')) : null;
+        $partner_ids = ($meeting_with === 'Partners') ? implode(',', $this->request->getPost('appointment_partner_ids')) : null;
+        $visitor_ids = ($meeting_with === 'Visitors') ? implode(',', $this->request->getPost('appointment_visitor_ids')) : null;
+        $employee_ids = ($meeting_with === 'Employees') ? implode(',', $this->request->getPost('appointment_employee_ids')) : null;
+
+        // Prepare the data array
         $data = array(
-            "title" => $appointment_title,
+            "title" => $this->request->getPost('appointment_title'),
             "date" => $this->request->getPost('appointment_date'),
-            "time" => $this->request->getPost('appointment_time'), 
+            "time" => $this->request->getPost('appointment_time'),
             "room" => $this->request->getPost('appointment_room'),
             "note" => $this->request->getPost('appointment_note'),
             "host_id" => $this->request->getPost('appointment_host_id'),
-            "meeting_with" => $this->request->getPost('meeting_with'),
-            "department_ids" => $this->request->getPost('appointment_department_ids'),
-            "section_ids" => $this->request->getPost('appointment_section_ids'),
-            "unit_ids" => $this->request->getPost('appointment_unit_ids'),
-            "payer_ids" => $this->request->getPost('appointment_payer_ids'),
-            "partner_ids" => $this->request->getPost('appointment_partner_ids'),
-            "visitor_ids" => $this->request->getPost('appointment_visitor_ids'),
-            "employee_ids" => $this->request->getPost('appointment_employee_ids'),
+            "meeting_with" => $meeting_with,
+            "department_ids" => $department_ids,
+            "section_ids" => $section_ids,
+            "unit_ids" => $unit_ids,
+            "payer_ids" => $payer_ids,
+            "partner_ids" => $partner_ids,
+            "visitor_ids" => $visitor_ids,
+            "employee_ids" => $employee_ids
         );
+
 
         if ($this->login_user->user_type === "staff") {
             $data["labels"] = $this->request->getPost('labels');
@@ -288,6 +299,7 @@ class Appointments extends Security_Controller {
             $data->room,
             $data->note,
             $data->HostName,
+            $data->meeting_with,
             
         );
 
@@ -902,9 +914,15 @@ class Appointments extends Security_Controller {
 
             $view_data['Merchant_types_dropdown'] = $this->get_merchant_types_dropdown();
 
-            $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
-            $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-            $view_data['guests'] = array("" => " -- choose a visitor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['host'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['Units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['payers'] = $this->Clients_model->get_dropdown_list(array("Contact_Name"), "id");
+            $view_data['partners'] = $this->Partners_model->get_dropdown_list(array("contact_name"), "id");
+            $view_data['guests'] = $this->Visitors_model->get_dropdown_list(array("name"), "id");
+            $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+
             $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();

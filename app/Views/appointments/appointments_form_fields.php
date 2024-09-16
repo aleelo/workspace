@@ -141,8 +141,8 @@
         <label for="meeting_with" class="<?php echo $label_column; ?>"><?php echo 'Meeting With'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
-            $meetingWith = [''=>' - ','Department'=>'Department','Section'=>'Section','Unit'=>'Unit','Payers'=>'Payers',
-            'Partners'=>'Partners','Visitor'=>'Visitor','Employee'=>'Employee'];
+            $meetingWith = [''=>' - ','Departments'=>'Departments','Sections'=>'Sections','Units'=>'Units','Payers'=>'Payers',
+            'Partners'=>'Partners','Visitors'=>'Visitors','Employees'=>'Employees'];
             echo form_dropdown(array(
                 "id" => "meeting_with",
                 "name" => "meeting_with",
@@ -162,13 +162,15 @@
         <label for="appointment_department_ids" class=" <?php echo $label_column; ?>"><?php echo 'Departments'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
+            
             echo form_dropdown(array(
                 "id" => "appointment_department_ids",
-                "name" => "appointment_department_ids",
+                "name" => "appointment_department_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Departments',
-                "autocomplete" => "off"
-            ),$departments,[$model_info->department_ids]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Departments -- ',
+                "autocomplete" => "off",
+            ),$departments,$model_info->department_ids ? explode(',', $model_info->department_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -183,11 +185,12 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_section_ids",
-                "name" => "appointment_section_ids",
+                "name" => "appointment_section_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Sections',
-                "autocomplete" => "off"
-            ),$Sections,[$model_info->section_ids]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Sections -- ',
+                "autocomplete" => "off",
+            ),$Sections,$model_info->section_ids ? explode(',', $model_info->section_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -202,11 +205,12 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_unit_ids",
-                "name" => "appointment_unit_ids",
+                "name" => "appointment_unit_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Units',
-                "autocomplete" => "off"
-            ),$Units,[$model_info->unit_ids]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Units -- ',
+                "autocomplete" => "off",
+            ),$Units,$model_info->unit_ids ? explode(',', $model_info->unit_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -221,11 +225,13 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_payer_ids",
-                "name" => "appointment_payer_ids",
+                "name" => "appointment_payer_ids[]",
                 "class" => "form-control select2",
                 "placeholder" => 'Payers',
-                "autocomplete" => "off"
-            ),$payers,[$model_info->payer_ids]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Payers -- ',
+                "autocomplete" => "off",
+            ),$payers,$model_info->payer_ids ? explode(',', $model_info->payer_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -240,11 +246,12 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_partner_ids",
-                "name" => "appointment_partner_ids",
+                "name" => "appointment_partner_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Partners',
+                "placeholder" => ' -- Choose Partners -- ',
+                "multiple" => "multiple",
                 "autocomplete" => "off"
-            ),$partners,[$model_info->partner_ids]);
+            ),$partners,$model_info->partner_ids ? explode(',', $model_info->partner_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -259,11 +266,12 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_visitor_ids",
-                "name" => "appointment_visitor_ids",
+                "name" => "appointment_visitor_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Visitors',
+                "placeholder" => ' -- Choose Visitors -- ',
+                "multiple" => "multiple",
                 "autocomplete" => "off"
-            ),$guests,[$model_info->visitor_ids]);
+            ),$guests,$model_info->visitor_ids ? explode(',', $model_info->visitor_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -278,11 +286,12 @@
             <?php
             echo form_dropdown(array(
                 "id" => "appointment_employee_ids",
-                "name" => "appointment_employee_ids",
+                "name" => "appointment_employee_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Employees',
+                "placeholder" => ' -- Choose Employees -- ',
+                "multiple" => "multiple",
                 "autocomplete" => "off"
-            ),$employees,[$model_info->employee_ids]);
+            ),$employees,$model_info->employee_ids ? explode(',', $model_info->employee_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -340,6 +349,78 @@
 
         setDatePicker("#appointment_date");
         setTimePicker("#appointment_time");
+
+        // Function to reset other dropdowns
+    function resetOtherDropdowns(excludeSection) {
+        var sections = ['#departments_section', '#sections_section', '#units_section', '#payers_section', '#partners_section', '#visitors_section', '#employees_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+    // Initially hide all sections
+    function hideAllSections() {
+        $('#departments_section').hide();
+        $('#sections_section').hide();
+        $('#units_section').hide();
+        $('#payers_section').hide();
+        $('#partners_section').hide();
+        $('#visitors_section').hide();
+        $('#employees_section').hide();
+    }
+
+    // Call this function whenever the "Meeting With" dropdown changes
+    $('#meeting_with').on('change', function () {
+        var meeting_with = $(this).val();
+
+        // Hide all sections first
+        hideAllSections();
+
+        // Show the appropriate section(s) based on the selected meeting_with value and reset others
+        switch (meeting_with) {
+            case 'Departments':
+                $('#departments_section').show();
+                resetOtherDropdowns('#departments_section');
+                break;
+            case 'Sections':
+                $('#sections_section').show();
+                resetOtherDropdowns('#sections_section');
+                break;
+            case 'Units':
+                $('#units_section').show();
+                resetOtherDropdowns('#units_section');
+                break;
+            case 'Payers':
+                $('#payers_section').show();
+                resetOtherDropdowns('#payers_section');
+                break;
+            case 'Partners':
+                $('#partners_section').show();
+                resetOtherDropdowns('#partners_section');
+                break;
+            case 'Visitors':
+                $('#visitors_section').show();
+                resetOtherDropdowns('#visitors_section');
+                break;
+            case 'Employees':
+                $('#employees_section').show();
+                resetOtherDropdowns('#employees_section');
+                break;
+            default:
+                hideAllSections(); // If no valid selection is made, hide all sections and reset all dropdowns
+                resetOtherDropdowns(null);
+        }
+    });
+
+    // Trigger change on page load to set the correct visibility based on any pre-selected value
+    $('#meeting_with').trigger('change');
 
 
     });
