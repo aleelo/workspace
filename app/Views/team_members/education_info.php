@@ -430,6 +430,45 @@
 
             </div>
 
+            <div id="other_skills_section">
+
+                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                    <div class="row">
+                        <label for="other_skills" class=" col-md-2"><?php echo 'Other Skills'; ?></label>
+                        <div class=" col-md-10">
+                            <?php
+                            echo form_textarea(array(
+                                "id" => "other_skills",
+                                "name" => "other_skills",
+                                "value" => $education_info->other_skills,
+                                "class" => "form-control",
+                                "placeholder" => 'Other Skills'
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                    <div class="row">
+                        <label for="graduation_date_other_skills" class=" col-md-2"><?php echo 'Graduation Date Other Skills'; ?></label>
+                        <div class=" col-md-10">
+                            <?php
+                            echo form_input(array(
+                                "id" => "graduation_date_other_skills",
+                                "name" => "graduation_date_other_skills",
+                                "class" => "form-control date",
+                                'value'=> $education_info->graduation_date_other_skills,
+                                "placeholder" => 'Graduation Date PHD',
+                                "autocomplete" => "off"
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-2", "field_column" => " col-md-10")); ?> 
 
         </div>
@@ -468,6 +507,7 @@
         setDatePicker("#graduation_date_master_1");
         setDatePicker("#graduation_date_master_2");
         setDatePicker("#graduation_date_phd");
+        setDatePicker("#graduation_date_other_skills");
 
         // Initially hide all sections
         function hideAllSections() {
@@ -479,6 +519,7 @@
             $('#master_1_section').hide();
             $('#master_2_section').hide();
             $('#php_section').hide();
+            $('#other_skills_section').hide();
         }
 
     // Call this function whenever the education level changes
@@ -523,6 +564,9 @@
                 break;
             case 'Doctor':
                 $('#php_section').show();
+                break;
+            case 'Other/Skill':
+                $('#other_skills_section').show();
                 break;
             default:
                 hideAllSections(); // If no valid selection is made, hide all sections

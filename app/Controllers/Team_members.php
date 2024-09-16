@@ -938,6 +938,8 @@ class Team_members extends Security_Controller {
             "university_name_phd" => $this->request->getPost('university_name_phd'),
             "field_of_study_phd" => $this->request->getPost('field_of_study_phd'),
             "graduation_date_phd" => $this->request->getPost('graduation_date_phd'),
+            "other_skills" => $this->request->getPost('other_skills'),
+            "graduation_date_other_skills" => $this->request->getPost('graduation_date_other_skills'),
         );
 
        
