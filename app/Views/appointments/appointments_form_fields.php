@@ -168,7 +168,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Departments',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->department_ids]);
+            ),$departments,[$model_info->department_ids]);
             ?>
         </div>
     </div>
@@ -187,7 +187,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Sections',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->section_ids]);
+            ),$Sections,[$model_info->section_ids]);
             ?>
         </div>
     </div>
@@ -206,7 +206,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Units',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->unit_ids]);
+            ),$Units,[$model_info->unit_ids]);
             ?>
         </div>
     </div>
@@ -225,7 +225,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Payers',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->payer_ids]);
+            ),$payers,[$model_info->payer_ids]);
             ?>
         </div>
     </div>
@@ -244,7 +244,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Partners',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->partner_ids]);
+            ),$partners,[$model_info->partner_ids]);
             ?>
         </div>
     </div>
@@ -282,7 +282,7 @@
                 "class" => "form-control select2",
                 "placeholder" => 'Employees',
                 "autocomplete" => "off"
-            ),$guests,[$model_info->employee_ids]);
+            ),$employees,[$model_info->employee_ids]);
             ?>
         </div>
     </div>

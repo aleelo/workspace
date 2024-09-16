@@ -75,7 +75,13 @@ class Appointments extends Security_Controller {
         // $view_data['host'] = dp_head_name_dropdown();
 
         $view_data['host'] = array("" => " -- choose a host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-        $view_data['guests'] = array("" => " -- choose a visitor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['departments'] = array("" => " -- Choose Departments -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Sections'] = array("" => " -- Choose Sections -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Units'] = array("" => " -- Choose Units -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['payers'] = array("" => " -- Choose Payers -- ") + $this->Clients_model->get_dropdown_list(array("Contact_Name"), "id");
+        $view_data['partners'] = array("" => " -- Choose Partners -- ") + $this->Partners_model->get_dropdown_list(array("contact_name"), "id");
+        $view_data['guests'] = array("" => " -- choose visitors -- ") + $this->Visitors_model->get_dropdown_list(array("name"), "id");
+        $view_data['employees'] = array("" => " -- choose Employees -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -118,7 +124,14 @@ class Appointments extends Security_Controller {
             "room" => $this->request->getPost('appointment_room'),
             "note" => $this->request->getPost('appointment_note'),
             "host_id" => $this->request->getPost('appointment_host_id'),
+            "meeting_with" => $this->request->getPost('meeting_with'),
+            "department_ids" => $this->request->getPost('appointment_department_ids'),
+            "section_ids" => $this->request->getPost('appointment_section_ids'),
+            "unit_ids" => $this->request->getPost('appointment_unit_ids'),
+            "payer_ids" => $this->request->getPost('appointment_payer_ids'),
+            "partner_ids" => $this->request->getPost('appointment_partner_ids'),
             "visitor_ids" => $this->request->getPost('appointment_visitor_ids'),
+            "employee_ids" => $this->request->getPost('appointment_employee_ids'),
         );
 
         if ($this->login_user->user_type === "staff") {
