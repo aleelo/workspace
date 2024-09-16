@@ -46,6 +46,8 @@ class Leave_applications_model extends Crud_model {
         $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
         $users_table = $this->db->prefixTable('users');
         $department_table = $this->db->prefixTable('departments');
+        $sections_table = $this->db->prefixTable('sections');
+        $units_table = $this->db->prefixTable('units');
         $where = "";
         
         $id = $this->_get_clean_value($options, "id");
@@ -54,29 +56,50 @@ class Leave_applications_model extends Crud_model {
         }
 
 
-        //role and user info:
-        $Users_model = model("App\Models\Users_model");
-        $role = $Users_model->get_user_role();
-        $user = $Users_model->get_access_info($Users_model->login_user_id());
+        // //role and user info:
+        // $Users_model = model("App\Models\Users_model");
+        // $role = $Users_model->get_user_role();
+        // $user = $Users_model->get_access_info($Users_model->login_user_id());
 
-        // die($role);
-        $dr_dp_id = $this->get_director_department_id();
-        $d = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user->id")->getRow();
-        $department_id = $d?->department_id;
-        $created_by = $user->id;
+        // // die($role);
+        // $dr_dp_id = $this->get_director_department_id();
+        // $d = $this->db->query("SELECT t.department_id from rise_team_member_job_info t left join rise_users u on u.id=t.user_id where t.user_id = $user->id")->getRow();
+        // $department_id = $d?->department_id;
+        // $created_by = $user->id;
 
-        if($role == 'Employee'){
-            $created_by = $user->id;
-        }elseif($role == 'Director'){
-            if(!empty($dr_dp_id)){
-                $department_id = $dr_dp_id;
-                $created_by = '%';
-            }
-        }elseif($role == 'Secretary'){
-            $created_by = '%';
-        }elseif($role == 'HRM' || $role == 'Admin' || $role == 'Administrator'){
-            $created_by = '%';
-            $department_id = '%';
+        // if($role == 'Employee'){
+        //     $created_by = $user->id;
+        // }elseif($role == 'Director'){
+        //     if(!empty($dr_dp_id)){
+        //         $department_id = $dr_dp_id;
+        //         $created_by = '%';
+        //     }
+        // }elseif($role == 'Secretary'){
+        //     $created_by = '%';
+        // }elseif($role == 'HRM' || $role == 'Admin' || $role == 'Administrator'){
+        //     $created_by = '%';
+        //     $department_id = '%';
+        // }
+
+        $show_own_leaves_only_user_id = $this->_get_clean_value($options, "show_own_leaves_only_user_id");
+        if ($show_own_leaves_only_user_id) {
+            $where .= " AND ($leave_applications_table.applicant_id=$show_own_leaves_only_user_id)";
+        }
+
+        $show_own_unit_leaves_only_user_id = $this->_get_clean_value($options, "show_own_unit_leaves_only_user_id");
+        if ($show_own_unit_leaves_only_user_id) {
+            $where .= " AND ($units_table.unit_head_id=$show_own_unit_leaves_only_user_id)";
+        }
+        
+        $show_own_section_leaves_only_user_id = $this->_get_clean_value($options, "show_own_section_leaves_only_user_id");
+        if ($show_own_section_leaves_only_user_id) {
+            $where .= " AND ($sections_table.section_head_id=$show_own_section_leaves_only_user_id)";
+        }
+
+        $show_own_department_leaves_only_user_id = $this->_get_clean_value($options, "show_own_department_leaves_only_user_id");
+        if ($show_own_department_leaves_only_user_id) {
+            $where .= " AND ($department_table.dep_head_id=$show_own_department_leaves_only_user_id";
+            $where .= " OR $department_table.secretary_id=$show_own_department_leaves_only_user_id)";
         }
 
         $status = $this->_get_clean_value($options, "status");
@@ -127,11 +150,10 @@ class Leave_applications_model extends Crud_model {
         //     $where .= " AND $leave_applications_table.applicant_id IN($allowed_members)";
         // }
        
-        $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $team_member_job_info_table.department_id like '$department_id'";
-        // $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND ( $team_member_job_info_table.department_id like '$dr_department_id' OR $leave_applications_table.department_id like '$department_id' )";
-        // $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $leave_applications_table.department_id like '$department_id'";
+        // $where.= " AND $leave_applications_table.applicant_id like '$created_by' AND $team_member_job_info_table.department_id like '$department_id'";
 
-        $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $department_table.nameEn as dp_name, $leave_applications_table.end_date, $leave_applications_table.total_hours,
+        $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $units_table.nameEn as unit_name, $sections_table.nameEn as section_name, 
+                $department_table.nameEn as dp_name, $leave_applications_table.end_date, $leave_applications_table.total_hours,
                 $leave_applications_table.total_days, $leave_applications_table.applicant_id, $leave_applications_table.status,
                 CONCAT($users_table.first_name, ' ',$users_table.last_name) AS applicant_name, $users_table.image as applicant_avatar,
                 $leave_types_table.title as leave_type_title,   $leave_types_table.color as leave_type_color,$leave_applications_table.leave_type_id,$leave_applications_table.uuid,
@@ -140,7 +162,13 @@ class Leave_applications_model extends Crud_model {
             LEFT JOIN $users_table ON $users_table.id = $leave_applications_table.applicant_id
             LEFT JOIN $leave_types_table ON $leave_types_table.id = $leave_applications_table.leave_type_id 
             LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
-            LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id       
+            LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id 
+            LEFT JOIN $users_table as users_dp ON users_dp.id = $department_table.dep_head_id
+            LEFT JOIN $users_table as us_dp_secretray ON us_dp_secretray.id = $department_table.secretary_id
+            LEFT JOIN $sections_table ON $sections_table.id = $team_member_job_info_table.section_id
+            LEFT JOIN $users_table as users_se ON users_se.id = $sections_table.section_head_id
+            LEFT JOIN $units_table ON $units_table.id = $team_member_job_info_table.unit_id
+            LEFT JOIN $users_table as users_un ON users_un.id = $units_table.unit_head_id      
             
             WHERE $leave_applications_table.deleted=0 $where order by start_date desc";
 

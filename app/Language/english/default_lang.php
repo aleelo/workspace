@@ -1948,6 +1948,13 @@ $lang["can_manage_departments_sections_units"] = "can manage Documents, Sections
 $lang["yes_all"] = "Yes, can manage all.";
 $lang["can_manage_appointment"] = "can manage Appointments?";
 $lang["meeting_with"] = "Meeting With";
+$lang["yes_own_leaves"] = "Yes, own Leaves";
+$lang["yes_own_unit_leaves"] = "Yes, own Unit Leaves";
+$lang["yes_own_section_leaves"] = "Yes, own Section Leaves";
+$lang["yes_own_department_leaves"] = "Yes, own Departments Leaves";
+$lang["unit_name"] = "Unit";
+$lang["section_name"] = "Section";
+$lang["dp_name"] = "Department";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";

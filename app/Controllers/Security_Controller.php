@@ -347,6 +347,8 @@ class Security_Controller extends App_Controller {
             return true; //can access if it's tickets module and user has a pertial access
         } else if ($this->module_group === "document" && ($this->access_type === "own" || $this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
             return true;  //can access if it's document module and user has a pertial access
+        } else if ($this->module_group === "leave" && ($this->access_type === "own" || $this->access_type === "own_unit" || $this->access_type === "own_section" || $this->access_type === "own_department")) {
+            return true;  //can access if it's document module and user has a pertial access
         } else if ($this->module_group === "lead" && $this->access_type === "own" ) {
             return true; //can access if it's leads module and user has access to own leads
         } else if ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
@@ -902,6 +904,31 @@ class Security_Controller extends App_Controller {
     protected function show_own_department_documents_only_user_id() {
         if ($this->login_user->user_type === "staff") {
             return get_array_value($this->login_user->permissions, "document") == "own_department" ? $this->login_user->id : false;
+        }
+    }
+
+    protected function show_own_leaves_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "leave") == "own" ? $this->login_user->id : false;
+        }
+    }
+    
+    protected function show_own_unit_leaves_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "leave") == "own_unit" ? $this->login_user->id : false;
+        }
+    }
+
+    protected function show_own_section_leaves_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "leave") == "own_section" ? $this->login_user->id : false;
+        }
+    }
+
+
+    protected function show_own_department_leaves_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "leave") == "own_department" ? $this->login_user->id : false;
         }
     }
 

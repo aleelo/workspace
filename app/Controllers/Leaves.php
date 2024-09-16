@@ -20,14 +20,14 @@ class Leaves extends Security_Controller {
 
     //only admin or assigend members can access/manage other member's leave
     //none admin users who has limited permission to manage other members leaves, can't manage his/her own leaves
-    protected function access_only_allowed_members($user_id = 0) {
-        if ($this->access_type !== "all") {
-            if ($user_id === $this->login_user->id || !array_search($user_id, $this->allowed_members)) {
-                app_redirect("forbidden");
-            }
-        }
+    // protected function access_only_allowed_members($user_id = 0) {
+    //     if ($this->access_type !== "all") {
+    //         if ($user_id === $this->login_user->id || !array_search($user_id, $this->allowed_members)) {
+    //             app_redirect("forbidden");
+    //         }
+    //     }
 
-    }
+    // }
 
     protected function can_delete_leave_application() {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "can_delete_leave_application") == "1") {
@@ -1206,7 +1206,17 @@ class Leaves extends Security_Controller {
     // list of pending leave application. prepared for datatable
     function pending_approval_list_data() {
 
-        $options = array("status" => "pending",'view_type' => 'pending_list', "access_type" => $this->access_type, "allowed_members" => $this->allowed_members);
+        $options = array(
+            "status" => "pending",
+            'view_type' => 'pending_list', 
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
+            "access_type" => $this->access_type, 
+            "allowed_members" => $this->allowed_members
+        );
+
         $list_data = $this->Leave_applications_model->get_list($options)->getResult();
 
         $result = array();
@@ -1302,6 +1312,9 @@ class Leaves extends Security_Controller {
             $meta_info->leave_type_meta,
             $meta_info->date_meta,
             $meta_info->duration_meta,
+            $meta_info->unit_name,
+            $meta_info->section_name,
+            $meta_info->dp_name,
             $meta_info->status_meta,
             $actions
         );

@@ -657,6 +657,50 @@
                         <div>
                             <?php
                             echo form_radio(array(
+                                "id" => "leave_yes_own",
+                                "name" => "leave_permission",
+                                "value" => "own",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "own") ? true : false);
+                            ?>
+                            <label for="leave_yes_own"><?php echo app_lang("yes_own_leaves"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "leave_yes_own_unit",
+                                "name" => "leave_permission",
+                                "value" => "own_unit",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "own_unit") ? true : false);
+                            ?>
+                            <label for="leave_yes_own_unit"><?php echo app_lang("yes_own_unit_leaves"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "leave_yes_own_section",
+                                "name" => "leave_permission",
+                                "value" => "own_section",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "own_section") ? true : false);
+                            ?>
+                            <label for="leave_yes_own_section"><?php echo app_lang("yes_own_section_leaves"); ?></label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "leave_yes_own_department",
+                                "name" => "leave_permission",
+                                "value" => "own_department",
+                                "class" => "leave_permission toggle_specific form-check-input",
+                                    ), $leave, ($leave === "own_department") ? true : false);
+                            ?>
+                            <label for="leave_yes_own_department"><?php echo app_lang("yes_own_department_leaves"); ?></label>
+                        </div>       
+                        <div>
+                            <?php
+                            echo form_radio(array(
                                 "id" => "leave_permission_all",
                                 "name" => "leave_permission",
                                 "value" => "all",

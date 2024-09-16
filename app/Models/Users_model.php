@@ -355,7 +355,6 @@ class Users_model extends Crud_model {
        
         //prepare full query string
 
-        //if( $role == 'Head Department'){
 
             $sql = "SELECT SQL_CALC_FOUND_ROWS $users_table.*,$sections_table.nameSo as sc_name_so,
             $department_table.nameSo as dp_name_so,$department_table.short_name_SO as dp_short_name_so,$department_table.nameEn as dp_name_en,
