@@ -135,6 +135,7 @@
                             "autocomplete" => "off",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
+                            // "value" => date('d F Y')
                         ));
                         ?>
                     </div>
@@ -155,7 +156,9 @@
                                 "placeholder" => app_lang('start_date'),
                                 "autocomplete" => "off",
                                 "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required")
+                                "data-msg-required" => app_lang("field_required"),
+                            // "value" => date('d F Y')
+
                             ));
                             ?>
                         </div>
@@ -356,6 +359,19 @@
         // Set date pickers for the dates
         setDatePicker("#start_date, #end_date");
         setDatePicker("#single_date, #hour_date");
+
+        //  // Function to set up date pickers
+        //     function setDatePicker(selector) {
+        //         $(selector).datepicker({
+        //             dateFormat: 'dd MM yy', // Format for the date picker
+        //             changeMonth: true,
+        //             changeYear: true,
+        //             yearRange: "-100:+10" // Adjust year range as necessary
+        //         }).on("change", function() {
+        //             // Update moment.js date if needed
+        //             $(this).val(moment($(this).val(), "DD MM YYYY").format("DD MMMM YYYY"));
+        //         });
+        //     }
 
         // Handle duration type radio buttons
         $(".duration").click(function () {

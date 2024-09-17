@@ -62,18 +62,21 @@ class Leave_applications_model extends Crud_model {
 
         $show_own_unit_leaves_only_user_id = $this->_get_clean_value($options, "show_own_unit_leaves_only_user_id");
         if ($show_own_unit_leaves_only_user_id) {
-            $where .= " AND ($units_table.unit_head_id=$show_own_unit_leaves_only_user_id)";
+            $where .= " AND ($units_table.unit_head_id=$show_own_unit_leaves_only_user_id";
+            $where .= " or $leave_applications_table.applicant_id=$show_own_unit_leaves_only_user_id)";
         }
         
         $show_own_section_leaves_only_user_id = $this->_get_clean_value($options, "show_own_section_leaves_only_user_id");
         if ($show_own_section_leaves_only_user_id) {
-            $where .= " AND ($sections_table.section_head_id=$show_own_section_leaves_only_user_id)";
+            $where .= " AND ($sections_table.section_head_id=$show_own_section_leaves_only_user_id";
+            $where .= " or $leave_applications_table.applicant_id=$show_own_section_leaves_only_user_id)";
         }
 
         $show_own_department_leaves_only_user_id = $this->_get_clean_value($options, "show_own_department_leaves_only_user_id");
         if ($show_own_department_leaves_only_user_id) {
             $where .= " AND ($department_table.dep_head_id=$show_own_department_leaves_only_user_id";
-            $where .= " OR $department_table.secretary_id=$show_own_department_leaves_only_user_id)";
+            $where .= " OR $department_table.secretary_id=$show_own_department_leaves_only_user_id";
+            $where .= " or $leave_applications_table.applicant_id=$show_own_department_leaves_only_user_id)";
         }
 
         $status = $this->_get_clean_value($options, "status");

@@ -18,17 +18,6 @@ class Leaves extends Security_Controller {
         $this->init_permission_checker("leave");
     }
 
-    //only admin or assigend members can access/manage other member's leave
-    //none admin users who has limited permission to manage other members leaves, can't manage his/her own leaves
-    // protected function access_only_allowed_members($user_id = 0) {
-    //     if ($this->access_type !== "all") {
-    //         if ($user_id === $this->login_user->id || !array_search($user_id, $this->allowed_members)) {
-    //             app_redirect("forbidden");
-    //         }
-    //     }
-
-    // }
-
     protected function can_delete_leave_application() {
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "can_delete_leave_application") == "1") {
             return true;
@@ -49,10 +38,6 @@ class Leaves extends Security_Controller {
 
         return $this->template->rander("leaves/index", $view_data);
     }
-
-
-
-
 
 
      //update leave status
@@ -91,12 +76,7 @@ class Leaves extends Security_Controller {
             //any user can't cancel other user's leave application
             app_redirect("forbidden");
         }
-        
-        //user can update only the applications where status = pending
-        // if (($applicatoin_info->status != "pending" || $applicatoin_info->status != "active") || !($status === "approved" || $status === "rejected" || $status === "canceled")) {
-            //     app_redirect("forbidden");
-            // }
-    
+
             
         $save_id = $this->Leave_applications_model->ci_save($leave_data, $applicaiton_id);
             
@@ -763,16 +743,7 @@ class Leaves extends Security_Controller {
         echo json_encode(array('allowed_days' => $allowed_days, 'taken_days' => $taken_days));
     }
     
-    // public function get_allowed_dayss() {
-    //     $leave_type_id = $this->request->getPost('leave_type_id');
-    //     // $this->load->model('Leave_model');
-
-    //     // Hel allowed days ee fasaxa la doortay
-    //     $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
-
-    //     // Soo dir xogta
-    //     echo json_encode(array('allowed_days' => $allowed_days));
-    // }
+  
 
     /**
      * start document functions
@@ -1178,6 +1149,7 @@ class Leaves extends Security_Controller {
 
             $days = $d_diff->days + 1;
             $hours = $days * $hours_per_day;
+            
         } else if ($duration === "hours") {
 
             $this->validate_submitted_data(array(
