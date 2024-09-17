@@ -1917,6 +1917,7 @@ $lang["the_invoices_id_must_be_larger_then_last_invoice_id"] = "The invoices ID 
 
 $lang["client_dashboard_help_message"] = "This will be the default dashboard for all clients. Please note that, the information you're seeing here in the widgets, isn't any actual infromation of clients.";
 
+$lang["verify"] = "Verify";
 $lang["send_to_lead"] = "Send to document";
 $lang["lead"] = "Lead";
 $lang["document"] = "Document";
