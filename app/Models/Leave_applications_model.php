@@ -91,6 +91,9 @@ class Leave_applications_model extends Crud_model {
         if($view_type == 'approved_list'){
             $where .= " AND $leave_applications_table.status IN('approved')";
         }
+        if($view_type == 'canceled_list'){
+            $where .= " AND $leave_applications_table.status IN('canceled')";
+        }
             
         $start_date = $this->_get_clean_value($options, "start_date");
         $end_date = $this->_get_clean_value($options, "end_date");

@@ -1342,6 +1342,7 @@ class Leaves extends Security_Controller {
         echo json_encode(array("data" => $result));
         
     }
+
      // load pending approval tab
      function rejected_list() {
         return $this->template->view("leaves/rejected_list");
@@ -1353,6 +1354,35 @@ class Leaves extends Security_Controller {
         $options = array(
             "status" => "rejected",
             'view_type' => 'rejected_list', 
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
+            "access_type" => $this->access_type, 
+            "allowed_members" => $this->allowed_members
+        );
+
+        $list_data = $this->Leave_applications_model->get_list($options)->getResult();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_row($data);
+        }
+        echo json_encode(array("data" => $result));
+        
+    }
+
+     // load pending approval tab
+     function canceled_list() {
+        return $this->template->view("leaves/canceled_list");
+    }
+
+    // list of pending leave application. prepared for datatable
+    function canceled_list_data() {
+
+        $options = array(
+            "status" => "canceled",
+            'view_type' => 'canceled_list', 
             "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
             "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
             "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
@@ -1447,10 +1477,11 @@ class Leaves extends Security_Controller {
         $role = $this->get_user_role();
         $can_approve_leaves = $role != 'Employee';
 
+        $actions .= modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
+
         $can_manage_application = false;
         if ($this->access_type === "own_section" || $this->access_type === "all" && $can_approve_leaves) {
             $can_manage_application = true;
-            $actions .= modal_anchor(get_uri("leaves/application_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('application_details'), "data-post-id" => $data->id));
             // $actions .= modal_anchor(get_uri("clients/application_details"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_client'), "data-post-id" => $data->id))
             
         } else if (array_search($data->applicant_id, $this->allowed_members) && $data->applicant_id !== $this->login_user->id && ($can_approve_leaves)) {
