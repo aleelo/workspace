@@ -106,14 +106,25 @@ class Leave_applications_model extends Crud_model {
         $view_type = get_array_value($options, 'view_type');
 
       
-        if($status ){
-            if($view_type == 'pending_list'){
-                $where .= " AND $leave_applications_table.status IN('pending','active')";
-            }else{
-                $where .= " AND $leave_applications_table.status='$status'";
-            }
+        // if($status ){
+        //     if($view_type == 'pending_list'){
+        //         $where .= " AND $leave_applications_table.status IN('pending','active')";
+        //     }else{
+        //         $where .= " AND $leave_applications_table.status='$status'";
+        //     }
             
+        // }
+
+        if($view_type == 'pending_list'){
+            $where .= " AND $leave_applications_table.status IN('pending','active')";
         }
+        if($view_type == 'rejected_list'){
+            $where .= " AND $leave_applications_table.status IN('rejected')";
+        }
+        if($view_type == 'approved_list'){
+            $where .= " AND $leave_applications_table.status IN('approved')";
+        }
+            
         
         $start_date = $this->_get_clean_value($options, "start_date");
         $end_date = $this->_get_clean_value($options, "end_date");

@@ -15,6 +15,8 @@
         </div>
         <ul id="leaves-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white inner" role="tablist">
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/pending_approval/"); ?>" data-bs-target="#leave-pending-approval"><?php echo app_lang("pending_approval"); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/approved_list/"); ?>" data-bs-target="#leave-approved-applications"><?php echo app_lang("approved"); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/rejected_list/"); ?>" data-bs-target="#leave-rejected-applications"><?php echo app_lang("rejected"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/all_applications/"); ?>" data-bs-target="#leave-all-applications"><?php echo app_lang("all_applications"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php echo app_lang("summary"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php echo 'NOLO OSTO'; ?></a></li>
@@ -31,6 +33,8 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade active" id="leave-pending-approval"></div>
+            <div role="tabpanel" class="tab-pane fade active" id="leave-approved-applications"></div>
+            <div role="tabpanel" class="tab-pane fade active" id="leave-rejected-applications"></div>
             <div role="tabpanel" class="tab-pane fade" id="leave-all-applications"></div>
             <div role="tabpanel" class="tab-pane fade" id="leave-summary"></div>
             <div role="tabpanel" class="tab-pane fade" id="leave-nolo"></div>

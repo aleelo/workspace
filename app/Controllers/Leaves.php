@@ -1186,21 +1186,17 @@ class Leaves extends Security_Controller {
         return $leave_data;
     }
 
-    // load pending approval tab
-    function pending_approval() {
-        return $this->template->view("leaves/pending_approval");
-    }
-
-    // load all applications tab 
-    function all_applications() {
-        return $this->template->view("leaves/all_applications");
-    }
 
     // load leave summary tab
     function summary() {
         $view_data['team_members_dropdown'] = json_encode($this->_get_members_dropdown_list_for_filter());
         $view_data['leave_types_dropdown'] = json_encode($this->_get_leave_types_dropdown_list_for_filter());
         return $this->template->view("leaves/summary", $view_data);
+    }
+
+    // load pending approval tab
+    function pending_approval() {
+        return $this->template->view("leaves/pending_approval");
     }
 
     // list of pending leave application. prepared for datatable
@@ -1225,6 +1221,68 @@ class Leaves extends Security_Controller {
         }
         echo json_encode(array("data" => $result));
         
+    }
+
+     // load pending approval tab
+     function approved_list() {
+        return $this->template->view("leaves/approved_list");
+    }
+
+    // list of pending leave application. prepared for datatable
+    function approved_list_data() {
+
+        $options = array(
+            "status" => "approved",
+            'view_type' => 'approved_list', 
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
+            "access_type" => $this->access_type, 
+            "allowed_members" => $this->allowed_members
+        );
+
+        $list_data = $this->Leave_applications_model->get_list($options)->getResult();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_row($data);
+        }
+        echo json_encode(array("data" => $result));
+        
+    }
+     // load pending approval tab
+     function rejected_list() {
+        return $this->template->view("leaves/rejected_list");
+    }
+
+    // list of pending leave application. prepared for datatable
+    function rejected_list_data() {
+
+        $options = array(
+            "status" => "rejected",
+            'view_type' => 'rejected_list', 
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
+            "access_type" => $this->access_type, 
+            "allowed_members" => $this->allowed_members
+        );
+
+        $list_data = $this->Leave_applications_model->get_list($options)->getResult();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_row($data);
+        }
+        echo json_encode(array("data" => $result));
+        
+    }
+
+      // load all applications tab 
+      function all_applications() {
+        return $this->template->view("leaves/all_applications");
     }
 
     // list of all leave application. prepared for datatable 
