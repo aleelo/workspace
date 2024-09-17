@@ -391,6 +391,8 @@ class Leaves extends Security_Controller {
 
     function assign_leave_modal_form($applicant_id = 0) {
 
+        // $view_data = $this->team_members_dropdown();
+
         if ($applicant_id) {
             $view_data['team_members_info'] = $this->Users_model->get_one($applicant_id);
         } else {
@@ -419,6 +421,35 @@ class Leaves extends Security_Controller {
     }
 
 
+    
+    private function team_members_dropdown()
+    {
+
+        $options = array(
+            "status" => $this->request->getPost("status"),
+            "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
+            "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
+            "show_own_department_documents_only_user_id" => $this->show_own_department_documents_only_user_id(),
+            "user_type" => "staff",
+        );
+
+        $templates = $this->Templates_model->get_templates_dropdown_permission($options);
+        
+        $templates = get_array_value($templates,'data') ? get_array_value($templates,'data') : $templates->getResult(); 
+        $recordsTotal =  get_array_value($templates,'recordsTotal');
+        $recordsFiltered =  get_array_value($templates,'recordsFiltered');
+
+        $temp_array = ['-'];
+        
+        $result = array();
+        foreach ($templates as $t) {
+            $temp_array[$t->id] = $t->name;
+        }
+
+
+        $view_data["team_members_dropdown"] = $temp_array;
+        return $view_data;
+    }
 
 
     // save: assign leave 
@@ -715,6 +746,7 @@ class Leaves extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
+
 
     public function get_allowed_days() {
         $leave_type_id = $this->request->getPost('leave_type_id');
