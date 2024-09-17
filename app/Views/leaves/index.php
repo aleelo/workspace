@@ -18,9 +18,9 @@
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/approved_list/"); ?>" data-bs-target="#leave-approved-applications"><?php echo app_lang("approved"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/rejected_list/"); ?>" data-bs-target="#leave-rejected-applications"><?php echo app_lang("rejected"); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/all_applications/"); ?>" data-bs-target="#leave-all-applications"><?php echo app_lang("all_applications"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php echo app_lang("summary"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php echo 'NOLO OSTO'; ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php echo 'PASSPORT CELIN'; ?></a></li>
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php //echo app_lang("summary"); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php// echo 'NOLO OSTO'; ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php //echo 'PASSPORT CELIN'; ?></a></li> -->
             
             <li class="d-flex align-items-center gap-4 ml30">
                 <span><i data-feather='info' class='icon-16 text-info'></i>  Status Description: </span> 
