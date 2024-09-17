@@ -1,11 +1,11 @@
 <div class="table-responsive">
-    <table id="pending-approval-table" class="display" cellspacing="0" width="100%">            
+    <table id="active-list-table" class="display" cellspacing="0" width="100%">            
     </table>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#pending-approval-table").appTable({
+        $("#active-list-table").appTable({
             source: '<?php echo_uri("leaves/active_list_data") ?>',
             columns: [
                 {title: '<?php echo 'ID' ?>', "class": "w10p"},
