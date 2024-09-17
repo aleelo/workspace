@@ -115,8 +115,14 @@ class Leave_applications_model extends Crud_model {
             
         // }
 
+        // if($view_type == 'pending_list'){
+        //     $where .= " AND $leave_applications_table.status IN('pending','active')";
+        // }
+        if($view_type == 'active_list'){
+            $where .= " AND $leave_applications_table.status IN('active')";
+        }
         if($view_type == 'pending_list'){
-            $where .= " AND $leave_applications_table.status IN('pending','active')";
+            $where .= " AND $leave_applications_table.status IN('pending')";
         }
         if($view_type == 'rejected_list'){
             $where .= " AND $leave_applications_table.status IN('rejected')";
