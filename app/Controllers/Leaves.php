@@ -391,7 +391,7 @@ class Leaves extends Security_Controller {
 
     function assign_leave_modal_form($applicant_id = 0) {
 
-        // $view_data = $this->team_members_dropdown();
+        $view_data = $this->team_members_dropdown();
 
         if ($applicant_id) {
             $view_data['team_members_info'] = $this->Users_model->get_one($applicant_id);
@@ -404,7 +404,7 @@ class Leaves extends Security_Controller {
             } else {
                 $where = array("user_type" => "staff", "id !=" => $this->login_user->id, "where_in" => array("id" => $this->allowed_members));
             }
-            $view_data['team_members_dropdown'] = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", $where);
+            // $view_data['team_members_dropdown'] = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", $where);
         }
 
         $view_data['leave_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
@@ -427,22 +427,23 @@ class Leaves extends Security_Controller {
 
         $options = array(
             "status" => $this->request->getPost("status"),
-            "show_own_unit_documents_only_user_id" => $this->show_own_unit_documents_only_user_id(),
-            "show_own_section_documents_only_user_id" => $this->show_own_section_documents_only_user_id(),
-            "show_own_department_documents_only_user_id" => $this->show_own_department_documents_only_user_id(),
+            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
+            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
+            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
+            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
             "user_type" => "staff",
         );
 
-        $templates = $this->Templates_model->get_templates_dropdown_permission($options);
+        $team_members = $this->Leave_applications_model->get_team_members_dropdown_permission($options);
         
-        $templates = get_array_value($templates,'data') ? get_array_value($templates,'data') : $templates->getResult(); 
-        $recordsTotal =  get_array_value($templates,'recordsTotal');
-        $recordsFiltered =  get_array_value($templates,'recordsFiltered');
+        $team_members = get_array_value($team_members,'data') ? get_array_value($team_members,'data') : $team_members->getResult(); 
+        $recordsTotal =  get_array_value($team_members,'recordsTotal');
+        $recordsFiltered =  get_array_value($team_members,'recordsFiltered');
 
         $temp_array = ['-'];
         
         $result = array();
-        foreach ($templates as $t) {
+        foreach ($team_members as $t) {
             $temp_array[$t->id] = $t->name;
         }
 

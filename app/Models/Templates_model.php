@@ -44,18 +44,6 @@ class Templates_model extends Crud_model {
         $created_by = get_array_value($options,'created_by') ?? '%';
         $department_id = get_array_value($options,'department_id') ?? '%';
 
-        
-        // if($role == 'Head Department'){
-        //     $department_id = get_user_department_id();
-        //     $created_by = "%";
-        // }
-
-        // if($role == 'Head Department'){
-        //     $department_id = get_dept_id_of_Head_list();
-        //     $created_by = "%";
-        // }
-
-
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         $status = $this->_get_clean_value($options, "status");
@@ -69,16 +57,11 @@ class Templates_model extends Crud_model {
         if ($id) {
             $where .= " AND $templates_table.id=$id";
         }
-        
-
-      
 
         $non_admin_users_only = $this->_get_clean_value($options, "non_admin_users_only");
         if ($non_admin_users_only) {
             $where .= " AND $templates_table.is_admin=0";
         }
-
-      
 
         $show_own_unit_documents_only_user_id = $this->_get_clean_value($options, "show_own_unit_documents_only_user_id");
         if ($show_own_unit_documents_only_user_id) {
@@ -103,9 +86,6 @@ class Templates_model extends Crud_model {
             $offset = $skip ? $skip : 0;
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
-
-
-
 
             $sql = "SELECT SQL_CALC_FOUND_ROWS $templates_table.*
             FROM $templates_table
