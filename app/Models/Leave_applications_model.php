@@ -116,7 +116,7 @@ class Leave_applications_model extends Crud_model {
         $access_type = $this->_get_clean_value($options, "access_type");
 
         $sql = "SELECT $leave_applications_table.id, $leave_applications_table.start_date, $units_table.nameEn as unit_name, $sections_table.nameEn as section_name, 
-                $department_table.nameEn as dp_name, $leave_applications_table.end_date, $leave_applications_table.total_hours,
+                $department_table.nameEn as dp_name, $leave_applications_table.flight_included, $leave_applications_table.end_date, $leave_applications_table.total_hours,
                 $leave_applications_table.total_days, $leave_applications_table.applicant_id, $leave_applications_table.status,
                 CONCAT($users_table.first_name, ' ',$users_table.last_name) AS applicant_name, $users_table.image as applicant_avatar,
                 $leave_types_table.title as leave_type_title,   $leave_types_table.color as leave_type_color,$leave_applications_table.leave_type_id,$leave_applications_table.uuid,
