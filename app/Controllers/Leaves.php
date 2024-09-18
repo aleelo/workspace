@@ -1465,7 +1465,7 @@ class Leaves extends Security_Controller {
 
         if ($this->can_delete_leave_application() && $can_manage_application && $can_approve_leaves) {
             $webUrl = empty($doc) ? '' : $doc->webUrl;
-            if(($meta_info->leave_type_title === "Fassax Shaqo" || $meta_info->leave_type_title === "Fasax Caafimaad" || $meta_info->leave_type_title === "Fasax Waxbarasho") && $meta_info->flight_included === "1" && $meta_info->status === "approved" && !empty($webUrl)){
+            if(($meta_info->leave_type_title === "Fassax Shaqo" || $meta_info->leave_type_title === "Fasax Caafimaad" || $meta_info->leave_type_title === "Fasax Waxbarasho") && $meta_info->flight_included === "1" && $meta_info->status === "approved" && !empty($webUrl) && $role === "admin"){
                 $actions .= "<a href='$webUrl' class='btn btn-success' target='_blank' title='Open Document' style='background: #1cc976;color: white'><i data-feather='eye' class='icon-16'></i>";
             }   
             $actions .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("leaves/delete"), "data-action" => "delete-confirmation"));
