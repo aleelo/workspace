@@ -121,50 +121,6 @@ class Training extends Security_Controller {
             "id" => "numeric"
         ));
 
-        $model_info = $this->Tasks_model->get_one($training_id);
-
-        $contexts = $this->_get_accessible_contexts();
-        $selected_context = get_array_value($contexts, 0);
-        $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
-
-        $selected_context_id = 0;
-
-        foreach ($this->get_context_id_pairs() as $obj) {
-            $context_id_key = get_array_value($obj, "id_key");
-
-            $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
-            $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
-            
-            if ($value) {
-                $selected_context = get_array_value($obj, "context");
-                $selected_context_id = $value;
-                $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
-            }
-        }
-
-        $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
-
-        $view_data = array_merge($view_data, $dropdowns);
-        
-        // if ($id) {
-        //     if (!$this->can_edit_tasks($model_info)) {
-        //         app_redirect("forbidden");
-        //     }
-        //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
-        //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
-        // } else {
-        //     //Going to create new task. Check if the user has access in any context
-        //     if (!$this->can_create_tasks()) {
-        //         app_redirect("forbidden");
-        //     }
-        // }
-
-        $view_data['selected_context'] = $selected_context;
-        $view_data['contexts'] = $contexts;
-        $view_data['model_info'] = $model_info;
-        $view_data["add_type"] = $add_type;
-        $view_data['view_type'] = $this->request->getPost("view_type");
-
         $view_data['label_column'] = "col-md-3 text-right";
         $view_data['field_column'] = "col-md-9";
 
@@ -180,10 +136,11 @@ class Training extends Security_Controller {
 
         $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
         $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
+        $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
-        $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
 
         // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
 
@@ -191,11 +148,6 @@ class Training extends Security_Controller {
 
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
-
-
-        // $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
-
-        //prepare label suggestions
 
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $training_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -305,6 +257,14 @@ class Training extends Security_Controller {
             "id" => "numeric",
         ));
 
+        $participant = $this->request->getPost('training_participant');
+
+
+        $department_ids = ($participant === 'Departments') ? implode(',', $this->request->getPost('training_department_ids')) : null;
+        $section_ids = ($participant === 'Sections') ? implode(',', $this->request->getPost('training_section_ids')) : null;
+        $unit_ids = ($participant === 'Units') ? implode(',', $this->request->getPost('training_unit_ids')) : null;
+        $employee_ids = ($participant === 'Employees') ? implode(',', $this->request->getPost('training_employee_ids')) : null;
+
         $training_name = $this->request->getPost('training_name');
 
         $data = array(
@@ -313,12 +273,14 @@ class Training extends Security_Controller {
             "end_date" => $this->request->getPost('training_end_date'), 
             "training_location_id" => $this->request->getPost('training_location_id'),
             "type" => $this->request->getPost('Training_Type'),
-            "participant" => $this->request->getPost('training_participant'),
             "num_employee" => $this->request->getPost('num_employee'),
             "trainer_id" => $this->request->getPost('trainer_id'),
-            "department_id" => $this->request->getPost('department_id'),
-            "section_id" => $this->request->getPost('section_id'),
-            "unit_id" => $this->request->getPost('unit_id'),
+
+            "participant" => $participant,
+            "department_ids" => $department_ids,
+            "section_ids" => $section_ids,
+            "unit_ids" => $unit_ids,
+            "employee_ids" => $employee_ids,
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -476,9 +438,9 @@ class Training extends Security_Controller {
             $data->type,
             $data->trainer_name,
             $data->num_employee,
-            $data->Department_name,
-            $data->Section_name,
-            $data->Unit_name,
+            // $data->Department_name,
+            // $data->Section_name,
+            // $data->Unit_name,
             
         );
 

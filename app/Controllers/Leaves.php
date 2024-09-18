@@ -66,6 +66,20 @@ class Leaves extends Security_Controller {
             "status" => $status
         );
 
+        if ($status === "pending") {
+            $leave_data["pended_by"] = $this->login_user->id;
+            $leave_data["pended_at"] = $now;
+        } else if ($status === "approved") {
+            $leave_data["approved_by"] = $this->login_user->id;
+            $leave_data["approved_at"] = $now;
+        } else if ($status === "rejected") {
+            $leave_data["rejected_by"] = $this->login_user->id;
+            $leave_data["rejected_at"] = $now;
+        } else if ($status === "canceled") {
+            $leave_data["canceled_by"] = $this->login_user->id;
+            $leave_data["canceled_at"] = $now;
+        }
+
         //only allow to updte the status = accept or reject for admin or specefic user
         //otherwise user can cancel only his/her own application
         $applicatoin_info = $this->Leave_applications_model->get_one($applicaiton_id);

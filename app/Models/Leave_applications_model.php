@@ -220,7 +220,7 @@ class Leave_applications_model extends Crud_model {
 
     public function get_taken_days_by_type($user_id, $leave_type_id) {
         // Define the query with a placeholder for the leave_type_id
-        $sql = "SELECT SUM(la.total_days) AS total_days FROM rise_leave_applications la WHERE la.applicant_id = ? AND la.leave_type_id = ?";
+        $sql = "SELECT SUM(la.total_days) AS total_days FROM rise_leave_applications la WHERE la.applicant_id = ? AND la.leave_type_id = ? AND la.status != 'canceled'";
     
         // Execute the query
         $query = $this->db->query($sql, array($user_id, $leave_type_id));

@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-            <div id="total_days_section" class="hide date_section">
+            <div id="total_days_section" class="date_section">
 
                 <div class="form-group">
                      <div class="row">
@@ -276,8 +276,22 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        
         var allowed_days = 0;  // Initialize allowed days globally
         var taken_days = 0;    // Initialize taken days globally
+
+        function getCurrentDate() {
+            var today = new Date();
+            var day = ("0" + today.getDate()).slice(-2);
+            var month = ("0" + (today.getMonth() + 1)).slice(-2);
+            var year = today.getFullYear();
+            return year + "-" + month + "-" + day;
+        }
+
+        // Set the default date to today's date
+        var currentDate = getCurrentDate();
+        $('#single_date').val(currentDate);
+        $('#start_date').val(currentDate);
 
         // Handle form success
         $("#leave-form").appForm({
@@ -313,27 +327,35 @@
                     $('div.taken-days-display-label').html('Taken Days: ').css('color', 'purple');
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
 
-                    // Immediately recalculate the remaining days with the new allowed_days and taken_days values
-                    calculateRemainingDays(); 
+                    // Immediately recalculate based on the selected duration (single or multiple)
+                    handleDurationChange();
                 }
             });
         });
 
-        // When start and end dates are changed, recalculate remaining days
-        $('#start_date, #end_date').change(function () {
-            calculateRemainingDays();  // Call the function to recalculate remaining days
+        // When start, end, or single day is changed, recalculate remaining days
+        $('#start_date, #end_date, #single_date').change(function () {
+            handleDurationChange();  // Call the function to recalculate based on the selected duration
         });
 
-        $("#leave-form .select2").select2();
+        // Function to handle duration change and trigger the correct calculation
+        function handleDurationChange() {
+            var selectedDuration = $('input[name="duration"]:checked').val();
 
-        // Function to calculate the remaining days
+            if (selectedDuration === "single_day") {
+                calculateSingleDay();  // Calculate remaining days for a single day leave
+            } else if (selectedDuration === "multiple_days") {
+                calculateRemainingDays();  // Calculate remaining days for multiple days leave
+            }
+        }
+
+        // Function to calculate the remaining days for multiple days leave
         function calculateRemainingDays() {
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
 
             // Check if both start and end dates are selected
             if (start_date && end_date) {
-                // Calculate total days (difference between start date and end date)
                 var total_days = moment(end_date).diff(moment(start_date), 'days') + 1;  // +1 to include the start day
 
                 // Display total days
@@ -343,35 +365,47 @@
                 // Calculate remaining days by subtracting total days from allowed days minus taken days
                 var remaining_days = allowed_days - taken_days - total_days;
 
-                // Display remaining days and validation
-                if (remaining_days >= 0) {
-                    $('div.remaining-days-label').html('Remaining Days: ').css('color', 'green');
-                    $('div.remaining-days').html(remaining_days + ' - Days').css('color', 'green');
-                    $('#submit_button').prop('disabled', false);  // Enable submit button
-                } else {
-                    $('div.remaining-days-label').html('Remaining Days: ').css('color', 'red');
-                    $('div.remaining-days').html(remaining_days + ' - Days' + ' (You have exceeded the allowed days)').css('color', 'red');
-                    $('#submit_button').prop('disabled', true);  // Disable submit button
-                }
+                // Update the remaining days display and validation
+                updateRemainingDays(remaining_days);
+            }
+        }
+
+        // Function to calculate the remaining days for a single day leave
+        function calculateSingleDay() {
+            var single_date = $('#single_date').val();  // Ensure single date is set
+
+            if (single_date) {
+                var total_days = 1;  // Single day request is always 1 day
+
+                // Display total days
+                $('div.total-days-label').html('Requested Days: ');
+                $('div.total-days').html(total_days + ' - Day');
+
+                // Calculate remaining days by subtracting 1 day from allowed days minus taken days
+                var remaining_days = allowed_days - taken_days - total_days;
+
+                // Update the remaining days display and validation
+                updateRemainingDays(remaining_days);
+            }
+        }
+
+        // Helper function to update the remaining days and enable/disable the submit button
+        function updateRemainingDays(remaining_days) {
+            if (remaining_days >= 0) {
+                $('div.remaining-days-label').html('Remaining Days: ').css('color', 'green');
+                $('div.remaining-days').html(remaining_days + ' - Days').css('color', 'green');
+                $('#submit_button').prop('disabled', false);  // Enable submit button
+            } else {
+                $('div.remaining-days-label').html('Remaining Days: ').css('color', 'red');
+                $('div.remaining-days').html(remaining_days + ' - Days' + ' (You have exceeded the allowed days)').css('color', 'red');
+                $('#submit_button').prop('disabled', true);  // Disable submit button
             }
         }
 
         // Set date pickers for the dates
-        setDatePicker("#start_date, #end_date");
-        setDatePicker("#single_date, #hour_date");
+        setDatePicker("#start_date, #end_date, #single_date, #hour_date");
 
-        //  // Function to set up date pickers
-        //     function setDatePicker(selector) {
-        //         $(selector).datepicker({
-        //             dateFormat: 'dd MM yy', // Format for the date picker
-        //             changeMonth: true,
-        //             changeYear: true,
-        //             yearRange: "-100:+10" // Adjust year range as necessary
-        //         }).on("change", function() {
-        //             // Update moment.js date if needed
-        //             $(this).val(moment($(this).val(), "DD MM YYYY").format("DD MMMM YYYY"));
-        //         });
-        //     }
+        $("#leave-form .select2").select2();
 
         // Handle duration type radio buttons
         $(".duration").click(function () {
@@ -379,13 +413,16 @@
             $(".date_section").addClass("hide");
             if (value === "multiple_days") {
                 $("#multiple_days_section").removeClass("hide");
+                handleDurationChange();  // Recalculate for multiple days
             } else if (value === "hours") {
                 $("#hours_section").removeClass("hide");
             } else {
                 $("#single_day_section").removeClass("hide");
+                handleDurationChange();  // Recalculate for single day
             }
         });
 
+        // Update the total days section visibility for multiple days
         $("#multiple_days_section").change(function () {
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
@@ -404,5 +441,8 @@
 
     });
 </script>
+
+
+
 
 

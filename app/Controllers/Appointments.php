@@ -134,6 +134,7 @@ class Appointments extends Security_Controller {
             "room" => $this->request->getPost('appointment_room'),
             "note" => $this->request->getPost('appointment_note'),
             "host_id" => $this->request->getPost('appointment_host_id'),
+            
             "meeting_with" => $meeting_with,
             "department_ids" => $department_ids,
             "section_ids" => $section_ids,

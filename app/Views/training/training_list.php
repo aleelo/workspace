@@ -50,10 +50,7 @@
             {title: "<?php echo app_lang("Training_location") ?>", order_by: "training_location"},
             {title: "<?php echo app_lang("Training_Type") ?>", order_by: "type"},
             {title: "<?php echo app_lang("Trainer_name") ?>", order_by: "trainer_name"},
-            {title: "<?php echo app_lang("num_employee") ?>", order_by: "num_employee"},
-            {title: "<?php echo app_lang("training_department") ?>", order_by: "Department_name"},
-            {title: "<?php echo app_lang("training_section") ?>", order_by: "Section_name"},
-            {title: "<?php echo app_lang("training_unit") ?>", order_by: "Unit_name"}
+            {title: "<?php echo app_lang("num_employee") ?>", order_by: "num_employee"}
 
             
 <?php echo $custom_field_headers; ?>,

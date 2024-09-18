@@ -158,7 +158,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Related to'; ?></label>
+        <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Participant'; ?></label>
         <div class=" col-md-9">
             <?php
             $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
@@ -166,7 +166,7 @@
                 "id" => "training_participant",
                 "name" => "training_participant",
                 "class" => "form-control select2",
-                "placeholder" => 'Related to',
+                "placeholder" => 'Participant',
                 "autocomplete" => "off"
             ),$participant,[$model_info->participant]);
             ?>
@@ -174,59 +174,82 @@
     </div>
 </div>
 
-<!----------------------------------------- Department  ------------------------------------>
+<!----------------------------------------- Departments  ------------------------------------>
 
-<div class="form-group">
+<div class="form-group" id="departments_section">
     <div class="row">
-        <label for="department_id" class=" <?php echo $label_column; ?>"><?php echo 'Department'; ?></label>
-        <div class=" col-md-9">
+        <label for="training_department_ids" class=" <?php echo $label_column; ?>"><?php echo 'Departments'; ?></label>
+        <div class="<?php echo $field_column; ?>">
             <?php
+            
             echo form_dropdown(array(
-                "id" => "department_id",
-                "name" => "department_id",
+                "id" => "training_department_ids",
+                "name" => "training_department_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Department',
-                "autocomplete" => "off"
-            ),$Departments,[$model_info->department_id]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Departments -- ',
+                "autocomplete" => "off",
+            ),$departments,$model_info->department_ids ? explode(',', $model_info->department_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
 </div>
 
-<!----------------------------------------- Section  ------------------------------------>
+<!----------------------------------------- Sections  ------------------------------------>
 
-<div class="form-group">
+<div class="form-group" id="sections_section">
     <div class="row">
-        <label for="section_id" class=" <?php echo $label_column; ?>"><?php echo 'Section'; ?></label>
-        <div class=" col-md-9">
+        <label for="training_section_ids" class=" <?php echo $label_column; ?>"><?php echo 'Sections'; ?></label>
+        <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "section_id",
-                "name" => "section_id",
+                "id" => "training_section_ids",
+                "name" => "training_section_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Section',
-                "autocomplete" => "off"
-            ),$Sections,[$model_info->section_id]);
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Sections -- ',
+                "autocomplete" => "off",
+            ),$sections,$model_info->section_ids ? explode(',', $model_info->section_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
 </div>
 
+<!----------------------------------------- Units  ------------------------------------>
 
-<!----------------------------------------- Unit  ------------------------------------>
-
-<div class="form-group">
+<div class="form-group" id="units_section">
     <div class="row">
-        <label for="unit_id" class=" <?php echo $label_column; ?>"><?php echo 'Unit'; ?></label>
-        <div class=" col-md-9">
+        <label for="training_unit_ids" class=" <?php echo $label_column; ?>"><?php echo 'Units'; ?></label>
+        <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "unit_id",
-                "name" => "unit_id",
+                "id" => "training_unit_ids",
+                "name" => "training_unit_ids[]",
                 "class" => "form-control select2",
-                "placeholder" => 'Unit',
+                "multiple" => "multiple",
+                "placeholder" => ' -- Choose Units -- ',
+                "autocomplete" => "off",
+            ),$units,$model_info->unit_ids ? explode(',', $model_info->unit_ids) : []); // Handle multiple values
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Emplyees  ------------------------------------>
+
+<div class="form-group" id="employees_section">
+    <div class="row">
+        <label for="training_employee_ids" class=" <?php echo $label_column; ?>"><?php echo 'Employees'; ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_dropdown(array(
+                "id" => "training_employee_ids",
+                "name" => "training_employee_ids[]",
+                "class" => "form-control select2",
+                "placeholder" => ' -- Choose Employees -- ',
+                "multiple" => "multiple",
                 "autocomplete" => "off"
-            ),$Units,[$model_info->unit_id]);
+            ),$employees,$model_info->employee_ids ? explode(',', $model_info->employee_ids) : []); // Handle multiple values
             ?>
         </div>
     </div>
@@ -262,10 +285,6 @@
             });
 <?php } ?>
 
-<?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
-            $('#created_by').select2({data: <?php echo $team_members_dropdown; ?>});
-<?php } ?>
-
 <?php if ($login_user->user_type === "staff") { ?>
             $("#client_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
 <?php } ?>
@@ -283,4 +302,60 @@
         $("#client-form .select2").select2();
 
     });
+
+    function resetOtherDropdowns(excludeSection) {
+        var sections = ['#departments_section', '#sections_section', '#units_section', '#employees_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+       // Initially hide all sections
+       function hideAllSections() {
+        $('#departments_section').hide();
+        $('#sections_section').hide();
+        $('#units_section').hide();
+        $('#employees_section').hide();
+    }
+
+    // Call this function whenever the "Meeting With" dropdown changes
+    $('#training_participant').on('change', function () {
+        var meeting_with = $(this).val();
+
+        // Hide all sections first
+        hideAllSections();
+
+        // Show the appropriate section(s) based on the selected meeting_with value and reset others
+        switch (meeting_with) {
+            case 'Departments':
+                $('#departments_section').show();
+                resetOtherDropdowns('#departments_section');
+                break;
+            case 'Sections':
+                $('#sections_section').show();
+                resetOtherDropdowns('#sections_section');
+                break;
+            case 'Units':
+                $('#units_section').show();
+                resetOtherDropdowns('#units_section');
+                break;
+            case 'Employees':
+                $('#employees_section').show();
+                resetOtherDropdowns('#employees_section');
+                break;
+            default:
+                hideAllSections(); // If no valid selection is made, hide all sections and reset all dropdowns
+                resetOtherDropdowns(null);
+        }
+    });
+
+    // Trigger change on page load to set the correct visibility based on any pre-selected value
+    $('#training_participant').trigger('change');
 </script>

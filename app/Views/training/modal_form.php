@@ -72,12 +72,3 @@
         });
     });
 </script>    
-
-
-<?php
-echo view("training/get_dropdowns_script", array(
-    "employees_dropdown" => $employees_dropdown,
-    "departments_dropdown" => $departments_dropdown,
-    "sections_dropdown" => $sections_dropdown,
-    "units_dropdown" => $units_dropdown
-));
