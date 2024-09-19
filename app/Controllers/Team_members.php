@@ -928,6 +928,7 @@ class Team_members extends Security_Controller {
         $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
         $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
+        $view_data['university_names'] = array("" => " -- Choose University Name -- ") + $this->University_names_model->get_dropdown_list(array("university_name"), "id");
 
         // $options = array("id" => $user_id);
         // $user_info = $this->Users_model->get_details($options)->getRow();

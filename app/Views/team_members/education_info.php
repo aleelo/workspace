@@ -107,14 +107,12 @@
                         <label for="university_name_diploma" class=" col-md-2"><?php echo 'University Name Diploma'; ?></label>
                         <div class=" col-md-10">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_diploma",
                                 "name" => "university_name_diploma",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_diploma,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Diploma',
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_diploma]); ?>
                         </div>
                     </div>
                 </div>
@@ -161,14 +159,12 @@
                         <label for="university_name_foculty_1" class=" col-md-2"><?php echo 'University Name Foculty'; ?></label>
                         <div class=" col-md-10">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_foculty_1",
                                 "name" => "university_name_foculty_1",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_foculty_1,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Foculty',
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_foculty_1]); ?>
                         </div>
                     </div>
                 </div>
@@ -216,15 +212,12 @@
                         <label for="university_name_foculty_2" class=" col-md-2"><?php echo 'University Name Faculty 2'; ?></label>
                         <div class=" col-md-10">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_foculty_2",
                                 "name" => "university_name_foculty_2",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_foculty_2,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Faculty 2',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_foculty_2]); ?>
                         </div>
                     </div>
                 </div> 
@@ -271,15 +264,13 @@
                         <label for="university_name_master_1" class=" col-md-2"><?php echo 'University Name Master'; ?></label>
                         <div class=" col-md-10">
                             <?php 
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_master_1",
                                 "name" => "university_name_master_1",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_master_1,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Master',
                                 "autocomplete" => "off",
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_master_1]); ?>
                         </div>
                     </div>
                 </div> 
@@ -327,15 +318,12 @@
                         <label for="university_name_master_2" class=" col-md-2"><?php echo 'University Name Master 2'; ?></label>
                         <div class=" col-md-10">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_master_2",
                                 "name" => "university_name_master_2",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_master_2,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Master 2',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_master_2]); ?>
                         </div>
                     </div>
                 </div> 
@@ -382,15 +370,13 @@
                         <label for="university_name_phd" class=" col-md-2"><?php echo 'University Name PHD'; ?></label>
                         <div class=" col-md-10">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_phd",
                                 "name" => "university_name_phd",
-                                "class" => "form-control",
-                                "value" => $education_info->university_name_phd,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name PHD',
                                 "autocomplete" => "off",
-                            ));
-                            ?>
+                            ),$university_names,[$education_info->university_name_phd]); ?>
                         </div>
                     </div>
                 </div> 
