@@ -124,7 +124,7 @@ $settings_menu["form_setup"][] = array("name" => "field_of_study", "url" => "fie
 $settings_menu["form_setup"][] = array("name" => "grades", "url" => "grades");
 $settings_menu["form_setup"][] = array("name" => "job_locations", "url" => "job_locations");
 $settings_menu["form_setup"][] = array("name" => "trainers", "url" => "trainers");
-$settings_menu["form_setup"][] = array("name" => "training_locations", "url" => "training_locations");
+// $settings_menu["form_setup"][] = array("name" => "training_locations", "url" => "training_locations");
 
 
 $settings_menu["setup"][] = array("name" => "gdpr", "url" => "settings/gdpr");
