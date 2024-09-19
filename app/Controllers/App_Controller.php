@@ -37,6 +37,7 @@ class App_Controller extends Controller {
     public $Bank_names_model;
     public $Merchant_types_model;
     public $Merchant_details_model;
+    public $University_names_model;
     
     public $Purchase_Order_model;
     public $Purchase_Receive_model;
@@ -260,6 +261,7 @@ class App_Controller extends Controller {
             'Training_model',
             'Appointments_model',
             'Compliance_model',
+            'University_names_model',
         );
     }
 

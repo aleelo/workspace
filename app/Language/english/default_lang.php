@@ -1959,6 +1959,11 @@ $lang["yes_own_department_leaves"] = "Yes, own Departments Leaves";
 $lang["unit_name"] = "Unit";
 $lang["section_name"] = "Section";
 $lang["dp_name"] = "Department";
+$lang["university_name"] = "University Name";
+$lang["university_names"] = "University Names";
+$lang["add_university_name"] = "Add University Name";
+$lang["delete_university_name"] = "Delete University Name";
+$lang["edit_university_name"] = "Edit University Name";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";
