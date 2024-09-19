@@ -34,13 +34,14 @@
         <label for="visitor_type" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
-            echo form_input(array(
-                "id" => "visitor_type",
-                "name" => "visitor_type",
-                "value" => $model_info->type,
-                "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('type'),
-            ));
+                $visitor_type = [''=>' - ','Indivitual'=>'Indivitual','Company'=>'Company'];
+                echo form_dropdown(array(
+                    "id" => "visitor_type",
+                    "name" => "visitor_type",
+                    "class" => "form-control select2",
+                    "placeholder" => app_lang('type'),
+                    "autocomplete" => "off"
+                ),$visitor_type,[$model_info->type]);
             ?>
         </div>
     </div>

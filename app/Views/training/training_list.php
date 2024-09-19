@@ -49,7 +49,7 @@
             {title: "<?php echo app_lang("training_end_date") ?>", order_by: "end_date"},
             {title: "<?php echo app_lang("Training_location") ?>", order_by: "training_location"},
             {title: "<?php echo app_lang("Training_Type") ?>", order_by: "type"},
-            {title: "<?php echo app_lang("Trainer_name") ?>", order_by: "trainer_name"},
+            {title: "<?php echo app_lang("training_location") ?>", order_by: "training_location"},
             {title: "<?php echo app_lang("num_employee") ?>", order_by: "num_employee"}
 
             

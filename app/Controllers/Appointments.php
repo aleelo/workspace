@@ -77,7 +77,7 @@ class Appointments extends Security_Controller {
         if($role === "Secretary"){
             $view_data['host'] = $this->Appointments_model->get_secretary_director($user_id);
         }else{
-            $view_data['host'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+            $view_data['host'] = array("" => " -- Choose Host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
         }
 
         $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");

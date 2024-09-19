@@ -31,8 +31,9 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="training_start_date" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('training_start_date'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="training_start_date" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('training_start_date'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "training_start_date",
@@ -43,17 +44,9 @@
             ));
             ?>
         </div>
-    </div>
-</div>
 
-
-<!----------------------------------------- Training End Date  ------------------------------------>
-
-
-<div class="form-group">
-    <div class="row">
-        <label for="training_end_date" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('training_end_date'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <label for="training_end_date" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('training_end_date'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_input(array(
                 "id" => "training_end_date",
@@ -64,6 +57,7 @@
             ));
             ?>
         </div>
+
     </div>
 </div>
 
@@ -72,16 +66,16 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="training_location_id" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
+        <label for="training_location" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_dropdown(array(
-                "id" => "training_location_id",
-                "name" => "training_location_id",
+                "id" => "training_location",
+                "name" => "training_location",
                 "class" => "form-control select2",
                 "placeholder" => 'Training Location',
                 "autocomplete" => "off"
-            ),$training_location,[$model_info->training_location_id]);
+            ),$locations,[$model_info->training_location]);
             ?>
         </div>
     </div>
@@ -94,7 +88,7 @@
 <div class="form-group">
     <div class="row">
         <label for="Training_Type" class=" <?php echo $label_column; ?>"><?php echo 'Training Type'; ?></label>
-        <div class=" col-md-9">
+        <div class=" col-md-10">
             <?php
             $training = [''=>'-- choose a type --','Face 2 Face'=>'Face 2 Face','Virtual'=>'Virtual'];
             echo form_dropdown(array(
@@ -137,7 +131,7 @@
 <div class="form-group">
     <div class="row">
         <label for="trainer_id" class=" <?php echo $label_column; ?>"><?php echo 'Trainer Name'; ?></label>
-        <div class=" col-md-9">
+        <div class=" col-md-10">
             <?php
             echo form_dropdown(array(
                 "id" => "trainer_id",
@@ -159,7 +153,7 @@
 <div class="form-group">
     <div class="row">
         <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Participant'; ?></label>
-        <div class=" col-md-9">
+        <div class=" col-md-10">
             <?php
             $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
             echo form_dropdown(array(
