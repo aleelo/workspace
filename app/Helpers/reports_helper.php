@@ -36,13 +36,13 @@ if (!function_exists('get_reports_topbar')) {
             $show_payments_button = true;
         }
 
-        $fuel_dropdown = array();
-        if (($ci->login_user->is_admin || $access_fuel)) {
-            $fuel_dropdown["fuel_receive"] = array("name" => "fuel_receive", "url" => "fuel/fuel_receive_report");
-            $fuel_dropdown["fuel_request"] = array("name" => "fuel_request", "url" => "fuel/fuel_request_report");
-            $fuel_dropdown["fuel_daily_activity"] = array("name" => "fuel_daily_activity", "url" => "fuel/fuel_activity_report");
+        // $fuel_dropdown = array();
+        // if (($ci->login_user->is_admin || $access_fuel)) {
+        //     $fuel_dropdown["fuel_receive"] = array("name" => "fuel_receive", "url" => "fuel/fuel_receive_report");
+        //     $fuel_dropdown["fuel_request"] = array("name" => "fuel_request", "url" => "fuel/fuel_request_report");
+        //     $fuel_dropdown["fuel_daily_activity"] = array("name" => "fuel_daily_activity", "url" => "fuel/fuel_activity_report");
           
-        }
+        // }
 
         /*
           if (get_setting("module_order") == "1" && ($ci->login_user->is_admin || $access_order)) {
@@ -98,12 +98,12 @@ if (!function_exists('get_reports_topbar')) {
             $reports_menu[] = array("name" => "timesheets", "url" => "projects/all_timesheets", "class" => "clock", "single_button" => true);
         }
 
-        if ($ci->login_user->is_admin || get_array_value($permissions, "can_manage_all_projects") == "1") {
+        if (get_setting("module_project") == "1" && ($ci->login_user->is_admin || get_array_value($permissions, "can_manage_all_projects") == "1")) {
             $reports_menu[] = array("name" => "projects", "url" => "projects/team_members_summary", "class" => "command", "single_button" => true);
         }
 
         if (get_setting("module_lead") == "1" && ($ci->login_user->is_admin || $access_lead == "all")) {
-            $reports_menu[] = array("name" => "leads", "url" => "leads/converted_to_client_report", "class" => "layers", "single_button" => true);
+            $reports_menu[] = array("name" => "document", "url" => "documents/converted_to_client_report", "class" => "layers", "single_button" => true);
         }
 
         if (get_setting("module_ticket") == "1" && ($ci->login_user->is_admin || $access_ticket == "all")) {
@@ -119,9 +119,9 @@ if (!function_exists('get_reports_topbar')) {
             $reports_menu[] = array("name" => "tickets", "url" => "tickets/tickets_chart_report", "class" => "life-buoy", "single_button" => true);
         }
 
-        if ( ($ci->login_user->is_admin || $access_fuel == "all" || $access_fuel == "own")) {
-            $reports_menu['fuel'] = array("name" => "fuel", "url" => "fuel", "class" => "droplet", "dropdown_item" => $fuel_dropdown);
-        }
+        // if ( ($ci->login_user->is_admin || $access_fuel == "all" || $access_fuel == "own")) {
+        //     $reports_menu['fuel'] = array("name" => "fuel", "url" => "fuel", "class" => "droplet", "dropdown_item" => $fuel_dropdown);
+        // }
 
         if ($return_array) {
             return $reports_menu;
