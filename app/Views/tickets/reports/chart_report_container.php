@@ -28,6 +28,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        
         $("#tickets-chart-filters").appFilters({
             source: '<?php echo_uri("tickets/tickets_chart_report_data") ?>',
             targetSelector: '#load-tickets-chart',

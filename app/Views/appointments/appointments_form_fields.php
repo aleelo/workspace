@@ -304,36 +304,35 @@
 
 
 <script type="text/javascript">
+
     var k=1;
     $(document).ready(function () {
-
-      
 
         setDatePicker("#Start_Date")
         setDatePicker("#End_Date")
         
         $('[data-bs-toggle="tooltip"]').tooltip();
 
-<?php if (isset($currency_dropdown)) { ?>
-            if ($('#currency').length) {
-                $('#currency').select2({data: <?php echo json_encode($currency_dropdown); ?>});
-            }
-<?php } ?>
+        <?php if (isset($currency_dropdown)) { ?>
+                    if ($('#currency').length) {
+                        $('#currency').select2({data: <?php echo json_encode($currency_dropdown); ?>});
+                    }
+        <?php } ?>
 
-<?php if (isset($groups_dropdown)) { ?>
-            $("#group_ids").select2({
-                multiple: true,
-                data: <?php echo json_encode($groups_dropdown); ?>
-            });
-<?php } ?>
+        <?php if (isset($groups_dropdown)) { ?>
+                    $("#group_ids").select2({
+                        multiple: true,
+                        data: <?php echo json_encode($groups_dropdown); ?>
+                    });
+        <?php } ?>
 
-<?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
-            $('#created_by').select2({data: <?php echo $team_members_dropdown; ?>});
-<?php } ?>
+        <?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client") === "all") { ?>
+                    $('#created_by').select2({data: <?php echo $team_members_dropdown; ?>});
+        <?php } ?>
 
-<?php if ($login_user->user_type === "staff") { ?>
-            $("#client_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
-<?php } ?>
+        <?php if ($login_user->user_type === "staff") { ?>
+                    $("#client_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
+        <?php } ?>
         $('.account_type').click(function () {
             var inputValue = $(this).attr("value");
             if (inputValue === "person") {
@@ -350,9 +349,10 @@
         setDatePicker("#appointment_date");
         setTimePicker("#appointment_time");
 
+
         // Function to reset other dropdowns
-    function resetOtherDropdowns(excludeSection) {
-        var sections = ['#departments_section', '#sections_section', '#units_section', '#payers_section', '#partners_section', '#visitors_section', '#employees_section'];
+        function resetOtherDropdowns(excludeSection) {
+            var sections = ['#departments_section', '#sections_section', '#units_section', '#payers_section', '#partners_section', '#visitors_section', '#employees_section'];
         
         // Remove the excluded section from the list
         sections = sections.filter(function (item) {

@@ -107,6 +107,15 @@ if (!function_exists('get_reports_topbar')) {
         }
 
         if (get_setting("module_ticket") == "1" && ($ci->login_user->is_admin || $access_ticket == "all")) {
+            $reports_menu[] = array("name" => "team_members", "url" => "team_members/charts", "class" => "life-buoy", "single_button" => true);
+        }
+
+        //  //Employees List
+        //  if (get_array_value($this->ci->login_user->permissions, "hide_team_members_list") != "1") {
+        //     $team_submenu["team_members"] = array("name" => "team_members", "url" => "team_members", "class" => "users");//team_members
+        // }
+
+        if (get_setting("module_ticket") == "1" && ($ci->login_user->is_admin || $access_ticket == "all")) {
             $reports_menu[] = array("name" => "tickets", "url" => "tickets/tickets_chart_report", "class" => "life-buoy", "single_button" => true);
         }
 

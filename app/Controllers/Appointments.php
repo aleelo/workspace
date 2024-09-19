@@ -57,7 +57,6 @@ class Appointments extends Security_Controller {
             "id" => "numeric"
         ));
 
-        // $view_data['label_column'] = "col-md-2 text-right";
         $view_data['label_column'] = "col-md-2 text-right";
         $view_data['field_column'] = "col-md-10";
 
@@ -72,9 +71,15 @@ class Appointments extends Security_Controller {
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
         $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
 
-        // $view_data['host'] = dp_head_name_dropdown();
+        $role = $this->get_user_role();
+        $user_id = $this->login_user->id;
 
-        $view_data['host'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        if($role === "Secretary"){
+            $view_data['host'] = $this->Appointments_model->get_secretary_director($user_id);
+        }else{
+            $view_data['host'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        }
+
         $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");

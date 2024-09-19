@@ -176,6 +176,50 @@ class Appointments_model extends Crud_model {
         }
     }
 
+    public function get_secretary_director($user_id) {
+        // Define the query to fetch the director's name
+        $sql = "SELECT CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
+                FROM rise_users su
+                LEFT JOIN rise_team_member_job_info tj ON tj.user_id = su.id
+                LEFT JOIN rise_departments dp ON dp.id = tj.department_id
+                LEFT JOIN rise_users du ON du.id = dp.dep_head_id
+                WHERE su.id = ?";
+        
+        // Execute the query
+        $query = $this->db->query($sql, array($user_id));
+        
+        if ($query && $query->getNumRows() > 0) {
+            $result = $query->getRow();
+            return isset($result->director_name) ? $result->director_name : '';
+        } else {
+            // Log the error if the query failed or no rows were found
+            log_message('error', 'Query failed or no rows found for Director Name: ' . $user_id);
+            return null; // Return null if no director was found
+        }
+    }
+
+    public function get_directors_for_departments() {
+
+        $sql = "SELECT CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
+                FROM rise_users du 
+                LEFT JOIN rise_roles ro ON ro.id = du.role_id 
+                WHERE (ro.title = 'HRM' or du.is_admin = 1)";
+        
+        // Execute the query
+        $query = $this->db->query($sql);
+        
+        // Check if the query returns any rows
+        if ($query && $query->getNumRows() > 0) {
+            // Fetch all rows as an array
+            return $query->getResultArray(); // Returns an array of director names
+        } else {
+            // Log the error if the query failed or no rows were found
+            log_message('error', 'Query failed or no directors found for departments.');
+            return []; // Return an empty array if no directors were found
+        }
+    }
+    
+
     private function make_quick_filter_query($filter, $clients_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table) {
         $query = "";
         $tolarance = get_paid_status_tolarance();

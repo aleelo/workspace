@@ -414,7 +414,43 @@ class Team_members extends Security_Controller {
         }
     }
 
+    function tickets_chart_report() {
+        $this->_validate_tickets_report_access();
 
+        $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
+        $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
+        $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
+
+        return $this->template->rander("tickets/reports/chart_report_container", $view_data);
+    }
+
+    private function _get_assiged_to_dropdown() {
+        $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
+
+        $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
+        foreach ($assigned_to_list as $key => $value) {
+            $assigned_to_dropdown[] = array("id" => $key, "text" => $value);
+        }
+        return $assigned_to_dropdown;
+    }
+
+    public function charts() {
+        // Fetch user type data as an array
+        $data['user_type_data'] = $this->db->query("SELECT user_type, COUNT(*) as count FROM rise_users GROUP BY user_type")->getResultArray();
+    
+        // Fetch marital status data as an array
+        $data['marital_status_data'] = $this->db->query("SELECT marital_status, COUNT(*) as count FROM rise_users GROUP BY marital_status")->getResultArray();
+    
+        // Fetch age level and work experience data as an array
+     
+        // Pass the data to the view
+
+        $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
+        // $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
+        // $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
+        return $this->template->rander("team_members/reports/chart_report_container", $data);
+    }
+    
 
     //prepere the data for members list
     function list_data() {
