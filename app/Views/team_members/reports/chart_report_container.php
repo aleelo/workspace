@@ -3,120 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Employee Data Charts</title>
+    <title>Modern Combined Profile Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <style>
-        /* Modern styling for charts */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
         .chart-container {
-            width: 1000%; /* Ensure charts fit the available space */
-            height: 400px;
-            margin: 40px;
+            width: 1200%;
+            height: 600px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+
 <?php echo get_reports_topbar(); ?>
-    <!-- Div for User Type Bar Chart -->
 
-    <div id="page-content" class="page-wrapper clearfix grid-button">
-        <div class="card clearfix">
-            <ul id="tickets-reports-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white inner" role="tablist">
-                <!-- <li class="title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang("tickets"); ?></h4></li> -->
-                <li><a role="presentation" data-bs-toggle="tab"  href="javascript:;" data-bs-target="#marital-status-chart"><?php echo 'Marital Status'; ?></a></li>
-                <!--<li><a role="presentation" data-bs-toggle="tab" href="<?php // echo_uri("tickets/team_members_summary"); ?>" data-bs-target="#team-members-summary-tab"><?php //echo app_lang('team_members_summary'); ?></a></li>-->
-            </ul>
+<div id="page-content" class="page-wrapper clearfix grid-button">
+    <div class="card clearfix">
+        <ul id="tickets-reports-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white inner" role="tablist">
+            <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#tickets-chart-tab"><?php echo 'Employee List'; ?></a></li>
+        </ul>
 
-            <div class="tab-content">
+        <div class="tab-content">
 
-                <div role="tabpanel" class="tab-pane fade" id="marital-status-chart">
-                    
-                    <div class="chart-container" id="marital_status_chart"></div>
+            <div role="tabpanel" class="tab-pane fade" id="tickets-chart-tab">
 
+                <!-- Combined Chart Container -->
+                <div class="chart-container" id="combined_chart">
+                    <h2>Modern Combined Profile Chart</h2>
                 </div>
 
-                <div role="tabpanel" class="tab-pane fade" id="team-members-summary-tab">
-                    
+                <div class="bg-white">
+                    <div id="tickets-chart-filters"></div>
                 </div>
+
+                <div id="load-tickets-chart"></div>
+
             </div>
+            <div role="tabpanel" class="tab-pane fade" id="team-members-summary-tab"></div>
         </div>
     </div>
-    
-    <div class="chart-container" id="user_type_chart"></div>
+</div>
 
-    <!-- Div for Marital Status Pie Chart -->
+<script type="text/javascript">
+    // Use data passed from the controller
+    var genderData = <?php echo $gender_data; ?>;
+    var maritalStatusData = <?php echo $marital_status_data; ?>;
+    var ageLevelData = <?php echo $age_level_data; ?>;
 
-    <!-- Div for Age vs Work Experience Scatter Plot -->
-    <div class="chart-container" id="age_work_chart"></div>
+    // Prepare data for each category (Gender, Marital Status, Age Level)
+    var categories = ['Gender', 'Marital Status', 'Age Level'];
 
-    <script type="text/javascript">
-        // Data from the server (ensure this outputs proper JSON format)
-        var userTypeData = <?php echo json_encode($user_type_data); ?>;
-        var maritalStatusData = <?php echo json_encode($marital_status_data); ?>;
- 
-        // Modernized Bar Chart for User Types
-        var userTypeChart = echarts.init(document.getElementById('user_type_chart'));
-        var userTypeOption = {
-            title: {
-                text: 'User Types',
-                left: 'center',
-                textStyle: { fontSize: 18, color: '#4A4A4A' }
-            },
-            tooltip: { trigger: 'axis' },
-            xAxis: {
-                type: 'category',
-                data: userTypeData.map(item => item.user_type),
-                axisLabel: { rotate: 30 }
-            },
-            yAxis: { type: 'value' },
-            series: [{
+    var genderValues = genderData.map(item => item.count); // Extract count for gender
+    var maritalStatusValues = maritalStatusData.map(item => item.count); // Extract count for marital status
+    var ageLevelValues = ageLevelData.map(item => item.count); // Extract count for age level
+
+    // Modern Combined Bar Chart with Stacked Bars and Smooth Transitions
+    var combinedChart = echarts.init(document.getElementById('combined_chart'));
+    var combinedOption = {
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        legend: { 
+            data: ['Male', 'Female', 'Single', 'Married', 'Young', 'Middle-aged', 'Older'],
+            bottom: '0' // Legend at the bottom
+        },
+        xAxis: {
+            type: 'category',
+            data: categories,
+            axisLabel: { fontSize: 14, color: '#666' }
+        },
+        yAxis: { 
+            type: 'value',
+            axisLabel: { fontSize: 14, color: '#666' }
+        },
+        series: [
+            {
+                name: 'Male',
                 type: 'bar',
-                data: userTypeData.map(item => item.count),
+                stack: 'Gender',
+                data: [genderValues[0], 0, 0], // Only for "Gender" category
                 itemStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#83bff6' },
-                        { offset: 0.5, color: '#188df0' },
-                        { offset: 1, color: '#188df0' }
+                        { offset: 0, color: '#3498db' },
+                        { offset: 1, color: '#2980b9' }
                     ])
-                },
-                barWidth: '60%',
-                animationDuration: 1500
-            }]
-        };
-        userTypeChart.setOption(userTypeOption);
-
-        // Modernized Pie (Donut) Chart for Marital Status
-        var maritalStatusChart = echarts.init(document.getElementById('marital_status_chart'));
-        var maritalStatusOption = {
-            title: {
-                text: 'Marital Status Distribution',
-                left: 'center',
-                textStyle: { fontSize: 18, color: '#4A4A4A' }
+                }
             },
-            tooltip: { trigger: 'item' },
-            series: [{
-                name: 'Marital Status',
-                type: 'pie',
-                radius: ['40%', '70%'], // Donut chart
-                avoidLabelOverlap: false,
-                label: {
-                    formatter: '{b}: {d}%',
-                    position: 'outside',
-                    textStyle: { color: '#4A4A4A' }
-                },
-                labelLine: { show: true },
-                data: maritalStatusData.map(function(item) {
-                    return { value: item.count, name: item.marital_status };
-                }),
-                animationDuration: 1500
-            }]
-        };
-        maritalStatusChart.setOption(maritalStatusOption);
+            {
+                name: 'Female',
+                type: 'bar',
+                stack: 'Gender',
+                data: [genderValues[1], 0, 0], // Only for "Gender" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#e74c3c' },
+                        { offset: 1, color: '#c0392b' }
+                    ])
+                }
+            },
+            {
+                name: 'Single',
+                type: 'bar',
+                stack: 'Marital Status',
+                data: [0, maritalStatusValues[0], 0], // Only for "Marital Status" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#2ecc71' },
+                        { offset: 1, color: '#27ae60' }
+                    ])
+                }
+            },
+            {
+                name: 'Married',
+                type: 'bar',
+                stack: 'Marital Status',
+                data: [0, maritalStatusValues[1], 0], // Only for "Marital Status" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#f39c12' },
+                        { offset: 1, color: '#e67e22' }
+                    ])
+                }
+            },
+            {
+                name: 'Young',
+                type: 'bar',
+                stack: 'Age Level',
+                data: [0, 0, ageLevelValues[0]], // Only for "Age Level" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#9b59b6' },
+                        { offset: 1, color: '#8e44ad' }
+                    ])
+                }
+            },
+            {
+                name: 'Middle-aged',
+                type: 'bar',
+                stack: 'Age Level',
+                data: [0, 0, ageLevelValues[1]], // Only for "Age Level" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#34495e' },
+                        { offset: 1, color: '#2c3e50' }
+                    ])
+                }
+            },
+            {
+                name: 'Older',
+                type: 'bar',
+                stack: 'Age Level',
+                data: [0, 0, ageLevelValues[2]], // Only for "Age Level" category
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#e67e22' },
+                        { offset: 1, color: '#d35400' }
+                    ])
+                }
+            }
+        ],
+        animationDuration: 2000
+    };
+    combinedChart.setOption(combinedOption);
 
-        // Modernized Scatter Plot for Age Level vs Work Experience
-        
-
-        // Responsive resizing of charts
-      
-    </script>
+    // Responsive resizing of the chart
+    window.addEventListener('resize', function() {
+        combinedChart.resize();
+    });
+</script>
 </body>
 </html>

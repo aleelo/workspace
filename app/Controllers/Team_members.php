@@ -436,19 +436,23 @@ class Team_members extends Security_Controller {
 
     public function charts() {
         // Fetch user type data as an array
-        $data['user_type_data'] = $this->db->query("SELECT user_type, COUNT(*) as count FROM rise_users GROUP BY user_type")->getResultArray();
-    
-        // Fetch marital status data as an array
+         
+        $data['gender_data'] = $this->db->query("SELECT gender, COUNT(*) as count FROM rise_users GROUP BY gender")->getResultArray();
+
+        // Fetch marital status distribution from database
         $data['marital_status_data'] = $this->db->query("SELECT marital_status, COUNT(*) as count FROM rise_users GROUP BY marital_status")->getResultArray();
     
-        // Fetch age level and work experience data as an array
-     
+        // Fetch age level distribution from database
+        $data['age_level_data'] = $this->db->query("SELECT age_level, COUNT(*) as count FROM rise_users GROUP BY age_level")->getResultArray();
+    
         // Pass the data to the view
-
+        $view_data['gender_data'] = json_encode($data['gender_data']); // Convert to JSON for JavaScript
+        $view_data['marital_status_data'] = json_encode($data['marital_status_data']); // Convert to JSON for JavaScript
+        $view_data['age_level_data'] = json_encode($data['age_level_data']); // Convert to JSON for JavaScript
         $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
         // $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
         // $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
-        return $this->template->rander("team_members/reports/chart_report_container", $data);
+        return $this->template->rander("team_members/reports/chart_report_container", $view_data);
     }
     
 
