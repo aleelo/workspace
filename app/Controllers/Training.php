@@ -43,75 +43,7 @@ class Training extends Security_Controller {
         return $this->template->rander("training/index", $view_data);
     }
 
-    private function get_context_id_pairs() {
-        return array(
-            array("context" => "employee", "id_key" => "employee_ids", "id" => null),
-            array("context" => "unit", "id_key" => "unit_ids", "id" => null),
-            array("context" => "section", "id_key" => "section_ids", "id" => null),
-            array("context" => "department", "id_key" => "department_ids", "id" => null),
-        );
-    }
-
-    private function get_context_and_id($model_info = null) {
-
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        foreach ($context_id_pairs as $pair) {
-            $id_key = $pair["id_key"];
-            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
-
-            $request = request(); //needed when loading controller from widget helper
-
-            if ($id !== null) {
-                $pair["id"] = $id;
-            } else if ($request->getPost($id_key)) {
-                $pair["id"] = $request->getPost($id_key);
-            }
-
-            if ($pair["id"] !== null) {
-                return $pair;
-            }
-        }
-
-        return array("context" => "employee", "id" => null);
-    }
-
-    private function _get_accessible_contexts($type = "create", $task_info = null) {
-
-        $context_id_pairs = $this->get_context_id_pairs();
-
-        $available_contexts = array();
-
-        foreach ($context_id_pairs as $pair) {
-            $context = $pair["context"];
-
-            // $alwasy_enabled_module = array("project", "client");
-            // if (!(in_array($context))) {
-            //     continue;
-            // }
-
-            $available_contexts[] = $context;
-            
-            // if ($type == "view") {
-            //     if ($this->can_view_tasks($context)) {
-            //     }
-            // } else if ($type == "edit") {
-            //     if ($this->can_edit_tasks($task_info)) {
-            //         $available_contexts[] = $context;
-            //     }
-            // } else {
-            //     if ($this->can_create_tasks($context)) {
-            //         $available_contexts[] = $context;
-            //     }
-            // }
-        }
-
-        return $available_contexts;
-    }
-
   
-    /* load client add/edit modal */
-
     function modal_form() {
         
         $training_id = $this->request->getPost('id');
@@ -137,7 +69,7 @@ class Training extends Security_Controller {
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
-        $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
+        $view_data['Trainers'] = array("" => " -- choose a trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
         $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
@@ -271,12 +203,19 @@ class Training extends Security_Controller {
 
         $data = array(
             "training_name" => $training_name,
+            "trainer_id" => $this->request->getPost('trainer_id'),
+            "type" => $this->request->getPost('Training_Type'),
+            "technical_skills" => $this->request->getPost('technical_skills'),
+            "soft_skills" => $this->request->getPost('soft_skills'),
+            "delivery_mode" => $this->request->getPost('delivery_mode'),
+            "platform" => $this->request->getPost('platform'),
             "start_date" => $this->request->getPost('training_start_date'),
             "end_date" => $this->request->getPost('training_end_date'), 
+            "training_duration" => $this->request->getPost('training_duration'), 
             "training_location" => $this->request->getPost('training_location'),
-            "type" => $this->request->getPost('Training_Type'),
+            "objectives" => $this->request->getPost('objectives'),
+            "budget" => $this->request->getPost('budget'),
             "num_employee" => $this->request->getPost('num_employee'),
-            "trainer_id" => $this->request->getPost('trainer_id'),
 
             "participant" => $participant,
             "department_ids" => $department_ids,
@@ -292,29 +231,6 @@ class Training extends Security_Controller {
 
         if (!$training_id) {
             $data["created_at"] = get_current_utc_time();
-        }
-
-
-        // if ($this->login_user->is_admin) {
-        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
-
-        //     //check if the currency is editable
-        //     if ($training_id) {
-        //         $client_info = $this->Clients_model->get_one($training_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($training_id)) {
-        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-        //             exit();
-        //         }
-        //     }
-        // }
-
-        if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
-            //user has access to change created by
-            $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$training_id) {
-            //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
 
@@ -1250,6 +1166,9 @@ class Training extends Security_Controller {
         if ($Sections_id) {
             $this->_validate_client_view_access($Sections_id);
 
+            $view_data = $this->_get_nationalities();
+
+
             $view_data['model_info'] = $this->Training_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
@@ -1273,9 +1192,10 @@ class Training extends Security_Controller {
             $view_data['can_edit_clients'] = $this->can_edit_clients($Sections_id);
 
             $view_data['Trainers'] = array("" => " -- Choose Trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
-            $view_data['Departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
-            $view_data['Sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
-            $view_data['Units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['departments'] = array("" => " -- Choose Training Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['sections'] = array("" => " -- Choose Training Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['units'] = array("" => " -- Choose Training Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+            $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();

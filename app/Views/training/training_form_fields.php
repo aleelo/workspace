@@ -17,10 +17,135 @@
                 "value" => $model_info->training_name,
                 "class" => "form-control company_name_input_section",
                 "placeholder" => app_lang('training_name'),
-                //"autofocus" => true,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
             ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Trainer  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="trainer_id" class=" <?php echo $label_column; ?>"><?php echo 'Trainer Name'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            echo form_dropdown(array(
+                "id" => "trainer_id",
+                "name" => "trainer_id",
+                "class" => "form-control select2",
+                "placeholder" => 'Trainer Name',
+                "autocomplete" => "off"
+            ),$Trainers,[$model_info->trainer_id]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Training Type  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        
+        <label for="Training_Type" class=" <?php echo $label_column; ?>"><?php echo 'Training Type'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            $Training_Type = [''=>' -- choose training type -- ','Technical Skills'=>'Technical Skills','Soft Skills'=>'Soft Skills','Others'=>'Others'];
+            echo form_dropdown(array(
+                "id" => "Training_Type",
+                "name" => "Training_Type",
+                "class" => "form-control select2",
+                "placeholder" => 'Training Type',
+                "autocomplete" => "off"
+            ),$Training_Type,[$model_info->type]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Technical Skills  ------------------------------------>
+
+
+<div class="form-group" id="technical_skills_section">
+    <div class="row">
+        <label for="technical_skills" class=" <?php echo $label_column; ?>"><?php echo 'Technical Skills'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            $technical_skills = [''=>' -- choose technical skills -- ','Data Analysis'=>'Data Analysis','Programming & Coding'=>'Programming & Coding','IT Security'=>'IT Security',
+            'Software Training'=>'Software Training','Digital Marketing'=>'Digital Marketing'];
+            echo form_dropdown(array(
+                "id" => "technical_skills",
+                "name" => "technical_skills",
+                "class" => "form-control select2",
+                "placeholder" => 'Technical Skills',
+                "autocomplete" => "off"
+            ),$technical_skills,[$model_info->technical_skills]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Soft Skills  ------------------------------------>
+
+
+<div class="form-group" id="soft_skills_section">
+    <div class="row">
+        <label for="soft_skills" class=" <?php echo $label_column; ?>"><?php echo 'Soft Skills'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            $soft_skills = [''=>' -- choose soft skills -- ','Communication Skills'=>'Communication Skills','Time Management'=>'Time Management',
+            'Team Building'=>'Team Building','Team Building'=>'Team Building'];
+            echo form_dropdown(array(
+                "id" => "soft_skills",
+                "name" => "soft_skills",
+                "class" => "form-control select2",
+                "placeholder" => 'Soft Skills',
+                "autocomplete" => "off"
+            ),$soft_skills,[$model_info->soft_skills]);
+            ?>
+        </div>
+    </div>
+</div>
+
+
+<!----------------------------------------- Delivery Mode  ------------------------------------>
+
+<div class="form-group">
+    <div class="row">
+        <label for="delivery_mode" class=" <?php echo $label_column; ?>"><?php echo 'Delivery Mode'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            $delivery_mode = [''=>' -- choose delivery mode -- ','Virtual'=>'Virtual','Face 2 Face'=>'Face 2 Face','Workshop'=>'Workshop'];
+            echo form_dropdown(array(
+                "id" => "delivery_mode",
+                "name" => "delivery_mode",
+                "class" => "form-control select2",
+                "placeholder" => 'Delivery Mode',
+                "autocomplete" => "off"
+            ),$delivery_mode,[$model_info->delivery_mode]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------- Platfroms  ------------------------------------>
+
+<div class="form-group" id="platform_section">
+    <div class="row">
+        <label for="platform" class=" <?php echo $label_column; ?>"><?php echo 'Platform'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            $platform = [''=>' -- choose platform -- ','Zoom'=>'Zoom','Microsoft Teams'=>'Microsoft Teams','Google Meet'=>'Google Meet'
+            ,'Cisco WebEx'=>'Cisco WebEx','Skype for Business'=>'Skype for Business'];
+            echo form_dropdown(array(
+                "id" => "platform",
+                "name" => "platform",
+                "class" => "form-control select2",
+                "placeholder" => 'Platform',
+                "autocomplete" => "off"
+            ),$platform,[$model_info->platform]);
             ?>
         </div>
     </div>
@@ -61,13 +186,32 @@
     </div>
 </div>
 
-<!----------------------------------------- Training Location  ------------------------------------>
+
+<!----------------------------------------- Duration & Training Location  ------------------------------------>
 
 
 <div class="form-group">
     <div class="row">
-        <label for="training_location" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
-        <div class="<?php echo $field_column; ?>">
+
+        <label for="training_duration" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('duration'); ?></label>
+        <div class=" col-md-3">
+            <?php
+            echo form_input(array(
+                "id" => "training_duration",
+                "name" => "training_duration",
+                "value" => $model_info->training_duration,
+                "class" => "form-control company_name_input_section",
+                "placeholder" => app_lang('duration'),
+            ));
+            ?>
+            
+        </div>
+        <div class=" col-md-1">
+        hrs
+        </div>
+        
+        <label for="training_location" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
+        <div class="<?php echo $field_column_2; ?>">
             <?php
             echo form_dropdown(array(
                 "id" => "training_location",
@@ -78,73 +222,50 @@
             ),$locations,[$model_info->training_location]);
             ?>
         </div>
+
     </div>
 </div>
 
-<!----------------------------------------- Training Type  ------------------------------------>
-
+<!----------------------------------------- Objectives  ------------------------------------>
 
 
 <div class="form-group">
     <div class="row">
-        <label for="Training_Type" class=" <?php echo $label_column; ?>"><?php echo 'Training Type'; ?></label>
+        <label for="objectives" class=" <?php echo $label_column; ?>"><?php echo 'Objectives'; ?></label>
         <div class=" col-md-10">
             <?php
-            $training = [''=>'-- choose a type --','Face 2 Face'=>'Face 2 Face','Virtual'=>'Virtual'];
-            echo form_dropdown(array(
-                "id" => "Training_Type",
-                "name" => "Training_Type",
-                "class" => "form-control select2",
-                "placeholder" => 'Training Type',
-                "autocomplete" => "off"
-            ),$training,[$model_info->type]);
-            ?>
-        </div>
-    </div>
-</div>
+            echo form_textarea(array(
+                "id" => "objectives",
+                "name" => "objectives",
+                "class" => "form-control",
+                "placeholder" => 'Objectives',
+                "value" => $model_info->objectives
 
-
-
-<!----------------------------------------- Number of Employee  ------------------------------------>
-
-<!-- 
-<div class="form-group">
-    <div class="row">
-        <label for="num_employee" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('num_employee'); ?></label>
-        <div class="<?php echo $field_column; ?>">
-            <?php
-            echo form_input(array(
-                "id" => "num_employee",
-                "name" => "num_employee",
-                "value" => $model_info->num_employee,
-                "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('num_employee'),
             ));
             ?>
         </div>
     </div>
-</div> -->
+</div>
 
+<!-----------------------------------------  Budget  ------------------------------------>
 
-<!----------------------------------------- Trainer  ------------------------------------>
 
 <div class="form-group">
     <div class="row">
-        <label for="trainer_id" class=" <?php echo $label_column; ?>"><?php echo 'Trainer Name'; ?></label>
-        <div class=" col-md-10">
+        <label for="budget" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Budget'; ?></label>
+        <div class="<?php echo $field_column; ?>">
             <?php
-            echo form_dropdown(array(
-                "id" => "trainer_id",
-                "name" => "trainer_id",
-                "class" => "form-control select2",
-                "placeholder" => 'Trainer Name',
-                "autocomplete" => "off"
-            ),$Trainers,[$model_info->trainer_id]);
+            echo form_input(array(
+                "id" => "budget",
+                "name" => "budget",
+                "value" => $model_info->budget,
+                "class" => "form-control company_name_input_section",
+                "placeholder" => 'Budget',
+            ));
             ?>
         </div>
     </div>
 </div>
-
 
 <!----------------------------------------- Training Participant  ------------------------------------>
 
@@ -297,6 +418,100 @@
 
     });
 
+// ------------------------------------------------------------------------------------------------------------------------------ //
+
+    function resetOtherDropdownsDeliveryMode(excludeSection) {
+        var sections = ['#platform_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+      // Initially hide all sections
+      function hideAllSectionsDeliveryMode() {
+        $('#platform_section').hide();
+    }
+
+    // Call this function whenever the "Meeting With" dropdown changes
+    $('#delivery_mode').on('change', function () {
+        var delivery_mode = $(this).val();
+
+        // Hide all sections first
+        hideAllSectionsDeliveryMode();
+
+        // Show the appropriate section(s) based on the selected meeting_with value and reset others
+        switch (delivery_mode) {
+            case 'Virtual':
+                $('#platform_section').show();
+                resetOtherDropdownsDeliveryMode('#platform_section');
+                break;
+            default:
+                hideAllSectionsDeliveryMode(); // If no valid selection is made, hide all sections and reset all dropdowns
+                resetOtherDropdownsDeliveryMode(null);
+        }
+    });
+
+    // Trigger change on page load to set the correct visibility based on any pre-selected value
+    $('#delivery_mode').trigger('change');
+
+// ------------------------------------------------------------------------------------------------------------------------- //
+
+    function resetOtherDropdownsTrainingType(excludeSection) {
+        var sections = ['#technical_skills_section', '#soft_skills_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+      // Initially hide all sections
+      function hideAllSectionsTrainingType() {
+        $('#technical_skills_section').hide();
+        $('#soft_skills_section').hide();
+    }
+
+    // Call this function whenever the "Meeting With" dropdown changes
+    $('#Training_Type').on('change', function () {
+        var training_Type = $(this).val();
+
+        // Hide all sections first
+        hideAllSectionsTrainingType();
+
+        // Show the appropriate section(s) based on the selected meeting_with value and reset others
+        switch (training_Type) {
+            case 'Technical Skills':
+                $('#technical_skills_section').show();
+                resetOtherDropdownsTrainingType('#technical_skills_section');
+                break;
+            case 'Soft Skills':
+                $('#soft_skills_section').show();
+                resetOtherDropdownsTrainingType('#soft_skills_section');
+                break;
+            default:
+                hideAllSectionsTrainingType(); // If no valid selection is made, hide all sections and reset all dropdowns
+                resetOtherDropdownsTrainingType(null);
+        }
+    });
+
+    // Trigger change on page load to set the correct visibility based on any pre-selected value
+    $('#Training_Type').trigger('change');
+
+// -------------------------------------------------------------------------------------------------------------------------------------- //
+
+
     function resetOtherDropdowns(excludeSection) {
         var sections = ['#departments_section', '#sections_section', '#units_section', '#employees_section'];
         
@@ -321,13 +536,13 @@
 
     // Call this function whenever the "Meeting With" dropdown changes
     $('#training_participant').on('change', function () {
-        var meeting_with = $(this).val();
+        var training_participant = $(this).val();
 
         // Hide all sections first
         hideAllSections();
 
         // Show the appropriate section(s) based on the selected meeting_with value and reset others
-        switch (meeting_with) {
+        switch (training_participant) {
             case 'Departments':
                 $('#departments_section').show();
                 resetOtherDropdowns('#departments_section');
@@ -352,4 +567,5 @@
 
     // Trigger change on page load to set the correct visibility based on any pre-selected value
     $('#training_participant').trigger('change');
+
 </script>
