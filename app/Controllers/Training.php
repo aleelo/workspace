@@ -355,11 +355,6 @@ class Training extends Security_Controller {
             $data->training_location,
             $data->type,
             $data->trainer_name,
-            $data->num_employee,
-            // $data->Department_name,
-            // $data->Section_name,
-            // $data->Unit_name,
-            
         );
 
         foreach ($custom_fields as $field) {
