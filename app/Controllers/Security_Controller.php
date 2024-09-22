@@ -155,10 +155,6 @@ class Security_Controller extends App_Controller {
     }
 
     public function get_user_department_head_id(){
-        // $dep_head = array(
-        //     "dep_head" => $this->show_own_department_documents_only_user_id()
-        // );
-        // $dep_head_id = get_array_value($dep_head, "dep_head");
         $user_id = $this->login_user->id;
         $job_info = $this->db->query("SELECT t.id,t.name,t.department_id FROM rise_templates t 
         LEFT JOIN rise_departments dp ON dp.id = t.department_id 
@@ -169,7 +165,6 @@ class Security_Controller extends App_Controller {
     }
     
     public function get_user_section_head_id(){
-        // $sec_head = $this->show_own_section_documents_only_user_id();
         $user_id = $this->login_user->id;
         $template_info = $this->db->query("SELECT t.id,t.name,t.section_id FROM rise_templates t 
         LEFT JOIN rise_sections se on se.id = t.section_id 

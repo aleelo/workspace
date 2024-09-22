@@ -83,8 +83,8 @@ class Appointments extends Security_Controller {
         $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
-        $view_data['payers'] = $this->Clients_model->get_dropdown_list(array("Contact_Name"), "id");
-        $view_data['partners'] = $this->Partners_model->get_dropdown_list(array("contact_name"), "id");
+        $view_data['payers'] = $this->Clients_model->get_dropdown_list(array("company_name"), "id");
+        $view_data['partners'] = $this->Partners_model->get_dropdown_list(array("name"), "id");
         $view_data['guests'] = $this->Visitors_model->get_dropdown_list(array("name"), "id");
         $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
@@ -106,7 +106,49 @@ class Appointments extends Security_Controller {
         return $this->template->view('appointments/modal_form', $view_data);
     }
 
-   
+    public function send_appointment_created_email($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_host_email", true);
+
+        $host_email = $data['HOST_EMAIL'];
+
+        $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+        $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+        $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+        $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+        $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+        $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+        $parser_data["LEAVE_URL"] = get_uri('payers');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        //$info_email = send_app_mail($info_email, $subject, $message);
+        //$mof_email = send_app_mail($mof_email, $subject, $message);
+
+        if(!empty($host_email)){
+
+            $host_email =  send_app_mail($host_email, $subject, $message);
+        }
+
+        if ($host_email) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 
     /* insert or update a client */
     
@@ -161,21 +203,6 @@ class Appointments extends Security_Controller {
         }
 
 
-        // if ($this->login_user->is_admin) {
-        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
-
-        //     //check if the currency is editable
-        //     if ($appointments_id) {
-        //         $client_info = $this->Clients_model->get_one($appointments_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($appointments_id)) {
-        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-        //             exit();
-        //         }
-        //     }
-        // }
-
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
@@ -193,6 +220,8 @@ class Appointments extends Security_Controller {
         // }
 
         $save_id = $this->Appointments_model->ci_save($data, $appointments_id);
+
+        $host_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email FROM rise_users host LEFT JOIN rise_appointments ap ON ap.host_id = host.id WHERE ap.id = $save_id")->getRow();
      
 
         if ($save_id) {
@@ -201,9 +230,24 @@ class Appointments extends Security_Controller {
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Appointments_model->get_details($options)->getRow();
+                $appoinment = $this->Appointments_model->get_details($options)->getRow();
 
-                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $appoinment?->created_by")->getRow();
+
+                $appoinment_email_data = [
+                    'APPOINTMENT_ID'=>$save_id,
+                    'APPOINTMENT_TITLE' => $appoinment->title,
+                    'APPOINTMENT_DATE'=>$appoinment->date,
+                    'APPOINTMENT_TIME'=>$appoinment->time,
+                    'APPOINTMENT_ROOM'=>$appoinment->room,
+                    'APPOINTMENT_NOTE'=>$appoinment->note,
+                    'HOST_NAME'=>$host_info->host_name,
+                    'HOST_EMAIL'=>$host_info->private_email,
+                    'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                ];
+
+                $r = $this->send_appointment_created_email($appoinment_email_data);
+                // $r = $this->send_email_to_new_payer_registerer($appoinment_email_data);
 
             }
 
@@ -295,17 +339,18 @@ class Appointments extends Security_Controller {
     /* prepare a row of client list table */
 
     private function _make_row($data, $custom_fields) {
-
+        $meta_info = $this->_prepare_appointment_info($data);
 
         $row_data = array($data->id,
 
-            anchor(get_uri("appointments/view/" . $data->id), $data->title),
+            anchor(get_uri("appointments/view/" . $data->id), $meta_info->title_meta),
             $data->date,
             $data->time,
             $data->room,
             $data->note,
             $data->HostName,
             $data->meeting_with,
+            $meta_info->status_meta,
             
         );
 
@@ -321,7 +366,43 @@ class Appointments extends Security_Controller {
     }
 
 
-
+    private function _prepare_appointment_info($data) {
+        $style = '';
+        $current_date = date('Y-m-d'); // Get the current date in 'Y-m-d' format
+    
+        // Check if the appointment date is set and if it is in the past
+        if (isset($data->date) && $data->date < $current_date) {
+            // Add (expired) to the status, if not already appended
+            if (!str_contains($data->status, "(expired)")) {
+                $data->status .= " (expired)";
+            }
+        }
+    
+        // Assign the appropriate class based on the status
+        if (isset($data->status)) {
+            if (str_contains($data->status, "approved")) {
+                $status_class = "badge bg-success"; // Green for approved
+            } else if (str_contains($data->status, "active")) {
+                $status_class = "btn-dark"; // Dark background for active
+                $style = "background-color:#a7abbf;";
+            } else if (str_contains($data->status, "rejected")) {
+                $status_class = "bg-danger"; // Red for rejected
+            }
+    
+            // Apply the orange color if the status includes (expired)
+            if (str_contains($data->status, "(expired)")) {
+                $status_class = "badge bg-orange"; // Orange for expired
+                $style = "background-color:orange;";
+            }
+    
+            // Add status and title meta information
+            $data->status_meta = "<span style='$style' class='badge $status_class'>" . app_lang($data->status) . "</span>";
+            $data->title_meta = "<span style='$style' class='badge $status_class'>" . $data->title . "</span>";
+        }
+    
+        return $data;
+    }
+    
 
     private function can_view_files() {
         if ($this->login_user->user_type == "staff") {

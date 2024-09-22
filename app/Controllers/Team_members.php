@@ -2,15 +2,17 @@
 
 namespace App\Controllers;
 
-class Team_members extends Security_Controller {
+class Team_members extends Security_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->access_only_team_members();
-        
     }
 
-    private function can_view_team_members_contact_info() {
+    private function can_view_team_members_contact_info()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->login_user->is_admin) {
                 return true;
@@ -20,7 +22,8 @@ class Team_members extends Security_Controller {
         }
     }
 
-    private function can_view_team_members_social_links() {
+    private function can_view_team_members_social_links()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->login_user->is_admin) {
                 return true;
@@ -30,7 +33,8 @@ class Team_members extends Security_Controller {
         }
     }
 
-    private function update_only_allowed_members($user_id) {
+    private function update_only_allowed_members($user_id)
+    {
         if ($this->can_update_team_members_info($user_id)) {
             return true; //own profile
         } else {
@@ -41,7 +45,8 @@ class Team_members extends Security_Controller {
     //only admin can change other user's info
     //none admin users can only change his/her own info
     //allowed members can update other members info    
-    private function can_update_team_members_info($user_id) {
+    private function can_update_team_members_info($user_id)
+    {
         $access_info = $this->get_access_info("team_member_update_permission");
 
         if ($this->login_user->id === $user_id) {
@@ -58,7 +63,8 @@ class Team_members extends Security_Controller {
 
     //only admin/permitted users can change other user's info
     //other users can only change his/her own info
-    private function can_access_user_settings($user_id) {
+    private function can_access_user_settings($user_id)
+    {
         if ($user_id && ($this->login_user->is_admin || $this->login_user->id === $user_id || get_array_value($this->login_user->permissions, "can_manage_user_role_and_permissions"))) {
             return true;
         } else {
@@ -66,7 +72,8 @@ class Team_members extends Security_Controller {
         }
     }
 
-    private function _can_activate_deactivate_team_member($member_info) {
+    private function _can_activate_deactivate_team_member($member_info)
+    {
 
         if ($member_info && !$this->is_own_id($member_info->id) && ($this->login_user->is_admin || (get_array_value($this->login_user->permissions, "can_activate_deactivate_team_members") && $member_info->is_admin != 1))) {
             return true;
@@ -74,7 +81,8 @@ class Team_members extends Security_Controller {
         return false;
     }
 
-    private function _can_delete_team_member($member_info) {
+    private function _can_delete_team_member($member_info)
+    {
 
         //can't delete own user
         //only admin can delete other admin users.
@@ -85,7 +93,8 @@ class Team_members extends Security_Controller {
         return false;
     }
 
-    public function index() {
+    public function index()
+    {
         if (!$this->can_view_team_members_list()) {
             app_redirect("forbidden");
         }
@@ -99,15 +108,18 @@ class Team_members extends Security_Controller {
         return $this->template->rander("team_members/index", $view_data);
     }
 
-    private function access_only_admin_or_member_creator() {
+    private function access_only_admin_or_member_creator()
+    {
         if (!($this->login_user->is_admin || get_array_value($this->login_user->permissions, "can_add_or_invite_new_team_members"))) {
             app_redirect("forbidden");
         }
     }
 
+
     /* open new member modal */
 
-    function modal_form() {
+    function modal_form()
+    {
         $this->access_only_admin_or_member_creator();
 
         $this->validate_submitted_data(array(
@@ -132,29 +144,38 @@ class Team_members extends Security_Controller {
         $view_data['Units'] = array("" => " -- Choose Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
-        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
-        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
-        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
-        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
-        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+        $view_data['education_levels'] = [
+            '' => ' -- Choose Education Level -- ',
+            'Primary' => 'Primary',
+            'Secondary' => 'Secondary',
+            'Diploma' => 'Diploma',
+            'Bachelor' => 'Bachelor',
+            'Bachelor & Master' => 'Bachelor & Master',
+            '2 Bachelors' => '2 Bachelors',
+            '2 Bachelors & Master' => '2 Bachelors & Master',
+            '2 Bachelors & 2 Masters' => '2 Bachelors & 2 Masters',
+            'Doctor' => 'Doctor',
+            'Other/Skill' => 'Other/Skill'
+        ];
+        $view_data['sections'] = ['' => 'Choose Department Section', '1' => 'ICT & Cyber Security', '2' => 'Other'];
         $education_fields = $this->db->query("select '' id,'-- Select Field of Study --' name UNION ALL select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
 
         $age_levels = [
-            ''=>'-- Choose Age Level --',
-            '18 - 25' =>'18 - 25',
-            '26 - 35'=>'26 - 35',
-            '36 - 45'=>'36 - 45',
-            '46 -55'=>'46 -55',
-            '56 - 65'=>'56 - 65',
-            '66 ama kaweyn'=>'66 ama kaweyn'
+            '' => '-- Choose Age Level --',
+            '18 - 25' => '18 - 25',
+            '26 - 35' => '26 - 35',
+            '36 - 45' => '36 - 45',
+            '46 -55' => '46 -55',
+            '56 - 65' => '56 - 65',
+            '66 ama kaweyn' => '66 ama kaweyn'
         ];
 
         $view_data['age_levels'] = $age_levels;
-        
-        $array_fields=[];
-        foreach($education_fields as $f){
+
+        $array_fields = [];
+        foreach ($education_fields as $f) {
             $array_fields[$f->id] = $f->name;
         }
         $view_data['education_fields'] = $array_fields;
@@ -169,8 +190,9 @@ class Team_members extends Security_Controller {
 
     /* save new member */
 
-    function add_team_member() {
-        
+    function add_team_member()
+    {
+
         $this->access_only_admin_or_member_creator();
 
         //check duplicate email address, if found then show an error message
@@ -193,7 +215,7 @@ class Team_members extends Security_Controller {
         $password = $this->request->getPost("password");
 
         // new fields for emof: //
-            
+
         // age_level,	
         // work_experience	,	
         // faculty	,
@@ -243,12 +265,12 @@ class Team_members extends Security_Controller {
             "user_type" => "staff",
             "created_at" => get_current_utc_time(),
 
-             // Bank Details
-             "bank_id" => $this->request->getPost('bank_id'),
-             "bank_account" => $this->request->getPost('bank_account'),
-             "registered_name" => $this->request->getPost('bank_registered_name'),
+            // Bank Details
+            "bank_id" => $this->request->getPost('bank_id'),
+            "bank_account" => $this->request->getPost('bank_account'),
+            "registered_name" => $this->request->getPost('bank_registered_name'),
 
-             // Account Settings
+            // Account Settings
             "email" => $this->request->getPost('email'),
             "private_email" => $this->request->getPost('private_email'),
         );
@@ -339,7 +361,8 @@ class Team_members extends Security_Controller {
 
     /* open invitation modal */
 
-    function invitation_modal() {
+    function invitation_modal()
+    {
         $this->access_only_admin_or_member_creator();
 
         $role_dropdown = array(
@@ -357,7 +380,8 @@ class Team_members extends Security_Controller {
     }
 
     //send a team member invitation to an email address
-    function send_invitation() {
+    function send_invitation()
+    {
         $this->access_only_admin_or_member_creator();
 
         $this->validate_submitted_data(array(
@@ -414,7 +438,8 @@ class Team_members extends Security_Controller {
         }
     }
 
-    function tickets_chart_report() {
+    function tickets_chart_report()
+    {
         $this->_validate_tickets_report_access();
 
         $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
@@ -424,7 +449,8 @@ class Team_members extends Security_Controller {
         return $this->template->rander("tickets/reports/chart_report_container", $view_data);
     }
 
-    private function _get_assiged_to_dropdown() {
+    private function _get_assiged_to_dropdown()
+    {
         $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
 
         $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
@@ -434,46 +460,61 @@ class Team_members extends Security_Controller {
         return $assigned_to_dropdown;
     }
 
-    public function charts() {
-        // Fetch user type data as an array
-         
-        $data['gender_data'] = $this->db->query("SELECT gender, COUNT(*) as count FROM rise_users GROUP BY gender")->getResultArray();
+    public function charts()
+    {
+        // Fetch bank usage data
+        $data['bank_usage_data'] = $this->db->query("SELECT bank_name, COUNT(*) as count FROM rise_users JOIN rise_bank_names ON rise_users.bank_id = rise_bank_names.id GROUP BY bank_name")->getResultArray();
 
-        // Fetch marital status distribution from database
+        // Fetch gender data
+        // Fetch gender data
+        $data['gender_data'] = $this->db->query("SELECT LOWER(gender) as gender, COUNT(*) as count FROM rise_users GROUP BY gender")->getResultArray();
+
+        // Fetch marital status data
         $data['marital_status_data'] = $this->db->query("SELECT marital_status, COUNT(*) as count FROM rise_users GROUP BY marital_status")->getResultArray();
-    
-        // Fetch age level distribution from database
+
+        // Fetch age level data
         $data['age_level_data'] = $this->db->query("SELECT age_level, COUNT(*) as count FROM rise_users GROUP BY age_level")->getResultArray();
-    
-        // Pass the data to the view
-        $view_data['gender_data'] = json_encode($data['gender_data']); // Convert to JSON for JavaScript
-        $view_data['marital_status_data'] = json_encode($data['marital_status_data']); // Convert to JSON for JavaScript
-        $view_data['age_level_data'] = json_encode($data['age_level_data']); // Convert to JSON for JavaScript
-        $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
-        // $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
-        // $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
+
+        // Fetch marital status data
+        $view_data['gender_data'] = json_encode($data['gender_data']);
+        $view_data['marital_status_data'] = json_encode($data['marital_status_data']);
+        $view_data['age_level_data'] = json_encode($data['age_level_data']);
+
+        // Fetch age level data
+
+        // Fetch job info data (static_salary and work_experience)
+        $data['job_info_data'] = $this->db->query("SELECT salary, work_experience FROM rise_team_member_job_info")->getResultArray();
+
+        // Convert the data into JSON format for use in the view
+        $view_data['bank_usage_data'] = json_encode($data['bank_usage_data']);
+
+        $view_data['job_info_data'] = json_encode($data['job_info_data']);
+
+        // Render the view with the prepared data
         return $this->template->rander("team_members/reports/chart_report_container", $view_data);
     }
-    
+
+
 
     //prepere the data for members list
-    function list_data() {
+    function list_data()
+    {
 
         if (!$this->can_view_team_members_list()) {
             app_redirect("forbidden");
         }
 
-        $result = $this->check_access('lead');//here means documents for us.
+        $result = $this->check_access('lead'); //here means documents for us.
 
-        $role = get_array_value($result,'role');
-        $department_id = get_array_value($result,'department_id');
-        $created_by = get_array_value($result,'created_by');
+        $role = get_array_value($result, 'role');
+        $department_id = get_array_value($result, 'department_id');
+        $created_by = get_array_value($result, 'created_by');
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
-            'role'=>$role,
-            'created_by'=>$created_by,
-            'department_id'=> $this->request->getPost("department_id") ? $this->request->getPost("department_id") : $department_id,
+            'role' => $role,
+            'created_by' => $created_by,
+            'department_id' => $this->request->getPost("department_id") ? $this->request->getPost("department_id") : $department_id,
             "status" => $this->request->getPost("status"),
             "show_own_unit_only_user_id" => $this->show_own_unit_only_user_id(),
             "show_own_section_only_user_id" => $this->show_own_section_only_user_id(),
@@ -488,25 +529,27 @@ class Team_members extends Security_Controller {
         // die();
 
         $list_data = $this->Users_model->get_details($options);
-        
-        $list_data = get_array_value($list_data,'data') ? get_array_value($list_data,'data') : $list_data->getResult(); 
-        $recordsTotal =  get_array_value($list_data,'recordsTotal');
-        $recordsFiltered =  get_array_value($list_data,'recordsFiltered');
+
+        $list_data = get_array_value($list_data, 'data') ? get_array_value($list_data, 'data') : $list_data->getResult();
+        $recordsTotal =  get_array_value($list_data, 'recordsTotal');
+        $recordsFiltered =  get_array_value($list_data, 'recordsFiltered');
 
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data, $custom_fields);
         }
-        echo json_encode(array("data" => $result,
-                        'recordsTotal'=>$recordsTotal,
-                        'recordsFiltered'=>$recordsFiltered
-                    ));
+        echo json_encode(array(
+            "data" => $result,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered
+        ));
     }
 
 
 
     //get a row data for member list
-    function _row_data($id) {
+    function _row_data($id)
+    {
         validate_numeric_value($id);
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
@@ -521,10 +564,11 @@ class Team_members extends Security_Controller {
 
 
     //prepare team member list row
-    private function _make_row($data, $custom_fields) {
+    private function _make_row($data, $custom_fields)
+    {
 
         $image_url = get_avatar($data->image);
-        
+
 
         // var_dump($a);
         // var_dump($image_url);
@@ -562,9 +606,10 @@ class Team_members extends Security_Controller {
         // }
 
         $delete_link = "";
-        
+
+        // if ($login_user->is_admin || get_array_value($login_user->permissions, "can_add_or_invite_new_team_members")) {
             $delete_link = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_team_member'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("team_members/delete"), "data-action" => "delete-confirmation"));
-        
+        // }
 
         $row_data[] = $delete_link;
 
@@ -574,7 +619,8 @@ class Team_members extends Security_Controller {
 
 
     //delete a team member
-    function delete() {
+    function delete()
+    {
 
 
         $this->validate_submitted_data(array(
@@ -598,7 +644,8 @@ class Team_members extends Security_Controller {
 
 
     //show team member's details view
-    function view($id = 0, $tab = "") {
+    function view($id = 0, $tab = "")
+    {
         if ((int)$id * 1) {
             validate_numeric_value($id);
 
@@ -610,19 +657,19 @@ class Team_members extends Security_Controller {
             //we have an id. view the team_member's profie
             $options = array("id" => $id, "user_type" => "staff");
             $user_info = $this->Users_model->get_details($options)->getRow();
-           
+
             // var_dump($user_info);die;
             $age_levels = [
-                '18 - 25' =>'18 - 25',
-                '26 - 35'=>'26 - 35',
-                '36 - 45'=>'36 - 45',
-                '46 -55'=>'46 -55',
-                '56 - 65'=>'56 - 65',
-                '66 ama kaweyn'=>'66 ama kaweyn'
+                '18 - 25' => '18 - 25',
+                '26 - 35' => '26 - 35',
+                '36 - 45' => '36 - 45',
+                '46 -55' => '46 -55',
+                '56 - 65' => '56 - 65',
+                '66 ama kaweyn' => '66 ama kaweyn'
             ];
-    
+
             $view_data['age_levels'] = $age_levels;
-            
+
             if ($user_info) {
 
                 // var_dump($user_info);
@@ -728,7 +775,8 @@ class Team_members extends Security_Controller {
     }
 
     //show the job information of a team member
-    function job_info($user_id) {
+    function job_info($user_id)
+    {
 
         validate_numeric_value($user_id);
         if (!($this->login_user->is_admin || $this->login_user->id === $user_id || $this->has_job_info_manage_permission())) {
@@ -746,11 +794,20 @@ class Team_members extends Security_Controller {
         $view_data['job_locations'] = array("" => " -- Choose Job Location -- ") + $this->Job_locations_model->get_dropdown_list(array("name"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
 
-        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
-        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
-        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
-        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
-        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+        $view_data['education_levels'] = [
+            '' => ' -- Choose Education Level -- ',
+            'Primary' => 'Primary',
+            'Secondary' => 'Secondary',
+            'Diploma' => 'Diploma',
+            'Bachelor' => 'Bachelor',
+            'Bachelor & Master' => 'Bachelor & Master',
+            '2 Bachelors' => '2 Bachelors',
+            '2 Bachelors & Master' => '2 Bachelors & Master',
+            '2 Bachelors & 2 Masters' => '2 Bachelors & 2 Masters',
+            'Doctor' => 'Doctor',
+            'Other/Skill' => 'Other/Skill'
+        ];
+        $view_data['sections'] = ['' => 'Choose Department Section', '1' => 'ICT & Cyber Security', '2' => 'Other'];
 
         // var_dump($view_data['departments']);
         // die();
@@ -769,14 +826,16 @@ class Team_members extends Security_Controller {
     }
 
 
-    private function has_job_info_manage_permission() {
+    private function has_job_info_manage_permission()
+    {
         return get_array_value($this->login_user->permissions, "job_info_manage_permission");
     }
 
 
 
     //save job information of a team member
-    function save_job_info() {
+    function save_job_info()
+    {
 
         if (!($this->login_user->is_admin || $this->has_job_info_manage_permission())) {
             app_redirect("forbidden");
@@ -790,9 +849,9 @@ class Team_members extends Security_Controller {
 
         $target_path = get_setting("signature_file_path");
         $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "signature");
-        $new_files = unserialize($files_data);    
-        
-       
+        $new_files = unserialize($files_data);
+
+
         $job_data = array(
             "user_id" => $user_id,
             "employee_type" => $this->request->getPost('employee_type'),
@@ -805,14 +864,14 @@ class Team_members extends Security_Controller {
             "job_description" => $this->request->getPost('job_description'),
             "work_experience" => $this->request->getPost('work_experience'),
             "job_location_id" => $this->request->getPost('job_location'),
-            "date_of_hire" => $this->request->getPost('date_of_hire'),         
+            "date_of_hire" => $this->request->getPost('date_of_hire'),
             "employee_id" => $this->request->getPost('employee_id'),
 
             "salary" => unformat_currency($this->request->getPost('salary')),
             "salary_term" => $this->request->getPost('salary_term'),
         );
 
-       
+
         $user_data = array(
             "job_title" => $this->request->getPost('job_title_en'),
             "employee_id" => $this->request->getPost('employee_id'),
@@ -820,12 +879,12 @@ class Team_members extends Security_Controller {
         );
 
         if ($user_id) {
-            $user_j0b_info = $this->Users_model->get_details(['id'=>$user_id])->getRow();
+            $user_j0b_info = $this->Users_model->get_details(['id' => $user_id])->getRow();
             $timeline_file_path = get_setting("signature_file_path");
             $new_files = update_saved_files($timeline_file_path, $user_j0b_info->signature, $new_files);
         }
 
-        
+
         $job_data["signature"] = serialize($new_files);
 
 
@@ -840,29 +899,39 @@ class Team_members extends Security_Controller {
 
 
     //show general information of a team member
-    function general_info($user_id) {
+    function general_info($user_id)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
-        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
-        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
-        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
-        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+        $view_data['education_levels'] = [
+            '' => ' -- Choose Education Level -- ',
+            'Primary' => 'Primary',
+            'Secondary' => 'Secondary',
+            'Diploma' => 'Diploma',
+            'Bachelor' => 'Bachelor',
+            'Bachelor & Master' => 'Bachelor & Master',
+            '2 Bachelors' => '2 Bachelors',
+            '2 Bachelors & Master' => '2 Bachelors & Master',
+            '2 Bachelors & 2 Masters' => '2 Bachelors & 2 Masters',
+            'Doctor' => 'Doctor',
+            'Other/Skill' => 'Other/Skill'
+        ];
+        $view_data['sections'] = ['' => 'Choose Department Section', '1' => 'ICT & Cyber Security', '2' => 'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
         $age_levels = [
-            ''=>'-- Choose Age Level --',
-            '18 - 25' =>'18 - 25',
-            '26 - 35'=>'26 - 35',
-            '36 - 45'=>'36 - 45',
-            '46 -55'=>'46 -55',
-            '56 - 65'=>'56 - 65',
-            '66 ama kaweyn'=>'66 ama kaweyn'
+            '' => '-- Choose Age Level --',
+            '18 - 25' => '18 - 25',
+            '26 - 35' => '26 - 35',
+            '36 - 45' => '36 - 45',
+            '46 -55' => '46 -55',
+            '56 - 65' => '56 - 65',
+            '66 ama kaweyn' => '66 ama kaweyn'
         ];
 
         $view_data['age_levels'] = $age_levels;
@@ -872,8 +941,9 @@ class Team_members extends Security_Controller {
     }
 
     //save general information of a team member
-    function save_general_info($user_id) {
-        
+    function save_general_info($user_id)
+    {
+
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
@@ -918,18 +988,28 @@ class Team_members extends Security_Controller {
     }
 
     //show general information of a team member
-    function education_info($user_id) {
+    function education_info($user_id)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
         $view_data['departments'] = $this->Team_model->get_departments_for_select();
 
-        $view_data['education_levels'] = [''=>' -- Choose Education Level -- ','Primary'=>'Primary','Secondary'=>'Secondary',
-        'Diploma'=>'Diploma','Bachelor'=>'Bachelor','Bachelor & Master'=>'Bachelor & Master','2 Bachelors'=>'2 Bachelors',
-        '2 Bachelors & Master'=>'2 Bachelors & Master','2 Bachelors & 2 Masters'=>'2 Bachelors & 2 Masters',
-        'Doctor'=>'Doctor','Other/Skill'=>'Other/Skill'];
+        $view_data['education_levels'] = [
+            '' => ' -- Choose Education Level -- ',
+            'Primary' => 'Primary',
+            'Secondary' => 'Secondary',
+            'Diploma' => 'Diploma',
+            'Bachelor' => 'Bachelor',
+            'Bachelor & Master' => 'Bachelor & Master',
+            '2 Bachelors' => '2 Bachelors',
+            '2 Bachelors & Master' => '2 Bachelors & Master',
+            '2 Bachelors & 2 Masters' => '2 Bachelors & 2 Masters',
+            'Doctor' => 'Doctor',
+            'Other/Skill' => 'Other/Skill'
+        ];
         // print_r($view_data['education_levels']);die();
-        $view_data['sections'] = [''=>'Choose Department Section','1'=>'ICT & Cyber Security','2'=>'Other'];
+        $view_data['sections'] = ['' => 'Choose Department Section', '1' => 'ICT & Cyber Security', '2' => 'Other'];
         $view_data['education_fields'] = $this->db->query("select id,name from rise_education_industry where deleted=0")->getResult();
         $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
         $view_data['university_names'] = array("" => " -- Choose University Name -- ") + $this->University_names_model->get_dropdown_list(array("university_name"), "id");
@@ -948,12 +1028,13 @@ class Team_members extends Security_Controller {
 
 
     //save general information of a team member
-    function save_education_info($user_id) {
+    function save_education_info($user_id)
+    {
 
-        
+
         $user_id = $this->request->getPost('user_id');
 
-        
+
         $education_data = array(
             "user_id" => $user_id,
             "education_level" => $this->request->getPost('education_level'),
@@ -966,7 +1047,7 @@ class Team_members extends Security_Controller {
             "graduation_date_diploma" => $this->request->getPost('graduation_date_diploma'),
             "university_name_foculty_1" => $this->request->getPost('university_name_foculty_1'),
             "field_of_study_foculty_1" => $this->request->getPost('field_of_study_foculty_1'),
-            "graduation_date_foculty_1" => $this->request->getPost('graduation_date_foculty_1'),         
+            "graduation_date_foculty_1" => $this->request->getPost('graduation_date_foculty_1'),
             "university_name_foculty_2" => $this->request->getPost('university_name_foculty_2'),
             "field_of_study_foculty_2" => $this->request->getPost('field_of_study_foculty_2'),
             "graduation_date_foculty_2" => $this->request->getPost('graduation_date_foculty_2'),
@@ -983,7 +1064,7 @@ class Team_members extends Security_Controller {
             "graduation_date_other_skills" => $this->request->getPost('graduation_date_other_skills'),
         );
 
-       
+
 
         // if ($user_id) {
         //     $user_j0b_info = $this->Users_model->get_details(['id'=>$user_id])->getRow();
@@ -1004,7 +1085,7 @@ class Team_members extends Security_Controller {
         }
 
         // education
-        
+
         // validate_numeric_value($user_id);
         // $this->update_only_allowed_members($user_id);
 
@@ -1034,8 +1115,9 @@ class Team_members extends Security_Controller {
         // }
     }
 
-     //show general information of a team member
-     function bank_details($user_id) {
+    //show general information of a team member
+    function bank_details($user_id)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
@@ -1052,8 +1134,9 @@ class Team_members extends Security_Controller {
     }
 
     //save general information of a team member
-    function save_bank_details($user_id) {
-        
+    function save_bank_details($user_id)
+    {
+
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
@@ -1079,7 +1162,8 @@ class Team_members extends Security_Controller {
     // //show social links of a team member
 
     //show social links of a team member
-    function social_links($user_id) {
+    function social_links($user_id)
+    {
         //important! here id=user_id
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
@@ -1087,12 +1171,13 @@ class Team_members extends Security_Controller {
         $view_data['user_id'] = $user_id;
         $view_data['model_info'] = $this->Social_links_model->get_one($user_id);
         $view_data['can_edit_profile']  = !$this->can_edit_profile();
-        
+
         return $this->template->view("users/social_links", $view_data);
     }
 
     //save social links of a team member
-    function save_social_links($user_id) {
+    function save_social_links($user_id)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
@@ -1123,10 +1208,11 @@ class Team_members extends Security_Controller {
         $this->Social_links_model->ci_save($social_link_data, $id);
         echo json_encode(array("success" => true, 'message' => app_lang('record_updated')));
     }
-    
+
 
     //show account settings of a team member
-    function account_settings($user_id) {
+    function account_settings($user_id)
+    {
         validate_numeric_value($user_id);
         $this->can_access_user_settings($user_id);
 
@@ -1142,7 +1228,8 @@ class Team_members extends Security_Controller {
     }
 
     //show my preference settings of a team member
-    function my_preferences() {
+    function my_preferences()
+    {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
 
         //language dropdown
@@ -1157,7 +1244,8 @@ class Team_members extends Security_Controller {
         return $this->template->view("team_members/my_preferences", $view_data);
     }
 
-    function save_my_preferences() {
+    function save_my_preferences()
+    {
         //setting preferences
         $settings = array("notification_sound_volume", "disable_push_notification", "hidden_topbar_menus", "disable_keyboard_shortcuts", "recently_meaning", "reminder_sound_volume", "reminder_snooze_length");
 
@@ -1195,7 +1283,8 @@ class Team_members extends Security_Controller {
         echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
     }
 
-    function save_personal_language($language) {
+    function save_personal_language($language)
+    {
         if (!get_setting("disable_language_selector_for_team_members") && ($language || $language === "0")) {
 
             $language = clean_data($language);
@@ -1206,7 +1295,8 @@ class Team_members extends Security_Controller {
     }
 
     //save account settings of a team member
-    function save_account_settings($user_id) {
+    function save_account_settings($user_id)
+    {
         validate_numeric_value($user_id);
         $this->can_access_user_settings($user_id);
 
@@ -1260,7 +1350,8 @@ class Team_members extends Security_Controller {
     }
 
     //save profile image of a team member
-    function save_profile_image($user_id = 0) {
+    function save_profile_image($user_id = 0)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
         $user_info = $this->Users_model->get_one($user_id);
@@ -1294,7 +1385,7 @@ class Team_members extends Security_Controller {
                 $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $image_file_name, "", "", false, $image_file_size));
 
                 //delete old file
-                if($user_info->image){
+                if ($user_info->image) {
                     delete_app_files(get_setting("profile_image_path"), array(@unserialize($user_info->image)));
                 }
 
@@ -1306,7 +1397,8 @@ class Team_members extends Security_Controller {
     }
 
     //show projects list of a team member
-    function projects_info($user_id) {
+    function projects_info($user_id)
+    {
         if ($user_id) {
             validate_numeric_value($user_id);
             $view_data['user_id'] = $user_id;
@@ -1318,7 +1410,8 @@ class Team_members extends Security_Controller {
     }
 
     //show attendance list of a team member
-    function attendance_info($user_id) {
+    function attendance_info($user_id)
+    {
         if ($user_id) {
             validate_numeric_value($user_id);
             $view_data['user_id'] = $user_id;
@@ -1327,24 +1420,28 @@ class Team_members extends Security_Controller {
     }
 
     //show weekly attendance list of a team member
-    function weekly_attendance() {
+    function weekly_attendance()
+    {
         return $this->template->view("team_members/weekly_attendance");
     }
 
     //show weekly attendance list of a team member
-    function custom_range_attendance() {
+    function custom_range_attendance()
+    {
         return $this->template->view("team_members/custom_range_attendance");
     }
 
     //show attendance summary of a team member
-    function attendance_summary($user_id) {
+    function attendance_summary($user_id)
+    {
         validate_numeric_value($user_id);
         $view_data["user_id"] = $user_id;
         return $this->template->view("team_members/attendance_summary", $view_data);
     }
 
     //show leave list of a team member
-    function leave_info($applicant_id) {
+    function leave_info($applicant_id)
+    {
         if ($applicant_id) {
             validate_numeric_value($applicant_id);
             $view_data['applicant_id'] = $applicant_id;
@@ -1353,12 +1450,14 @@ class Team_members extends Security_Controller {
     }
 
     //show yearly leave list of a team member
-    function yearly_leaves() {
+    function yearly_leaves()
+    {
         return $this->template->view("team_members/yearly_leaves");
     }
 
     //show yearly leave list of a team member
-    function expense_info($user_id) {
+    function expense_info($user_id)
+    {
         validate_numeric_value($user_id);
         $view_data["user_id"] = $user_id;
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
@@ -1367,7 +1466,8 @@ class Team_members extends Security_Controller {
 
     /* load files tab */
 
-    function files($user_id) {
+    function files($user_id)
+    {
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
@@ -1379,7 +1479,8 @@ class Team_members extends Security_Controller {
 
     /* file upload modal */
 
-    function file_modal_form() {
+    function file_modal_form()
+    {
         $view_data['model_info'] = $this->General_files_model->get_one($this->request->getPost('id'));
         $user_id = $this->request->getPost('user_id') ? $this->request->getPost('user_id') : $view_data['model_info']->user_id;
 
@@ -1391,7 +1492,8 @@ class Team_members extends Security_Controller {
 
     /* save file data and move temp file to parmanent file directory */
 
-    function save_file() {
+    function save_file()
+    {
 
 
         $this->validate_submitted_data(array(
@@ -1441,7 +1543,8 @@ class Team_members extends Security_Controller {
 
     /* list of files, prepared for datatable  */
 
-    function files_list_data($user_id = 0) {
+    function files_list_data($user_id = 0)
+    {
         validate_numeric_value($user_id);
         $options = array("user_id" => $user_id);
 
@@ -1455,7 +1558,8 @@ class Team_members extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _make_file_row($data) {
+    private function _make_file_row($data)
+    {
         $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
 
         $image_url = get_avatar($data->uploaded_by_user_image);
@@ -1464,7 +1568,7 @@ class Team_members extends Security_Controller {
         $uploaded_by = get_team_member_profile_link($data->uploaded_by, $uploaded_by);
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("team_members/view_file/" . $data->id)));
+            js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("team_members/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -1478,7 +1582,8 @@ class Team_members extends Security_Controller {
             $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("team_members/delete_file"), "data-action" => "delete-confirmation"));
         }
 
-        return array($data->id,
+        return array(
+            $data->id,
             "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
             convert_file_size($data->file_size),
             $uploaded_by,
@@ -1487,7 +1592,8 @@ class Team_members extends Security_Controller {
         );
     }
 
-    function view_file($file_id = 0) {
+    function view_file($file_id = 0)
+    {
         validate_numeric_value($file_id);
         $file_info = $this->General_files_model->get_details(array("id" => $file_id))->getRow();
 
@@ -1519,7 +1625,8 @@ class Team_members extends Security_Controller {
 
     /* download a file */
 
-    function download_file($id) {
+    function download_file($id)
+    {
 
         $file_info = $this->General_files_model->get_one($id);
 
@@ -1536,23 +1643,27 @@ class Team_members extends Security_Controller {
 
     /* upload a post file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
-    function validate_team_file() {
+    function validate_team_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* check valid file for user */
 
-    function validate_file() {
+    function validate_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete a file */
 
-    function delete_file() {
+    function delete_file()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->General_files_model->get_one($id);
@@ -1578,11 +1689,13 @@ class Team_members extends Security_Controller {
 
     /* show keyboard shortcut modal form */
 
-    function keyboard_shortcut_modal_form() {
+    function keyboard_shortcut_modal_form()
+    {
         return $this->template->view('team_members/keyboard_shortcut_modal_form');
     }
 
-    private function get_recently_meaning_dropdown() {
+    private function get_recently_meaning_dropdown()
+    {
         return array(
             "2_hours" => app_lang("in") . " 2 " . strtolower(app_lang("hours")),
             "5_hours" => app_lang("in") . " 5 " . strtolower(app_lang("hours")),
@@ -1597,12 +1710,14 @@ class Team_members extends Security_Controller {
         );
     }
 
-    function recently_meaning_modal_form() {
+    function recently_meaning_modal_form()
+    {
         $view_data["recently_meaning_dropdown"] = $this->get_recently_meaning_dropdown();
         return $this->template->view('tasks/recently_meaning_modal_form', $view_data);
     }
 
-    function save_recently_meaning() {
+    function save_recently_meaning()
+    {
         $recently_meaning = $this->request->getPost("recently_meaning");
         $this->Settings_model->save_setting("user_" . $this->login_user->id . "_recently_meaning", $recently_meaning, "user");
         echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
@@ -1610,7 +1725,8 @@ class Team_members extends Security_Controller {
 
     /* load notes tab  */
 
-    function notes($user_id) {
+    function notes($user_id)
+    {
         validate_numeric_value($user_id);
         $this->can_access_team_members_note($user_id);
 

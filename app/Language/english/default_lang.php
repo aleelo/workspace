@@ -1917,6 +1917,14 @@ $lang["the_invoices_id_must_be_larger_then_last_invoice_id"] = "The invoices ID 
 
 $lang["client_dashboard_help_message"] = "This will be the default dashboard for all clients. Please note that, the information you're seeing here in the widgets, isn't any actual infromation of clients.";
 
+$lang["appointment_email"] = "Appointment Email";
+$lang["appointment_created_to_host_email"] = "Created Host Email";
+$lang["appointment_created_to_sectetary_email"] = "Created Secratary Email";
+$lang["appointment_created_to_meeting_with_email"] = "Created Meeting With Email";
+
+$lang["approved (expired)"] = "Approved (Expired)";
+$lang["active (expired)"] = "Active (Expired)";
+$lang["rejected (expired)"] = "Rejected (Expired)";
 $lang["verify"] = "Verify";
 $lang["send_to_lead"] = "Send to document";
 $lang["lead"] = "Lead";

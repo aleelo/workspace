@@ -397,19 +397,6 @@ class Payers extends Security_Controller {
             $payer_email =  send_app_mail($payer_email, $subject, $message);
         }
 
-        // if(!empty($registerer_email)){
-
-        //     $registerer_email =  send_app_mail($registerer_email, $subject, $message);
-        // }
-
-        
-
-        // if ($hrm_email || $head_department_email || $private_email) {
-        //     return true;
-        // }else{
-        //     return false;
-        // }
-
         if ($payer_email) {
             return true;
         }else{

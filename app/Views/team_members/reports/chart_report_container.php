@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,11 +15,12 @@
         }
 
         .chart-container {
-            width: 1200%;
-            height: 600px;
+            width: 100%;
+            height: 400px;
             background-color: white;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            margin-bottom: 40px;
             padding: 20px;
         }
 
@@ -30,161 +32,257 @@
         }
     </style>
 </head>
+
 <body>
 
-<?php echo get_reports_topbar(); ?>
+    <?php echo get_reports_topbar(); ?>
 
-<div id="page-content" class="page-wrapper clearfix grid-button">
-    <div class="card clearfix">
-        <ul id="tickets-reports-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white inner" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#tickets-chart-tab"><?php echo 'Employee List'; ?></a></li>
-        </ul>
+    <div id="page-content" class="page-wrapper clearfix grid-button">
+        <div class="card clearfix">
 
-        <div class="tab-content">
-
-            <div role="tabpanel" class="tab-pane fade" id="tickets-chart-tab">
-
-                <!-- Combined Chart Container -->
-                <div class="chart-container" id="combined_chart">
-                    <h2>Modern Combined Profile Chart</h2>
-                </div>
-
-                <div class="bg-white">
-                    <div id="tickets-chart-filters"></div>
-                </div>
-
-                <div id="load-tickets-chart"></div>
-
+            <!-- Profile Info Chart -->
+            <div class="chart-container" id="profile_chart">
+                <h2>Profile Info Chart</h2>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="team-members-summary-tab"></div>
+
+            <!-- Bank Usage Chart -->
+            <div class="chart-container" id="bank_chart">
+                <h2>Bank Usage Chart</h2>
+            </div>
+
+            <!-- Job Info Chart -->
+            <div class="chart-container" id="job_chart">
+                <h2>Job Info Chart</h2>
+            </div>
+
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    // Use data passed from the controller
-    var genderData = <?php echo $gender_data; ?>;
-    var maritalStatusData = <?php echo $marital_status_data; ?>;
-    var ageLevelData = <?php echo $age_level_data; ?>;
+    <script type="text/javascript">
+        // Data passed from the controller
+        var genderData = <?php echo $gender_data; ?>;
+        var maritalStatusData = <?php echo $marital_status_data; ?>;
+        var ageLevelData = <?php echo $age_level_data; ?>;
+        var bankUsageData = <?php echo $bank_usage_data; ?>;
+        var jobInfoData = <?php echo $job_info_data; ?>;
 
-    // Prepare data for each category (Gender, Marital Status, Age Level)
-    var categories = ['Gender', 'Marital Status', 'Age Level'];
+        // Helper function to find age level counts
+        function getAgeLevelCount(level) {
+            var data = ageLevelData.find(a => a.age_level === level);
+            return data ? data.count : 0;
+        }
 
-    var genderValues = genderData.map(item => item.count); // Extract count for gender
-    var maritalStatusValues = maritalStatusData.map(item => item.count); // Extract count for marital status
-    var ageLevelValues = ageLevelData.map(item => item.count); // Extract count for age level
+        // Profile Info Chart
+        var profileChart = echarts.init(document.getElementById('profile_chart'));
+        var profileOption = {
+            title: {
+                text: 'Profile Information Breakdown',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    var result = '';
+                    params.forEach(function(item) {
+                        result += item.seriesName + ': ' + item.data + '<br>';
+                    });
+                    return result;
+                }
+            },
+            legend: {
+                bottom: '0',
+                data: ['Male', 'Female', 'Single', 'Married', '10-20', '20-30', '30+']
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Gender', 'Marital Status', 'Age Level'],
+                axisLabel: {
+                    fontSize: 14,
+                    color: '#666'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    fontSize: 14,
+                    color: '#666'
+                }
+            },
+            series: [{
+                    name: 'Male',
+                    type: 'bar',
+                    stack: 'Gender',
+                    data: [genderData.find(g => g.gender === 'male')?.count || 0, 0, 0],
+                    itemStyle: {
+                        color: '#3498db'
+                    }
+                },
+                {
+                    name: 'Female',
+                    type: 'bar',
+                    stack: 'Gender',
+                    data: [genderData.find(g => g.gender === 'female')?.count || 0, 0, 0],
+                    itemStyle: {
+                        color: '#e74c3c'
+                    }
+                },
+                {
+                    name: 'Single',
+                    type: 'bar',
+                    stack: 'Marital Status',
+                    data: [0, maritalStatusData.find(m => m.marital_status === 'single')?.count || 0, 0],
+                    itemStyle: {
+                        color: '#2ecc71'
+                    }
+                },
+                {
+                    name: 'Married',
+                    type: 'bar',
+                    stack: 'Marital Status',
+                    data: [0, maritalStatusData.find(m => m.marital_status === 'maried')?.count || 0, 0],
+                    itemStyle: {
+                        color: '#f39c12'
+                    }
+                },
+                {
+                    name: '10-20',
+                    type: 'bar',
+                    stack: 'Age Level',
+                    data: [0, 0, getAgeLevelCount('10-20')],
+                    itemStyle: {
+                        color: '#9b59b6'
+                    }
+                },
+                {
+                    name: '20-30',
+                    type: 'bar',
+                    stack: 'Age Level',
+                    data: [0, 0, getAgeLevelCount('20-30')],
+                    itemStyle: {
+                        color: '#34495e'
+                    }
+                },
+                {
+                    name: '30+',
+                    type: 'bar',
+                    stack: 'Age Level',
+                    data: [0, 0, getAgeLevelCount('30+')],
+                    itemStyle: {
+                        color: '#d35400'
+                    }
+                }
+            ],
+            animationDuration: 2000
+        };
+        profileChart.setOption(profileOption);
 
-    // Modern Combined Bar Chart with Stacked Bars and Smooth Transitions
-    var combinedChart = echarts.init(document.getElementById('combined_chart'));
-    var combinedOption = {
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        legend: { 
-            data: ['Male', 'Female', 'Single', 'Married', 'Young', 'Middle-aged', 'Older'],
-            bottom: '0' // Legend at the bottom
-        },
-        xAxis: {
-            type: 'category',
-            data: categories,
-            axisLabel: { fontSize: 14, color: '#666' }
-        },
-        yAxis: { 
-            type: 'value',
-            axisLabel: { fontSize: 14, color: '#666' }
-        },
-        series: [
-            {
-                name: 'Male',
-                type: 'bar',
-                stack: 'Gender',
-                data: [genderValues[0], 0, 0], // Only for "Gender" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#3498db' },
-                        { offset: 1, color: '#2980b9' }
-                    ])
+        // Bank Usage Chart
+        var bankChart = echarts.init(document.getElementById('bank_chart'));
+        var bankOption = {
+            title: {
+                text: 'Bank Usage Statistics',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
                 }
             },
-            {
-                name: 'Female',
-                type: 'bar',
-                stack: 'Gender',
-                data: [genderValues[1], 0, 0], // Only for "Gender" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#e74c3c' },
-                        { offset: 1, color: '#c0392b' }
-                    ])
+            xAxis: {
+                type: 'category',
+                data: bankUsageData.map(function(item) {
+                    return item.bank_name;
+                }),
+                axisLabel: {
+                    fontSize: 12,
+                    color: '#666'
                 }
             },
-            {
-                name: 'Single',
-                type: 'bar',
-                stack: 'Marital Status',
-                data: [0, maritalStatusValues[0], 0], // Only for "Marital Status" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#2ecc71' },
-                        { offset: 1, color: '#27ae60' }
-                    ])
-                }
+            yAxis: {
+                type: 'value'
             },
-            {
-                name: 'Married',
+            series: [{
+                data: bankUsageData.map(function(item) {
+                    return item.count;
+                }),
                 type: 'bar',
-                stack: 'Marital Status',
-                data: [0, maritalStatusValues[1], 0], // Only for "Marital Status" category
+                barWidth: '50%',
                 itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#f39c12' },
-                        { offset: 1, color: '#e67e22' }
-                    ])
+                    color: '#2ecc71'
                 }
-            },
-            {
-                name: 'Young',
-                type: 'bar',
-                stack: 'Age Level',
-                data: [0, 0, ageLevelValues[0]], // Only for "Age Level" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#9b59b6' },
-                        { offset: 1, color: '#8e44ad' }
-                    ])
-                }
-            },
-            {
-                name: 'Middle-aged',
-                type: 'bar',
-                stack: 'Age Level',
-                data: [0, 0, ageLevelValues[1]], // Only for "Age Level" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#34495e' },
-                        { offset: 1, color: '#2c3e50' }
-                    ])
-                }
-            },
-            {
-                name: 'Older',
-                type: 'bar',
-                stack: 'Age Level',
-                data: [0, 0, ageLevelValues[2]], // Only for "Age Level" category
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#e67e22' },
-                        { offset: 1, color: '#d35400' }
-                    ])
-                }
-            }
-        ],
-        animationDuration: 2000
-    };
-    combinedChart.setOption(combinedOption);
+            }]
+        };
+        bankChart.setOption(bankOption);
 
-    // Responsive resizing of the chart
-    window.addEventListener('resize', function() {
-        combinedChart.resize();
-    });
-</script>
+        // Job Info Chart
+        var jobChart = echarts.init(document.getElementById('job_chart'));
+        var jobOption = {
+            title: {
+                text: 'Job Information (Salary and Experience)',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                bottom: '0',
+                data: ['Static Salary', 'Work Experience']
+            },
+            xAxis: {
+                type: 'category',
+                data: jobInfoData.map(function(item) {
+                    return item.salary;
+                }),
+                axisLabel: {
+                    fontSize: 12,
+                    color: '#666'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    fontSize: 12,
+                    color: '#666'
+                }
+            },
+            series: [{
+                    name: 'Static Salary',
+                    type: 'bar',
+                    data: jobInfoData.map(function(item) {
+                        return item.salary;
+                    }),
+                    itemStyle: {
+                        color: '#3498db'
+                    }
+                },
+                {
+                    name: 'Work Experience',
+                    type: 'bar',
+                    data: jobInfoData.map(function(item) {
+                        return item.work_experience;
+                    }),
+                    itemStyle: {
+                        color: '#e74c3c'
+                    }
+                }
+            ]
+        };
+        jobChart.setOption(jobOption);
+
+        // Resize charts on window resize
+        window.addEventListener('resize', function() {
+            profileChart.resize();
+            bankChart.resize();
+            jobChart.resize();
+        });
+    </script>
 </body>
+
 </html>

@@ -20,6 +20,17 @@ class Email_templates extends Security_Controller {
             "verify_email" => array("VERIFY_EMAIL_URL", "SITE_URL", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
         );
 
+        if (get_setting("module_appointment")) {
+            $templates_array["appointment_email"] = [
+                "appointment_created_to_host_email" => array("APPOINTMENT_ID", "APPOINTMENT_TITLE", "APPOINTMENT_DATE", "APPOINTMENT_TIME", 
+                    "APPOINTMENT_ROOM", "APPOINTMENT_NOTE", "HOST_NAME", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
+                "appointment_created_to_sectetary_email" => array("APPOINTMENT_ID", "APPOINTMENT_TITLE", "APPOINTMENT_DATE", "APPOINTMENT_TIME", 
+                    "APPOINTMENT_ROOM", "HOST_NAME", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
+                "appointment_created_to_meeting_with_email" => array("APPOINTMENT_ID", "APPOINTMENT_TITLE", "APPOINTMENT_DATE", "APPOINTMENT_TIME", 
+                    "APPOINTMENT_ROOM", "HOST_NAME", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
+            ];
+        }
+
         if (get_setting("module_announcement")) {
             $templates_array["announcement"] = array(
                 "announcement_created" => array("ANNOUNCEMENT_TITLE", "ANNOUNCEMENT_CONTENT", "USER_NAME", "APP_TITLE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
