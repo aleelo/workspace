@@ -336,6 +336,7 @@ class Appointments extends Security_Controller {
         return $this->_make_row($data, $custom_fields);
     }
 
+
     /* prepare a row of client list table */
 
     private function _make_row($data, $custom_fields) {
@@ -363,6 +364,30 @@ class Appointments extends Security_Controller {
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
+    }
+
+    function appointment_details() {
+        // $this->validate_submitted_data(array(
+        //     "id" => "required|numeric"
+        // ));
+        $appointment_id = $this->request->getPost('id');
+        $info = $this->Appointments_model->get_details_info($appointment_id);
+        if (!$info) {
+            show_404();
+        }
+        
+        $can_manage_application = false;
+        if ($this->access_type === "own_department" || $this->access_type === "all") {
+            $can_manage_application = true;
+        } 
+
+        if (!$can_manage_application) {
+            app_redirect("forbidden");
+        }
+
+        $view_data['appointment_info'] = $this->_prepare_appointment_info($info);
+        $view_data['role']=$role;
+        return $this->template->view("appointments/appointment_details", $view_data);
     }
 
 

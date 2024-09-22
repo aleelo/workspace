@@ -411,6 +411,8 @@ class Leaves extends Security_Controller {
     function apply_leave_modal_form() {
         $view_data['leave_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
         $view_data['form_type'] = "apply_leave";
+        
+        $view_data['applicant_id'] = $this->login_user->id;
         return $this->template->view('leaves/modal_form', $view_data);
     }
 
@@ -745,7 +747,10 @@ class Leaves extends Security_Controller {
 
     public function get_allowed_days() {
         $leave_type_id = $this->request->getPost('leave_type_id');
-        $user_id = $this->login_user->id ? $this->login_user->id : $this->request->getPost('applicant_id');  // Assuming the user ID is stored in session
+        $form_type = $this->request->getPost('form_type');
+        $applicant_id = $this->request->getPost('applicant_id');
+
+        $user_id = $form_type == 'apply_leave' ? $this->login_user->id : $applicant_id;  // Assuming the user ID is stored in session
     
         // Get allowed days for the selected leave type
         $allowed_days = $this->Leave_applications_model->get_allowed_days_by_type($leave_type_id);
