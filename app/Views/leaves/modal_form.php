@@ -350,9 +350,7 @@
     }
     // When start, end, or single day is changed, recalculate remaining days
     $('#start_date, #end_date, #single_date').change(function () {
-        alert('evebt')
         if (!unlimited_days) {
-            alert(unlimited_days);
             updateAllowedDays();  // Call the function to recalculate based on the selected duration
         }
     });
