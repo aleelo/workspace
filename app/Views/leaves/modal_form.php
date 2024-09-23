@@ -332,13 +332,18 @@
         // Update the displayed allowed days
         if (unlimited_days) {
                     $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
-                    $('div.allowed-days-display').html('Unlimited').css('color', 'blue');
+                    $('div.allowed-days-display').html('Unlimited Days').css('color', 'blue');
                     $('div.taken-days-display-label').html('Taken Days: ').css('color', 'purple');
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
                     $('#submit_button').prop('disabled', false);  // Enable submit button for unlimited days
                     // Hide remaining and requested days, since they don't apply
-                    $('div.remaining-days').html('');
-                    $('div.total-days').html('');
+                    // $('div.remaining-days').html('');
+
+                    var total_days = 1;
+
+                    $('div.total-days-label').html('Requested Days: ');
+                    $('div.total-days').html(total_days + ' - Day');
+                    // handleDurationChange();
                 } else {
                     $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
                     $('div.allowed-days-display').html(allowed_days + ' - Days').css('color', 'blue');
