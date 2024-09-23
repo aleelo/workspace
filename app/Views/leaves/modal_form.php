@@ -319,31 +319,15 @@
                 allowed_days = data.allowed_days;
                 taken_days = data.taken_days;
                 unlimited_days = allowed_days == 'Unlimited';  // Check if leave type has unlimited days
-                
-                
-                // Update the displayed allowed days
-                updateAllowedDays()
-            }
-        });
-    });
 
-    function updateAllowedDays(){
-
-        // Update the displayed allowed days
-        if (unlimited_days) {
+                if (unlimited_days) {
                     $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
                     $('div.allowed-days-display').html('Unlimited Days').css('color', 'blue');
                     $('div.taken-days-display-label').html('Taken Days: ').css('color', 'purple');
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
                     $('#submit_button').prop('disabled', false);  // Enable submit button for unlimited days
-                    // Hide remaining and requested days, since they don't apply
-                    // $('div.remaining-days').html('');
-
-                    var total_days = 1;
-
-                    $('div.total-days-label').html('Requested Days: ');
-                    $('div.total-days').html(total_days + ' - Day');
-                    // handleDurationChange();
+                    $('div.remaining-days').html('');
+                    handleDurationChange();
                 } else {
                     $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
                     $('div.allowed-days-display').html(allowed_days + ' - Days').css('color', 'blue');
@@ -352,7 +336,10 @@
                     handleDurationChange();  // Recalculate based on the selected duration
                 }
 
-    }
+            }
+        });
+    });
+
     // When start, end, or single day is changed, recalculate remaining days
     $('#start_date, #end_date, #single_date').change(function () {
         if (!unlimited_days) {

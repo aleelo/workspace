@@ -1974,6 +1974,7 @@ $lang["delete_university_name"] = "Delete University Name";
 $lang["edit_university_name"] = "Edit University Name";
 $lang["report"] = "Report";
 $lang["can_manage_report"] = "Can Manage Report?";
+$lang["decline"] = "Decline";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";

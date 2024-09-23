@@ -14,9 +14,11 @@ class Appointments_model extends Crud_model {
     function get_details_info($id = 0) {
         $appointments_table = $this->db->prefixTable('appointments');
 
-        $sql = "SELECT $appointments_table.*, 
+        $sql = "SELECT $appointments_table.*
             FROM $appointments_table
             WHERE $appointments_table.deleted=0 AND $appointments_table.id=$id";
+            // print_r($sql);
+            // die;
         return $this->db->query($sql)->getRow();
     }
 

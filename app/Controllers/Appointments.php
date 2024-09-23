@@ -341,6 +341,8 @@ class Appointments extends Security_Controller {
 
     private function _make_row($data, $custom_fields) {
         $meta_info = $this->_prepare_appointment_info($data);
+        $option_icon = "info";
+
 
         $row_data = array($data->id,
 
@@ -361,6 +363,7 @@ class Appointments extends Security_Controller {
         }
 
         $row_data[] = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_appointment'), "data-post-id" => $data->id))
+                    .modal_anchor(get_uri("appointments/appointment_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('appointment_details'), "data-post-id" => $data->id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
@@ -384,10 +387,146 @@ class Appointments extends Security_Controller {
         if (!$can_manage_application) {
             app_redirect("forbidden");
         }
-
+        $role = $this->get_user_role();
         $view_data['appointment_info'] = $this->_prepare_appointment_info($info);
         $view_data['role']=$role;
         return $this->template->view("appointments/appointment_details", $view_data);
+    }
+
+    function update_status() {
+
+        $appointment_id = $this->request->getPost('id');
+        $status = $this->request->getPost('status');
+        $now = get_current_utc_time();
+
+        $role = $this->get_user_role();
+    
+
+        $appointment_data = array(
+            "status" => $status
+        );
+
+        if ($status === "approved") {
+            $appointment_data["approved_by"] = $this->login_user->id;
+            $appointment_data["approved_at"] = $now;
+        } else if ($status === "rejected") {
+            $appointment_data["rejected_by"] = $this->login_user->id;
+            $appointment_data["rejected_at"] = $now;
+        }
+
+        //only allow to updte the status = accept or reject for admin or specefic user
+        //otherwise user can cancel only his/her own application
+        $applicatoin_info = $this->Leave_applications_model->get_one($appointment_id);
+
+        if ($status === "approved" || $status === "rejected") {
+            $this->access_only_allowed_members($applicatoin_info->applicant_id);
+        } else if ($status === "canceled" && $applicatoin_info->applicant_id != $this->login_user->id) {
+            //any user can't cancel other user's leave application
+            app_redirect("forbidden");
+        }
+
+            
+        $save_id = $this->Leave_applications_model->ci_save($appointment_data, $appointment_id);
+            
+            if ($save_id) {
+                
+                $notification_options = array("leave_id" => $appointment_id, "to_user_id" => $applicatoin_info->applicant_id);
+                
+                if ($status == "approved") {
+                    log_notification("leave_approved_HR", $notification_options);//leave_approved
+                } else if ($status == "pending") {
+                    log_notification("leave_verified_Director", $notification_options);
+                } else if ($status == "rejected") {
+                    log_notification("leave_rejected", $notification_options);
+                } else if ($status == "canceled") {
+                    log_notification("leave_canceled", $notification_options);
+                }               
+                        
+                $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
+
+                $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
+
+                $head_section_info = $this->db->query("SELECT la.id, au.id, hsu.first_name, hsu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on au.id = la.applicant_id LEFT JOIN rise_team_member_job_info tj ON tj.user_id = au.id LEFT JOIN rise_sections sc on sc.id = tj.section_id LEFT JOIN rise_users hsu on sc.section_head_id = hsu.id WHERE la.id = $save_id")->getRow();
+                
+                // $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.dep_head_id = hdu.id WHERE la.id = $save_id")->getRow();
+                
+                
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
+
+                if ($status === "approved" ) {
+                    
+                     //send email to the user for leave status
+                    $leave_email_data = [
+                        'LEAVE_ID'=>$save_id,
+                        'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                        'LEAVE_TITLE' => $leave_info->title,
+                        // 'LEAVE_REASON' => $leave_info->reason,
+                        // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
+                        // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                        'LEAVE_STATUS'=>$status,  
+                        'HRM_EMAIL'=>$hrm_info->private_email,                 
+                        // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,                 
+                        'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
+                        'PRIVATE_EMAIL'=>$user_info->private_email,                 
+                        'MOF_EMAIL'=>$user_info->email,                 
+                    ];
+
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
+
+
+                }elseif($status === "rejected"){
+
+                     //send email to the user for leave status:
+                        $leave_email_data = [
+                            'LEAVE_ID'=>$save_id,
+                            'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                            'LEAVE_TITLE' => $leave_info->title,
+                            // 'LEAVE_REASON' => $leave_info->reason,
+                            // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
+                            // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            'LEAVE_STATUS'=>$status, 
+                            'HRM_EMAIL'=>$hrm_info->private_email,                 
+                            // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
+                            'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email, 
+                            'MOF_EMAIL'=>$user_info->email,                 
+
+                        ];
+    
+
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
+
+
+                }elseif($status == 'pending'){
+                    
+                     //send email to the user for leave status:
+                        $leave_email_data = [
+                            'LEAVE_ID'=>$save_id,
+                            'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
+                            'LEAVE_TITLE' => $leave_info->title,
+                            // 'LEAVE_REASON' => $leave_info->reason,
+                            // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
+                            // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
+                            'LEAVE_STATUS'=>$status, 
+                            'HRM_EMAIL'=>$hrm_info->private_email,                 
+                            // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email, 
+                            'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
+                            'PRIVATE_EMAIL'=>$user_info->private_email,   
+                            'MOF_EMAIL'=>$user_info->email,                 
+
+                        ];
+    
+
+                    $r = $this->send_notify_leave_status_email($leave_email_data);
+
+                }
+
+
+
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
     }
 
 
