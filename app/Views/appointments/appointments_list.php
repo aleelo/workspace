@@ -55,7 +55,7 @@
 
             
 <?php echo $custom_field_headers; ?>,
-            {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100", visible: showOptions}
+            {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w500", visible: showOptions}
             ],
             printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>'),
             xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6, 7], '<?php echo $custom_field_headers; ?>')
