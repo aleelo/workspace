@@ -6,10 +6,14 @@ class Reports extends Security_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->access_only_team_members();
+        // $this->access_only_team_members();
+        $this->init_permission_checker("report");
+
     }
 
     public function index() {
+        $this->check_module_availability("module_report");
+        $this->access_only_allowed_members();
         $redirect_to = "";
         $reports = get_reports_topbar(true);
         $count = 1;

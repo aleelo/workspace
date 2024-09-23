@@ -26,6 +26,7 @@ class Left_menu {
 
             $permissions = $this->ci->login_user->permissions;
 
+            $access_report = get_array_value($permissions, "report");
             $access_expense = get_array_value($permissions, "expense");
             $access_invoice = get_array_value($permissions, "invoice");
             $access_ticket = get_array_value($permissions, "ticket");
@@ -270,19 +271,21 @@ class Left_menu {
                 $show_expenses_menu = true;
             }
 
-            $sidebar_menu["reports"] = array("name" => "reports", "url" => "reports/index", "class" => "pie-chart",
-                "sub_pages" => array(
-                    "invoices/invoices_summary",
-                    "orders/orders_summary",
-                    "projects/all_timesheets",
-                    "expenses/income_vs_expenses",
-                    "invoice_payments/payments_summary",
-                    "expenses/summary",
-                    "projects/team_members_summary",
-                    "leads/converted_to_client_report",
-                    "tickets/tickets_chart_report"
-                )
-            );
+            if (get_setting("module_report") == "1" && ($this->ci->login_user->is_admin || $access_report)) {
+                $sidebar_menu["reports"] = array("name" => "reports", "url" => "reports/index", "class" => "pie-chart",
+                    "sub_pages" => array(
+                        "invoices/invoices_summary",
+                        "orders/orders_summary",
+                        "projects/all_timesheets",
+                        "expenses/income_vs_expenses",
+                        "invoice_payments/payments_summary",
+                        "expenses/summary",
+                        "projects/team_members_summary",
+                        "leads/converted_to_client_report",
+                        "tickets/tickets_chart_report"
+                    )
+                 );
+            }
 
             $module_help = get_setting("module_help") == "1" ? true : false;
             $module_knowledge_base = get_setting("module_knowledge_base") == "1" ? true : false;

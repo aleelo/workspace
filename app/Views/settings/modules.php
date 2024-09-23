@@ -347,6 +347,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="module_report" class="col-md-2"><?php echo app_lang('report'); ?></label>
+                            <div class="col-md-10">
+                                <?php
+                                echo form_checkbox("module_report", "1", get_setting("module_report") ? true : false, "id='module_report' class='form-check-input ml15'");
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>

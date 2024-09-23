@@ -91,6 +91,7 @@ class Roles extends Security_Controller {
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
             $view_data['appointment'] = get_array_value($permissions, "appointment");
+            $view_data['report'] = get_array_value($permissions, "report");
             $view_data['event'] = get_array_value($permissions, "event");
             $view_data['project'] = get_array_value($permissions, "project");
             $view_data['task'] = get_array_value($permissions, "task");
@@ -263,6 +264,7 @@ class Roles extends Security_Controller {
 
         $announcement = $this->request->getPost('announcement_permission');
         $appointment = $this->request->getPost('appointment_permission');
+        $report = $this->request->getPost('report_permission');
         $event = $this->request->getPost('event_permission');
         $project = $this->request->getPost('project_permission');
         $task = $this->request->getPost('task_permission');
@@ -359,6 +361,7 @@ class Roles extends Security_Controller {
             "ticket_specific" => $ticket_specific,
             "announcement" => $announcement,
             "appointment" => $appointment,
+            "report" => $report,
             "event" => $event,
             "project" => $project,
             "task" => $task,

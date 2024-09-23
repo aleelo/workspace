@@ -1577,6 +1577,38 @@
                         </div>
                     </li>
                 <?php } ?>
+
+                <?php if (get_setting("module_report")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_report"); ?> <span class="help" data-bs-toggle="tooltip" title="Hides all information of reports except company name."><i data-feather="help-circle" class="icon-14"></i></span></h5>
+                        <div>
+                            <?php
+                            if (is_null($report)) {
+                                $report = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "report_no",
+                                "name" => "report_permission",
+                                "value" => "",
+                                "class" => "report_permission toggle_specific form-check-input",
+                                    ), $report, ($report === "") ? true : false);
+                            ?>
+                            <label for="report_no"><?php echo app_lang("no"); ?> </label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "report_yes_all",
+                                "name" => "report_permission",
+                                "value" => "all",
+                                "class" => "report_permission toggle_specific form-check-input",
+                                    ), $report, ($report === "all") ? true : false);
+                            ?>
+                            <label for="report_yes_all"><?php echo app_lang("yes"); ?></label>
+                        </div>
+                    </li>
+                <?php } ?>
                
 
                 <?php app_hooks()->do_action('app_hook_role_permissions_extension'); ?>
