@@ -27,7 +27,7 @@ class Email_templates extends Security_Controller {
                 "appointment_created_to_sectetary_email" => array("APPOINTMENT_ID", "APPOINTMENT_TITLE", "APPOINTMENT_DATE", "APPOINTMENT_TIME", 
                     "APPOINTMENT_ROOM", "APPOINTMENT_NOTE", "HOST_NAME", "SECRETARY_NAME", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
                 "appointment_created_to_meeting_with_email" => array("APPOINTMENT_ID", "APPOINTMENT_TITLE", "APPOINTMENT_DATE", "APPOINTMENT_TIME", 
-                    "APPOINTMENT_ROOM", "HOST_NAME", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
+                    "APPOINTMENT_ROOM", "APPOINTMENT_NOTE", "HOST_NAME", "HOST_DEPARTMENT", "APPOINTMENT_MEETING_WITH", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
             ];
         }
 

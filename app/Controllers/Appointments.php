@@ -184,6 +184,47 @@ class Appointments extends Security_Controller {
             return false;
         }
     }
+    
+    public function send_appointment_created_email_to_meeting_with($data = array()) {
+        
+        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_sectetary_email", true);
+
+        $secretary_email = $data['SECRETARY_EMAIL'];
+
+        $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+        $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+        $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+        $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+        $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+        $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+        $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
+        $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+        $parser_data["LEAVE_URL"] = get_uri('payers');
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+        $message =  get_array_value($email_template, "message_default");
+        $subject =  get_array_value($email_template, "subject_default");
+
+        $message = $this->parser->setData($parser_data)->renderString($message);
+        $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+        if(!empty($secretary_email)){
+
+            $secretary_email =  send_app_mail($secretary_email, $subject, $message);
+        }
+        if ($secretary_email) {
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /* insert or update a client */
     
@@ -279,6 +320,7 @@ class Appointments extends Security_Controller {
                     'APPOINTMENT_ROOM'=>$appoinment->room,
                     'APPOINTMENT_NOTE'=>$appoinment->note,
                     'HOST_NAME'=>$host_info->host_name,
+                    'HOST_DEPARTMENT'=>$host_info->host_department,
                     'HOST_EMAIL'=>$host_info->private_email,
                     'SECRETARY_EMAIL'=>$secretary_email,
                     'SECRETARY_NAME'=>$secretary_name,
@@ -287,6 +329,7 @@ class Appointments extends Security_Controller {
 
                 $r = $this->send_appointment_created_email_to_Host($appoinment_email_data);
                 $r = $this->send_appointment_created_email_to_secretary($appoinment_email_data);
+                $r = $this->send_appointment_created_email_to_meeting_with($appoinment_email_data);
 
             }
 

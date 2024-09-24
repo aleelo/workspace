@@ -143,7 +143,7 @@ class Documents_model extends Crud_model {
             "id" => $documents_table . ".id",
             "document_title" => $documents_table . ".document_title",
             "ref_number" => $documents_table . ".ref_number",
-            "nameSo" => $sections_table . ".nameSo",
+            "section" => $sections_table . ".nameSo",
             "department" => $documents_table . ".department",
             "template" => $documents_table . ".template",
             "created_by" => $documents_table . ".created_by",
