@@ -187,48 +187,81 @@ class Appointments_model extends Crud_model {
         }
     }
 
-    public function get_secretary_director($user_id) {
-        // Define the query to fetch the director's name
-        $sql = "SELECT CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
-                FROM rise_users su
-                LEFT JOIN rise_team_member_job_info tj ON tj.user_id = su.id
-                LEFT JOIN rise_departments dp ON dp.id = tj.department_id
-                LEFT JOIN rise_users du ON du.id = dp.dep_head_id
-                WHERE su.id = ?";
-        
-        // Execute the query
-        $query = $this->db->query($sql, array($user_id));
-        
-        if ($query && $query->getNumRows() > 0) {
-            $result = $query->getRow();
-            return isset($result->director_name) ? $result->director_name : '';
-        } else {
-            // Log the error if the query failed or no rows were found
-            log_message('error', 'Query failed or no rows found for Director Name: ' . $user_id);
-            return null; // Return null if no director was found
+    function get_secretary_director($options = array()) {
+        $users_table = $this->db->prefixTable('users');
+        $team_member_job_info_table = $this->db->prefixTable('team_member_job_info');
+        $department_table = $this->db->prefixTable('departments');
+
+        $where = "";
+        $user_id = $this->_get_clean_value($options, "user_id");
+
+        if ($user_id) {
+            $where .= " AND $users_table.id=$user_id";
         }
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS du.id,
+        CONCAT(du.first_name,' ',du.last_name) as name
+        FROM $users_table
+        LEFT JOIN $team_member_job_info_table ON $team_member_job_info_table.user_id = $users_table.id
+        LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id
+        LEFT JOIN $users_table as du ON du.id = $department_table.dep_head_id
+        WHERE $users_table.deleted=0 $where ";
+        
+        $raw_query = $this->db->query($sql);
+        $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+            return $raw_query;
+
     }
 
-    public function get_directors_for_departments() {
+    // public function get_secretary_directorr($user_id) {
+        // SQL query to fetch the director name
+    //     $sql = "SELECT du.id, CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
+    //             FROM rise_users su
+    //             LEFT JOIN rise_team_member_job_info tj ON tj.user_id = su.id
+    //             LEFT JOIN rise_departments dp ON dp.id = tj.department_id
+    //             LEFT JOIN rise_users du ON du.id = dp.dep_head_id
+    //             WHERE su.id = ?";
+        
+    //     // Execute the query
+    //     $query = $this->db->query($sql, array($user_id));
+    
+    //     // Initialize result array with "Choose a director name" option
+    //     $result = array('' => ' -- ');
+    
+    //     if ($query && $query->getNumRows() > 0) {
+    //         $director = $query->getRow();
+    //         $result[$director->director_name] = $director->director_name; // Add director name from the database
+    //     } else {
+    //         // Log the error if the query failed or no rows were found
+    //         log_message('error', 'Query failed or no rows found for Director Name: ' . $user_id);
+    //     }
+    
+    //     return $result; // Return the array with both options
+    // }
+    
 
-        $sql = "SELECT CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
-                FROM rise_users du 
-                LEFT JOIN rise_roles ro ON ro.id = du.role_id 
-                WHERE (ro.title = 'HRM' or du.is_admin = 1)";
+    // public function get_directors_for_departments() {
+
+    //     $sql = "SELECT CONCAT(COALESCE(du.first_name, ''), ' ', COALESCE(du.last_name, '')) AS director_name 
+    //             FROM rise_users du 
+    //             LEFT JOIN rise_roles ro ON ro.id = du.role_id 
+    //             WHERE (ro.title = 'HRM' or du.is_admin = 1)";
         
-        // Execute the query
-        $query = $this->db->query($sql);
+    //     // Execute the query
+    //     $query = $this->db->query($sql);
         
-        // Check if the query returns any rows
-        if ($query && $query->getNumRows() > 0) {
-            // Fetch all rows as an array
-            return $query->getResultArray(); // Returns an array of director names
-        } else {
-            // Log the error if the query failed or no rows were found
-            log_message('error', 'Query failed or no directors found for departments.');
-            return []; // Return an empty array if no directors were found
-        }
-    }
+    //     // Check if the query returns any rows
+    //     if ($query && $query->getNumRows() > 0) {
+    //         // Fetch all rows as an array
+    //         return $query->getResultArray(); // Returns an array of director names
+    //     } else {
+    //         // Log the error if the query failed or no rows were found
+    //         log_message('error', 'Query failed or no directors found for departments.');
+    //         return []; // Return an empty array if no directors were found
+    //     }
+    // }
+
+
     
 
     private function make_quick_filter_query($filter, $clients_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table) {

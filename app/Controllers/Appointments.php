@@ -23,6 +23,31 @@ class Appointments extends Security_Controller {
         }
     }
 
+    private function _get_secretary_director()
+    {
+        $role = $this->get_user_role();
+        $user_id = $this->login_user->id;
+
+        $options = array(
+            "user_id" => $user_id,
+        );
+
+        $team_members = $this->Appointments_model->get_secretary_director($options);
+        
+        $team_members = get_array_value($team_members,'data') ? get_array_value($team_members,'data') : $team_members->getResult(); 
+        $recordsTotal =  get_array_value($team_members,'recordsTotal');
+        $recordsFiltered =  get_array_value($team_members,'recordsFiltered');
+        
+        $result = array();
+        foreach ($team_members as $t) {
+            $temp_array[$t->id] = $t->name;
+        }
+
+
+        // $view_data["host"] = $temp_array;
+        return $temp_array;
+    }
+
     /* load clients list view */
 
     function index($tab = "") {
@@ -75,7 +100,7 @@ class Appointments extends Security_Controller {
         $user_id = $this->login_user->id;
 
         if($role === "Secretary"){
-            $view_data['host'] = $this->Appointments_model->get_secretary_director($user_id);
+            $view_data['host'] = $this->_get_secretary_director();
         }else{
             $view_data['host'] = array("" => " -- Choose Host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
         }
@@ -187,7 +212,7 @@ class Appointments extends Security_Controller {
     
     public function send_appointment_created_email_to_meeting_with($data = array()) {
         
-        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_sectetary_email", true);
+        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_meeting_with_email", true);
 
         $secretary_email = $data['SECRETARY_EMAIL'];
 
@@ -329,7 +354,7 @@ class Appointments extends Security_Controller {
 
                 $r = $this->send_appointment_created_email_to_Host($appoinment_email_data);
                 $r = $this->send_appointment_created_email_to_secretary($appoinment_email_data);
-                $r = $this->send_appointment_created_email_to_meeting_with($appoinment_email_data);
+                // $r = $this->send_appointment_created_email_to_meeting_with($appoinment_email_data);
 
             }
 
@@ -425,9 +450,23 @@ class Appointments extends Security_Controller {
         $meta_info = $this->_prepare_appointment_info($data);
         $option_icon = "info";
 
+        $actions= '';
 
-        $row_data = array($data->id,
+        $role = $this->get_user_role();
 
+        foreach ($custom_fields as $field) {
+            $cf_id = "cfv_" . $field->id;
+            $actions = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
+        }
+
+        $actions = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_appointment'), "data-post-id" => $data->id));
+        if($role === 'Director' || $role === 'admin'){
+            $actions .= modal_anchor(get_uri("appointments/appointment_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('appointment_details'), "data-post-id" => $data->id));
+        }
+        $actions .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
+
+
+        return array($data->id,
             anchor(get_uri("appointments/view/" . $data->id), $meta_info->title_meta),
             $data->date,
             $data->time,
@@ -436,19 +475,8 @@ class Appointments extends Security_Controller {
             $data->HostName,
             $data->meeting_with,
             $meta_info->status_meta,
-            
+            $actions,
         );
-
-        foreach ($custom_fields as $field) {
-            $cf_id = "cfv_" . $field->id;
-            $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
-        }
-
-        $row_data[] = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_appointment'), "data-post-id" => $data->id))
-                    .modal_anchor(get_uri("appointments/appointment_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('appointment_details'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
-
-        return $row_data;
     }
 
     function appointment_details() {
