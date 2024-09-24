@@ -171,8 +171,6 @@
                                 "data-rule-required" => true,
                                 "data-msg-required" => app_lang("field_required"),
                                 "data-rule-greaterThanOrEqual" => "#start_date",
-                                "data-msg-greaterThanOrEqual" => app_lang("end_date_must_be_equal_or_greater_than_start_date"),
-                                "data-rule-mustBeSameYear" => "#start_date"
                             ));
                             ?>
                         </div>

@@ -256,7 +256,7 @@ class Appointments extends Security_Controller {
 
         $save_id = $this->Appointments_model->ci_save($data, $appointments_id);
 
-        $host_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email FROM rise_users host LEFT JOIN rise_appointments ap ON ap.host_id = host.id WHERE ap.id = $save_id")->getRow();
+        $host_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email, dp.nameEn as host_department FROM rise_users host LEFT JOIN rise_team_member_job_info tj ON tj.user_id = host.id LEFT JOIN rise_departments dp ON dp.id = tj.department_id LEFT JOIN rise_appointments ap ON ap.host_id = host.id WHERE ap.id = $save_id")->getRow();
         $secretary_email = $this->login_user->private_email;
         $secretary_name = $this->login_user->first_name.' '.$this->login_user->last_name;
      
