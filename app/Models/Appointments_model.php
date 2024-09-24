@@ -124,12 +124,14 @@ class Appointments_model extends Crud_model {
 
         $available_order_by_list = array(
             "id" => $appointments_table . ".id",
-            "company_name" => $appointments_table . ".company_name",
-            "created_date" => $appointments_table . ".created_date",
-            "primary_contact" => $users_table . ".first_name",
-            "status" => "lead_status_title",
-            "primary_contact" => "primary_contact",
-            "client_groups" => "client_groups"
+            "title" => $appointments_table . ".title",
+            "date" => $appointments_table . ".date",
+            "time" => $appointments_table . ".time",
+            "room" => $appointments_table . ".room",
+            "note" => $appointments_table . ".note",
+            "HostName" => $users_table . ".first_name",
+            "meeting_with" => $appointments_table . ".meeting_with",
+            "status" => $appointments_table . ".status",
         );
 
         $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
@@ -149,7 +151,13 @@ class Appointments_model extends Crud_model {
 
             $where .= " AND (";
             $where .= " $appointments_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $appointments_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.title LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.date LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.time LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.room LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.note LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.meeting_with LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $appointments_table.status LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $appointments_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
@@ -206,7 +214,7 @@ class Appointments_model extends Crud_model {
         LEFT JOIN $department_table ON $department_table.id = $team_member_job_info_table.department_id
         LEFT JOIN $users_table as du ON du.id = $department_table.dep_head_id
         WHERE $users_table.deleted=0 $where ";
-        
+
         $raw_query = $this->db->query($sql);
         $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
             return $raw_query;
