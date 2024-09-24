@@ -39,7 +39,7 @@
                 "id" => "appointment_date",
                 "name" => "appointment_date",
                 "value" => $model_info->date,
-                "class" => "form-control company_name_input_section",
+                "class" => "form-control",
                 "placeholder" => app_lang('appointment_date'),
             ));
             ?>
