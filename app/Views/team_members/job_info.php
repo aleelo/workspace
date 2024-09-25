@@ -119,7 +119,7 @@
  
                 <div class="form-group">
                     <div class="row">
-                        <label for="job_title_en" class=" col-md-3"><?php echo 'Job Title English'; ?></label>
+                        <label for="job_title_en" class="col-md-3"><?php echo 'Job Title English'; ?></label>
                         <div class=" col-md-9">
                             <?php
                             echo form_input(array(

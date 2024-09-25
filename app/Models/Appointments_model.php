@@ -121,6 +121,12 @@ class Appointments_model extends Crud_model {
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
 
+        $show_own_department_appointment_only_user_id = $this->_get_clean_value($options, "show_own_department_appointment_only_user_id");
+        if ($show_own_department_appointment_only_user_id) {
+            $where .= " AND ($departments_table.dep_head_id=$show_own_department_appointment_only_user_id";
+            $where .= " OR $departments_table.secretary_id=$show_own_department_appointment_only_user_id)";
+        }
+
 
         $available_order_by_list = array(
             "id" => $appointments_table . ".id",
@@ -172,13 +178,19 @@ class Appointments_model extends Crud_model {
         }
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $appointments_table.*,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as HostName
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $appointments_table.*, $departments_table.nameSo as department,
+        CONCAT(host.first_name,' ',host.last_name) as HostName
         FROM $appointments_table
-        LEFT JOIN $users_table ON $users_table.id = $appointments_table.host_id
+        LEFT JOIN $users_table as host ON host.id = $appointments_table.host_id
+        LEFT JOIN $departments_table ON $departments_table.id = $appointments_table.app_department_id
+        LEFT JOIN $users_table as us_dp_head ON us_dp_head.id = $departments_table.dep_head_id
+        LEFT JOIN $users_table as us_dp_secretray ON us_dp_secretray.id = $departments_table.secretary_id
         $join_custom_fieds               
         WHERE $appointments_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
+
+        // print_r($sql);
+            // die();
 
         $raw_query = $this->db->query($sql);
 

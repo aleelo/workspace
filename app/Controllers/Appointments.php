@@ -416,7 +416,7 @@ class Appointments extends Security_Controller {
 
         $save_id = $this->Appointments_model->ci_save($data, $appointments_id);
 
-        $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, 
+        $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, dp.id as dp_id,
             dp.nameEn as host_department, concat(sec.first_name,' ',sec.last_name) as sec_name, sec.private_email as sec_email
             FROM rise_appointments ap
             LEFT JOIN rise_users host ON host.id = ap.host_id
@@ -424,6 +424,11 @@ class Appointments extends Security_Controller {
             LEFT JOIN rise_departments dp ON dp.id = tj.department_id
             LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
             WHERE ap.id = $save_id")->getRow();
+        
+        $host_department_id["app_department_id"] = $host_sec_info->dp_id;
+
+        $save_id = $this->Appointments_model->ci_save($host_department_id, $save_id);
+        
 
         if ($save_id) {
 
@@ -581,6 +586,7 @@ class Appointments extends Security_Controller {
         
         $options = array(
             "custom_fields" => $custom_fields,
+            "show_own_department_appointment_only_user_id" => $this->show_own_department_appointment_only_user_id(),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("clients", $this->login_user->is_admin, $this->login_user->user_type),
             "group_id" => $this->request->getPost("group_id"),
             "show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(),
@@ -655,6 +661,7 @@ class Appointments extends Security_Controller {
             $data->note,
             $data->HostName,
             $data->meeting_with,
+            $data->department,
             $meta_info->status_meta,
             $actions,
         );

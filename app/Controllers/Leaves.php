@@ -319,11 +319,6 @@ class Leaves extends Security_Controller {
             $hrm_email =  send_app_mail($hrm_email, $subject, $message);
         }
 
-        // if(!empty($head_department_email)){
-
-        //     $head_department_email =  send_app_mail($head_department_email, $subject, $message);
-        // }
-
         if(!empty($head_section_email)){
 
             $head_section_email =  send_app_mail($head_section_email, $subject, $message);
@@ -539,10 +534,6 @@ class Leaves extends Security_Controller {
         }
     }
 
-
-
-
-    /* save: apply leave */
 
     function apply_leave() {
 

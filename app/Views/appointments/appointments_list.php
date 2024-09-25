@@ -51,6 +51,7 @@
             {title: "<?php echo app_lang("note") ?>", order_by: "note"},
             {title: "<?php echo app_lang("host_name") ?>", order_by: "HostName"},
             {title: "<?php echo app_lang("meeting_with") ?>", order_by: "meeting_with"},
+            {title: "<?php echo app_lang("department") ?>", order_by: "department"},
             {title: "<?php echo app_lang("status") ?>", order_by: "status"}
 
             

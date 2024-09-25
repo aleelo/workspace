@@ -929,6 +929,12 @@ class Security_Controller extends App_Controller {
         }
     }
 
+    protected function show_own_department_appointment_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "appointment") == "own_department" ? $this->login_user->id : false;
+        }
+    }
+
     protected function check_profile_image_dimension($image_file_name = "") {
         if (!$image_file_name) {
             return false;
