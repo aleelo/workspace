@@ -13,9 +13,6 @@
     }
 
     var showOptions = true;
-    // if (!"<?php //echo $can_edit_clients; ?>") {
-    // showOptions = false;
-    // }
 
     var ignoreSavedFilter = false;
     var quick_filters_dropdown = <?php echo view("visitors/quick_filters_dropdown"); ?>;
