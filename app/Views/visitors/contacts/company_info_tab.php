@@ -9,11 +9,9 @@
         <div class="card-body">
             <?php echo view("visitors/visitor_form_fields"); ?>
         </div>
-        <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">
                 <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
             </div>
-        <?php } ?>
     </div>
     <?php echo form_close(); ?>
 </div>

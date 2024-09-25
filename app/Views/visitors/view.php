@@ -42,60 +42,11 @@
                     <?php } ?>
                 </div>
 
-                <!-- <div>
-                    <?php// echo view("visitors/info_widgets/index"); ?>
-                </div> -->
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/company_info_tab/" . $visitor_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('visitor_info'); ?></a></li>
 
-                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contacts/" . $visitor_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
-
-                    <?php if ($show_project_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/projects/" . $visitor_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
-                    <?php } ?>
-
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/tasks/" . $visitor_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
-
-                    <!-- <?php if ($show_invoice_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/invoices/" . $visitor_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/payments/" . $visitor_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
-                    <?php } ?> -->
-
-                    <!-- <?php if ($show_estimate_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/estimates/" . $visitor_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
-                    <?php } ?> -->
-
-                    <!-- <?php if ($show_order_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/orders/" . $visitor_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>
-                    <?php } ?> -->
-
-                    <!-- <?php if ($show_estimate_request_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/estimate_requests/" . $visitor_info->id); ?>" data-bs-target="#client-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
-                    <?php } ?>
-                    <?php if ($show_contract_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/contracts/" . $visitor_info->id); ?>" data-bs-target="#client-contracts"> <?php echo app_lang('contracts'); ?></a></li>
-                    <?php } ?>
-                    <?php if ($show_proposal_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/proposals/" . $visitor_info->id); ?>" data-bs-target="#client-proposals"> <?php echo app_lang('proposals'); ?></a></li>
-                    <?php } ?> -->
-
-                    <!-- <?php if ($show_ticket_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/tickets/" . $visitor_info->id); ?>" data-bs-target="#client-tickets"> <?php echo app_lang('tickets'); ?></a></li>
-                    <?php } ?>
-                    <?php if ($show_note_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/notes/" . $visitor_info->id); ?>" data-bs-target="#client-notes"> <?php echo app_lang('notes'); ?></a></li>
-                    <?php } ?>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/files/" . $visitor_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li> -->
-
-                    <!-- <?php if ($show_event_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/events/" . $visitor_info->id); ?>" data-bs-target="#client-events"> <?php echo app_lang('events'); ?></a></li>
-                    <?php } ?>
-
-                    <?php if ($show_expense_info) { ?>
-                        <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("visitors/expenses/" . $visitor_info->id); ?>" data-bs-target="#client-expenses"> <?php echo app_lang('expenses'); ?></a></li>
-                    <?php } ?> -->
 
                     <?php
                     $hook_tabs = array();

@@ -8,7 +8,7 @@ class Visitors extends Security_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("client");
+        $this->init_permission_checker("appointment");
     }
 
     private function _validate_client_manage_access($client_id = 0) {
@@ -26,6 +26,8 @@ class Visitors extends Security_Controller {
     /* load clients list view */
 
     function index($tab = "") {
+
+        $this->check_module_availability("module_appointment");
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();
@@ -49,7 +51,7 @@ class Visitors extends Security_Controller {
     function modal_form() {
         
         $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        // $this->_validate_client_manage_access($Units_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -97,7 +99,7 @@ class Visitors extends Security_Controller {
     function save() {
         
         $Units_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($Units_id);
+        // $this->_validate_client_manage_access($Units_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -123,21 +125,6 @@ class Visitors extends Security_Controller {
             $data["created_at"] = get_current_utc_time();
         }
 
-
-        // if ($this->login_user->is_admin) {
-        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
-
-        //     //check if the currency is editable
-        //     if ($Units_id) {
-        //         $client_info = $this->Clients_model->get_one($Units_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Units_id)) {
-        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-        //             exit();
-        //         }
-        //     }
-        // }
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
@@ -308,7 +295,7 @@ class Visitors extends Security_Controller {
 
     function view($Units_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($Units_id);
+        // $this->_validate_client_view_access($Units_id);
 
         if ($Units_id) {
             $options = array("id" => $Units_id);
@@ -874,7 +861,7 @@ class Visitors extends Security_Controller {
 
     function company_info_tab($Sections_id = 0) {
         if ($Sections_id) {
-            $this->_validate_client_view_access($Sections_id);
+            // $this->_validate_client_view_access($Sections_id);
 
             $view_data['model_info'] = $this->Visitors_model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
