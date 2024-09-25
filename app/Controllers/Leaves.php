@@ -334,52 +334,8 @@ class Leaves extends Security_Controller {
             $private_email = send_app_mail($private_email, $subject, $message);
         }
 
-        // $hrm_email =  send_app_mail($hrm_email, $subject, $message);
-        // $head_department_email =  send_app_mail($head_department_email, $subject, $message);
-        // $private_email =  send_app_mail($private_email, $subject, $message);
-
-        // if(!empty()){
-
-        // }
-
-
-        // if ($hrm_email) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
     }
 
-    
-    // Edit Leave 
-
-    // function edit_leave_modal_form() {
-
-    //     $application_id = $this->request->getPost('id');
-        
-
-        // if ($applicant_id) {
-        //     $view_data['team_members_info'] = $this->Users_model->get_one($applicant_id);
-        // } else {
-
-        //     //show all members list to only admin and other members who has permission to manage all member's leave
-        //     //show only specific members list who has limited access
-        //     if ($this->access_type === "all") {
-        //         $where = array("user_type" => "staff");
-        //     } else {
-        //         $where = array("user_type" => "staff", "id !=" => $this->login_user->id, "where_in" => array("id" => $this->allowed_members));
-        //     }
-        // }
-
-    //     $view_data['team_members_dropdown'] = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"));
-        
-    //     $view_data['model_info'] = $this->Leave_applications_model->get_one($application_id);
-
-    //     $view_data['leave_types_dropdown'] = array("" => "-") + $this->Leave_types_model->get_dropdown_list(array("title"), "id", array("status" => "active"));
-    //     $view_data['form_type'] = "assign_leave";
-
-    //     return $this->template->view('leaves/modal_form', $view_data);
-    // }
 
     //load assign leave modal 
 

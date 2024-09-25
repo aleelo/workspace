@@ -131,91 +131,134 @@ class Appointments extends Security_Controller {
         return $this->template->view('appointments/modal_form', $view_data);
     }
 
-    public function send_appointment_created_email_to_Host($data = array()) {
+    // public function send_appointment_created_email_to_Host($data = array()) {
         
-        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_host_email", true);
+    //     $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_host_email", true);
+
+    //     $host_email = $data['HOST_EMAIL'];
+
+    //     $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+    //     $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+    //     $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+    //     $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+    //     $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+    //     $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+    //     $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+    //     $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+    //     $parser_data["LEAVE_URL"] = get_uri('payers');
+    //     $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+    //     $parser_data["LOGO_URL"] = get_logo_url();
+    //     $parser_data["SITE_URL"] = get_uri();
+    //     $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+    //     $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+    //     $message =  get_array_value($email_template, "message_default");
+    //     $subject =  get_array_value($email_template, "subject_default");
+
+    //     $message = $this->parser->setData($parser_data)->renderString($message);
+    //     $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+    //     if(!empty($host_email)){
+
+    //         $host_email =  send_app_mail($host_email, $subject, $message);
+    //     }
+    //     if ($host_email) {
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
+    // public function send_appointment_created_email_to_secretary($data = array()) {
+        
+    //     $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_sectetary_email", true);
+
+    //     $secretary_email = $data['SECRETARY_EMAIL'];
+
+    //     $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+    //     $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+    //     $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+    //     $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+    //     $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+    //     $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+    //     $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+    //     $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+    //     $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+    //     $parser_data["LEAVE_URL"] = get_uri('payers');
+    //     $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+    //     $parser_data["LOGO_URL"] = get_logo_url();
+    //     $parser_data["SITE_URL"] = get_uri();
+    //     $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+    //     $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+    //     $message =  get_array_value($email_template, "message_default");
+    //     $subject =  get_array_value($email_template, "subject_default");
+
+    //     $message = $this->parser->setData($parser_data)->renderString($message);
+    //     $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+    //     if(!empty($secretary_email)){
+
+    //         $secretary_email =  send_app_mail($secretary_email, $subject, $message);
+    //     }
+    //     if ($secretary_email) {
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+    
+    // public function send_appointment_created_email_to_meeting_with($data = array()) {
+        
+    //     $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_meeting_with_email", true);
+
+    //     $secretary_email = $data['SECRETARY_EMAIL'];
+
+    //     $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+    //     $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+    //     $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+    //     $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+    //     $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+    //     $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+    //     $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+    //     $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
+    //     $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+    //     $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+    //     $parser_data["LEAVE_URL"] = get_uri('payers');
+    //     $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+    //     $parser_data["LOGO_URL"] = get_logo_url();
+    //     $parser_data["SITE_URL"] = get_uri();
+    //     $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+    //     $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+
+    //     $message =  get_array_value($email_template, "message_default");
+    //     $subject =  get_array_value($email_template, "subject_default");
+
+    //     $message = $this->parser->setData($parser_data)->renderString($message);
+    //     $subject = $this->parser->setData($parser_data)->renderString($subject);
+
+    //     if(!empty($secretary_email)){
+
+    //         $secretary_email =  send_app_mail($secretary_email, $subject, $message);
+    //     }
+    //     if ($secretary_email) {
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
+    public function send_appointment_created_email($data = array()) {
 
         $host_email = $data['HOST_EMAIL'];
-
-        $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
-        $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
-        $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
-        $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
-        $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
-        $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
-        $parser_data["HOST_NAME"] = $data['HOST_NAME'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
-
-        $parser_data["LEAVE_URL"] = get_uri('payers');
-        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
-        $parser_data["LOGO_URL"] = get_logo_url();
-        $parser_data["SITE_URL"] = get_uri();
-        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
-        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
-
-        $message =  get_array_value($email_template, "message_default");
-        $subject =  get_array_value($email_template, "subject_default");
-
-        $message = $this->parser->setData($parser_data)->renderString($message);
-        $subject = $this->parser->setData($parser_data)->renderString($subject);
-
-        if(!empty($host_email)){
-
-            $host_email =  send_app_mail($host_email, $subject, $message);
-        }
-        if ($host_email) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public function send_appointment_created_email_to_secretary($data = array()) {
-        
-        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_sectetary_email", true);
-
         $secretary_email = $data['SECRETARY_EMAIL'];
 
-        $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
-        $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
-        $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
-        $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
-        $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
-        $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
-        $parser_data["HOST_NAME"] = $data['HOST_NAME'];
-        $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
-
-        $parser_data["LEAVE_URL"] = get_uri('payers');
-        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
-        $parser_data["LOGO_URL"] = get_logo_url();
-        $parser_data["SITE_URL"] = get_uri();
-        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
-        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
-
-        $message =  get_array_value($email_template, "message_default");
-        $subject =  get_array_value($email_template, "subject_default");
-
-        $message = $this->parser->setData($parser_data)->renderString($message);
-        $subject = $this->parser->setData($parser_data)->renderString($subject);
-
-        if(!empty($secretary_email)){
-
-            $secretary_email =  send_app_mail($secretary_email, $subject, $message);
-        }
-        if ($secretary_email) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-    public function send_appointment_created_email_to_meeting_with($data = array()) {
-        
-        $email_template = $this->Email_templates_model->get_final_template("appointment_created_to_meeting_with_email", true);
-
-        $secretary_email = $data['SECRETARY_EMAIL'];
-
+        $host_email_template = $this->Email_templates_model->get_final_template("appointment_created_to_host_email", true);
+        $secretary_email_template = $this->Email_templates_model->get_final_template("appointment_created_to_sectetary_email", true);
+ 
         $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
         $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
         $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
@@ -227,45 +270,106 @@ class Appointments extends Security_Controller {
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
 
-        $parser_data["LEAVE_URL"] = get_uri('payers');
-        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LEAVE_URL"] = get_uri('leaves');
+        $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($secretary_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+ 
+        $host_message =  get_array_value($host_email_template, "message_default");
+        $host_subject =  get_array_value($host_email_template, "subject_default");
 
-        $message =  get_array_value($email_template, "message_default");
-        $subject =  get_array_value($email_template, "subject_default");
+        $host_message = $this->parser->setData($parser_data)->renderString($host_message);
+        $host_subject = $this->parser->setData($parser_data)->renderString($host_subject);
 
-        $message = $this->parser->setData($parser_data)->renderString($message);
-        $subject = $this->parser->setData($parser_data)->renderString($subject);
+        if(!empty($host_email)){
+            $hrm_email =  send_app_mail($host_email, $host_subject, $host_message);
+        }
 
+        $secretary_message =  get_array_value($secretary_email_template, "message_default");
+        $secretary_subject =  get_array_value($secretary_email_template, "subject_default");
+ 
+        $secretary_message = $this->parser->setData($parser_data)->renderString($secretary_message);
+        $secretary_subject = $this->parser->setData($parser_data)->renderString($secretary_subject);
+ 
         if(!empty($secretary_email)){
+            $hrm_email =  send_app_mail($secretary_email, $secretary_subject, $secretary_message);
+        }
 
-            $secretary_email =  send_app_mail($secretary_email, $subject, $message);
+ 
+     }
+
+    public function send_notify_appointment_status_email($data = array()) {
+
+        $host_email = $data['HOST_EMAIL'];
+        $secretary_email = $data['SECRETARY_EMAIL'];
+ 
+        $status = $data['APPOINTMENT_STATUS'];
+ 
+         if($status == 'approved'){
+            $host_email_template = $this->Email_templates_model->get_final_template("appointment_approved_to_host_email", true);
+            $secretary_email_template = $this->Email_templates_model->get_final_template("appointment_approved_to_sectetary_email", true);
+         }else if($status == 'rejected'){
+            $host_email_template = $this->Email_templates_model->get_final_template("appointment_rejected_to_host_email", true);
+            $secretary_email_template = $this->Email_templates_model->get_final_template("appointment_rejected_to_sectetary_email", true);
+         }
+ 
+        $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
+        $parser_data["APPOINTMENT_TITLE"] = $data['APPOINTMENT_TITLE'];
+        $parser_data["APPOINTMENT_DATE"] = $data['APPOINTMENT_DATE'];
+        $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
+        $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
+        $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["HOST_NAME"] = $data['HOST_NAME'];
+        $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
+        $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+
+        $parser_data["LEAVE_URL"] = get_uri('leaves');
+        $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($secretary_email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+ 
+        $host_message =  get_array_value($host_email_template, "message_default");
+        $host_subject =  get_array_value($host_email_template, "subject_default");
+
+        $host_message = $this->parser->setData($parser_data)->renderString($host_message);
+        $host_subject = $this->parser->setData($parser_data)->renderString($host_subject);
+
+        if(!empty($host_email)){
+            $hrm_email =  send_app_mail($host_email, $host_subject, $host_message);
         }
-        if ($secretary_email) {
-            return true;
-        }else{
-            return false;
+
+        $secretary_message =  get_array_value($secretary_email_template, "message_default");
+        $secretary_subject =  get_array_value($secretary_email_template, "subject_default");
+ 
+        $secretary_message = $this->parser->setData($parser_data)->renderString($secretary_message);
+        $secretary_subject = $this->parser->setData($parser_data)->renderString($secretary_subject);
+ 
+        if(!empty($secretary_email)){
+            $hrm_email =  send_app_mail($secretary_email, $secretary_subject, $secretary_message);
         }
-    }
+
+ 
+     }
 
     /* insert or update a client */
     
     function save() {
         
         $appointments_id = $this->request->getPost('id');
-        // $this->_validate_client_manage_access($appointments_id);
         
-        /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
 
         $meeting_with = $this->request->getPost('meeting_with');
 
-          // Capture only the relevant dropdown values based on "Meeting With"
         $department_ids = ($meeting_with === 'Departments') ? implode(',', $this->request->getPost('appointment_department_ids')) : null;
         $section_ids = ($meeting_with === 'Sections') ? implode(',', $this->request->getPost('appointment_section_ids')) : null;
         $unit_ids = ($meeting_with === 'Units') ? implode(',', $this->request->getPost('appointment_unit_ids')) : null;
@@ -274,7 +378,6 @@ class Appointments extends Security_Controller {
         $visitor_ids = ($meeting_with === 'Visitors') ? implode(',', $this->request->getPost('appointment_visitor_ids')) : null;
         $employee_ids = ($meeting_with === 'Employees') ? implode(',', $this->request->getPost('appointment_employee_ids')) : null;
 
-        // Prepare the data array
         $data = array(
             "title" => $this->request->getPost('appointment_title'),
             "date" => $this->request->getPost('appointment_date'),
@@ -293,16 +396,13 @@ class Appointments extends Security_Controller {
             "employee_ids" => $employee_ids
         );
 
-
         if ($this->login_user->user_type === "staff") {
             $data["labels"] = $this->request->getPost('labels');
         }
 
-
         if (!$appointments_id) {
             $data["created_at"] = get_current_utc_time();
         }
-
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
@@ -314,18 +414,16 @@ class Appointments extends Security_Controller {
 
         $data = clean_data($data);
 
-        //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $appointments_id)) {
-        //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
-        //     exit();
-        // }
-
         $save_id = $this->Appointments_model->ci_save($data, $appointments_id);
 
-        $host_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email, dp.nameEn as host_department FROM rise_users host LEFT JOIN rise_team_member_job_info tj ON tj.user_id = host.id LEFT JOIN rise_departments dp ON dp.id = tj.department_id LEFT JOIN rise_appointments ap ON ap.host_id = host.id WHERE ap.id = $save_id")->getRow();
-        $secretary_email = $this->login_user->private_email;
-        $secretary_name = $this->login_user->first_name.' '.$this->login_user->last_name;
-     
+        $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, 
+            dp.nameEn as host_department, concat(sec.first_name,' ',sec.last_name) as sec_name, sec.private_email as sec_email
+            FROM rise_appointments ap
+            LEFT JOIN rise_users host ON host.id = ap.host_id
+            LEFT JOIN rise_team_member_job_info tj on tj.user_id = host.id
+            LEFT JOIN rise_departments dp ON dp.id = tj.department_id
+            LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
+            WHERE ap.id = $save_id")->getRow();
 
         if ($save_id) {
 
@@ -344,23 +442,19 @@ class Appointments extends Security_Controller {
                     'APPOINTMENT_TIME'=>$appoinment->time,
                     'APPOINTMENT_ROOM'=>$appoinment->room,
                     'APPOINTMENT_NOTE'=>$appoinment->note,
-                    'HOST_NAME'=>$host_info->host_name,
-                    'HOST_DEPARTMENT'=>$host_info->host_department,
-                    'HOST_EMAIL'=>$host_info->private_email,
-                    'SECRETARY_EMAIL'=>$secretary_email,
-                    'SECRETARY_NAME'=>$secretary_name,
+                    'HOST_NAME'=>$host_sec_info->host_name,
+                    'HOST_EMAIL'=>$host_sec_info->host_email,
+                    'HOST_DEPARTMENT'=>$host_sec_info->host_department,
+                    'SECRETARY_NAME'=>$host_sec_info->sec_name,
+                    'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
                     'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
                 ];
 
-                $r = $this->send_appointment_created_email_to_Host($appoinment_email_data);
-                $r = $this->send_appointment_created_email_to_secretary($appoinment_email_data);
-                // $r = $this->send_appointment_created_email_to_meeting_with($appoinment_email_data);
-
+                $r = $this->send_appointment_created_email($appoinment_email_data);
             }
 
             save_custom_fields("clients", $save_id, $this->login_user->is_admin, $this->login_user->user_type);
 
-            //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
                 $ticket_data = array("appointments_id" => $save_id);
@@ -368,6 +462,93 @@ class Appointments extends Security_Controller {
             }
 
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'view' => $this->request->getPost('view'), 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function update_status() {
+
+        $appointment_id = $this->request->getPost('id');
+        $status = $this->request->getPost('status');
+        $now = get_current_utc_time();
+
+        $role = $this->get_user_role();
+    
+        $appointment_data = array(
+            "status" => $status
+        );
+
+        if ($status === "approved") {
+            $appointment_data["approved_by"] = $this->login_user->id;
+            $appointment_data["approved_at"] = $now;
+        } else if ($status === "rejected") {
+            $appointment_data["rejected_by"] = $this->login_user->id;
+            $appointment_data["rejected_at"] = $now;
+        }
+
+        $applicatoin_info = $this->Appointments_model->get_one($appointment_id);
+
+        $save_id = $this->Appointments_model->ci_save($appointment_data, $appointment_id);
+
+            if ($save_id) {
+
+                $options = array('id'=>$save_id);
+
+                $appoinment = $this->Appointments_model->get_details($options)->getRow();
+
+                $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, 
+                    dp.nameEn as host_department, concat(sec.first_name,' ',sec.last_name) as sec_name, sec.private_email as sec_email
+                    FROM rise_appointments ap
+                    LEFT JOIN rise_users host ON host.id = ap.host_id
+                    LEFT JOIN rise_team_member_job_info tj on tj.user_id = host.id
+                    LEFT JOIN rise_departments dp ON dp.id = tj.department_id
+                    LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
+                    WHERE ap.id = $save_id")->getRow();
+
+                    if ($status === "approved" ) {
+
+                        $appoinment_email_data = [
+                            'APPOINTMENT_ID'=>$save_id,
+                            'APPOINTMENT_TITLE' => $appoinment->title,
+                            'APPOINTMENT_DATE'=>$appoinment->date,
+                            'APPOINTMENT_TIME'=>$appoinment->time,
+                            'APPOINTMENT_ROOM'=>$appoinment->room,
+                            'APPOINTMENT_NOTE'=>$appoinment->note,
+                            'HOST_NAME'=>$host_sec_info->host_name,
+                            'HOST_EMAIL'=>$host_sec_info->host_email,
+                            'HOST_DEPARTMENT'=>$host_sec_info->host_department,
+                            'SECRETARY_NAME'=>$host_sec_info->sec_name,
+                            'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
+                            'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                            'APPOINTMENT_STATUS'=>$status, 
+                        ];
+        
+                        $r = $this->send_notify_appointment_status_email($appoinment_email_data);
+        
+                }elseif($status === "rejected"){
+
+                    $appoinment_email_data = [
+                        'APPOINTMENT_ID'=>$save_id,
+                        'APPOINTMENT_TITLE' => $appoinment->title,
+                        'APPOINTMENT_DATE'=>$appoinment->date,
+                        'APPOINTMENT_TIME'=>$appoinment->time,
+                        'APPOINTMENT_ROOM'=>$appoinment->room,
+                        'APPOINTMENT_NOTE'=>$appoinment->note,
+                        'HOST_NAME'=>$host_sec_info->host_name,
+                        'HOST_EMAIL'=>$host_sec_info->host_email,
+                        'HOST_DEPARTMENT'=>$host_sec_info->host_department,
+                        'SECRETARY_NAME'=>$host_sec_info->sec_name,
+                        'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
+                        'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                        'APPOINTMENT_STATUS'=>$status, 
+                    ];
+    
+                    $r = $this->send_notify_appointment_status_email($appoinment_email_data);
+
+                }
+
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -503,137 +684,7 @@ class Appointments extends Security_Controller {
         return $this->template->view("appointments/appointment_details", $view_data);
     }
 
-    function update_status() {
 
-        $appointment_id = $this->request->getPost('id');
-        $status = $this->request->getPost('status');
-        $now = get_current_utc_time();
-
-        $role = $this->get_user_role();
-    
-
-        $appointment_data = array(
-            "status" => $status
-        );
-
-        if ($status === "approved") {
-            $appointment_data["approved_by"] = $this->login_user->id;
-            $appointment_data["approved_at"] = $now;
-        } else if ($status === "rejected") {
-            $appointment_data["rejected_by"] = $this->login_user->id;
-            $appointment_data["rejected_at"] = $now;
-        }
-
-        //only allow to updte the status = accept or reject for admin or specefic user
-        //otherwise user can cancel only his/her own application
-        $applicatoin_info = $this->Appointments_model->get_one($appointment_id);
-
-        // if ($status === "approved" || $status === "rejected") {
-        //     $this->access_only_allowed_members($applicatoin_info->applicant_id);
-        // } else if ($status === "canceled" && $applicatoin_info->applicant_id != $this->login_user->id) {
-        //     //any user can't cancel other user's leave application
-        //     app_redirect("forbidden");
-        // }
-
-            
-        $save_id = $this->Appointments_model->ci_save($appointment_data, $appointment_id);
-            
-            if ($save_id) {
-                
-                // $notification_options = array("appointment_id" => $appointment_id, "to_user_id" => $applicatoin_info->appointment_id);
-                
-                // if ($status == "approved") {
-                //     log_notification("leave_approved_HR", $notification_options);//leave_approved
-                // } else if ($status == "rejected") {
-                //     log_notification("leave_rejected", $notification_options);
-                // }             
-                        
-                // $leave_info = $this->db->query("SELECT l.*,t.title,t.status FROM rise_leave_applications l left join rise_leave_types t on t.id=l.leave_type_id where l.id = $save_id")->getRow();
-
-                // $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
-
-                // $head_section_info = $this->db->query("SELECT la.id, au.id, hsu.first_name, hsu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on au.id = la.applicant_id LEFT JOIN rise_team_member_job_info tj ON tj.user_id = au.id LEFT JOIN rise_sections sc on sc.id = tj.section_id LEFT JOIN rise_users hsu on sc.section_head_id = hsu.id WHERE la.id = $save_id")->getRow();
-                
-                // // $head_department_info = $this->db->query("SELECT la.id, hdu.private_email FROM rise_leave_applications la LEFT JOIN rise_users au on la.applicant_id = au.id LEFT JOIN rise_departments dp on au.department_id = dp.id LEFT JOIN rise_users hdu on dp.dep_head_id = hdu.id WHERE la.id = $save_id")->getRow();
-                
-                
-                // $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $leave_info?->applicant_id")->getRow();
-
-                // if ($status === "approved" ) {
-                    
-                //      //send email to the user for leave status
-                //     $leave_email_data = [
-                //         'LEAVE_ID'=>$save_id,
-                //         'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                //         'LEAVE_TITLE' => $leave_info->title,
-                //         // 'LEAVE_REASON' => $leave_info->reason,
-                //         // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
-                //         // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
-                //         'LEAVE_STATUS'=>$status,  
-                //         'HRM_EMAIL'=>$hrm_info->private_email,                 
-                //         // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,                 
-                //         'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
-                //         'PRIVATE_EMAIL'=>$user_info->private_email,                 
-                //         'MOF_EMAIL'=>$user_info->email,                 
-                //     ];
-
-                //     $r = $this->send_notify_leave_status_email($leave_email_data);
-
-
-                // }elseif($status === "rejected"){
-
-                //      //send email to the user for leave status:
-                //         $leave_email_data = [
-                //             'LEAVE_ID'=>$save_id,
-                //             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                //             'LEAVE_TITLE' => $leave_info->title,
-                //             // 'LEAVE_REASON' => $leave_info->reason,
-                //             // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
-                //             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
-                //             'LEAVE_STATUS'=>$status, 
-                //             'HRM_EMAIL'=>$hrm_info->private_email,                 
-                //             // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email,
-                //             'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
-                //             'PRIVATE_EMAIL'=>$user_info->private_email, 
-                //             'MOF_EMAIL'=>$user_info->email,                 
-
-                //         ];
-    
-
-                //     $r = $this->send_notify_leave_status_email($leave_email_data);
-
-
-                // }elseif($status == 'pending'){
-                    
-                //      //send email to the user for leave status:
-                //         $leave_email_data = [
-                //             'LEAVE_ID'=>$save_id,
-                //             'EMPLOYEE_NAME'=>$user_info->first_name.' '.$user_info->last_name,
-                //             'LEAVE_TITLE' => $leave_info->title,
-                //             // 'LEAVE_REASON' => $leave_info->reason,
-                //             // 'LEAVE_DATE' => $duration == 1 ? $appointment_data['start_date']: $appointment_data['start_date'] .' - '.$appointment_data['end_date'],
-                //             // 'TOTAL_DAYS'=>(int)$leave_info->total_days,
-                //             'LEAVE_STATUS'=>$status, 
-                //             'HRM_EMAIL'=>$hrm_info->private_email,                 
-                //             // 'HEAD_DEPARTMENT_EMAIL'=>$head_department_info->private_email, 
-                //             'HEAD_SECTION_EMAIL'=>$head_section_info->private_email,                 
-                //             'PRIVATE_EMAIL'=>$user_info->private_email,   
-                //             'MOF_EMAIL'=>$user_info->email,                 
-
-                //         ];
-    
-
-                //     $r = $this->send_notify_leave_status_email($leave_email_data);
-
-                // }
-
-
-
-            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
-        } else {
-            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
-        }
-    }
 
 
     private function _prepare_appointment_info($data) {

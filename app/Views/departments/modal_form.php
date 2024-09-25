@@ -57,6 +57,7 @@
                     $("#client-table").appTable({newData: result.data, dataId: result.id});
                     window.clientForm.closeModal();
                 }
+                location.reload();
             }
         });
         // setTimeout(function () {
