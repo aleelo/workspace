@@ -139,6 +139,18 @@ class Leaves extends Security_Controller {
 
                     $r = $this->send_notify_leave_status_email($leave_email_data);
 
+                   
+
+                    //get document row
+                    $doc = $this->db->query("select d.* from rise_documents d
+                    LEFT JOIN rise_leave_document ld on d.id = ld.document_id
+                    where d.deleted=0 and ld.leave_id =$applicaiton_id")->getRow();
+
+                    // print_r($doc);die;
+                    $drive_info = unserialize($doc->drive_info);
+                    $itemID = $doc->item_id;
+                    $imageUrl = 'https://workspace.revenuedirectorate.gov.so/assets/images/logo.png';
+                    $s = $this->updateWordDocumentAfterSection($itemID, $imageUrl);
 
                 }elseif($status === "rejected"){
 
@@ -195,6 +207,59 @@ class Leaves extends Security_Controller {
         }
     }
 
+    function addImageAfterContentControl($accessToken, $siteId, $driveId, $itemId, $contentControlId, $imageUrl) {
+
+        $url = "https://graph.microsoft.com/v1.0/sites/$siteId/drives/$driveId/items/$itemId/word/contentControls/$contentControlId/insertAfter";
+    
+        $data = json_encode([
+            'insertLocation' => 'after', // Can be 'after' or 'before'
+            'type' => 'image',
+            'imageUrl' => $imageUrl
+        ]);
+    
+        $headers = [
+            "Authorization: Bearer $accessToken",
+            'Content-Type: application/json',
+        ];
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        return json_decode($response, true);
+    }
+
+    function updateWordDocumentAfterSection($itemId, $imageUrl) {
+        // Step 1: Get Access Token
+        $accessToken =  $this->AccesToken();
+    
+        // Step 2: Define SharePoint and Word document details
+        
+        $driveId = getenv('DRIVE_ID');
+        $siteId = getenv('SITE_ID');
+        
+        $contentControlId = 'leaves_signature_tag'; // The ID of the content control
+    
+        // Step 3: Add Text After Content Control
+        // $signatureText = "John Doe";
+        // $textResponse = addTextAfterContentControl($accessToken, $siteId, $driveId, $itemId, $contentControlId, $signatureText);
+    
+        // Step 4: Add Image After Content Control
+        $imageResponse = $this->addImageAfterContentControl($accessToken, $siteId, $driveId, $itemId, $contentControlId, $imageUrl);
+    
+        if (isset($textResponse['id']) && isset($imageResponse['id'])) {
+            return "Signature (text and image) added successfully after the section.";
+        } else {
+            return "Error adding signature after the section.";
+        }
+    }
+    
 
     public function send_leave_request_email($data = array()) {
         

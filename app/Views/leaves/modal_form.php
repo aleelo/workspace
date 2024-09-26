@@ -264,9 +264,8 @@
 </div>
 <?php echo form_close(); ?>
 
-<script>
-    
-    $(document).ready(function () {
+<script type="text/javascript">
+   $(document).ready(function () {
     var allowed_days = 0;  // Initialize allowed days globally
     var taken_days = 0;    // Initialize taken days globally
     var unlimited_days = false;  // Flag for unlimited days
@@ -301,7 +300,11 @@
 
     // Fetch allowed days and taken days dynamically when leave type changes
     $('#leave_type_id').change(function () {
-        var leave_type_id = $(this).val();
+        get_allowed_days();
+    });
+
+    function get_allowed_days() {
+        var leave_type_id = $('#leave_type_id').val();
         var applicant_id = $('#applicant_id').val();
 
         $.ajax({
@@ -316,16 +319,29 @@
                 var data = JSON.parse(response);
                 allowed_days = data.allowed_days;
                 taken_days = data.taken_days;
-                unlimited_days = allowed_days == 'Unlimited';  // Check if leave type has unlimited days
+                unlimited_days = $.trim(allowed_days) === 'Unlimited';  // Check if leave type has unlimited days
 
-                if (unlimited_days) {
-                    $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
-                    $('div.allowed-days-display').html('Unlimited Days').css('color', 'blue');
+                 // Update the displayed allowed days
+                updateAllowedDays();
+            }
+        });
+    }
+
+     // Update the displayed allowed days
+    function updateAllowedDays() {
+       
+        if (unlimited_days) { 
+                    $('div.allowed-days-label').html('Allowed Days: ').css('color', 'green');
+                    $('div.allowed-days-display').html('Unlimited').css('color', 'green');
                     $('div.taken-days-display-label').html('Taken Days: ').css('color', 'purple');
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
                     $('#submit_button').prop('disabled', false);  // Enable submit button for unlimited days
+                    // Hide remaining and requested days, since they don't apply
+                    $('div.total-days-label').html('');
+                    $('div.total-days').html('');
                     $('div.remaining-days').html('');
-                    handleDurationChange();
+                    $('div.remaining-days-label').html('');
+                    
                 } else {
                     $('div.allowed-days-label').html('Allowed Days: ').css('color', 'blue');
                     $('div.allowed-days-display').html(allowed_days + ' - Days').css('color', 'blue');
@@ -333,15 +349,13 @@
                     $('div.taken-days-display').html(taken_days + ' - Days').css('color', 'purple');
                     handleDurationChange();  // Recalculate based on the selected duration
                 }
-
-            }
-        });
-    });
+    }
 
     // When start, end, or single day is changed, recalculate remaining days
-    $('#start_date, #end_date, #single_date').change(function () {
+    $('#start_date, #end_date, #single_date').change(function () { //
+       
         if (!unlimited_days) {
-            updateAllowedDays();  // Call the function to recalculate based on the selected duration
+            get_allowed_days();  // Call the function to recalculate based on the selected duration
         }
     });
 
@@ -349,33 +363,17 @@
     function handleDurationChange() {
         var selectedDuration = $('input[name="duration"]:checked').val();
 
+        $('#total_days_section').removeClass("hide");
+
         if (selectedDuration === "single_day") {
             calculateSingleDay();  // Calculate remaining days for a single day leave
         } else if (selectedDuration === "multiple_days") {
-            calculateMultipleDays();  // Calculate remaining days for multiple days leave
-        }
-    }
-
-     // Function to calculate the remaining days for a single day leave
-     function calculateSingleDay() {
-        if (!unlimited_days) {  // Only calculate remaining days if not unlimited
-            var single_date = $('#single_date').val();
-
-            if (single_date) {
-                var total_days = 1;
-
-                $('div.total-days-label').html('Requested Days: ');
-                $('div.total-days').html(total_days + ' - Day');
-
-                var remaining_days = allowed_days - taken_days - total_days;
-
-                updateRemainingDays(remaining_days);
-            }
+            calculateRemainingDays();  // Calculate remaining days for multiple days leave
         }
     }
 
     // Function to calculate the remaining days for multiple days leave
-    function calculateMultipleDays() {
+    function calculateRemainingDays() {
         if (!unlimited_days) {  // Only calculate remaining days if not unlimited
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
@@ -385,6 +383,24 @@
 
                 $('div.total-days-label').html('Requested Days: ');
                 $('div.total-days').html(total_days + ' - Days');
+
+                var remaining_days = allowed_days - taken_days - total_days;
+
+                updateRemainingDays(remaining_days);
+            }
+        }
+    }
+
+    // Function to calculate the remaining days for a single day leave
+    function calculateSingleDay() {
+        if (!unlimited_days) {  // Only calculate remaining days if not unlimited
+            var single_date = $('#single_date').val();
+
+            if (single_date) {
+                var total_days = 1;
+
+                $('div.total-days-label').html('Requested Days: ');
+                $('div.total-days').html(total_days + ' - Day');
 
                 var remaining_days = allowed_days - taken_days - total_days;
 
@@ -426,8 +442,6 @@
         }
     });
 });
-
-
 </script>
 
 

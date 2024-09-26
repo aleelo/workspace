@@ -1,11 +1,11 @@
 <div class="table-responsive">
-    <table id="pending-list-table" class="display" cellspacing="0" width="100%">            
+    <table id="cancel-list-table" class="display" cellspacing="0" width="100%">            
     </table>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#pending-list-table").appTable({
+        $("#cancel-list-table").appTable({
             source: '<?php echo_uri("leaves/canceled_list_data") ?>',
             columns: [
                 {title: '<?php echo 'ID' ?>', "class": "w10p"},
