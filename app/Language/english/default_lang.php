@@ -1927,6 +1927,8 @@ $lang["appointment_rejected_to_host_email"] = "Rejected Host Email";
 $lang["appointment_rejected_to_sectetary_email"] = "Rejected Secratary Email";
 $lang["decline_reason"] = "Decline Reason";
 $lang["write_reason_here"] = "Write Reason Here";
+$lang["write_remarks_here"] = "Write Remarks Here";
+$lang["decline_remarks"] = "Decline Remarks";
 
 $lang["approved (expired)"] = "Approved (Expired)";
 $lang["active (expired)"] = "Active (Expired)";

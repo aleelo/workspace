@@ -9,14 +9,14 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="decline_reason" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('reason'); ?></label>
+        <label for="decline_reason" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('remarks'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_textarea(array(
                 "id" => "decline_reason",
                 "name" => "decline_reason",
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('write_reason_here'),
+                "placeholder" => app_lang('write_remarks_here'),
             ));
             ?>
         </div>
