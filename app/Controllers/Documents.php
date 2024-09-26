@@ -253,7 +253,7 @@ class Documents extends Security_Controller
 
             $t = $this->Templates_model->get_one($template_id);
             $this->db->query("update rise_templates set sqn = sqn + 1 where id = $template_id");
-            $sqn = $this->db->query("SELECT lpad(max(sqn),4,0) as sqn FROM rise_templates where id = $template_id")->getRow()->sqn;
+            $sqn = $this->db->query("SELECT lpad(max(sqn),5,0) as sqn FROM rise_templates where id = $template_id")->getRow()->sqn;
             $template_name = $t->path;
             $input['template'] = $template_name;
             $input['id'] = $save_id;
@@ -266,7 +266,7 @@ class Documents extends Security_Controller
 
             $input['folder'] = $doc->getRow()->folder;
             $input['uuid'] = $doc->getRow()->uuid;
-            $input['ref_number'] = $doc->getRow()->ref_prefix . $sqn . '/' . date('m') . '/' . date('y');
+            $input['ref_number'] = $doc->getRow()->ref_prefix . $sqn .  '/' . date('y');
             $token = $this->AccesToken();
 
             //create/save doc
