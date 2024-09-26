@@ -131,6 +131,64 @@ class Appointments extends Security_Controller {
         return $this->template->view('appointments/modal_form', $view_data);
     }
 
+    function decline_reason() {
+        
+        $appointments_id = $this->request->getPost('id');
+        // $this->_validate_client_manage_access($appointments_id);
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric"
+        ));
+
+        $view_data['label_column'] = "col-md-2 text-right";
+        $view_data['field_column'] = "col-md-10";
+
+        $view_data['label_column_2'] = "col-md-2 text-right";
+        $view_data['field_column_2'] = "col-md-4";
+
+        $view_data['field_column_3'] = "col-md-10";
+
+        $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
+        $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
+        $view_data['model_info'] = $this->Appointments_model->get_one($appointments_id);
+        $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
+        $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
+
+        $role = $this->get_user_role();
+        $user_id = $this->login_user->id;
+
+        if($role === "Secretary"){
+            $view_data['host'] = $this->_get_secretary_director();
+        }else{
+            $view_data['host'] = array("" => " -- Choose Host -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        }
+
+        $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['Units'] = $this->Units_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['payers'] = $this->Clients_model->get_dropdown_list(array("company_name"), "id");
+        $view_data['partners'] = $this->Partners_model->get_dropdown_list(array("name"), "id");
+        $view_data['guests'] = $this->Visitors_model->get_dropdown_list(array("name"), "id");
+        $view_data['employees'] = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+
+        // $view_data['Section_heads'] = array("" => " -- Choose Section Head -- ") + $this->Users_model->get_dropdown_list(array("first_name"," ","last_name")), "id");
+
+        $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
+
+        //prepare groups dropdown list
+        $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
+
+
+        $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
+
+        //prepare label suggestions
+
+        //get custom fields
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $appointments_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        return $this->template->view('appointments/decline_reason', $view_data);
+    }
+
     public function send_appointment_created_email($data = array()) {
 
         $host_email = $data['HOST_EMAIL'];
@@ -206,6 +264,7 @@ class Appointments extends Security_Controller {
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
@@ -356,6 +415,7 @@ class Appointments extends Security_Controller {
 
         $appointment_id = $this->request->getPost('id');
         $status = $this->request->getPost('status');
+        $decline_reason = $this->request->getPost('decline_reason');
         $now = get_current_utc_time();
 
         $role = $this->get_user_role();
@@ -368,6 +428,7 @@ class Appointments extends Security_Controller {
             $appointment_data["approved_by"] = $this->login_user->id;
             $appointment_data["approved_at"] = $now;
         } else if ($status === "rejected") {
+            $appointment_data["decline_reason"] = $decline_reason;
             $appointment_data["rejected_by"] = $this->login_user->id;
             $appointment_data["rejected_at"] = $now;
         }
@@ -426,6 +487,7 @@ class Appointments extends Security_Controller {
                         'SECRETARY_NAME'=>$host_sec_info->sec_name,
                         'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
                         'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                        'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason, 
                         'APPOINTMENT_STATUS'=>$status, 
                     ];
     
