@@ -1428,7 +1428,7 @@ class Leaves extends Security_Controller {
 
         $leave_types = $meta_info->leave_type_title === "Fassax Shaqo" || $meta_info->leave_type_title === "Fasax Caafimaad" || $meta_info->leave_type_title === "Fasax Waxbarasho"; 
         $flight_included = $meta_info->flight_included === "1";
-        $loginuser = $this->login_user->id === "1" || $this->login_user->id === "2621" || $this->login_user->id === "2552";
+        $loginuser = $this->login_user->id === "1" || $this->login_user->id === "2621" || $this->login_user->id === "2552" || $this->login_user->id === "1547";
 
         if ($this->can_delete_leave_application() && $can_manage_application && $can_approve_leaves) {
             $webUrl = empty($doc) ? '' : $doc->webUrl;
