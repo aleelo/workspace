@@ -68,7 +68,8 @@ class Team_members extends Security_Controller
         if ($user_id && ($this->login_user->is_admin || $this->login_user->id === $user_id || get_array_value($this->login_user->permissions, "can_manage_user_role_and_permissions"))) {
             return true;
         } else {
-            app_redirect("forbidden");
+            return false;
+            // app_redirect("forbidden");
         }
     }
 
