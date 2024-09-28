@@ -27,7 +27,7 @@
                         echo form_dropdown(array(
                             "id" => "login_type",
                             "name" => "login_type",
-                            "class" => "form-control",
+                            "class" => "form-control select2",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required")
                         ),['azure_login' => 'Azure Login','normal_login'=>'Normal Login'],['Azure Login' => $user_info->login_type]);
