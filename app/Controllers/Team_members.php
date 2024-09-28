@@ -1215,7 +1215,7 @@ class Team_members extends Security_Controller
     function account_settings($user_id)
     {
         validate_numeric_value($user_id);
-        $this->can_access_user_settings($user_id);
+        // $this->can_access_user_settings($user_id);
 
         $view_data['user_info'] = $this->Users_model->get_one($user_id);
         if ($view_data['user_info']->is_admin) {
