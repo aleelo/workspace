@@ -467,6 +467,7 @@ class Appointments extends Security_Controller {
                             'SECRETARY_NAME'=>$host_sec_info->sec_name,
                             'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
                             'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                            'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason, 
                             'APPOINTMENT_STATUS'=>$status, 
                         ];
         
