@@ -587,7 +587,7 @@ class Appointments extends Security_Controller {
         }
 
         $actions = modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_appointment'), "data-post-id" => $data->id));
-        if($role === 'Director' || $role === 'admin'){
+        if($role === 'Director' || $role === 'admin' || $role === 'Administrator'){
             $actions .= modal_anchor(get_uri("appointments/appointment_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('appointment_details'), "data-post-id" => $data->id));
         }
         $actions .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_appointment'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("appointments/delete"), "data-action" => "delete-confirmation"));
