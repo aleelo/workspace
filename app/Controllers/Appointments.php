@@ -213,7 +213,7 @@ class Appointments extends Security_Controller {
         $parser_data["SIGNATURE"] = get_array_value($secretary_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
-        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
  
         $host_message =  get_array_value($host_email_template, "message_default");
@@ -271,7 +271,7 @@ class Appointments extends Security_Controller {
         $parser_data["SIGNATURE"] = get_array_value($secretary_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
-        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.png');
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
  
         $host_message =  get_array_value($host_email_template, "message_default");
