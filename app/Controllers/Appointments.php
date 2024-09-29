@@ -206,6 +206,8 @@ class Appointments extends Security_Controller {
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+        $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
+        $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
@@ -263,6 +265,8 @@ class Appointments extends Security_Controller {
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
+        $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
+        $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
         $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
 
