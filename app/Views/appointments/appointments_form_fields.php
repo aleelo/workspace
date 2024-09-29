@@ -141,7 +141,7 @@
         <label for="meeting_with" class="<?php echo $label_column; ?>"><?php echo 'Meeting With'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
-            $meetingWith = [''=>' - ','Departments'=>'Departments','Sections'=>'Sections','Units'=>'Units','Payers'=>'Payers',
+            $meetingWith = [''=>' - ','Payers'=>'Payers',
             'Partners'=>'Partners','Visitors'=>'Visitors','Employees'=>'Employees'];
             echo form_dropdown(array(
                 "id" => "meeting_with",
