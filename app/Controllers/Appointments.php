@@ -363,6 +363,13 @@ class Appointments extends Security_Controller {
             LEFT JOIN rise_departments dp ON dp.id = tj.department_id
             LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
             WHERE ap.id = $save_id")->getRow();
+
+        $regard_name = $this->login_user->first_name.' '.$this->login_user->last_name;
+        $loginuser = $this->login_user->id;
+        $regard_position = $this->db->query("SELECT tj.job_title_en as job_title 
+            FROM rise_team_member_job_info tj 
+            LEFT JOIN rise_users us ON us.id = tj.user_id 
+            WHERE us.id = $loginuser")->getRow();
         
         $host_department_id["app_department_id"] = $host_sec_info->dp_id;
 
@@ -391,6 +398,8 @@ class Appointments extends Security_Controller {
                     'HOST_DEPARTMENT'=>$host_sec_info->host_department,
                     'SECRETARY_NAME'=>$host_sec_info->sec_name,
                     'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
+                    'REGARD_NAME'=>$regard_name,
+                    'REGARD_POSITION'=>$regard_position->job_title,
                     'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
                 ];
 
@@ -452,6 +461,13 @@ class Appointments extends Security_Controller {
                     LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
                     WHERE ap.id = $save_id")->getRow();
 
+                $regard_name = $this->login_user->first_name.' '.$this->login_user->last_name;
+                $loginuser = $this->login_user->id;
+                $regard_position = $this->db->query("SELECT tj.job_title_en as job_title 
+                    FROM rise_team_member_job_info tj 
+                    LEFT JOIN rise_users us ON us.id = tj.user_id 
+                    WHERE us.id = $loginuser")->getRow();
+
                     if ($status === "approved" ) {
 
                         $appoinment_email_data = [
@@ -468,6 +484,8 @@ class Appointments extends Security_Controller {
                             'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
                             'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
                             'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason, 
+                            'REGARD_NAME'=>$regard_name,
+                            'REGARD_POSITION'=>$regard_position->job_title,
                             'APPOINTMENT_STATUS'=>$status, 
                         ];
         
@@ -488,7 +506,9 @@ class Appointments extends Security_Controller {
                         'SECRETARY_NAME'=>$host_sec_info->sec_name,
                         'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
                         'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
-                        'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason, 
+                        'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason,
+                        'REGARD_NAME'=>$regard_name,
+                        'REGARD_POSITION'=>$regard_position->job_title, 
                         'APPOINTMENT_STATUS'=>$status, 
                     ];
     
