@@ -87,6 +87,7 @@ class Roles extends Security_Controller {
             $view_data['document'] = get_array_value($permissions, "document");
             $view_data['department'] = get_array_value($permissions, "department");
             $view_data['section'] = get_array_value($permissions, "section");
+            $view_data['training'] = get_array_value($permissions, "training");
             $view_data['unit'] = get_array_value($permissions, "unit");
 
             $view_data['announcement'] = get_array_value($permissions, "announcement");
@@ -263,6 +264,7 @@ class Roles extends Security_Controller {
         $can_delete_files = $this->request->getPost('can_delete_files');
 
         $announcement = $this->request->getPost('announcement_permission');
+        $training = $this->request->getPost('training_permission');
         $appointment = $this->request->getPost('appointment_permission');
         $report = $this->request->getPost('report_permission');
         $event = $this->request->getPost('event_permission');
@@ -360,6 +362,7 @@ class Roles extends Security_Controller {
             "ticket" => $ticket,
             "ticket_specific" => $ticket_specific,
             "announcement" => $announcement,
+            "training" => $training,
             "appointment" => $appointment,
             "report" => $report,
             "event" => $event,

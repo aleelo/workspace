@@ -32,6 +32,7 @@ class Left_menu {
             $access_ticket = get_array_value($permissions, "ticket");
             $access_appointment = get_array_value($permissions, "appointment");
             $access_client = get_array_value($permissions, "client");
+            $access_training = get_array_value($permissions, "training");
             $access_event = get_array_value($permissions, "event");
             $access_lead = get_array_value($permissions, "lead");
             $access_document = get_array_value($permissions, "document");
@@ -95,7 +96,7 @@ class Left_menu {
                 $sidebar_menu["units"] = array("name" => "units", "url" => "units", "class" => "briefcase");
             }
             
-            if ($this->ci->login_user->is_admin || $access_client) {
+            if ($this->ci->login_user->is_admin || $access_training) {
                 $sidebar_menu["training"] = array("name" => "training", "url" => "training", "class" => "briefcase");
             }
             

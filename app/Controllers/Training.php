@@ -8,7 +8,7 @@ class Training extends Security_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->init_permission_checker("client");
+        $this->init_permission_checker("training");
     }
 
     private function _validate_client_manage_access($client_id = 0) {
@@ -26,6 +26,7 @@ class Training extends Security_Controller {
     /* load clients list view */
 
     function index($tab = "") {
+        $this->check_module_availability("module_training");
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();
@@ -47,7 +48,7 @@ class Training extends Security_Controller {
     function modal_form() {
         
         $training_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($training_id);
+        // $this->_validate_client_manage_access($training_id);
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
@@ -184,7 +185,7 @@ class Training extends Security_Controller {
     function save() {
         
         $training_id = $this->request->getPost('id');
-        $this->_validate_client_manage_access($training_id);
+        // $this->_validate_client_manage_access($training_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
@@ -395,7 +396,7 @@ class Training extends Security_Controller {
 
     function view($training_id = 0, $tab = "") {
         
-        $this->_validate_client_view_access($training_id);
+        // $this->_validate_client_view_access($training_id);
 
         if ($training_id) {
             $options = array("id" => $training_id);
@@ -1159,7 +1160,7 @@ class Training extends Security_Controller {
 
     function company_info_tab($Sections_id = 0) {
         if ($Sections_id) {
-            $this->_validate_client_view_access($Sections_id);
+            // $this->_validate_client_view_access($Sections_id);
 
             $view_data = $this->_get_nationalities();
 

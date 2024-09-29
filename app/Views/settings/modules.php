@@ -47,6 +47,16 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
+                            <label for="module_training" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('training'); ?></label>
+                            <div class="col-md-10 col-xs-4 col-sm-8">
+                                <?php
+                                echo form_checkbox("module_training", "1", get_setting("module_training") ? true : false, "id='module_training' class='form-check-input ml15'");
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
                             <label for="module_appointment" class="col-md-2 col-xs-8 col-sm-4"><?php echo app_lang('appointment'); ?></label>
                             <div class="col-md-10 col-xs-4 col-sm-8">
                                 <?php

@@ -1098,6 +1098,7 @@ $lang["excluding_his_her_time_cards"] = "Excluding his/her own time cards";
 $lang["excluding_his_her_leaves"] = "Excluding his/her own leaves";
 $lang["excluding_their_documents"] = "Excluding their own documents";
 $lang["can_manage_team_members_leave"] = "Can manage employee leaves?";
+$lang["can_manage_trainings"] = "Can manage Training?";
 $lang["can_manage_team_members_timecards"] = "Can manage employee time cards?";
 $lang["can_access_invoices"] = "Can access invoices?";
 $lang["can_access_expenses"] = "Can access expenses?";

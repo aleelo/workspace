@@ -1067,6 +1067,37 @@
                         </div>
                     </li>
                 <?php } ?>
+                <?php if (get_setting("module_training")) { ?>
+                    <li>
+                        <span data-feather="key" class="icon-14 ml-20"></span>
+                        <h5><?php echo app_lang("can_manage_trainings"); ?></h5>
+                        <div>
+                            <?php
+                            if (is_null($training)) {
+                                $training = "";
+                            }
+                            echo form_radio(array(
+                                "id" => "training_no",
+                                "name" => "training_permission",
+                                "value" => "",
+                                "class" => "form-check-input",
+                                    ), $training, ($training === "") ? true : false);
+                            ?>
+                            <label for="training_no"><?php echo app_lang("no"); ?> </label>
+                        </div>
+                        <div>
+                            <?php
+                            echo form_radio(array(
+                                "id" => "training_yes",
+                                "name" => "training_permission",
+                                "value" => "all",
+                                "class" => "form-check-input",
+                                    ), $training, ($training === "all") ? true : false);
+                            ?>
+                            <label for="training_yes"><?php echo app_lang("yes"); ?></label>
+                        </div>
+                    </li>
+                <?php } ?>
                 <?php if (get_setting("module_estimate")) { ?>
                     <li>
                         <span data-feather="key" class="icon-14 ml-20"></span>

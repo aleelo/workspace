@@ -1,6 +1,6 @@
 <div class="card">
     <div class="table-responsive">
-        <table id="client-table" class="display" cellspacing="0" width="100%">            
+        <table id="training-table" class="display" cellspacing="0" width="100%">            
         </table>
     </div>
 </div>
@@ -13,9 +13,6 @@
     }
 
     var showOptions = true;
-    if (!"<?php echo $can_edit_clients; ?>") {
-    showOptions = false;
-    }
 
     var ignoreSavedFilter = false;
     var quick_filters_dropdown = <?php echo view("training/quick_filters_dropdown"); ?>;
@@ -60,6 +57,6 @@
     });
     };
     $(document).ready(function () {
-    loadClientsTable("#client-table");
+    loadClientsTable("#training-table");
     });
 </script>
