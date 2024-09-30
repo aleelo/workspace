@@ -230,6 +230,7 @@ class Appointments extends Security_Controller {
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
@@ -412,6 +413,39 @@ class Appointments extends Security_Controller {
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $appoinment?->created_by")->getRow();
 
+                $meeting_with_names = '';
+
+                // Based on the selected meeting_with option, fetch the corresponding names
+                if ($meeting_with === 'Departments' && !empty($department_ids)) {
+                    $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($department_names, 'name'));
+                } elseif ($meeting_with === 'Sections' && !empty($section_ids)) {
+                    $section_names = $this->db->query("SELECT se.nameEn as name FROM rise_sections se WHERE id IN ($section_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($section_names, 'name'));
+                } elseif ($meeting_with === 'Units' && !empty($unit_ids)) {
+                    $unit_names = $this->db->query("SELECT un.nameEn as name FROM rise_units un WHERE id IN ($unit_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($unit_names, 'name'));
+                } elseif ($meeting_with === 'Payers' && !empty($payer_ids)) {
+                    $payer_names = $this->db->query("SELECT pa.company_name as name FROM rise_clients pa WHERE id IN ($payer_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($payer_names, 'name'));
+                } elseif ($meeting_with === 'Partners' && !empty($partner_ids)) {
+                    $partner_names = $this->db->query("SELECT pr.name as name FROM rise_partners pr WHERE id IN ($partner_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($partner_names, 'name'));
+                } elseif ($meeting_with === 'Visitors' && !empty($visitor_ids)) {
+                    $visitor_names = $this->db->query("SELECT v.name as name FROM rise_visitors v WHERE id IN ($visitor_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($visitor_names, 'name'));
+                } elseif ($meeting_with === 'Employees' && !empty($employee_ids)) {
+                    $employee_names = $this->db->query("SELECT CONCAT(first_name, ' ', last_name) AS name FROM rise_users WHERE id IN ($employee_ids)")
+                                                ->getResultArray();
+                    $meeting_with_names = implode(', ', array_column($employee_names, 'name'));
+                }
+
                 $appoinment_email_data = [
                     'APPOINTMENT_ID'=>$save_id,
                     'APPOINTMENT_TITLE' => $appoinment->title,
@@ -427,6 +461,7 @@ class Appointments extends Security_Controller {
                     'REGARD_NAME'=>$regard_name,
                     'REGARD_POSITION'=>$regard_position->job_title,
                     'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
+                    'MEETING_WITH_NAMES' => $meeting_with_names,
                 ];
 
                 $r = $this->send_appointment_created_email($appoinment_email_data);
