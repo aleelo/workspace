@@ -109,9 +109,6 @@ class Events extends Security_Controller {
             $end_time = convert_time_to_24hours_format($end_time);
         }
 
-
-
-
         //prepare share with data
         $share_with = $this->request->getPost('share_with');
         if ($share_with == "specific") {
@@ -140,8 +137,6 @@ class Events extends Security_Controller {
                 exit();
             }
         }
-
-
 
         $recurring = $this->request->getPost('recurring') ? 1 : 0;
         $repeat_every = $this->request->getPost('repeat_every');

@@ -374,6 +374,18 @@
     </div>
 </div>
 
+<!----------------------------------------- Emplyees  ------------------------------------>
+
+<div class="form-group">
+    <div class="col-md-12">
+        <?php
+        echo view("includes/file_list", array("files" => $model_info->files));
+        ?>
+    </div>
+</div>
+
+<?php echo view("includes/dropzone_preview"); ?>
+
 
 
 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => $label_column, "field_column" => $field_column)); ?> 

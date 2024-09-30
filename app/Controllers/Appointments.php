@@ -332,6 +332,7 @@ class Appointments extends Security_Controller {
             "id" => "numeric",
         ));
 
+
         $meeting_with = $this->request->getPost('meeting_with');
 
         $department_ids = ($meeting_with === 'Departments') ? implode(',', $this->request->getPost('appointment_department_ids')) : null;
@@ -1830,6 +1831,10 @@ class Appointments extends Security_Controller {
 
     function upload_excel_file() {
         upload_file_to_temp(true);
+    }
+
+    function validate_events_file() {
+        return validate_post_file($this->request->getPost("file_name"));
     }
 
     function import_clients_modal_form() {

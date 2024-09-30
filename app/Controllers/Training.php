@@ -192,6 +192,11 @@ class Training extends Security_Controller {
             "id" => "numeric",
         ));
 
+        
+        $target_path = get_setting("training_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "training");
+        $new_files = unserialize($files_data);
+
         $participant = $this->request->getPost('training_participant');
 
 
@@ -237,14 +242,16 @@ class Training extends Security_Controller {
 
         $data = clean_data($data);
 
-        //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $training_id)) {
-        //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
-        //     exit();
-        // }
+        if ($training_id) {
+            $training_info = $this->Training_model->get_one($training_id);
+            $timeline_file_path = get_setting("training_file_path");
+
+            $new_files = update_saved_files($timeline_file_path, $training_info->files, $new_files);
+        }
+
+        $data["files"] = serialize($new_files);
 
         $save_id = $this->Training_model->ci_save($data, $training_id);
-     
 
         if ($save_id) {
 
