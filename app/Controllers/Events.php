@@ -257,7 +257,7 @@ class Events extends Security_Controller {
             $data['start_time']=$this->request->getPost('start_time');
             $data['end_time']=$this->request->getPost('end_time');
 
-            $r = $this->add_outlook_calendar_event($data);
+            // $r = $this->add_outlook_calendar_event($data);
            
 
             if ($share_with) {

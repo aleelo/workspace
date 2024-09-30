@@ -993,6 +993,7 @@ $lang["yesterday_at"] = "Yesterday at";
 
 /* tickets */
 
+$lang["appointments_calendar"] = "Appointments Calendar";
 $lang["add_ticket"] = "Add ticket";
 $lang["ticket"] = "Ticket";
 $lang["tickets"] = "Tickets";

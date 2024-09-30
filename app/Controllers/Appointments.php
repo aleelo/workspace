@@ -70,6 +70,27 @@ class Appointments extends Security_Controller {
         return $this->template->rander("appointments/index", $view_data);
     }
 
+    function appointments_calendar($tab = "") {
+
+        $this->check_module_availability("module_appointment");
+        $this->access_only_allowed_members();
+
+        $view_data = $this->make_access_permissions_view_data();
+
+        // $view_data['can_edit_clients'] = $this->can_edit_clients();
+        $view_data["show_project_info"] = $this->can_manage_all_projects() && !$this->has_all_projects_restricted_role();
+
+        $view_data["show_own_clients_only_user_id"] = $this->show_own_clients_only_user_id();
+        $view_data["allowed_client_groups"] = $this->allowed_client_groups;
+        $view_data['login_user'] = $this->login_user;
+
+        $view_data['tab'] = clean_data($tab);
+
+        
+
+        return $this->template->rander("appointments/appointments_calendar", $view_data);
+    }
+
   
     /* load client add/edit modal */
 

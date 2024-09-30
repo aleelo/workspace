@@ -194,20 +194,19 @@
     <div class="row">
 
         <label for="training_duration" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('duration'); ?></label>
-        <div class=" col-md-3">
+        <div class=" col-md-4" style="position: relative;">
+        <span style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%);">hrs</span>
             <?php
             echo form_input(array(
                 "id" => "training_duration",
                 "name" => "training_duration",
                 "value" => $model_info->training_duration,
                 "class" => "form-control company_name_input_section",
+                "style" => "padding-left: 35px;", // Adjust padding to make room for the dollar sign
                 "placeholder" => app_lang('duration'),
             ));
             ?>
             
-        </div>
-        <div class=" col-md-1">
-        hrs
         </div>
         
         <label for="training_location" class="<?php echo $label_column_2; ?> company_name_section"><?php echo app_lang('Training_location'); ?></label>
@@ -253,19 +252,24 @@
 <div class="form-group">
     <div class="row">
         <label for="budget" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Budget'; ?></label>
-        <div class="<?php echo $field_column; ?>">
+        <div class="<?php echo $field_column; ?>" style="position: relative;">
+            <!-- Dollar sign span -->
+            <span style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%);">$</span>
+
             <?php
             echo form_input(array(
                 "id" => "budget",
                 "name" => "budget",
                 "value" => $model_info->budget,
                 "class" => "form-control company_name_input_section",
+                "style" => "padding-left: 25px;", // Adjust padding to make room for the dollar sign
                 "placeholder" => 'Budget',
             ));
             ?>
         </div>
     </div>
 </div>
+
 
 <!----------------------------------------- Training Participant  ------------------------------------>
 

@@ -1,6 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="appointment-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/appointments_calendar/"); ?>" data-bs-target="#appointments_calendar"><?php echo app_lang('appointments_calendar'); ?></a></li>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/appointments_list/"); ?>" data-bs-target="#appointment_list"><?php echo app_lang('appointments_list'); ?></a></li>
             <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
             <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("appointments/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
@@ -17,8 +18,8 @@
                 <?php echo view("appointments/overview/index"); ?>
             </div>
 
+            <div role="tabpanel" class="tab-pane fade" id="appointments_calendar"></div>
             <div role="tabpanel" class="tab-pane fade" id="appointment_list"></div>
-            <div role="tabpanel" class="tab-pane fade" id="contacts"></div>
         </div>
     </div>
 </div>
