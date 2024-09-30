@@ -417,9 +417,11 @@ class Appointments extends Security_Controller {
 
                 // Based on the selected meeting_with option, fetch the corresponding names
                 if ($meeting_with === 'Departments' && !empty($department_ids)) {
-                    $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($department_names, 'name'));
+                    $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $department_names));
+                    // $meeting_with_names = implode(', ', array_column($department_names, 'name'));
                 } elseif ($meeting_with === 'Sections' && !empty($section_ids)) {
                     $section_names = $this->db->query("SELECT se.nameEn as name FROM rise_sections se WHERE id IN ($section_ids)")
                                                 ->getResultArray();
