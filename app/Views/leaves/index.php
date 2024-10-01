@@ -14,25 +14,54 @@
             </div>
         </div>
         <ul id="leaves-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white inner" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/active_list/"); ?>" data-bs-target="#leave-active-applications"><?php echo app_lang("active"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/pending_list/"); ?>" data-bs-target="#leave-pending-applications"><?php echo app_lang("pending"); ?></a></li>
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/pending_approval/"); ?>" data-bs-target="#leave-pending-approval"><?php //echo app_lang("pending_approval"); ?></a></li> -->
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/approved_list/"); ?>" data-bs-target="#leave-approved-applications"><?php echo app_lang("approved"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/rejected_list/"); ?>" data-bs-target="#leave-rejected-applications"><?php echo app_lang("rejected"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/canceled_list/"); ?>" data-bs-target="#leave-canceled-applications"><?php echo app_lang("canceled"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/all_applications/"); ?>" data-bs-target="#leave-all-applications"><?php echo app_lang("all_applications"); ?></a></li>
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php //echo app_lang("summary"); ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php// echo 'NOLO OSTO'; ?></a></li>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php //echo 'PASSPORT CELIN'; ?></a></li> -->
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/active_list/"); ?>" data-bs-target="#leave-active-applications">
+                <span class="badge " style="background-color: #a7abbf" title="Newly applied leaves">
+                Active</span> 
+                <!-- <?php //echo app_lang("active"); ?> -->
+            </a>
+            </li>
             
-            <li class="d-flex align-items-center gap-4 ml30">
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/pending_list/"); ?>" data-bs-target="#leave-pending-applications">
+                <span class="badge bg-warning" title="Leaves approved by Director">Pending</span> 
+                <!-- <?php //echo app_lang("pending"); ?> -->
+            </a>
+            </li>
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("leaves/pending_approval/"); ?>" data-bs-target="#leave-pending-approval"><?php //echo app_lang("pending_approval"); ?></a></li> -->
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/approved_list/"); ?>" data-bs-target="#leave-approved-applications">
+                <span class="badge bg-success" title="Leaves approved by HRM">Approved</span> 
+                </a>
+            </li>
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/rejected_list/"); ?>" data-bs-target="#leave-rejected-applications">
+                <span class="badge bg-danger" title="Leaves rejected by HRM or Director">Rejected</span>
+                </a>
+            </li>
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/canceled_list/"); ?>" data-bs-target="#leave-canceled-applications">
+                    <span class="badge bg-dark" title="Leaves cancelled by user">Cancelled</span> 
+                </a>
+            </li>
+            <li>
+                <a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/all_applications/"); ?>" data-bs-target="#leave-all-applications">
+                <spanspan class="badge bg-info" title="All Applications">All Applications</span>
+                </a>
+            </li>
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/summary/"); ?>" data-bs-target="#leave-summary"><?php echo app_lang("summary"); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_nolosto_search/"); ?>" data-bs-target="#leave-nolo"><?php echo 'NOLO OSTO'; ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leaves/leave_return_search/"); ?>" data-bs-target="#leave-return"><?php echo 'PASSPORT CELIN'; ?></a></li> -->
+            
+            <!-- <li class="d-flex align-items-center gap-4 ml30">
                 <span><i data-feather='info' class='icon-16 text-info'></i>  Status Description: </span> 
                 <span class="badge " style="background-color: #a7abbf" title="Newly applied leaves">Active</span> 
                 <span class="badge bg-warning" title="Leaves approved by Director">Pending</span> 
                 <span class="badge bg-success" title="Leaves approved by HRM">Approved</span> 
                 <span class="badge bg-dark" title="Leaves cancelled by user">Cancelled</span> 
                 <span class="badge bg-danger" title="Leaves rejected by HRM or Director">Rejected</span>
-            </li>
+            </li> -->
+            
         </ul>
         <div class="tab-content">
             <!-- <div role="tabpanel" class="tab-pane fade active" id="leave-pending-approval"></div> -->
