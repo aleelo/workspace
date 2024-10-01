@@ -1591,6 +1591,15 @@ class Leaves extends Security_Controller {
             }
             $data->date_meta = $date;
         }
+
+        // if (isset($data->start_date)) {
+        //     $date = format_to_date($data->start_date, FALSE);
+        //     if ($data->start_date != $data->end_date) {
+        //         $date = sprintf('%s to %s', format_to_date($data->start_date, FALSE), format_to_date($data->end_date, FALSE));
+        //     }
+        //     $data->date_meta = $date;
+        // }
+
         if ($data->total_days > 1) {
             $duration = $data->total_days . " " . app_lang("days");
         } else {

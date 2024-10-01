@@ -295,6 +295,30 @@ if (!function_exists('format_to_relative_time')) {
  * @param string $convert_to_local .. to prevent conversion, pass $convert_to_local=false 
  * @return date
  */
+// if (!function_exists('format_to_date')) {
+
+//     function format_to_date($date_time, $convert_to_local = true) {
+
+//         if (!$date_time) {
+//             return "";
+//         } else {
+//             //check the date string format is correct
+//             $date_parts = explode("-", $date_time);
+//             if (!(get_array_value($date_parts, 0) && get_array_value($date_parts, 1) && get_array_value($date_parts, 2))) {
+//                 return "";
+//             }
+//         }
+
+
+//         if ($convert_to_local) {
+//             $date_time = convert_date_utc_to_local($date_time);
+//         }
+//         $target_date = new DateTime($date_time);
+//         return $target_date->format(get_setting('date_format'));
+//     }
+
+// }
+
 if (!function_exists('format_to_date')) {
 
     function format_to_date($date_time, $convert_to_local = true) {
@@ -302,21 +326,21 @@ if (!function_exists('format_to_date')) {
         if (!$date_time) {
             return "";
         } else {
-            //check the date string format is correct
+            // check if the date string format is correct
             $date_parts = explode("-", $date_time);
             if (!(get_array_value($date_parts, 0) && get_array_value($date_parts, 1) && get_array_value($date_parts, 2))) {
                 return "";
             }
         }
 
-
         if ($convert_to_local) {
             $date_time = convert_date_utc_to_local($date_time);
         }
-        $target_date = new DateTime($date_time);
-        return $target_date->format(get_setting('date_format'));
-    }
 
+        $target_date = new DateTime($date_time);
+        // Use 'd M, Y' format for date like '01 Oct, 2024'
+        return $target_date->format('d M, Y');
+    }
 }
 
 /**
