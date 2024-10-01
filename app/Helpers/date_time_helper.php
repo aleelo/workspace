@@ -295,6 +295,7 @@ if (!function_exists('format_to_relative_time')) {
  * @param string $convert_to_local .. to prevent conversion, pass $convert_to_local=false 
  * @return date
  */
+
 // if (!function_exists('format_to_date')) {
 
 //     function format_to_date($date_time, $convert_to_local = true) {
