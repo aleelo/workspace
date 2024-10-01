@@ -190,7 +190,7 @@ class Appointments_model extends Crud_model {
         $order $limit_offset";
 
         // print_r($sql);
-            // die();
+        //     die();
 
         $raw_query = $this->db->query($sql);
 

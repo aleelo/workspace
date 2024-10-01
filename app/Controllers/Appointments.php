@@ -290,6 +290,7 @@ class Appointments extends Security_Controller {
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
         $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
@@ -414,58 +415,81 @@ class Appointments extends Security_Controller {
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $appoinment?->created_by")->getRow();
 
                 $meeting_with_names = '';
-
-                // Based on the selected meeting_with option, fetch the corresponding names
+                $meeting_with_header = '';  // Initialize the header
+        
+                // Fetch the corresponding names based on meeting_with and set the specific header
                 if ($meeting_with === 'Departments' && !empty($department_ids)) {
-                    $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")->getResultArray();
+                    $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")
+                                                 ->getResultArray();
                     $meeting_with_names = implode('', array_map(function($name) {
                         return '<li>' . $name['name'] . '</li>';
                     }, $department_names));
                     $meeting_with_header = "<strong>Department List</strong>";
                 } elseif ($meeting_with === 'Sections' && !empty($section_ids)) {
                     $section_names = $this->db->query("SELECT se.nameEn as name FROM rise_sections se WHERE id IN ($section_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($section_names, 'name'));
+                                               ->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $section_names));
+                    $meeting_with_header = "<strong>Section List</strong>";
                 } elseif ($meeting_with === 'Units' && !empty($unit_ids)) {
                     $unit_names = $this->db->query("SELECT un.nameEn as name FROM rise_units un WHERE id IN ($unit_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($unit_names, 'name'));
+                                            ->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $unit_names));
+                    $meeting_with_header = "<strong>Unit List</strong>";
                 } elseif ($meeting_with === 'Payers' && !empty($payer_ids)) {
                     $payer_names = $this->db->query("SELECT pa.company_name as name FROM rise_clients pa WHERE id IN ($payer_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($payer_names, 'name'));
+                                             ->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $payer_names));
+                    $meeting_with_header = "<strong>Payer List</strong>";
                 } elseif ($meeting_with === 'Partners' && !empty($partner_ids)) {
                     $partner_names = $this->db->query("SELECT pr.name as name FROM rise_partners pr WHERE id IN ($partner_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($partner_names, 'name'));
+                                               ->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $partner_names));
+                    $meeting_with_header = "<strong>Partner List</strong>";
                 } elseif ($meeting_with === 'Visitors' && !empty($visitor_ids)) {
                     $visitor_names = $this->db->query("SELECT v.name as name FROM rise_visitors v WHERE id IN ($visitor_ids)")
-                                                ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($visitor_names, 'name'));
+                                               ->getResultArray();
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $visitor_names));
+                    $meeting_with_header = "<strong>Visitor List</strong>";
                 } elseif ($meeting_with === 'Employees' && !empty($employee_ids)) {
                     $employee_names = $this->db->query("SELECT CONCAT(first_name, ' ', last_name) AS name FROM rise_users WHERE id IN ($employee_ids)")
                                                 ->getResultArray();
-                    $meeting_with_names = implode(', ', array_column($employee_names, 'name'));
+                    $meeting_with_names = implode('', array_map(function($name) {
+                        return '<li>' . $name['name'] . '</li>';
+                    }, $employee_names));
+                    $meeting_with_header = "<strong>Employee List</strong>";
                 }
-
+        
+                // Add the header and the bullet points in the email content
+                $meeting_with_names = $meeting_with_header  . $meeting_with_names ;
+        
                 $appoinment_email_data = [
-                    'APPOINTMENT_ID'=>$save_id,
+                    'APPOINTMENT_ID' => $save_id,
                     'APPOINTMENT_TITLE' => $appoinment->title,
-                    'APPOINTMENT_DATE'=>$appoinment->date,
-                    'APPOINTMENT_TIME'=>$appoinment->time,
-                    'APPOINTMENT_ROOM'=>$appoinment->room,
-                    'APPOINTMENT_NOTE'=>$appoinment->note,
-                    'HOST_NAME'=>$host_sec_info->host_name,
-                    'HOST_EMAIL'=>$host_sec_info->host_email,
-                    'HOST_DEPARTMENT'=>$host_sec_info->host_department,
-                    'SECRETARY_NAME'=>$host_sec_info->sec_name,
-                    'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
-                    'REGARD_NAME'=>$regard_name,
-                    'REGARD_POSITION'=>$regard_position->job_title,
-                    'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
-                    'MEETING_WITH_NAMES' => $meeting_with_names,
+                    'APPOINTMENT_DATE' => $appoinment->date,
+                    'APPOINTMENT_TIME' => $appoinment->time,
+                    'APPOINTMENT_ROOM' => $appoinment->room,
+                    'APPOINTMENT_NOTE' => $appoinment->note,
+                    'HOST_NAME' => $host_sec_info->host_name,
+                    'HOST_EMAIL' => $host_sec_info->host_email,
+                    'HOST_DEPARTMENT' => $host_sec_info->host_department,
+                    'SECRETARY_NAME' => $host_sec_info->sec_name,
+                    'SECRETARY_EMAIL' => $host_sec_info->sec_email,
+                    'REGARD_NAME' => $regard_name,
+                    'REGARD_POSITION' => $regard_position->job_title,
+                    'APPOINTMENT_MEETING_WITH' => $appoinment->meeting_with, 
+                    'MEETING_WITH_NAMES' => $meeting_with_names,  // The names in bullet format with a bold header
                 ];
-
+        
                 $r = $this->send_appointment_created_email($appoinment_email_data);
             }
 
@@ -489,13 +513,13 @@ class Appointments extends Security_Controller {
         $status = $this->request->getPost('status');
         $decline_reason = $this->request->getPost('decline_reason');
         $now = get_current_utc_time();
-
+    
         $role = $this->get_user_role();
     
         $appointment_data = array(
             "status" => $status
         );
-
+    
         if ($status === "approved") {
             $appointment_data["approved_by"] = $this->login_user->id;
             $appointment_data["approved_at"] = $now;
@@ -504,18 +528,17 @@ class Appointments extends Security_Controller {
             $appointment_data["rejected_by"] = $this->login_user->id;
             $appointment_data["rejected_at"] = $now;
         }
-
-        $applicatoin_info = $this->Appointments_model->get_one($appointment_id);
-
+    
+        $application_info = $this->Appointments_model->get_one($appointment_id);
+    
         $save_id = $this->Appointments_model->ci_save($appointment_data, $appointment_id);
-
-            if ($save_id) {
-
-                $options = array('id'=>$save_id);
-
-                $appoinment = $this->Appointments_model->get_details($options)->getRow();
-
-                $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, 
+    
+        if ($save_id) {
+            $options = array('id' => $save_id);
+    
+            $appoinment = $this->Appointments_model->get_details($options)->getRow();
+    
+            $host_sec_info = $this->db->query("SELECT concat(host.first_name,' ',host.last_name) as host_name, host.private_email as host_email, 
                     dp.nameEn as host_department, concat(sec.first_name,' ',sec.last_name) as sec_name, sec.private_email as sec_email
                     FROM rise_appointments ap
                     LEFT JOIN rise_users host ON host.id = ap.host_id
@@ -523,67 +546,132 @@ class Appointments extends Security_Controller {
                     LEFT JOIN rise_departments dp ON dp.id = tj.department_id
                     LEFT JOIN rise_users sec ON sec.id = dp.secretary_id
                     WHERE ap.id = $save_id")->getRow();
-
-                $regard_name = $this->login_user->first_name.' '.$this->login_user->last_name;
-                $loginuser = $this->login_user->id;
-                $regard_position = $this->db->query("SELECT tj.job_title_en as job_title 
-                    FROM rise_team_member_job_info tj 
-                    LEFT JOIN rise_users us ON us.id = tj.user_id 
-                    WHERE us.id = $loginuser")->getRow();
-
-                    if ($status === "approved" ) {
-
-                        $appoinment_email_data = [
-                            'APPOINTMENT_ID'=>$save_id,
-                            'APPOINTMENT_TITLE' => $appoinment->title,
-                            'APPOINTMENT_DATE'=>$appoinment->date,
-                            'APPOINTMENT_TIME'=>$appoinment->time,
-                            'APPOINTMENT_ROOM'=>$appoinment->room,
-                            'APPOINTMENT_NOTE'=>$appoinment->note,
-                            'HOST_NAME'=>$host_sec_info->host_name,
-                            'HOST_EMAIL'=>$host_sec_info->host_email,
-                            'HOST_DEPARTMENT'=>$host_sec_info->host_department,
-                            'SECRETARY_NAME'=>$host_sec_info->sec_name,
-                            'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
-                            'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
-                            'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason, 
-                            'REGARD_NAME'=>$regard_name,
-                            'REGARD_POSITION'=>$regard_position->job_title,
-                            'APPOINTMENT_STATUS'=>$status, 
-                        ];
-        
-                        $r = $this->send_notify_appointment_status_email($appoinment_email_data);
-        
-                }elseif($status === "rejected"){
-
-                    $appoinment_email_data = [
-                        'APPOINTMENT_ID'=>$save_id,
-                        'APPOINTMENT_TITLE' => $appoinment->title,
-                        'APPOINTMENT_DATE'=>$appoinment->date,
-                        'APPOINTMENT_TIME'=>$appoinment->time,
-                        'APPOINTMENT_ROOM'=>$appoinment->room,
-                        'APPOINTMENT_NOTE'=>$appoinment->note,
-                        'HOST_NAME'=>$host_sec_info->host_name,
-                        'HOST_EMAIL'=>$host_sec_info->host_email,
-                        'HOST_DEPARTMENT'=>$host_sec_info->host_department,
-                        'SECRETARY_NAME'=>$host_sec_info->sec_name,
-                        'SECRETARY_EMAIL'=>$host_sec_info->sec_email,
-                        'APPOINTMENT_MEETING_WITH'=>$appoinment->meeting_with, 
-                        'APPOINTMENT_DECLINE_REASON'=>$appoinment->decline_reason,
-                        'REGARD_NAME'=>$regard_name,
-                        'REGARD_POSITION'=>$regard_position->job_title, 
-                        'APPOINTMENT_STATUS'=>$status, 
-                    ];
     
-                    $r = $this->send_notify_appointment_status_email($appoinment_email_data);
-
-                }
-
+            $regard_name = $this->login_user->first_name . ' ' . $this->login_user->last_name;
+            $loginuser = $this->login_user->id;
+            $regard_position = $this->db->query("SELECT tj.job_title_en as job_title 
+                FROM rise_team_member_job_info tj 
+                LEFT JOIN rise_users us ON us.id = tj.user_id 
+                WHERE us.id = $loginuser")->getRow();
+    
+            // Retrieve and format the "meeting_with" list, similar to appointment creation
+            $meeting_with_names = '';
+            $meeting_with_header = ucfirst($appoinment->meeting_with);  // Capitalize the first letter for the header
+    
+            if ($appoinment->meeting_with === 'Departments') {
+                $department_ids = $appoinment->department_ids;
+                $department_names = $this->db->query("SELECT dp.nameEn as name FROM rise_departments dp WHERE id IN ($department_ids)")
+                                             ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $department_names));
+                $meeting_with_header = "<strong>Department List</strong>";
+            } elseif ($appoinment->meeting_with === 'Sections') {
+                $section_ids = $appoinment->section_ids;
+                $section_names = $this->db->query("SELECT se.nameEn as name FROM rise_sections se WHERE id IN ($section_ids)")
+                                          ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $section_names));
+                $meeting_with_header = "<strong>Section List</strong>";
+            } elseif ($appoinment->meeting_with === 'Units') {
+                $unit_ids = $appoinment->unit_ids;
+                $unit_names = $this->db->query("SELECT un.nameEn as name FROM rise_units un WHERE id IN ($unit_ids)")
+                                       ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $unit_names));
+                $meeting_with_header = "<strong>Unit List</strong>";
+            } elseif ($appoinment->meeting_with === 'Payers') {
+                $payer_ids = $appoinment->payer_ids;
+                $payer_names = $this->db->query("SELECT pa.company_name as name FROM rise_clients pa WHERE id IN ($payer_ids)")
+                                        ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $payer_names));
+                $meeting_with_header = "<strong>Payer List</strong>";
+            } elseif ($appoinment->meeting_with === 'Partners') {
+                $partner_ids = $appoinment->partner_ids;
+                $partner_names = $this->db->query("SELECT pr.name as name FROM rise_partners pr WHERE id IN ($partner_ids)")
+                                          ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $partner_names));
+                $meeting_with_header = "<strong>Partner List</strong>";
+            } elseif ($appoinment->meeting_with === 'Visitors') {
+                $visitor_ids = $appoinment->visitor_ids;
+                $visitor_names = $this->db->query("SELECT v.name as name FROM rise_visitors v WHERE id IN ($visitor_ids)")
+                                          ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $visitor_names));
+                $meeting_with_header = "<strong>Visitor List</strong>";
+            } elseif ($appoinment->meeting_with === 'Employees') {
+                $employee_ids = $appoinment->employee_ids;
+                $employee_names = $this->db->query("SELECT CONCAT(first_name, ' ', last_name) AS name FROM rise_users WHERE id IN ($employee_ids)")
+                                           ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($name) {
+                    return '<li>' . $name['name'] . '</li>';
+                }, $employee_names));
+                $meeting_with_header = "<strong>Employee List</strong>";
+            }
+    
+            // Combine header and names in bullet format
+            $meeting_with_names = $meeting_with_header .  $meeting_with_names ;
+    
+            if ($status === "approved") {
+                $appoinment_email_data = [
+                    'APPOINTMENT_ID' => $save_id,
+                    'APPOINTMENT_TITLE' => $appoinment->title,
+                    'APPOINTMENT_DATE' => $appoinment->date,
+                    'APPOINTMENT_TIME' => $appoinment->time,
+                    'APPOINTMENT_ROOM' => $appoinment->room,
+                    'APPOINTMENT_NOTE' => $appoinment->note,
+                    'HOST_NAME' => $host_sec_info->host_name,
+                    'HOST_EMAIL' => $host_sec_info->host_email,
+                    'HOST_DEPARTMENT' => $host_sec_info->host_department,
+                    'SECRETARY_NAME' => $host_sec_info->sec_name,
+                    'SECRETARY_EMAIL' => $host_sec_info->sec_email,
+                    'APPOINTMENT_DECLINE_REASON' => $appoinment->decline_reason,
+                    'APPOINTMENT_MEETING_WITH' => $appoinment->meeting_with, 
+                    'MEETING_WITH_NAMES' => $meeting_with_names,  // The list of people to meet with
+                    'REGARD_NAME' => $regard_name,
+                    'REGARD_POSITION' => $regard_position->job_title,
+                    'APPOINTMENT_STATUS' => $status, 
+                ];
+    
+                $r = $this->send_notify_appointment_status_email($appoinment_email_data);
+    
+            } elseif ($status === "rejected") {
+                $appoinment_email_data = [
+                    'APPOINTMENT_ID' => $save_id,
+                    'APPOINTMENT_TITLE' => $appoinment->title,
+                    'APPOINTMENT_DATE' => $appoinment->date,
+                    'APPOINTMENT_TIME' => $appoinment->time,
+                    'APPOINTMENT_ROOM' => $appoinment->room,
+                    'APPOINTMENT_NOTE' => $appoinment->note,
+                    'HOST_NAME' => $host_sec_info->host_name,
+                    'HOST_EMAIL' => $host_sec_info->host_email,
+                    'HOST_DEPARTMENT' => $host_sec_info->host_department,
+                    'SECRETARY_NAME' => $host_sec_info->sec_name,
+                    'SECRETARY_EMAIL' => $host_sec_info->sec_email,
+                    'APPOINTMENT_MEETING_WITH' => $appoinment->meeting_with, 
+                    'MEETING_WITH_NAMES' => $meeting_with_names,  // The list of people to meet with
+                    'APPOINTMENT_DECLINE_REASON' => $appoinment->decline_reason,
+                    'REGARD_NAME' => $regard_name,
+                    'REGARD_POSITION' => $regard_position->job_title, 
+                    'APPOINTMENT_STATUS' => $status, 
+                ];
+    
+                $r = $this->send_notify_appointment_status_email($appoinment_email_data);
+            }
+    
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
+    
 
     /* delete or undo a client */
 

@@ -18,7 +18,7 @@
                 <?php echo view("appointments/overview/index"); ?>
             </div>
 
-            <div role="tabpanel" class="tab-pane fade" id="appointments_calendar"></div>
+            <!-- <div role="tabpanel" class="tab-pane fade" id="appointments_calendar"></div> -->
             <div role="tabpanel" class="tab-pane fade" id="appointment_list"></div>
         </div>
     </div>
