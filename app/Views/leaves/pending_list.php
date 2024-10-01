@@ -7,6 +7,8 @@
     $(document).ready(function () {
         $("#pending-list-table").appTable({
             source: '<?php echo_uri("leaves/pending_list_data") ?>',
+            dateRangeType: "monthly",
+            rangeDatepicker: [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}}],
             columns: [
                 {title: '<?php echo 'ID' ?>', "class": "w10p"},
                 //{title: '<?php //echo app_lang("department_ame") ?>', "class": "w15p"},
