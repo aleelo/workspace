@@ -70,28 +70,31 @@ class Appointments extends Security_Controller {
         return $this->template->rander("appointments/index", $view_data);
     }
 
-    function appointments_calendar($tab = "") {
-
-        $this->check_module_availability("module_appointment");
-        $this->access_only_allowed_members();
-
-        $view_data = $this->make_access_permissions_view_data();
-
-        // $view_data['can_edit_clients'] = $this->can_edit_clients();
-        $view_data["show_project_info"] = $this->can_manage_all_projects() && !$this->has_all_projects_restricted_role();
-
-        $view_data["show_own_clients_only_user_id"] = $this->show_own_clients_only_user_id();
-        $view_data["allowed_client_groups"] = $this->allowed_client_groups;
-        $view_data['login_user'] = $this->login_user;
-
-        $view_data['tab'] = clean_data($tab);
-
-        
-
-        return $this->template->rander("appointments/appointments_calendar", $view_data);
+    function appointments_calendar($encrypted_event_id = "") {
+        $view_data['encrypted_event_id'] = clean_data($encrypted_event_id);
+        $view_data['calendar_filter_dropdown'] = $this->get_calendar_filter_dropdown();
+        $view_data['event_labels_dropdown'] = json_encode($this->make_labels_dropdown("event", "", true, app_lang("event_label")));
+        return $this->template->view("appointments/appointments_calendar", $view_data);
     }
 
-  
+
+    public function get_appointments() {
+        $appointments = $this->Appointments_model->get_all(); // Fetch appointments from the database
+
+        $events = array();
+        foreach ($appointments as $appointment) {
+            $events[] = array(
+                'id' => $appointment->id,
+                'title' => $appointment->title,
+                'start' => $appointment->start_date,
+                'end' => $appointment->end_date,
+                'color' => $appointment->color
+            );
+        }
+
+        echo json_encode($events);
+    }
+
     /* load client add/edit modal */
 
     function modal_form() {
@@ -2546,6 +2549,7 @@ class Appointments extends Security_Controller {
 
         return $this->template->view("appointments/appointments_list", $view_data);
     }
+
 
     private function make_access_permissions_view_data() {
 

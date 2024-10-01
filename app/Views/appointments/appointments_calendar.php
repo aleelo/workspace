@@ -13,14 +13,9 @@ if (isset($client_id)) {
     $client = $client_id;
 }
 ?>
-<div id="page-content<?php echo $client; ?>" class="page-wrapper<?php echo $client; ?> clearfix">
     <div class="card mb0 full-width-button">
         <div class="page-title clearfix">
-            <?php if ($client) { ?>
-                <h4><?php echo app_lang('events'); ?></h4>
-            <?php } else { ?>
-                <h1><?php echo app_lang('event_calendar'); ?></h1>
-            <?php } ?>
+                <h1><?php echo app_lang('appointment_calendar'); ?></h1>
             <div class="title-button-group custom-toolbar events-title-button">
 
                 <?php
@@ -55,7 +50,6 @@ if (isset($client_id)) {
             <div id="event-calendar"></div>
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
     var filterValues = "",

@@ -106,6 +106,11 @@ class Leave_applications_model extends Crud_model {
         }
 
         $applicant_id = $this->_get_clean_value($options, "applicant_id");
+        
+        if($applicant_id){
+            $where .= " AND $leave_applications_table.applicant_id=$applicant_id";
+        }
+            
 
         $today = get_today_date();
         $on_leave_today = $this->_get_clean_value($options, "on_leave_today");
