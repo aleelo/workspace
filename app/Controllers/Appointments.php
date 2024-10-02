@@ -656,81 +656,82 @@ class Appointments extends Security_Controller {
     
             // Retrieve and format the "meeting_with" list
             $meeting_with_names = '';
-            $participant_emails = [];
+            $participants = []; // Will hold name and email of each participant
             $meeting_with_header = ucfirst($appoinment->meeting_with);  // Capitalize the first letter for the header
     
             // ----------------- Departments ---------------
             if ($appoinment->meeting_with === 'Departments') {
                 $department_ids = $appoinment->department_ids;
                 $department_info = $this->db->query("SELECT dp.nameEn as name, dp.email FROM rise_departments dp WHERE id IN ($department_ids)")
-                                             ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];  // Collect participant emails
+                                            ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];  // Collect participant names and emails
                     return '<li>' . $info['name'] . '</li>';
                 }, $department_info));
                 $meeting_with_header = "<strong>Department List</strong>";
-
-                // --------------- Sections ------------
+    
+            // --------------- Sections ------------
             } elseif ($appoinment->meeting_with === 'Sections') {
                 $section_ids = $appoinment->section_ids;
                 $section_info = $this->db->query("SELECT se.nameEn as name, se.email FROM rise_sections se WHERE id IN ($section_ids)")
-                                          ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                         ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $section_info));
                 $meeting_with_header = "<strong>Section List</strong>";
-
-                // -------------- Units ------------------
+    
+            // -------------- Units ------------------
             } elseif ($appoinment->meeting_with === 'Units') {
                 $unit_ids = $appoinment->unit_ids;
                 $unit_info = $this->db->query("SELECT un.nameEn as name, un.email FROM rise_units un WHERE id IN ($unit_ids)")
-                                       ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                      ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $unit_info));
                 $meeting_with_header = "<strong>Unit List</strong>";
-                // -------------- Payers --------------
+    
+            // -------------- Payers --------------
             } elseif ($appoinment->meeting_with === 'Payers') {
                 $payer_ids = $appoinment->payer_ids;
                 $payer_info = $this->db->query("SELECT pa.company_name as name, pa.email as email FROM rise_clients pa WHERE id IN ($payer_ids)")
-                                        ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                       ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $payer_info));
                 $meeting_with_header = "<strong>Payer List</strong>";
-
-                // ------------- Partners --------------------
+    
+            // ------------- Partners --------------------
             } elseif ($appoinment->meeting_with === 'Partners') {
                 $partner_ids = $appoinment->partner_ids;
                 $partner_info = $this->db->query("SELECT pr.name as name, pr.email as email FROM rise_partners pr WHERE id IN ($partner_ids)")
-                                          ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                         ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $partner_info));
                 $meeting_with_header = "<strong>Partner List</strong>";
-
-                // ------------------- Visitors -------------
+    
+            // ------------------- Visitors -------------
             } elseif ($appoinment->meeting_with === 'Visitors') {
                 $visitor_ids = $appoinment->visitor_ids;
                 $visitor_info = $this->db->query("SELECT v.name as name, v.email as email FROM rise_visitors v WHERE id IN ($visitor_ids)")
-                                          ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                         ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $visitor_info));
                 $meeting_with_header = "<strong>Visitor List</strong>";
-
-                // ------------------ Employees --------------------
+    
+            // ------------------ Employees --------------------
             } elseif ($appoinment->meeting_with === 'Employees') {
                 $employee_ids = $appoinment->employee_ids;
                 $employee_info = $this->db->query("SELECT CONCAT(u.first_name, ' ', u.last_name) as name, u.private_email as email FROM rise_users u WHERE id IN ($employee_ids)")
-                                           ->getResultArray();
-                $meeting_with_names = implode('', array_map(function($info) use (&$participant_emails) {
-                    $participant_emails[] = $info['email'];
+                                          ->getResultArray();
+                $meeting_with_names = implode('', array_map(function($info) use (&$participants) {
+                    $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $employee_info));
                 $meeting_with_header = "<strong>Employee List</strong>";
@@ -760,13 +761,12 @@ class Appointments extends Security_Controller {
             ];
     
             $r = $this->send_notify_appointment_status_email($appoinment_email_data);
-
-            
     
-            // Send email to each participant
-            foreach ($participant_emails as $participant_email) {
-                send_app_mail($participant_email, "Appointment Status: " . ucfirst($status), $appoinment_email_data['MEETING_WITH_NAMES']);
-            }
+            // Send email to each participant with their name included
+            // foreach ($participants as $participant) {
+            //     $personalized_message = "Dear " . $participant['name'] . ",\n\n" . $appoinment_email_data['MEETING_WITH_NAMES'];
+            //     send_app_mail($participant['email'], "Appointment Status: " . ucfirst($status), $personalized_message);
+            // }
     
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
