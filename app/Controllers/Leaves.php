@@ -398,22 +398,8 @@ class Leaves extends Security_Controller {
             $private_email = send_app_mail($private_email, $subject, $message);
         }
 
-        // if ($hrm_email || $head_department_email || $private_email) {
-        //     return true;
-        // }else{
-        //     return false;
-        // }
-
-        // if ($private_email) {
-        //     return true;
-        // }else{
-        //     return false;
-        // }
 
     }
-
-
-
 
     public function send_notify_leave_status_email($data = array()) {
 
@@ -437,7 +423,6 @@ class Leaves extends Security_Controller {
             $email_template = $this->Email_templates_model->get_final_template("leave_request_verified", true);
            // $info_email = 'info@revenuedirectorate.gov.so';//$data['EMAIL'];
         }
-
 
         $parser_data["EMPLOYEE_NAME"] = $data['EMPLOYEE_NAME'];
         $parser_data["LEAVE_ID"] = $data['LEAVE_ID'];
