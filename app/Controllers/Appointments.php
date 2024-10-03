@@ -227,12 +227,13 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
         $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
@@ -280,12 +281,14 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["PARTICIPANT_NAME"] = $data['PARTICIPANT_NAME'];
         $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
@@ -340,14 +343,14 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
         $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
-        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
         $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
@@ -382,14 +385,14 @@ class Appointments extends Security_Controller {
 
     public function send_notify_appointment_status_email_participant($data = array()) {
 
-        $host_email = $data['HOST_EMAIL'];
+        $participant_email = $data['PARTICIPANT_EMAIL'];
  
         $status = $data['APPOINTMENT_STATUS'];
  
          if($status == 'approved'){
-            $host_email_template = $this->Email_templates_model->get_final_template("appointment_approved_to_host_email", true);
+            $participant_email_template = $this->Email_templates_model->get_final_template("appointment_approved_to_participant_email", true);
          }else if($status == 'rejected'){
-            $host_email_template = $this->Email_templates_model->get_final_template("appointment_rejected_to_host_email", true);
+            $participant_email_template = $this->Email_templates_model->get_final_template("appointment_rejected_to_participant_email", true);
          }
  
         $parser_data["APPOINTMENT_ID"] = $data['APPOINTMENT_ID'];
@@ -398,30 +401,31 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_TIME"] = $data['APPOINTMENT_TIME'];
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
+        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
         $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
         $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
-        $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
+        $parser_data["PARTICIPANT_NAME"] = $data['PARTICIPANT_NAME'];
         $parser_data["MEETING_WITH_NAMES"] = $data['MEETING_WITH_NAMES'];
-        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
 
         $parser_data["LEAVE_URL"] = get_uri('leaves');
-        $parser_data["SIGNATURE"] = get_array_value($host_email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($participant_email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
  
-        $host_message =  get_array_value($host_email_template, "message_default");
-        $host_subject =  get_array_value($host_email_template, "subject_default");
+        $participant_message =  get_array_value($participant_email_template, "message_default");
+        $participant_subject =  get_array_value($participant_email_template, "subject_default");
 
-        $host_message = $this->parser->setData($parser_data)->renderString($host_message);
-        $host_subject = $this->parser->setData($parser_data)->renderString($host_subject);
+        $participant_message = $this->parser->setData($parser_data)->renderString($participant_message);
+        $participant_subject = $this->parser->setData($parser_data)->renderString($participant_subject);
 
-        if(!empty($host_email)){
-            $hrm_email =  send_app_mail($host_email, $host_subject, $host_message);
+        if(!empty($participant_email)){
+            $hrm_email =  send_app_mail($participant_email, $participant_subject, $participant_message);
         }
  
      }
@@ -748,25 +752,27 @@ class Appointments extends Security_Controller {
                 'APPOINTMENT_TIME' => $appoinment->time,
                 'APPOINTMENT_ROOM' => $appoinment->room,
                 'APPOINTMENT_NOTE' => $appoinment->note,
+                'APPOINTMENT_MEETING_WITH' => $appoinment->meeting_with, 
+                'APPOINTMENT_DECLINE_REASON' => $appoinment->decline_reason,
                 'HOST_NAME' => $host_sec_info->host_name,
                 'HOST_EMAIL' => $host_sec_info->host_email,
                 'HOST_DEPARTMENT' => $host_sec_info->host_department,
                 'SECRETARY_NAME' => $host_sec_info->sec_name,
                 'SECRETARY_EMAIL' => $host_sec_info->sec_email,
-                'APPOINTMENT_MEETING_WITH' => $appoinment->meeting_with, 
-                'MEETING_WITH_NAMES' => $meeting_with_names,  // The list of people to meet with
                 'REGARD_NAME' => $regard_name,
                 'REGARD_POSITION' => $regard_position->job_title,
                 'APPOINTMENT_STATUS' => $status, 
+                'MEETING_WITH_NAMES' => $meeting_with_names,  // The list of people to meet with
             ];
     
             $r = $this->send_notify_appointment_status_email($appoinment_email_data);
-    
+
             // Send email to each participant with their name included
-            // foreach ($participants as $participant) {
-            //     $personalized_message = "Dear " . $participant['name'] . ",\n\n" . $appoinment_email_data['MEETING_WITH_NAMES'];
-            //     send_app_mail($participant['email'], "Appointment Status: " . ucfirst($status), $personalized_message);
-            // }
+            foreach ($participants as $participant) {
+                $appoinment_email_data['PARTICIPANT_EMAIL'] = $participant['email'];
+                $appoinment_email_data['PARTICIPANT_NAME'] = $participant['name'];
+                $this->send_notify_appointment_status_email_participant($appoinment_email_data);
+            }
     
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
