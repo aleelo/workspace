@@ -416,6 +416,78 @@ class Appointments extends Security_Controller {
  
      }
 
+     
+    //get calendar event
+    function calendar_appointments($filter_values = "", $event_label_id = 0, $client_id = 0) {
+        $start = $_GET["start"];
+        $end = $_GET["end"];
+
+        $result = array();
+
+        $filter_values_array = explode('-', $filter_values);
+
+        if (in_array("events", $filter_values_array)) {
+            //get all events
+            $is_client = false;
+            if ($this->login_user->user_type == "client") {
+                $is_client = true;
+            }
+
+            validate_numeric_value($event_label_id);
+            validate_numeric_value($client_id);
+            $options_of_appointments = array("created_by" => $this->login_user->id, "date" => $start);
+
+            $list_data_of_appointments = $this->Appointments_model->get_details($options_of_appointments)->getResult();
+
+            foreach ($list_data_of_appointments as $data) {
+
+                //check if this recurring event, generate recurring evernts based on the condition
+
+                $data->cycle = 0; //it's required to calculate the recurring events
+
+                $result[] = $this->_make_calendar_appointment($data); //add regular event
+
+                // if ($data->recurring) {
+                //     $no_of_cycles = $this->Events_model->get_no_of_cycles($data->repeat_type, $data->no_of_cycles);
+
+                //     for ($i = 1; $i <= $no_of_cycles; $i++) {
+                //         $data->start_date = add_period_to_date($data->start_date, $data->repeat_every, $data->repeat_type);
+                //         $data->end_date = add_period_to_date($data->end_date, $data->repeat_every, $data->repeat_type);
+                //         $data->cycle = $i;
+
+                //         $result[] = $this->_make_calendar_appointment($data);
+                //     }
+                // }
+            }
+        }
+
+
+        echo json_encode($result);
+    }
+
+    //prepare calendar event
+    private function _make_calendar_appointment($data) {
+
+        $end_time = $data->time;
+        // if ($data->start_date != $data->end_date && $end_time == "00:00:00") {
+        //     $end_time = "23:59:59";
+        // }
+
+        return array(
+            "title" => $data->title,
+            "start" => $data->date . " " . $data->time,
+            // "end" => $data->end_date . " " . $end_time,
+            "backgroundColor" => "#83c340",
+            "borderColor" => "#83c340",
+            "extendedProps" => array(
+                "icon" => get_event_icon('all'),
+                "encrypted_appointment_id" => encode_id($data->id, "appointment_id"), //to make is secure we'll use the encrypted id
+                // "cycle" => $data->cycle,
+                "event_type" => "appointment",
+            )
+        );
+    }
+
     /* insert or update a client */
     
     function save() {
@@ -518,7 +590,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];  // Collect participant names and emails
                     return '<li>' . $info['name'] . '</li>';
                 }, $department_info));
-                $meeting_with_header = "<strong>Department List</strong>";
+                $meeting_with_header = "<strong>Departments List</strong>";
             } elseif ($meeting_with === 'Sections' && !empty($section_ids)) {
                 $section_info = $this->db->query("SELECT se.nameEn as name, se.email FROM rise_sections se WHERE id IN ($section_ids)")
                     ->getResultArray();
@@ -526,7 +598,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $section_info));
-                $meeting_with_header = "<strong>Section List</strong>";
+                $meeting_with_header = "<strong>Sections List</strong>";
             } elseif ($meeting_with === 'Units' && !empty($unit_ids)) {
                 $unit_info = $this->db->query("SELECT un.nameEn as name, un.email FROM rise_units un WHERE id IN ($unit_ids)")
                     ->getResultArray();
@@ -534,7 +606,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $unit_info));
-                $meeting_with_header = "<strong>Unit List</strong>";
+                $meeting_with_header = "<strong>Units List</strong>";
             } elseif ($meeting_with === 'Payers' && !empty($payer_ids)) {
                 $payer_info = $this->db->query("SELECT pa.company_name as name, pa.email FROM rise_clients pa WHERE id IN ($payer_ids)")
                     ->getResultArray();
@@ -542,7 +614,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $payer_info));
-                $meeting_with_header = "<strong>Payer List</strong>";
+                $meeting_with_header = "<strong>Payers List</strong>";
             } elseif ($meeting_with === 'Partners' && !empty($partner_ids)) {
                 $partner_info = $this->db->query("SELECT pr.name as name, pr.email FROM rise_partners pr WHERE id IN ($partner_ids)")
                     ->getResultArray();
@@ -550,7 +622,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $partner_info));
-                $meeting_with_header = "<strong>Partner List</strong>";
+                $meeting_with_header = "<strong>Partners List</strong>";
             } elseif ($meeting_with === 'Visitors' && !empty($visitor_ids)) {
                 $visitor_info = $this->db->query("SELECT v.name as name, v.email FROM rise_visitors v WHERE id IN ($visitor_ids)")
                     ->getResultArray();
@@ -558,7 +630,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $visitor_info));
-                $meeting_with_header = "<strong>Visitor List</strong>";
+                $meeting_with_header = "<strong>Visitors List</strong>";
             } elseif ($meeting_with === 'Employees' && !empty($employee_ids)) {
                 $employee_info = $this->db->query("SELECT CONCAT(first_name, ' ', last_name) AS name, private_email as email FROM rise_users WHERE id IN ($employee_ids)")
                     ->getResultArray();
@@ -566,7 +638,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $employee_info));
-                $meeting_with_header = "<strong>Employee List</strong>";
+                $meeting_with_header = "<strong>Employees List</strong>";
             }
         
                 // Add the header and the bullet points in the email content
@@ -673,7 +745,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];  // Collect participant names and emails
                     return '<li>' . $info['name'] . '</li>';
                 }, $department_info));
-                $meeting_with_header = "<strong>Department List</strong>";
+                $meeting_with_header = "<strong>Departments List</strong>";
     
             // --------------- Sections ------------
             } elseif ($appoinment->meeting_with === 'Sections') {
@@ -684,7 +756,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $section_info));
-                $meeting_with_header = "<strong>Section List</strong>";
+                $meeting_with_header = "<strong>Sections List</strong>";
     
             // -------------- Units ------------------
             } elseif ($appoinment->meeting_with === 'Units') {
@@ -695,7 +767,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $unit_info));
-                $meeting_with_header = "<strong>Unit List</strong>";
+                $meeting_with_header = "<strong>Units List</strong>";
     
             // -------------- Payers --------------
             } elseif ($appoinment->meeting_with === 'Payers') {
@@ -706,7 +778,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $payer_info));
-                $meeting_with_header = "<strong>Payer List</strong>";
+                $meeting_with_header = "<strong>Payers List</strong>";
     
             // ------------- Partners --------------------
             } elseif ($appoinment->meeting_with === 'Partners') {
@@ -717,7 +789,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $partner_info));
-                $meeting_with_header = "<strong>Partner List</strong>";
+                $meeting_with_header = "<strong>Partners List</strong>";
     
             // ------------------- Visitors -------------
             } elseif ($appoinment->meeting_with === 'Visitors') {
@@ -728,7 +800,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $visitor_info));
-                $meeting_with_header = "<strong>Visitor List</strong>";
+                $meeting_with_header = "<strong>Visitors List</strong>";
     
             // ------------------ Employees --------------------
             } elseif ($appoinment->meeting_with === 'Employees') {
@@ -739,7 +811,7 @@ class Appointments extends Security_Controller {
                     $participants[] = ['name' => $info['name'], 'email' => $info['email']];
                     return '<li>' . $info['name'] . '</li>';
                 }, $employee_info));
-                $meeting_with_header = "<strong>Employee List</strong>";
+                $meeting_with_header = "<strong>Employees List</strong>";
             }
     
             // Combine header and names in bullet format

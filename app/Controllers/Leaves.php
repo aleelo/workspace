@@ -1509,37 +1509,6 @@ class Leaves extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    function applicant_applications_list_data() {
-
-        $this->validate_submitted_data(array(
-            "applicant_id" => "numeric"
-        ));
-
-        $start_date = $this->request->getPost('start_date');
-        $end_date = $this->request->getPost('end_date');
-        $applicant_id = $this->request->getPost('applicant_id');
-
-        $options = array(
-            "start_date" => $start_date, 
-            "end_date" => $end_date, 
-            "applicant_id" => $applicant_id, 
-            "login_user_id" => $this->login_user->id, 
-            "show_own_leaves_only_user_id" => $this->show_own_leaves_only_user_id(),
-            "show_own_unit_leaves_only_user_id" => $this->show_own_unit_leaves_only_user_id(),
-            "show_own_section_leaves_only_user_id" => $this->show_own_section_leaves_only_user_id(),
-            "show_own_department_leaves_only_user_id" => $this->show_own_department_leaves_only_user_id(),
-            "access_type" => $this->access_type, 
-            "allowed_members" => $this->allowed_members
-        );
-
-        $list_data = $this->Leave_applications_model->get_list($options)->getResult();
-        $result = array();
-        foreach ($list_data as $data) {
-            $result[] = $this->_make_row($data);
-        }
-        echo json_encode(array("data" => $result));
-    }
-
     // list of leave summary. prepared for datatable
     function summary_list_data() {
         $start_date = $this->request->getPost('start_date');

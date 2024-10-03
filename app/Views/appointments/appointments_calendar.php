@@ -70,7 +70,7 @@ if (isset($client_id)) {
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
-            events: "<?php echo_uri("events/calendar_events/"); ?>" + filter_values + "/" + event_label + "/" + "<?php echo "/$client"; ?>",
+            events: "<?php echo_uri("appointments/calendar_appointments/"); ?>" + filter_values + "/" + event_label + "/" + "<?php echo "/$client"; ?>",
             dayMaxEvents: false,
             dateClick: function (date, jsEvent, view) {
                 $("#add_event_hidden").attr("data-post-start_date", moment(date.date).format("YYYY-MM-DD"));
@@ -92,9 +92,9 @@ if (isset($client_id)) {
             },
             eventClick: function (calEvent) {
                 calEvent = calEvent.event.extendedProps;
-                if (calEvent.event_type === "event") {
-                    $("#show_event_hidden").attr("data-post-id", calEvent.encrypted_event_id);
-                    $("#show_event_hidden").attr("data-post-cycle", calEvent.cycle);
+                if (calEvent.event_type === "appointment") {
+                    $("#show_event_hidden").attr("data-post-id", calEvent.encrypted_appointment_id);
+                    // $("#show_event_hidden").attr("data-post-cycle", calEvent.cycle);
                     $("#show_event_hidden").trigger("click");
 
                 } else if (calEvent.event_type === "leave") {

@@ -127,6 +127,11 @@ class Appointments_model extends Crud_model {
             $where .= " OR $departments_table.secretary_id=$show_own_department_appointment_only_user_id)";
         }
 
+        $created_by = $this->_get_clean_value($options, "created_by");
+        if ($created_by) {
+            $where .= " AND $appointments_table.created_by=$created_by";
+        }
+
 
         $available_order_by_list = array(
             "id" => $appointments_table . ".id",
