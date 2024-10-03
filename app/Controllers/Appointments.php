@@ -228,7 +228,7 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
-        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
+        // $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
@@ -282,7 +282,7 @@ class Appointments extends Security_Controller {
         $parser_data["APPOINTMENT_ROOM"] = $data['APPOINTMENT_ROOM'];
         $parser_data["APPOINTMENT_NOTE"] = $data['APPOINTMENT_NOTE'];
         $parser_data["APPOINTMENT_MEETING_WITH"] = $data['APPOINTMENT_MEETING_WITH'];
-        $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
+        // $parser_data["APPOINTMENT_DECLINE_REASON"] = $data['APPOINTMENT_DECLINE_REASON'];
         $parser_data["HOST_NAME"] = $data['HOST_NAME'];
         $parser_data["HOST_DEPARTMENT"] = $data['HOST_DEPARTMENT'];
         $parser_data["SECRETARY_NAME"] = $data['SECRETARY_NAME'];
