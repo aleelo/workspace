@@ -48,7 +48,8 @@
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/company_info_tab/" . $department_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('department_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/company_info_tab/" . $department_info->id); ?>" data-bs-target="#departments-info"> <?php echo app_lang('department_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/department_employee/" . $department_info->id); ?>" data-bs-target="#department-employee-list"> <?php echo app_lang('employee_list'); ?></a></li>
 
                     <?php
                     $hook_tabs = array();
@@ -65,8 +66,8 @@
                     <div role="tabpanel" class="tab-pane fade" id="client-projects"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-tasks"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-files"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="client-info"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="client-contacts"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="departments-info"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="department-employee-list"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-invoices"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-payments"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-estimates"></div>
@@ -93,10 +94,10 @@
         setTimeout(function () {
             var tab = "<?php echo $tab; ?>";
             if (tab === "info") {
-                $("[data-bs-target='#client-info']").trigger("click");
-            } else if (tab === "projects") {
-                $("[data-bs-target='#client-projects']").trigger("click");
-            } else if (tab === "invoices") {
+                $("[data-bs-target='#departments-info']").trigger("click");
+            } else if (tab === "departments") {
+                $("[data-bs-target='#department-employee-list']").trigger("click");
+            } else if (tab === "employee-list") {
                 $("[data-bs-target='#client-invoices']").trigger("click");
             } else if (tab === "payments") {
                 $("[data-bs-target='#client-payments']").trigger("click");

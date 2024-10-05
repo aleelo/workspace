@@ -113,9 +113,15 @@ class Units_model extends Crud_model {
 
         $available_order_by_list = array(
             "id" => $units_table . ".id",
-            "company_name" => $units_table . ".company_name",
-            "created_date" => $units_table . ".created_date",
-            "primary_contact" => $users_table . ".first_name",
+            "nameSo" => $units_table . ".nameSo",
+            "short_name_SO" => $units_table . ".short_name_SO",
+            "nameEn" => $units_table . ".nameEn",
+            "short_name_EN" => $units_table . ".short_name_EN",
+            "email" => $units_table . ".email",
+            "DepNameSo" => $departments_table . ".nameSo",
+            "SecNameSo" => $sections_table . ".nameSo",
+            "UnitHead" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
+            "remarks" => $units_table . ".remarks",
             "status" => "lead_status_title",
             "primary_contact" => "primary_contact",
             "client_groups" => "client_groups"
@@ -138,8 +144,15 @@ class Units_model extends Crud_model {
 
             $where .= " AND (";
             $where .= " $units_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $units_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.email LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $departments_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $units_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $units_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
             if ($leads_only) {
@@ -162,6 +175,9 @@ class Units_model extends Crud_model {
         $join_custom_fieds               
         WHERE $units_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
+
+        // print_r($sql);
+        // die;
 
         $raw_query = $this->db->query($sql);
 

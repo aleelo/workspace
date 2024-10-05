@@ -334,6 +334,29 @@ class Departments extends Security_Controller {
         return $row_data;
     }
 
+    public function department_employee($deparment_id)
+    {
+        if (!$this->can_view_team_members_list()) {
+            app_redirect("forbidden");
+        }
+
+        $view_data["show_contact_info"] = $this->can_view_team_members_contact_info();
+        $view_data['departments_dropdown'] = $this->get_departments_for_table_emp();
+        $view_data['deparment_id'] = $deparment_id;
+
+        $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
+        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("team_members", $this->login_user->is_admin, $this->login_user->user_type);
+
+        return $this->template->rander("departments/department_employee", $view_data);
+    }
+
+    private function access_only_admin_or_member_creator()
+    {
+        if (!($this->login_user->is_admin || get_array_value($this->login_user->permissions, "can_add_or_invite_new_team_members"))) {
+            app_redirect("forbidden");
+        }
+    }
+
 
 
 

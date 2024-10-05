@@ -163,6 +163,17 @@ class Security_Controller extends App_Controller {
         
         return $job_info?->department_id;
     }
+
+    public function can_view_team_members_contact_info()
+    {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->login_user->is_admin) {
+                return true;
+            } else if (get_array_value($this->login_user->permissions, "can_view_team_members_contact_info") == "1") {
+                return true;
+            }
+        }
+    }
     
     public function get_user_section_head_id(){
         $user_id = $this->login_user->id;

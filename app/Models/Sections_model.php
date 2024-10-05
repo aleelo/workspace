@@ -112,9 +112,15 @@ class Sections_model extends Crud_model {
 
         $available_order_by_list = array(
             "id" => $sections_table . ".id",
-            "company_name" => $sections_table . ".company_name",
-            "created_date" => $sections_table . ".created_date",
-            "primary_contact" => $users_table . ".first_name",
+            "nameSo" => $sections_table . ".nameSo",
+            "short_name_SO" => $sections_table . ".short_name_SO",
+            "nameEn" => $sections_table . ".nameEn",
+            "short_name_EN" => $sections_table . ".short_name_EN",
+            "email" => $sections_table . ".email",
+            "DepNameSo" => $departments_table . ".nameSo",
+            "SectionHead" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
+            "secretary" => "CONCAT(sec.first_name,' ',sec.last_name)",
+            "remarks" => $sections_table . ".remarks",
             "status" => "lead_status_title",
             "primary_contact" => "primary_contact",
             "client_groups" => "client_groups"
@@ -137,8 +143,15 @@ class Sections_model extends Crud_model {
 
             $where .= " AND (";
             $where .= " $sections_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.email LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $departments_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR CONCAT(sec.first_name,' ',sec.last_name) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $sections_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $sections_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
             if ($leads_only) {
@@ -162,6 +175,8 @@ class Sections_model extends Crud_model {
         $join_custom_fieds               
         WHERE $sections_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
+
+        // print_r($sql);die;
 
         $raw_query = $this->db->query($sql);
 

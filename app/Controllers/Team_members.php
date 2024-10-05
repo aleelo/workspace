@@ -11,16 +11,16 @@ class Team_members extends Security_Controller
         $this->access_only_team_members();
     }
 
-    private function can_view_team_members_contact_info()
-    {
-        if ($this->login_user->user_type == "staff") {
-            if ($this->login_user->is_admin) {
-                return true;
-            } else if (get_array_value($this->login_user->permissions, "can_view_team_members_contact_info") == "1") {
-                return true;
-            }
-        }
-    }
+    // private function can_view_team_members_contact_info()
+    // {
+    //     if ($this->login_user->user_type == "staff") {
+    //         if ($this->login_user->is_admin) {
+    //             return true;
+    //         } else if (get_array_value($this->login_user->permissions, "can_view_team_members_contact_info") == "1") {
+    //             return true;
+    //         }
+    //     }
+    // }
 
     private function can_view_team_members_social_links()
     {

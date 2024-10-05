@@ -1924,6 +1924,7 @@ $lang["appointment_email"] = "Appointment Email";
 $lang["appointment_created_to_host_email"] = "Created Host Email";
 $lang["appointment_created_to_sectetary_email"] = "Created Secratary Email";
 $lang["appointment_created_to_participant_email"] = "Created Participarnt Email";
+$lang["appointment_created_to_participant_email"] = "Created Participarnt Email";
 $lang["appointment_approved_to_host_email"] = "Approved Host Email";
 $lang["appointment_approved_to_sectetary_email"] = "Approved Secratary Email";
 $lang["appointment_approved_to_participant_email"] = "Approved Participant Email";
@@ -1934,6 +1935,7 @@ $lang["decline_reason"] = "Decline Reason";
 $lang["write_reason_here"] = "Write Reason Here";
 $lang["write_remarks_here"] = "Write Remarks Here";
 $lang["decline_remarks"] = "Decline Remarks";
+$lang["employee_list"] = "Employee List";
 
 $lang["approved (expired)"] = "Approved (Expired)";
 $lang["active (expired)"] = "Active (Expired)";

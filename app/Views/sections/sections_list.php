@@ -50,7 +50,7 @@
             {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
             {title: "<?php echo app_lang("section_email") ?>", order_by: "email"},
             {title: "<?php echo app_lang("section_department") ?>", order_by: "DepNameSo"},
-            {title: "<?php echo app_lang("section_head") ?>", order_by: "section_head_id"},
+            {title: "<?php echo app_lang("section_head") ?>", order_by: "SectionHead"},
             {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
             {title: "<?php echo app_lang("section_remarks") ?>", order_by: "remarks"}
 
