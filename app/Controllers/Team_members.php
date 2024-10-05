@@ -583,17 +583,17 @@ class Team_members extends Security_Controller
 
         $row_data = array(
             $user_avatar,
-            $data->employee_id,
-            get_team_member_profile_link($data->id, $full_name),
-            $data->job_title,
-            $data->sc_name_so,
-            $data->dp_name_so,
-            $data->dp_short_name_so,
-            $data->dp_name_en,
-            $data->dp_short_name_en,
-            $data->place_of_work,
-            $show_cotact_info ? $data->email : "",
-            $show_cotact_info && $data->phone ? $data->phone : "-"
+            "<span title='" . htmlspecialchars($data->employee_id) . "'>" . $this->truncateText($data->employee_id, 20) . "</span>", // Job title with tooltip
+            get_team_member_profile_link($data->id, "<span title='$full_name'>" . $this->truncateText($full_name, 20) . "</span>"),
+            "<span title='" . htmlspecialchars($data->job_title) . "'>" . $this->truncateText($data->job_title, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->sc_name_so) . "'>" . $this->truncateText($data->sc_name_so, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->dp_name_so) . "'>" . $this->truncateText($data->dp_name_so, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->dp_short_name_so) . "'>" . $this->truncateText($data->dp_short_name_so, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->dp_name_en) . "'>" . $this->truncateText($data->dp_name_en, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->dp_short_name_en) . "'>" . $this->truncateText($data->dp_short_name_en, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->place_of_work) . "'>" . $this->truncateText($data->place_of_work, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->email) . "'>" . $this->truncateText($data->email, 20) . "</span>", // Job title with tooltip
+            "<span title='" . htmlspecialchars($data->phone) . "'>" . $this->truncateText($data->phone, 20) . "</span>", // Job title with tooltip
         );
 
         foreach ($custom_fields as $field) {
@@ -617,7 +617,12 @@ class Team_members extends Security_Controller
         return $row_data;
     }
 
-
+    function truncateText($text, $maxLength) {
+        if (strlen($text) > $maxLength) {
+            return substr($text, 0, $maxLength) . '…'; // Append ellipsis
+        }
+        return $text;
+    }
 
     //delete a team member
     function delete()

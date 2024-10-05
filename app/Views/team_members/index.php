@@ -1,3 +1,16 @@
+<head>
+    <style>
+        .table-scroll {
+            overflow-x: auto; /* Enables horizontal scrolling */
+            white-space: nowrap; /* Prevents line breaks in the table */
+        }
+
+        .table-responsive {
+            margin: 0; /* Optional: adjust margins as needed */
+        }
+    </style>
+</head>
+
 <div id="page-content" class="page-wrapper clearfix">
     <div class="card">
         <div class="page-title clearfix">
@@ -15,10 +28,12 @@
                 ?>
             </div>
         </div>
-        <div class="table-responsive">
-            <table id="team_member-table" class="display" cellspacing="0" width="100%">            
-            </table>
-        </div>
+            <div class="table-responsive">
+                <div class="table-scroll">
+                    <table id="team_member-table" class="display" cellspacing="0" width="100%">            
+                    </table>
+                </div>
+            </div>
     </div>
 </div>
 
@@ -55,8 +70,8 @@
                 {title: "<?php echo app_lang("department_name_en") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("shot_name_en") ?>", "class": "w200 all"},
                 {title: "<?php echo app_lang("job_location") ?>", "class": "w200 all"},
-                {visible: visibleContact, title: "<?php echo app_lang("email") ?>", "class": "w20p"},
-                {visible: visibleContact, title: "<?php echo app_lang("phone") ?>", "class": "w15p"}
+                {visible: visibleContact, title: "<?php echo app_lang("email") ?>", "class": "w200 all"},
+                {visible: visibleContact, title: "<?php echo app_lang("phone") ?>", "class": "w200 all"}
                 <?php echo $custom_field_headers; ?>,
                 {visible: visibleDelete, title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
