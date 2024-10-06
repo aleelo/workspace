@@ -15,22 +15,13 @@ if (isset($client_id)) {
 ?>
     <div class="card mb0 full-width-button">
         <div class="page-title clearfix">
-                <h1><?php echo app_lang('appointment_calendar'); ?></h1>
             <div class="title-button-group custom-toolbar events-title-button">
 
-                <?php
-                echo form_input(array(
-                    "id" => "event-labels-dropdown",
-                    "name" => "event-labels-dropdown",
-                    "class" => "select2 w200 mr10 float-start mt15"
-                ));
-                ?>
 
                 <?php if ($calendar_filter_dropdown) { ?>
-                    <div id="calendar-filter-dropdown" class="float-start <?php echo (count($calendar_filter_dropdown) == 1) ? "hide" : ""; ?>"></div>
+                    <div id="calendar-filter-dropdown" class="float-start <?php echo (count($calendar_filter_dropdown) == 1) ? "hide" : ""; ?>" style="display: none;"></div>
                 <?php } ?>
 
-                <?php echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "event")); ?>
 
                 <?php
                 if (get_setting("enable_google_calendar_api") && (get_setting("google_calendar_authorized") || get_setting('user_' . $login_user->id . '_google_calendar_authorized'))) {
@@ -42,8 +33,6 @@ if (isset($client_id)) {
 
                 <?php echo modal_anchor(get_uri("appointments/modal_form"), "", array("class" => "hide", "id" => "add_event_hidden", "title" => app_lang('add_appointment'))); ?>
                 <?php echo modal_anchor(get_uri("appointments/appointments_view"), "", array("class" => "hide", "id" => "show_event_hidden", "data-post-client_id" => $client, "data-post-cycle" => "0", "data-post-editable" => "1", "title" => app_lang('appointment_details'))); ?>
-                <!-- <?php //echo modal_anchor(get_uri("leaves/application_details"), "", array("class" => "hide", "data-post-id" => "", "id" => "show_leave_hidden")); ?>
-                <?php //echo modal_anchor(get_uri("tasks/view"), "", array("class" => "hide", "data-post-id" => "", "id" => "show_task_hidden", "data-modal-lg" => "1")); ?> -->
             </div>
         </div>
         <div class="card-body">
