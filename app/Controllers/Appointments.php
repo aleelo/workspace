@@ -448,17 +448,6 @@ class Appointments extends Security_Controller {
 
                 $result[] = $this->_make_calendar_appointment($data); //add regular event
 
-                // if ($data->recurring) {
-                //     $no_of_cycles = $this->Events_model->get_no_of_cycles($data->repeat_type, $data->no_of_cycles);
-
-                //     for ($i = 1; $i <= $no_of_cycles; $i++) {
-                //         $data->start_date = add_period_to_date($data->start_date, $data->repeat_every, $data->repeat_type);
-                //         $data->end_date = add_period_to_date($data->end_date, $data->repeat_every, $data->repeat_type);
-                //         $data->cycle = $i;
-
-                //         $result[] = $this->_make_calendar_appointment($data);
-                //     }
-                // }
             }
         }
 
@@ -484,9 +473,6 @@ class Appointments extends Security_Controller {
             } else if (str_contains($data->status, "rejected")) {
                 $status_meta = "#fc0758"; // Red for rejected
             }
-    
-            // Add status and title meta information
-            // $status_meta = "<span style='$style' class='badge $status_class'>" . app_lang($data->status) . "</span>";
         }
 
         return array(
