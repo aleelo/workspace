@@ -1062,16 +1062,27 @@ class Appointments extends Security_Controller {
                 $data->status .= " (expired)";
             }
         }
+
+        if (str_contains($data->status, "approved")) {
+            $status_meta = "#08976d"; // Green for approved
+        } else if (str_contains($data->status, "active")) {
+            // $status_class = "btn-dark"; // Dark background for active
+            $status_meta = "#6690f4";
+        } else if (str_contains($data->status, "rejected")) {
+            $status_meta = "#fc0758"; // Red for rejected
+        }
     
         // Assign the appropriate class based on the status
         if (isset($data->status)) {
             if (str_contains($data->status, "approved")) {
-                $status_class = "badge bg-success"; // Green for approved
+                $status_class = ""; // Green for approved
+                $style = "background-color:#08976d";
             } else if (str_contains($data->status, "active")) {
                 $status_class = "btn-dark"; // Dark background for active
-                $style = "background-color:#a7abbf;";
+                $style = "background-color:#6690f4";
             } else if (str_contains($data->status, "rejected")) {
                 $status_class = "bg-danger"; // Red for rejected
+                $style = "background-color:#fc0758;";
             }
     
             // Apply the orange color if the status includes (expired)
