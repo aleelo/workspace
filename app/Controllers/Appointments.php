@@ -474,11 +474,27 @@ class Appointments extends Security_Controller {
         //     $end_time = "23:59:59";
         // }
 
+        $style = '';
+        if (isset($data->status)) {
+            if (str_contains($data->status, "approved")) {
+                $status_meta = "#08976d"; // Green for approved
+            } else if (str_contains($data->status, "active")) {
+                // $status_class = "btn-dark"; // Dark background for active
+                $status_meta = "#6690f4";
+            } else if (str_contains($data->status, "rejected")) {
+                $status_meta = "#fc0758"; // Red for rejected
+            }
+    
+            // Add status and title meta information
+            // $status_meta = "<span style='$style' class='badge $status_class'>" . app_lang($data->status) . "</span>";
+        }
+
         return array(
             "title" => $data->title,
             "start" => $data->date . " " . $data->time,
             // "end" => $data->end_date . " " . $end_time,
-            "backgroundColor" => "#6690f4",
+            // "backgroundColor" => "#6690f4",
+            "backgroundColor" => $status_meta,
             "borderColor" => "#6690f4",
             "extendedProps" => array(
                 "icon" => get_event_icon('all'),
