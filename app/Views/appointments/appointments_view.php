@@ -59,11 +59,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        
         $(".update-appointment-status").click(function () {
             $("#appointment_status_input").val($(this).attr("data-status"));
         });
 
+        
+        $("#leave-status-form").appForm({
+            onSuccess: function () {
+                location.reload();
+            }
+        });
 
         $('#delete_event').click(function () {
             var encrypted_appointment_id = $(this).attr("data-encrypted_appointment_id");

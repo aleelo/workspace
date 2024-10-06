@@ -38,12 +38,10 @@ if (isset($client_id)) {
                 }
                 ?>
 
-                <?php echo modal_anchor(get_uri("events/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_event'), array("class" => "btn btn-default add-btn", "title" => app_lang('add_event'), "data-post-client_id" => $client)); ?>
+                <!-- <?php //echo modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_event'), array("class" => "btn btn-default add-btn", "title" => app_lang('add_event'), "data-post-client_id" => $client)); ?> -->
 
-                <?php echo modal_anchor(get_uri("events/modal_form"), "", array("class" => "hide", "id" => "add_event_hidden", "title" => app_lang('add_event'), "data-post-client_id" => $client)); ?>
-                <?php echo modal_anchor(get_uri("appointments/appointments_view"), "", array("class" => "hide", "id" => "show_event_hidden", "data-post-client_id" => $client, "data-post-cycle" => "0", "data-post-editable" => "1", "title" => app_lang('event_details'))); ?>
-                <?php echo modal_anchor(get_uri("leaves/application_details"), "", array("class" => "hide", "data-post-id" => "", "id" => "show_leave_hidden")); ?>
-                <?php echo modal_anchor(get_uri("tasks/view"), "", array("class" => "hide", "data-post-id" => "", "id" => "show_task_hidden", "data-modal-lg" => "1")); ?>
+                <?php echo modal_anchor(get_uri("appointments/modal_form"), "", array("class" => "hide", "id" => "add_event_hidden", "title" => app_lang('add_appointment'))); ?>
+                <?php echo modal_anchor(get_uri("appointments/appointments_view"), "", array("class" => "hide", "id" => "show_event_hidden", "data-post-client_id" => $client, "data-post-cycle" => "0", "data-post-editable" => "1", "title" => app_lang('appointment_details'))); ?>
             </div>
         </div>
         <div class="card-body">
@@ -73,22 +71,15 @@ if (isset($client_id)) {
             events: "<?php echo_uri("appointments/calendar_appointments/"); ?>" + filter_values + "/" + event_label + "/" + "<?php echo "/$client"; ?>",
             dayMaxEvents: false,
             dateClick: function (date, jsEvent, view) {
-                $("#add_event_hidden").attr("data-post-start_date", moment(date.date).format("YYYY-MM-DD"));
+                $("#add_event_hidden").attr("data-post-appointment_date", moment(date.date).format("YYYY-MM-DD"));
                 var startTime = moment(date.date).format("HH:mm:ss");
-                if (startTime === "00:00:00") {
-                    startTime = "";
-                }
-                $("#add_event_hidden").attr("data-post-start_time", startTime);
-                var endDate = moment(date.date).add(1, 'hours');
-
-                $("#add_event_hidden").attr("data-post-end_date", endDate.format("YYYY-MM-DD"));
-                var endTime = "";
-                if (startTime != "") {
-                    endTime = endDate.format("HH:mm:ss");
-                }
-
-                $("#add_event_hidden").attr("data-post-end_time", endTime);
+               
                 $("#add_event_hidden").trigger("click");
+
+               setTimeout(function(){
+                $('#appointment_date').val(moment(date.date).format("YYYY-MM-DD"));
+               },1000);
+               
             },
             eventClick: function (calEvent) {
                 calEvent = calEvent.event.extendedProps;

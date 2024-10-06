@@ -517,26 +517,6 @@ class Appointments extends Security_Controller {
             $approved_by_array = explode(",", $model_info->approved_by);
             $rejected_by_array = explode(",", $model_info->rejected_by);
 
-            //prepare status lable and status buttons
-            $status = "";
-            $status_button = "";
-
-            $status_confirm = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang('approve'), array("class" => "btn btn-success float-start", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "approved", "data-post-editable" => "1"));
-            $status_reject = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='x-circle' class='icon-16'></i> " . app_lang('reject'), array("class" => "btn btn-danger float-start", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "rejected", "data-post-editable" => "1"));
-            $status_button = $status_confirm . $status_reject;
-
-            if (in_array($this->login_user->id, $approved_by_array)) {
-                $status = "<span class='badge large' style='background-color:#5CB85C;' title=" . app_lang("appointment_status") . ">" . app_lang("approved") . "</span> ";
-                $status_button = $status_reject;
-            } else if (in_array($this->login_user->id, $rejected_by_array)) {
-                $status = "<span class='badge large' style='background-color:#D9534F;' title=" . app_lang("appointment_status") . ">" . app_lang("rejected") . "</span> ";
-                $status_button = $status_confirm;
-            } else {
-            }
-
-            $view_data["status"] = $status;
-            $view_data['status_button'] = $status_button;
-
             $view_data['confirmed_by'] = $model_info->approved_by; //get_array_value($confimed_rejected_users, 'confirmed_by');
             $view_data['rejected_by'] = $model_info->rejected_by; //get_array_value($confimed_rejected_users, 'rejected_by');
 
