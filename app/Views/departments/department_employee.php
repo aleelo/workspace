@@ -4,25 +4,14 @@ if (isset($page_type) && $page_type === "full") {
 }
 ?>">
     <ul id="team-member-leave-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-        <li class="title-tab"><h4 class="pl15 pt10 pr15">
-                <?php
-                if ($login_user->id === $applicant_id) {
-                    echo app_lang("my_leave");
-                } else {
-                    echo app_lang("leaves");
-                }
-                ?>
-            </h4>
         </li>
         <li><a id="monthly-leaves-button" role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#team_member-monthly-leaves"><?php echo app_lang("monthly"); ?></a></li>
         <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/yearly_leaves/"); ?>" data-bs-target="#team_member-yearly-leaves"><?php echo app_lang('yearly'); ?></a></li>
-        <?php if ($login_user->id === $applicant_id) { ?>
             <div class="tab-title clearfix no-border">
                 <div class="title-button-group">
                     <?php echo modal_anchor(get_uri('leaves/apply_leave_modal_form'), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('apply_leave'), array("class" => "btn btn-default", "title" => app_lang('apply_leave'))); ?>
                 </div>
             </div>    
-        <?php } ?>
 
     </ul>
     <div class="tab-content">
