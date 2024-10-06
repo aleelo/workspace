@@ -1,99 +1,35 @@
 <div class="modal-body">
-    <div class="container-fluid">
-        <div class="row mb15">
-            <div class="col-md-12 clearfix">
-                <h4 class="mt0 float-start">
-                    <?php
-                
-                    echo "<span style='color: #6690f4' class='float-start mr10'><i data-feather='$event_icon' class='icon-16'></i></span> " . $model_info->title;
-                    ?>
-                </h4>
-            </div>
-
-            <?php if ($status) { ?>
-                <div class="col-md-12 pb10">
-                    <?php echo $status; ?>
-                </div>
-            <?php } ?>
-
-            <div class="col-md-12 pb10 ">
-                <i data-feather="clock" class="icon-16"></i>
-                <?php
-                //echo view("appointments/event_time");
-                ?>
-            </div>
-
-            <div class="col-md-12 pb10">
-                <?php //echo $labels; ?>
-            </div>
-
-            <?php if ($model_info->note) { ?>
-                <div class="col-md-12">
-                    <blockquote class="font-14 text-justify" style="<?php echo "border-color: #6690f4" ; ?>"><?php echo nl2br(process_images_from_content($model_info->note)); ?></blockquote>
-                </div>
-            <?php } ?>
-
-            <?php if ($model_info->room) { ?>
-                <div class="col-md-12 mt5">
-                    <div class="font-14"><i data-feather="map-pin" class="icon-16"></i> <?php echo nl2br($model_info->room); ?></div>
-                </div>
-            <?php }
-            ?>
-
-
-
-            <?php if ($confirmed_by) { ?>
-                <div class="col-md-12 clearfix">
-                    <div class="pl10 pr10">
-                        <div class="row">
-                            <div class="col-md-1 p0">
-                                <span title="<?php echo app_lang("confirmed"); ?>" class='confirmed-by-logo'><span data-feather="check-circle"></span></span>
-                            </div>
-                            <div class="col-md-11 pt10 pl0">
-                                <?php echo $confirmed_by; ?>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-            <?php } ?>
-
-            <?php if ($rejected_by) { ?>
-                <div class="col-md-12 clearfix">
-                    <div class="pl10 pr10">
-                        <div class="row">
-                            <div class="col-md-1 p0">
-                                <span title="<?php echo app_lang("rejected"); ?>" class="rejected-by-logo"><i data-feather="x-circle"></i></span>
-                            </div>
-                            <div class="col-md-11 pt10 pl0">
-                                <?php echo $rejected_by; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
-
-
-            <!-- <?php
-            // $files = @unserialize($model_info->files);
-            // if ($files && is_array($files) && count($files)) {
-                ?>
-                <div class="clearfix">
-                    <div class="col-md-12 mt10">
-                        <div class="mb5 strong"><?php //echo app_lang("files"); ?></div>
-                        <?php
-                        // foreach ($files as $key => $value) {
-                        //     $file_name = get_array_value($value, "file_name");
-                        //     echo "<div>";
-                        //     echo js_anchor(remove_file_prefix($file_name), array("data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("events/file_preview/" . $model_info->id . "/" . $key)));
-                        //     echo "</div>";
-                        // }
-                        ?>
-                    </div>
-                </div>
-            <?php //} ?> -->
-
+    <div class="row">
+        <div class="table-responsive mb15">
+            <table class="table dataTable display b-t">
+                <tr>
+                    <td class="w100"> <?php echo $model_info->status; ?></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="w100"> <?php echo app_lang('title'); ?></td>
+                    <td><?php echo $model_info->title; ?></td>
+                </tr>
+                <tr>
+                    <td> <?php echo app_lang('date'); ?></td>
+                    <td><?php echo $model_info->date; ?></td>
+                </tr>
+                <tr>
+                    <td> <?php echo app_lang('time'); ?></td>
+                    <td><?php echo $model_info->time; ?></td>
+                </tr>
+                <tr>
+                    <td> <?php echo app_lang('room'); ?></td>
+                    <td><?php echo $model_info->room; ?></td>
+                </tr>
+                <tr>
+                    <td> <?php echo app_lang('room'); ?></td>
+                    <td><?php echo $model_info->note; ?></td>
+                </tr>
+            </table>
         </div>
     </div>
+    
 </div>
 
 <div class="modal-footer">

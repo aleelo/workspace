@@ -491,7 +491,6 @@ class Appointments extends Security_Controller {
 
     function appointments_view() {
         $encrypted_appointment_id = $this->request->getPost('id');
-        // $cycle = $this->request->getPost('cycle');
 
         $this->validate_submitted_data(array(
             "id" => "required"
@@ -509,14 +508,6 @@ class Appointments extends Security_Controller {
 
         if ($appointment_id && $model_info->id) {
 
-            // $model_info->cycle = $cycle * 1;
-
-            // if ($model_info->recurring && $cycle) {
-            //     $model_info->start_date = add_period_to_date($model_info->start_date, $model_info->repeat_every * $cycle, $model_info->repeat_type);
-            //     $model_info->end_date = add_period_to_date($model_info->end_date, $model_info->repeat_every * $cycle, $model_info->repeat_type);
-            // }
-
-
             $view_data['encrypted_appointment_id'] = $encrypted_appointment_id; //to make is secure we'll use the encrypted id 
             $view_data['editable'] = $this->request->getPost('editable');
             $view_data['model_info'] = $model_info;
@@ -525,9 +516,6 @@ class Appointments extends Security_Controller {
 
             $approved_by_array = explode(",", $model_info->approved_by);
             $rejected_by_array = explode(",", $model_info->rejected_by);
-
-            //prepare event lable
-            // $view_data['labels'] = make_labels_view_data($model_info->labels_list, "", true);
 
             //prepare status lable and status buttons
             $status = "";
@@ -549,11 +537,24 @@ class Appointments extends Security_Controller {
             $view_data["status"] = $status;
             $view_data['status_button'] = $status_button;
 
-            //prepare confimed/rejected user's list
-            // $confimed_rejected_users = $this->_get_confirmed_and_rejected_users_list($approved_by_array, $rejected_by_array);
-
             $view_data['confirmed_by'] = $model_info->approved_by; //get_array_value($confimed_rejected_users, 'confirmed_by');
             $view_data['rejected_by'] = $model_info->rejected_by; //get_array_value($confimed_rejected_users, 'rejected_by');
+
+             // Assign the appropriate class based on the status
+             $style = '';
+            if (isset($model_info->status)) {
+                if (str_contains($model_info->status, "approved")) {
+                    $status_class = "badge bg-success"; // Green for approved
+                } else if (str_contains($model_info->status, "active")) {
+                    $status_class = "btn-dark"; // Dark background for active
+                    $style = "background-color:#a7abbf;";
+                } else if (str_contains($model_info->status, "rejected")) {
+                    $status_class = "bg-danger"; // Red for rejected
+                }
+        
+                // Add status and title meta information
+                $view_data["status_meta"] = "<span style='$style' class='badge $status_class'>" . app_lang($model_info->status) . "</span>";
+            }
 
             return $view_data;
         } else {
@@ -926,8 +927,6 @@ class Appointments extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
-    
-    
 
     /* delete or undo a client */
 
@@ -998,7 +997,6 @@ class Appointments extends Security_Controller {
         return $this->_make_row($data, $custom_fields);
     }
 
-
     /* prepare a row of client list table */
 
     private function _make_row($data, $custom_fields) {
@@ -1057,9 +1055,6 @@ class Appointments extends Security_Controller {
         return $this->template->view("appointments/appointment_details", $view_data);
     }
 
-
-
-
     private function _prepare_appointment_info($data) {
         $style = '';
         $current_date = date('Y-m-d'); // Get the current date in 'Y-m-d' format
@@ -1096,7 +1091,6 @@ class Appointments extends Security_Controller {
     
         return $data;
     }
-    
 
     private function can_view_files() {
         if ($this->login_user->user_type == "staff") {
@@ -1143,7 +1137,6 @@ class Appointments extends Security_Controller {
 
                 $view_data["view_type"] = "";
 
-                //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
                 return $this->template->rander("appointments/view", $view_data);
