@@ -2,12 +2,10 @@
 <div class="row">
     <div class="table-responsive mb15">
         <table class="table dataTable display b-t">
-            <?php if (!empty($model_info->status)) { ?>
                 <tr>
-                    <td class="w100"><?php echo $model_info->status; ?></td>
+                    <td class="w100"><?php echo $status_meta; ?></td>
                     <td></td>
                 </tr>
-            <?php } ?>
             
             <?php if (!empty($model_info->title)) { ?>
                 <tr>

@@ -523,15 +523,17 @@ class Appointments extends Security_Controller {
             $view_data['rejected_by'] = $model_info->rejected_by; //get_array_value($confimed_rejected_users, 'rejected_by');
 
              // Assign the appropriate class based on the status
-             $style = '';
+            $style = '';
             if (isset($model_info->status)) {
                 if (str_contains($model_info->status, "approved")) {
-                    $status_class = "badge bg-success"; // Green for approved
+                    $status_class = ""; // Green for approved
+                    $style = "background-color:#08976d";
                 } else if (str_contains($model_info->status, "active")) {
                     $status_class = "btn-dark"; // Dark background for active
-                    $style = "background-color:#a7abbf;";
+                    $style = "background-color:#6690f4";
                 } else if (str_contains($model_info->status, "rejected")) {
                     $status_class = "bg-danger"; // Red for rejected
+                    $style = "background-color:#fc0758;";
                 }
         
                 // Add status and title meta information
