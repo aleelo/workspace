@@ -25,6 +25,7 @@ class Appointments extends Security_Controller {
 
     private function _get_secretary_director()
     {
+
         $role = $this->get_user_role();
         $user_id = $this->login_user->id;
 
@@ -481,7 +482,7 @@ class Appointments extends Security_Controller {
             "borderColor" => "#6690f4",
             "extendedProps" => array(
                 "icon" => get_event_icon('all'),
-                "encrypted_appointment_id" => encode_id($data->id, "appointment_id"), //to make is secure we'll use the encrypted id
+                "encrypted_appointment_id" => $data->id, //to make is secure we'll use the encrypted id
                 // "cycle" => $data->cycle,
                 "event_type" => "appointment",
             )
@@ -502,7 +503,7 @@ class Appointments extends Security_Controller {
     }
 
     private function _make_view_data($encrypted_appointment_id, $cycle = "0") {
-        $appointment_id = decode_id($encrypted_appointment_id, "appointment_id");
+        $appointment_id = $encrypted_appointment_id;
 
         $model_info = $this->Appointments_model->get_details(array("id" => $appointment_id))->getRow();
 
@@ -532,8 +533,9 @@ class Appointments extends Security_Controller {
             $status = "";
             $status_button = "";
 
-            $status_confirm = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang('approve'), array("class" => "btn btn-success float-start", "data-post-encrypted_appointment_id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "approved", "data-post-editable" => "1"));
-            $status_reject = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='x-circle' class='icon-16'></i> " . app_lang('reject'), array("class" => "btn btn-danger float-start", "data-post-encrypted_appointment_id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "rejected", "data-post-editable" => "1"));
+            $status_confirm = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang('approve'), array("class" => "btn btn-success float-start", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "approved", "data-post-editable" => "1"));
+            $status_reject = modal_anchor(get_uri("appointments/update_status/"), "<i data-feather='x-circle' class='icon-16'></i> " . app_lang('reject'), array("class" => "btn btn-danger float-start", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('appointment_details'), "data-post-status" => "rejected", "data-post-editable" => "1"));
+            $status_button = $status_confirm . $status_reject;
 
             if (in_array($this->login_user->id, $approved_by_array)) {
                 $status = "<span class='badge large' style='background-color:#5CB85C;' title=" . app_lang("appointment_status") . ">" . app_lang("approved") . "</span> ";
@@ -542,7 +544,6 @@ class Appointments extends Security_Controller {
                 $status = "<span class='badge large' style='background-color:#D9534F;' title=" . app_lang("appointment_status") . ">" . app_lang("rejected") . "</span> ";
                 $status_button = $status_confirm;
             } else {
-                $status_button = $status_confirm . $status_reject;
             }
 
             $view_data["status"] = $status;
@@ -761,6 +762,7 @@ class Appointments extends Security_Controller {
     function update_status() {
         $appointment_id = $this->request->getPost('id');
         $status = $this->request->getPost('status');
+        // die($appointment_id);
         $decline_reason = $this->request->getPost('decline_reason');
         $now = get_current_utc_time();
     

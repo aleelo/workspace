@@ -34,7 +34,7 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
     <?php
-        echo modal_anchor(get_uri("appointments/decline_reason"), "<i data-feather='x-circle' class='icon-16'></i>". app_lang('decline'), array("class" => "btn btn-danger", "title" => app_lang('decline_remarks'), "data-post-id" => $appointment_info->id));
+        echo modal_anchor(get_uri("appointments/decline_reason"), "<i data-feather='x-circle' class='icon-16'></i>". app_lang('decline'), array("class" => "btn btn-danger btn-sm", "title" => app_lang('decline_remarks'), "data-post-id" => $appointment_info->id));
     ?>
     <!-- <button data-status="rejected" type="submit" class="btn btn-danger btn-sm update-appointment-status"><span data-feather="x-circle" class="icon-16"></span> <?php echo app_lang('decline'); ?></button> -->
     <button data-status="approved" type="submit" class="btn btn-success btn-sm update-appointment-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('approve'); ?></button>

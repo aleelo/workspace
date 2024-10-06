@@ -101,26 +101,28 @@
     if (isset($editable) && $editable === "1") {
 
         if ($login_user->id == $model_info->created_by || $login_user->is_admin) {
-            //recurring child event's can't be deleted
-            $show_delete = true;
 
-            if (isset($model_info->cycle) && $model_info->cycle) {
-                $show_delete = false;
-            }
+            echo js_anchor("<i data-feather='x-circle' class='icon-16'></i> " . app_lang('delete_event'), array("class" => "btn btn-default float-start", "id" => "delete_event", "data-id" => $encrypted_appointment_id));
 
-            if ($show_delete) {
-                echo js_anchor("<i data-feather='x-circle' class='icon-16'></i> " . app_lang('delete_event'), array("class" => "btn btn-default float-start", "id" => "delete_event", "data-encrypted_event_id" => $encrypted_event_id));
-            }
-
-            echo modal_anchor(get_uri("events/modal_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit_event'), array("class" => "btn btn-default", "data-post-encrypted_event_id" => $encrypted_event_id, "title" => app_lang('edit_event')));
+            echo modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit_appointment'), array("class" => "btn btn-default", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('edit_appointment')));
         }
     }
-
-    //show a button to confirm or reject the event
-    if ($login_user->id != $model_info->created_by) {
-        echo $status_button;
-    }
     ?>
+    
+    <?php echo form_open(get_uri("appointments/update_status"), array("id" => "leave-status-form", "class" => "general-form", "role" => "form")); ?>
+        <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+        <input id="appointment_status_input" type="hidden" name="status" value="" />
+
+        <div class="modal-footer">
+            <?php
+                echo modal_anchor(get_uri("appointments/decline_reason"), "<i data-feather='x-circle' class='icon-16'></i>". app_lang('decline'), array("class" => "btn btn-danger", "title" => app_lang('decline_remarks'), "data-post-id" => $model_info->id));
+            ?>
+            <!-- <button data-status="rejected" type="submit" class="btn btn-danger btn-sm update-appointment-status"><span data-feather="x-circle" class="icon-16"></span> <?php echo app_lang('decline'); ?></button> -->
+            <button data-status="approved" type="submit" class="btn btn-success update-appointment-status"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('approve'); ?></button>
+
+        </div>
+    <?php echo form_close(); ?>
+
     <button type="button" class="btn btn-info text-white close-modal" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 </div>
 
@@ -128,8 +130,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        
+        $(".update-appointment-status").click(function () {
+            $("#appointment_status_input").val($(this).attr("data-status"));
+        });
+
+
         $('#delete_event').click(function () {
-            var encrypted_event_id = $(this).attr("data-encrypted_event_id");
+            var encrypted_appointment_id = $(this).attr("data-encrypted_appointment_id");
             $(this).appConfirmation({
                 title: "<?php echo app_lang('are_you_sure'); ?>",
                 btnConfirmLabel: "<?php echo app_lang('yes'); ?>",
@@ -139,10 +147,10 @@
                     $('.close-modal').trigger("click");
 
                     $.ajax({
-                        url: "<?php echo get_uri('events/delete') ?>",
+                        url: "<?php echo get_uri('appointments/delete') ?>",
                         type: 'POST',
                         dataType: 'json',
-                        data: {encrypted_event_id: encrypted_event_id},
+                        data: {id: encrypted_appointment_id},
                         success: function (result) {
                             if (result.success) {
                                 window.fullCalendar.refetchEvents();
