@@ -46,7 +46,7 @@
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
         <input id="appointment_status_input" type="hidden" name="status" value="" />
         <?php
-            echo js_anchor("<i data-feather='x-circle' class='icon-16'></i> " . app_lang('delete'), array("class" => "btn btn-default float-start", "id" => "delete", "data-id" => $encrypted_appointment_id));
+            // echo js_anchor("<i data-feather='x-circle' class='icon-16'></i> " . app_lang('delete'), array("class" => "btn btn-default float-start", "id" => "delete", "data-id" => $encrypted_appointment_id));
             echo modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $encrypted_appointment_id, "title" => app_lang('edit_appointment')));
             echo modal_anchor(get_uri("appointments/decline_reason"), "<i data-feather='x-circle' class='icon-16'></i>". app_lang('decline'), array("class" => "btn btn-danger", "title" => app_lang('decline_remarks'), "data-post-id" => $model_info->id));
         ?>

@@ -30,7 +30,7 @@ if (isset($client_id)) {
                     <div id="calendar-filter-dropdown" class="float-start <?php echo (count($calendar_filter_dropdown) == 1) ? "hide" : ""; ?>"></div>
                 <?php } ?>
 
-                <?php echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "event")); ?>
+                <?php //echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "event")); ?>
 
                 <?php
                 if (get_setting("enable_google_calendar_api") && (get_setting("google_calendar_authorized") || get_setting('user_' . $login_user->id . '_google_calendar_authorized'))) {
@@ -38,10 +38,9 @@ if (isset($client_id)) {
                 }
                 ?>
 
-                <!-- <?php //echo modal_anchor(get_uri("appointments/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_event'), array("class" => "btn btn-default add-btn", "title" => app_lang('add_event'), "data-post-client_id" => $client)); ?> -->
 
                 <?php echo modal_anchor(get_uri("appointments/modal_form"), "", array("class" => "hide", "id" => "add_event_hidden", "title" => app_lang('add_appointment'))); ?>
-                <?php echo modal_anchor(get_uri("appointments/appointments_view"), "", array("class" => "hide", "id" => "show_event_hidden", "data-post-client_id" => $client, "data-post-cycle" => "0", "data-post-editable" => "1", "title" => app_lang('appointment_details'))); ?>
+                <?php echo modal_anchor(get_uri("appointments/appointments_view"), "", array("class" => "hide", "id" => "show_event_hidden", "data-post-cycle" => "0", "data-post-editable" => "1", "title" => app_lang('appointment_details'))); ?>
             </div>
         </div>
         <div class="card-body">
@@ -140,12 +139,6 @@ if (isset($client_id)) {
             }
         });
 
-        var client = "<?php echo $client; ?>";
-        if (client) {
-            setTimeout(function () {
-                window.fullCalendar.today();
-            });
-        }
 
         //autoload the event popover
         var encrypted_event_id = "<?php echo isset($encrypted_event_id) ? $encrypted_event_id : ''; ?>";
