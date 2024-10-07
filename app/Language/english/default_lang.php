@@ -1936,6 +1936,11 @@ $lang["write_reason_here"] = "Write Reason Here";
 $lang["write_remarks_here"] = "Write Remarks Here";
 $lang["decline_remarks"] = "Decline Remarks";
 $lang["employee_list"] = "Employee List";
+$lang["training_budget_payer"] = "Training Budget Payer";
+$lang["training_budget_payers"] = "Training Budget Payers";
+$lang["budget_payer"] = "Budget Payer";
+$lang["edit_budget_payer"] = "Edit Budget Payer";
+$lang["edit_budget_payer"] = "Delete Budget Payer";
 
 $lang["approved (expired)"] = "Approved (Expired)";
 $lang["active (expired)"] = "Active (Expired)";

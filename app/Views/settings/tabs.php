@@ -124,6 +124,7 @@ $settings_menu["form_setup"][] = array("name" => "field_of_study", "url" => "fie
 $settings_menu["form_setup"][] = array("name" => "grades", "url" => "grades");
 $settings_menu["form_setup"][] = array("name" => "job_locations", "url" => "job_locations");
 $settings_menu["form_setup"][] = array("name" => "trainers", "url" => "trainers");
+$settings_menu["form_setup"][] = array("name" => "training_budget_payers", "url" => "training_budget_payers");
 $settings_menu["form_setup"][] = array("name" => "university_names", "url" => "university_names");
 // $settings_menu["form_setup"][] = array("name" => "training_locations", "url" => "training_locations");
 
