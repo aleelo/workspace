@@ -23,10 +23,10 @@
     </head>
     <body>
     <div class="container">
-      <div class="ticket-header"  style="padding: 3px !important;background-color: #5699ff !important;">
-      <img id="logo" src="<?php echo base_url().'assets/images/logo-emblem.png';?>" style="width: 90px;">
-            &nbsp;&nbsp;
-        <h2>Ministry of Finance Somalia</h2>
+      <div class="ticket-header"  style="padding: 2px !important;background-color: #5699ff !important;">
+      <img id="logo" src="<?php echo base_url().'assets/images/email_header.png';?>" style="width: 100%;">
+            <!-- &nbsp;&nbsp; -->
+        <!-- <h2>Ministry of Finance Somalia</h2> -->
       </div>
       <!-- <div class="ps">
         <h2>Somalia Revenue Directorate</h2>
