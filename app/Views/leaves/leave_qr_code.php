@@ -23,7 +23,7 @@
     </head>
     <body>
     <div class="container">
-      <div class="ticket-header"  style="padding: 2px !important;background-color: #5699ff !important;">
+      <div class="ticket-header"  style="padding: 1px !important;background-color: #000000 !important;">
       <img id="logo" src="<?php echo base_url().'assets/images/email_header.png';?>" style="width: 100%;">
             <!-- &nbsp;&nbsp; -->
         <!-- <h2>Ministry of Finance Somalia</h2> -->
