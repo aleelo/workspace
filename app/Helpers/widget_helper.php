@@ -267,7 +267,7 @@ if (!function_exists('get_event_icon')) {
         if (!$share_with) {
             $icon = "lock";
         } else if ($share_with == "all") {
-            $icon = "globe";
+            $icon = "calendar";
         } else {
             $icon = "at-sign";
         }
