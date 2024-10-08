@@ -16,7 +16,7 @@ class Training_budget_payers extends Security_Controller {
 
     //load leave type add/edit form
     function modal_form() {
-        $view_data['model_info'] = $this->Training_budget_payers_model->get_one($this->request->getPost('id'));
+        $view_data['model_info'] = $this->Training_funders_model->get_one($this->request->getPost('id'));
         return $this->template->view('training_budget_payers/modal_form', $view_data);
     }
 
@@ -35,7 +35,7 @@ class Training_budget_payers extends Security_Controller {
            
         );
 
-        $save_id = $this->Training_budget_payers_model->ci_save($data, $id);
+        $save_id = $this->Training_funders_model->ci_save($data, $id);
 
         if ($save_id) {
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
@@ -54,13 +54,13 @@ class Training_budget_payers extends Security_Controller {
         $id = $this->request->getPost('id');
 
         if ($this->request->getPost('undo')) {
-            if ($this->Training_budget_payers_model->delete($id, true)) {
+            if ($this->Training_funders_model->delete($id, true)) {
                 echo json_encode(array("success" => true, "data" => $this->_row_data($id), "message" => app_lang('record_undone')));
             } else {
                 echo json_encode(array("success" => false, app_lang('error_occurred')));
             }
         } else {
-            if ($this->Training_budget_payers_model->delete($id)) {
+            if ($this->Training_funders_model->delete($id)) {
                 echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
             } else {
                 echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -70,7 +70,7 @@ class Training_budget_payers extends Security_Controller {
 
     //prepare leave types list data for datatable
     function list_data() {
-        $list_data = $this->Training_budget_payers_model->get_details()->getResult();
+        $list_data = $this->Training_funders_model->get_details()->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
@@ -81,7 +81,7 @@ class Training_budget_payers extends Security_Controller {
     //get a row of leave types row
     private function _row_data($id) {
         $options = array("id" => $id);
-        $data = $this->Training_budget_payers_model->get_details($options)->getRow();
+        $data = $this->Training_funders_model->get_details($options)->getRow();
         return $this->_make_row($data);
     }
 
