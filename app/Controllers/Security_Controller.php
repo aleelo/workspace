@@ -371,6 +371,8 @@ class Security_Controller extends App_Controller {
             return true; //can access if it's estimates module and user has a pertial access
         } else if ($this->module_group === "report") {
             return true; //can access if it's estimates module and user has a pertial access
+        } else if ($this->module_group === "edeclartion") {
+            return true; //can access if it's estimates module and user has a pertial access
         } else if ($this->module_group === "training" && $this->access_type === "own") {
             return true; //can access if it's estimates module and user has a pertial access
         } else {

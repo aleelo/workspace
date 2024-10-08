@@ -51,7 +51,7 @@
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/company_info_tab/" . $appointments_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('appointment_info'); ?></a></li>
 
 
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tasks/" . $appointments_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> -->
+                    <!-- <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/tasks/" . $appointments_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li> --> -->
 
                     <!-- <?php if ($show_invoice_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("appointments/invoices/" . $appointments_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>

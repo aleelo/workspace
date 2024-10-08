@@ -31,6 +31,7 @@ class Left_menu {
             $access_invoice = get_array_value($permissions, "invoice");
             $access_ticket = get_array_value($permissions, "ticket");
             $access_appointment = get_array_value($permissions, "appointment");
+            $access_edeclaration = get_array_value($permissions, "edeclaration");
             $access_client = get_array_value($permissions, "client");
             $access_training = get_array_value($permissions, "training");
             $access_event = get_array_value($permissions, "event");
@@ -240,6 +241,18 @@ class Left_menu {
 
             if (get_setting("module_announcement") == "1" && ($this->ci->login_user->is_admin || $access_announcement)) {
                 $team_submenu["announcements"] = array("name" => "announcements", "url" => "announcements", "class" => "bell");
+            }
+
+            if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
+                $team_submenu["eDeclaration"] = array("name" => "eDeclaration", "url" => "", "class" => "arrow-right-circle");
+            }
+
+            if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
+                $team_submenu["eDeclaration_10k"] = array("name" => "eDeclaration_10k", "url" => "edeclaration_10k", "class" => "bell");
+            }
+
+            if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
+                $team_submenu["eDeclaration_100k"] = array("name" => "eDeclaration_100k", "url" => "edeclaration_100k", "class" => "bell");
             }
 
 

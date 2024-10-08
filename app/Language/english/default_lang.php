@@ -1995,7 +1995,14 @@ $lang["delete_university_name"] = "Delete University Name";
 $lang["edit_university_name"] = "Edit University Name";
 $lang["report"] = "Report";
 $lang["can_manage_report"] = "Can Manage Report?";
+$lang["can_manage_edeclaration"] = "Can Manage eDeclaration?";
 $lang["decline"] = "Decline";
+
+$lang["eDeclaration"] = "e-Declaration";
+$lang["eDeclaration_10k"] = "10k Above";
+$lang["eDeclaration_100k"] = "100k Above";
+$lang["arriving"] = "Arriving";
+$lang["departure"] = "Departure";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
 $lang["send_task_deadline_pre_reminder"] = "Send task deadline pre reminder";
@@ -2015,6 +2022,7 @@ $lang["mark_as_public"] = "Mark as public";
 $lang["note_details"] = "Note details";
 $lang["public_note_by"] = "Public note by";
 $lang["marked_as_public"] = "Marked as public";
+$lang["edeclaration"] = "eDeclaration";
 
 $lang["client_can_view_activity"] = "Client can view project activity";
 
