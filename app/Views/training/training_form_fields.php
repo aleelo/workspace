@@ -527,7 +527,7 @@ function resetOtherDropdownsFunder(excludeSection) {
 
         // Show the appropriate section(s) based on the selected meeting_with value and reset others
         switch (funder) {
-            case '2':
+            case '3':
                 $('#budget_section').show();
                 resetOtherDropdownsFunder('#budget_section');
                 break;
