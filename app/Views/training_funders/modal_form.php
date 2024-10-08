@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("training_budget_payers/save"), array("id" => "trainer-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("training_funders/save"), array("id" => "trainer-form", "class" => "general-form", "role" => "form")); ?>
 
 <div class="modal-body clearfix">
 
@@ -8,15 +8,15 @@
 
         <div class="form-group">
             <div class="row">
-                <label for="trainer" class=" col-md-3"><?php echo app_lang('budget_payer'); ?></label>
+                <label for="trainer" class=" col-md-3"><?php echo app_lang('funder'); ?></label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
-                        "id" => "budget_payer",
-                        "name" => "budget_payer",
-                        "value" => $model_info->budget_payer,
+                        "id" => "funder",
+                        "name" => "funder",
+                        "value" => $model_info->funder,
                         "class" => "form-control",
-                        "placeholder" => app_lang('budget_payer'),
+                        "placeholder" => app_lang('funder'),
                         "autofocus" => true,
                         "data-rule-required" => true,
                         "data-msg-required" => app_lang("field_required"),

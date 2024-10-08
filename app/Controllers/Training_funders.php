@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Training_budget_payers extends Security_Controller {
+class Training_funders extends Security_Controller {
 
     function __construct() {
         parent::__construct();
@@ -11,13 +11,13 @@ class Training_budget_payers extends Security_Controller {
 
     //load leave type list view
     function index() {
-        return $this->template->rander("training_budget_payers/index");
+        return $this->template->rander("training_funders/index");
     }
 
     //load leave type add/edit form
     function modal_form() {
         $view_data['model_info'] = $this->Training_funders_model->get_one($this->request->getPost('id'));
-        return $this->template->view('training_budget_payers/modal_form', $view_data);
+        return $this->template->view('training_funders/modal_form', $view_data);
     }
 
     //save leave type
@@ -25,13 +25,13 @@ class Training_budget_payers extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "budget_payer" => "required"
+            "funder" => "required"
         ));
 
         $id = $this->request->getPost('id');
 
         $data = array(
-            "budget_payer" => $this->request->getPost('budget_payer'),
+            "funder" => $this->request->getPost('funder'),
            
         );
 
@@ -89,9 +89,9 @@ class Training_budget_payers extends Security_Controller {
     private function _make_row($data) {
         return array(
 
-            $data->budget_payer,
-            modal_anchor(get_uri("training_budget_payers/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_budget_payer'), "data-post-id" => $data->id))
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_budget_payer'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training_budget_payers/delete"), "data-action" => "delete"))
+            $data->funder,
+            modal_anchor(get_uri("training_funders/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_funder'), "data-post-id" => $data->id))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_funder'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("training_funders/delete"), "data-action" => "delete"))
 
         );
     }
