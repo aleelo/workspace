@@ -70,6 +70,7 @@ class Training extends Security_Controller {
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['training_location'] = array("" => " -- Choose Training Location -- ") + $this->Training_locations_model->get_dropdown_list(array("location"), "id");
+        $view_data['funders'] = array("" => " -- Choose Funder -- ") + $this->Training_funders_model->get_dropdown_list(array("funder"), "id");
         $view_data['Trainers'] = array("" => " -- choose a trainer -- ") + $this->Trainers_model->get_dropdown_list(array("trainer"), "id");
         $view_data['departments'] = $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['sections'] = $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
@@ -220,6 +221,7 @@ class Training extends Security_Controller {
             "training_duration" => $this->request->getPost('training_duration'), 
             "training_location" => $this->request->getPost('training_location'),
             "objectives" => $this->request->getPost('objectives'),
+            "funder_id" => $this->request->getPost('funder'),
             "budget" => $this->request->getPost('budget'),
             "num_employee" => $this->request->getPost('num_employee'),
 

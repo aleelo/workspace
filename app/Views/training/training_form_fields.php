@@ -246,10 +246,30 @@
     </div>
 </div>
 
-<!-----------------------------------------  Budget  ------------------------------------>
+<!----------------------------------------- Training Funders  ------------------------------------>
 
 
 <div class="form-group">
+    <div class="row">
+        <label for="funder" class=" <?php echo $label_column; ?>"><?php echo 'Funder'; ?></label>
+        <div class=" col-md-10">
+            <?php
+            echo form_dropdown(array(
+                "id" => "funder",
+                "name" => "funder",
+                "class" => "form-control select2",
+                "placeholder" => 'Funder',
+                "autocomplete" => "off"
+            ),$funders,[$model_info->funder_id]);
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------  Budget  ------------------------------------>
+
+
+<div class="form-group" id="budget_section">
     <div class="row">
         <label for="budget" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Budget'; ?></label>
         <div class="<?php echo $field_column; ?>" style="position: relative;">
@@ -374,7 +394,7 @@
     </div>
 </div>
 
-<!----------------------------------------- Emplyees  ------------------------------------>
+<!----------------------------------------- Files  ------------------------------------>
 
 <div class="form-group">
     <div class="col-md-12">
@@ -434,7 +454,7 @@
 
     });
 
-// ------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------- Delivery Mode ----------------------------------------------------------------------------------------------- //
 
     function resetOtherDropdownsDeliveryMode(excludeSection) {
         var sections = ['#platform_section'];
@@ -477,7 +497,50 @@
     // Trigger change on page load to set the correct visibility based on any pre-selected value
     $('#delivery_mode').trigger('change');
 
-// ------------------------------------------------------------------------------------------------------------------------- //
+// ---------------------------- Funder  --------------------------------------------------------------------------------------------- //
+
+function resetOtherDropdownsFunder(excludeSection) {
+        var sections = ['#budget_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+      // Initially hide all sections
+      function hideAllSectionsFunder() {
+        $('#budget_section').hide();
+    }
+
+    // Call this function whenever the "Meeting With" dropdown changes
+    $('#funder').on('change', function () {
+        var funder = $(this).val();
+
+        // Hide all sections first
+        hideAllSectionsFunder();
+
+        // Show the appropriate section(s) based on the selected meeting_with value and reset others
+        switch (funder) {
+            case '4':
+                $('#budget_section').show();
+                resetOtherDropdownsFunder('#budget_section');
+                break;
+            default:
+            hideAllSectionsFunder(); // If no valid selection is made, hide all sections and reset all dropdowns
+            resetOtherDropdownsFunder(null);
+        }
+    });
+
+    // Trigger change on page load to set the correct visibility based on any pre-selected value
+    $('#funder').trigger('change');
+
+// ------------------------------  Training Type  ------------------------------------------------------------------------------------------- //
 
     function resetOtherDropdownsTrainingType(excludeSection) {
         var sections = ['#technical_skills_section', '#soft_skills_section'];
