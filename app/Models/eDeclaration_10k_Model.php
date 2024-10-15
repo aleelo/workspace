@@ -108,7 +108,7 @@ class eDeclaration_10k_Model extends Crud_model {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
         CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,
-        $travel_table.travel_type, $travel_table.departure_date, dpc.name as departure_country,
+        $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date, dpc.name as departure_country,
          dcc.name as destination_country, tcc.name as transit_country
         FROM $materials_table
         LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
@@ -116,7 +116,7 @@ class eDeclaration_10k_Model extends Crud_model {
         LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
         LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
         LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id
-                
+                 
         WHERE $materials_table.deleted=0 $where    
         $order $limit_offset";
 
