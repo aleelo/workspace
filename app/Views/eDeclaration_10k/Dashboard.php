@@ -94,34 +94,6 @@
             </div>
         </div>
 
-        <!-- Circular Progress Indicators -->
-        <!-- <div class="row my-5 text-center">
-            <div class="col-md-3">
-                <div class="circular-progress" data-percent="80">
-                    <span class="progress-value">80%</span>
-                </div>
-                <p class="mt-3">Departures On Time</p>
-            </div>
-            <div class="col-md-3">
-                <div class="circular-progress" data-percent="60">
-                    <span class="progress-value">60%</span>
-                </div>
-                <p class="mt-3">Arrivals On Time</p>
-            </div>
-            <div class="col-md-3">
-                <div class="circular-progress" data-percent="90">
-                    <span class="progress-value">90%</span>
-                </div>
-                <p class="mt-3">Transit Efficiency</p>
-            </div>
-            <div class="col-md-3">
-                <div class="circular-progress" data-percent="75">
-                    <span class="progress-value">75%</span>
-                </div>
-                <p class="mt-3">Customer Satisfaction</p>
-            </div>
-        </div> -->
-
         <!-- Data Table -->
         <div class="row mt-5">
             <div class="col-md-12">
@@ -130,40 +102,39 @@
                         <h4>Flight Summary Table</h4>
                     </div>
                     <div class="card-body">
-            <table class="table table-bordered">
-                <thead class="table-header">
-                    <tr>
-                        <th>Passenger Name</th>
-                        <th>Departure Country</th>
-                        <th>Destination Country</th>
-                        <th>Transit Country</th>
-                        <th>Departure Date</th>
-                        <th>Arrival Date</th>
-                        <th>Trip Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (isset($materials) && count($materials) > 0): ?>
-                        <?php foreach ($materials as $data): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($data->name ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->departure_country_id ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->transit_country ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->departure_date ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->arrival_date ?? 'N/A'); ?></td>
-                            <td><?= htmlspecialchars($data->trip_type ?? 'N/A'); ?></td>
-        
-                        </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7" class="text-center">No data available</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                        <table class="table table-bordered">
+                            <thead class="table-header">
+                                <tr>
+                                    <th>Passenger Name</th>
+                                    <th>Departure Country</th>
+                                    <th>Destination Country</th>
+                                    <th>Transit Country</th>
+                                    <th>Departure Date</th>
+                                    <th>Arrival Date</th>
+                                    <th>Trip Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (isset($materials) && count($materials) > 0): ?>
+                                    <?php foreach ($materials as $data): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($data->name ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->transit_country ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->departure_date ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->arrival_date ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->trip_type ?? 'N/A'); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7" class="text-center">No data available</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,7 +149,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        
+        // Initialize bar chart using Chart.js
+        const ctx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Departures', 'Arrivals'],
+                datasets: [{
+                    label: 'Total Flights',
+                    data: [100000, 100000],
+                    backgroundColor: ['#007bff', '#28a745'],
+                    borderColor: ['#007bff', '#28a745'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 </body>
 
