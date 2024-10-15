@@ -7,14 +7,16 @@ class eDeclaration_10k_Model extends Crud_model {
     protected $table = null;
 
     function __construct() {
-        $this->table = 'sections';
+        $this->table = 'materials';
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $sections_table = $this->db->prefixTable('sections');
+        $materials_table = $this->db->prefixTable('materials');
         $departments_table = $this->db->prefixTable('departments');
-
+        $passenger_table=$this->db->prefixTable('passenger_details');
+      
+        $travel_table=$this->db->prefixTable('travel_details');
         $projects_table = $this->db->prefixTable('projects');
         $users_table = $this->db->prefixTable('users');
         $invoices_table = $this->db->prefixTable('invoices');
@@ -30,74 +32,32 @@ class eDeclaration_10k_Model extends Crud_model {
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
-            $where .= " AND $sections_table.id=$id";
+            $where .= " AND $materials_table.id=$id";
         }
 
-        $custom_field_type = "clients";
-
-        $leads_only = $this->_get_clean_value($options, "leads_only");
-        if ($leads_only) {
-            $custom_field_type = "leads";
-            $where .= " AND $sections_table.is_lead=1";
+        $ref_number = $this->_get_clean_value($options, "ref_number");
+        if ($ref_number) {
+            $where .= " AND $materials_table.ref_number=$ref_number";
         }
 
-        $status = $this->_get_clean_value($options, "status");
-        if ($status) {
-            $where .= " AND $sections_table.lead_status_id='$status'";
-        }
-
-        $source = $this->_get_clean_value($options, "source");
-        if ($source) {
-            $where .= " AND $sections_table.lead_source_id='$source'";
-        }
-
-        $owner_id = $this->_get_clean_value($options, "owner_id");
-        if ($owner_id) {
-            $where .= " AND $sections_table.owner_id=$owner_id";
+        $q_type = $this->_get_clean_value($options, "q_type");
+        if ($q_type) {
+            $where .= " AND $materials_table.q_type='$q_type'";
         }
 
         $created_by = $this->_get_clean_value($options, "created_by");
         if ($created_by) {
-            $where .= " AND $sections_table.created_by=$created_by";
-        }
-
-        $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
-        if ($show_own_clients_only_user_id) {
-            $where .= " AND $sections_table.section_head_id=$show_own_clients_only_user_id";
+            $where .= " AND $materials_table.created_by=$created_by";
         }
 
 
-        $quick_filter = $this->_get_clean_value($options, "quick_filter");
-        if ($quick_filter) {
-            $where .= $this->make_quick_filter_query($quick_filter, $sections_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
+        $trip_type = $this->_get_clean_value($options, "trip_type");
+        
+        if($trip_type == "Arrival_list"){
+            $where .= " AND $materials_table.trip_type = 'Arrival'";
+        }elseif($trip_type == "Depature_list"){
+            $where .= " AND $materials_table.trip_type = 'Departure'";
         }
-
-        $start_date = $this->_get_clean_value($options, "start_date");
-        if ($start_date) {
-            $where .= " AND DATE($sections_table.created_date)>='$start_date'";
-        }
-        $end_date = $this->_get_clean_value($options, "end_date");
-        if ($end_date) {
-            $where .= " AND DATE($sections_table.created_date)<='$end_date'";
-        }
-
-        $label_id = $this->_get_clean_value($options, "label_id");
-        if ($label_id) {
-            $where .= " AND (FIND_IN_SET('$label_id', $sections_table.labels)) ";
-        }
-
-        $select_labels_data_query = $this->get_labels_data_query();
-
-        $client_groups = $this->_get_clean_value($options, "client_groups");
-        $where .= $this->prepare_allowed_client_groups_query($sections_table, $client_groups);
-
-        //prepare custom fild binding query
-        $custom_fields = get_array_value($options, "custom_fields");
-        $custom_field_filter = get_array_value($options, "custom_field_filter");
-        $custom_field_query_info = $this->prepare_custom_field_query_string($custom_field_type, $custom_fields, $sections_table, $custom_field_filter);
-        $select_custom_fieds = get_array_value($custom_field_query_info, "select_string");
-        $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
-        $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
 
         $this->db->query('SET SQL_BIG_SELECTS=1');
 
@@ -108,22 +68,14 @@ class eDeclaration_10k_Model extends Crud_model {
             $offset = $skip ? $skip : 0;
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
-
+        
 
         $available_order_by_list = array(
-            "id" => $sections_table . ".id",
-            "nameSo" => $sections_table . ".nameSo",
-            "short_name_SO" => $sections_table . ".short_name_SO",
-            "nameEn" => $sections_table . ".nameEn",
-            "short_name_EN" => $sections_table . ".short_name_EN",
-            "email" => $sections_table . ".email",
-            "DepNameSo" => $departments_table . ".nameSo",
-            "SectionHead" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
-            "secretary" => "CONCAT(sec.first_name,' ',sec.last_name)",
-            "remarks" => $sections_table . ".remarks",
-            "status" => "lead_status_title",
-            "primary_contact" => "primary_contact",
-            "client_groups" => "client_groups"
+            "id" => $materials_table . ".id",
+            "name" => $materials_table . ".name",
+            "ref_number" => $materials_table . ".ref_number",
+            "fullName" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
+            "trip_type" => $materials_table . ".trip_type",
         );
 
         $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
@@ -142,38 +94,24 @@ class eDeclaration_10k_Model extends Crud_model {
             $labels_table = $this->db->prefixTable("labels");
 
             $where .= " AND (";
-            $where .= " $sections_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.email LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $materials_table.id LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $materials_table.name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $materials_table.trip_type LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $materials_table.ref_number LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR CONCAT(sec.first_name,' ',sec.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $sections_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $sections_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
-
-            if ($leads_only) {
-                $where .= " OR $lead_status_table.title LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= $this->get_custom_field_search_query($sections_table, "leads", $search_by);
-            } else {
-                $where .= $this->get_custom_field_search_query($sections_table, "clients", $search_by);
-            }
-
+            
             $where .= " )";
         }
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $sections_table.*, $departments_table.nameSo as DepNameSo,
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as SectionHead,
-        CONCAT(sec.first_name,' ',sec.last_name) as secretary
-        FROM $sections_table
-        LEFT JOIN $users_table ON $users_table.id = $sections_table.section_head_id
-        LEFT JOIN $users_table as sec ON sec.id = $sections_table.secretary_id
-        LEFT JOIN $departments_table ON $departments_table.id = $sections_table.department_id
-        $join_custom_fieds               
-        WHERE $sections_table.deleted=0 $where $custom_fields_where  
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
+        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,
+        $travel_table.travel_type, $travel_table.departure_date
+        FROM $materials_table
+        LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+           LEFT JOIN $travel_table on $travel_table.passenger_id=$passenger_table.id
+                
+        WHERE $materials_table.deleted=0 $where    
         $order $limit_offset";
 
         // print_r($sql);die;
@@ -336,363 +274,6 @@ class eDeclaration_10k_Model extends Crud_model {
         }
     }
 
-    function get_leads_kanban_details($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-        $lead_source_table = $this->db->prefixTable('lead_source');
-        $users_table = $this->db->prefixTable('users');
-        $events_table = $this->db->prefixTable('events');
-        $notes_table = $this->db->prefixTable('notes');
-        $estimates_table = $this->db->prefixTable('estimates');
-        $general_files_table = $this->db->prefixTable('general_files');
-        $estimate_requests_table = $this->db->prefixTable('estimate_requests');
 
-        $where = "";
-
-        $status = $this->_get_clean_value($options, "status");
-        if ($status) {
-            $where .= " AND $clients_table.lead_status_id='$status'";
-        }
-
-        $owner_id = $this->_get_clean_value($options, "owner_id");
-        if ($owner_id) {
-            $where .= " AND $clients_table.owner_id='$owner_id'";
-        }
-
-        $source = $this->_get_clean_value($options, "source");
-        if ($source) {
-            $where .= " AND $clients_table.lead_source_id='$source'";
-        }
-
-        $search = get_array_value($options, "search");
-        if ($search) {
-            $search = $this->db->escapeLikeString($search);
-            $where .= " AND $clients_table.company_name LIKE '%$search%' ESCAPE '!'";
-        }
-
-        $label_id = $this->_get_clean_value($options, "label_id");
-        if ($label_id) {
-            $where .= " AND (FIND_IN_SET('$label_id', $clients_table.labels)) ";
-        }
-
-        $custom_field_filter = get_array_value($options, "custom_field_filter");
-        $custom_field_query_info = $this->prepare_custom_field_query_string("leads", "", $clients_table, $custom_field_filter);
-        $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
-
-        $users_where = "$users_table.client_id=$clients_table.id AND $users_table.deleted=0 AND $users_table.user_type='lead'";
-
-        $this->db->query('SET SQL_BIG_SELECTS=1');
-
-        $sql = "SELECT $clients_table.id, $clients_table.company_name, $clients_table.sort, IF($clients_table.sort!=0, $clients_table.sort, $clients_table.id) AS new_sort, $clients_table.lead_status_id, $clients_table.owner_id,
-                (SELECT $users_table.image FROM $users_table WHERE $users_where AND $users_table.is_primary_contact=1) AS primary_contact_avatar,
-                (SELECT COUNT($users_table.id) FROM $users_table WHERE $users_where) AS total_contacts_count,
-                (SELECT COUNT($events_table.id) FROM $events_table WHERE $events_table.deleted=0 AND $events_table.client_id=$clients_table.id) AS total_events_count,
-                (SELECT COUNT($notes_table.id) FROM $notes_table WHERE $notes_table.deleted=0 AND $notes_table.client_id=$clients_table.id) AS total_notes_count,
-                (SELECT COUNT($estimates_table.id) FROM $estimates_table WHERE $estimates_table.deleted=0 AND $estimates_table.client_id=$clients_table.id) AS total_estimates_count,
-                (SELECT COUNT($general_files_table.id) FROM $general_files_table WHERE $general_files_table.deleted=0 AND $general_files_table.client_id=$clients_table.id) AS total_files_count,
-                (SELECT COUNT($estimate_requests_table.id) FROM $estimate_requests_table WHERE $estimate_requests_table.deleted=0 AND $estimate_requests_table.client_id=$clients_table.id) AS total_estimate_requests_count,
-                $lead_source_table.title AS lead_source_title,
-                CONCAT($users_table.first_name, ' ', $users_table.last_name) AS owner_name
-        FROM $clients_table 
-        LEFT JOIN $lead_source_table ON $clients_table.lead_source_id = $lead_source_table.id 
-        LEFT JOIN $users_table ON $users_table.id = $clients_table.owner_id AND $users_table.deleted=0 AND $users_table.user_type='staff' 
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=1 $where $custom_fields_where
-        ORDER BY new_sort ASC";
-
-        return $this->db->query($sql);
-    }
-
-    function get_search_suggestion($search = "", $options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-
-        $where = "";
-        $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
-        if ($show_own_clients_only_user_id) {
-            $where .= " AND ($clients_table.created_by=$show_own_clients_only_user_id OR $clients_table.owner_id=$show_own_clients_only_user_id)";
-        }
-
-        if ($search) {
-            $search = $this->db->escapeLikeString($search);
-        }
-
-        $client_groups = $this->_get_clean_value($options, "client_groups");
-        $where .= $this->prepare_allowed_client_groups_query($clients_table, $client_groups);
-
-        $sql = "SELECT $clients_table.id, $clients_table.company_name AS title
-        FROM $clients_table  
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 AND $clients_table.company_name LIKE '%$search%' ESCAPE '!' $where
-        ORDER BY $clients_table.company_name ASC
-        LIMIT 0, 10";
-
-        return $this->db->query($sql);
-    }
-
-    function count_total_clients($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-        $tickets_table = $this->db->prefixTable('tickets');
-        $invoices_table = $this->db->prefixTable('invoices');
-        $invoice_payments_table = $this->db->prefixTable('invoice_payments');
-        $projects_table = $this->db->prefixTable('projects');
-        $estimates_table = $this->db->prefixTable('estimates');
-        $estimate_requests_table = $this->db->prefixTable('estimate_requests');
-        $orders_table = $this->db->prefixTable('orders');
-        $proposals_table = $this->db->prefixTable('proposals');
-
-        $where = "";
-
-        $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
-        if ($show_own_clients_only_user_id) {
-            $where .= " AND $clients_table.created_by=$show_own_clients_only_user_id";
-        }
-
-        $filter = $this->_get_clean_value($options, "filter");
-        if ($filter) {
-            $where .= $this->make_quick_filter_query($filter, $clients_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
-        }
-
-        $client_groups = $this->_get_clean_value($options, "client_groups");
-        $where .= $this->prepare_allowed_client_groups_query($clients_table, $client_groups);
-
-        $sql = "SELECT COUNT($clients_table.id) AS total
-        FROM $clients_table 
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 $where";
-        return $this->db->query($sql)->getRow()->total;
-    }
-
-    function get_conversion_rate_with_currency_symbol() {
-        $clients_table = $this->db->prefixTable('clients');
-
-        $sql = "SELECT $clients_table.currency_symbol, $clients_table.currency
-        FROM $clients_table 
-        WHERE $clients_table.deleted=0 AND $clients_table.currency!='' AND $clients_table.currency IS NOT NULL
-        GROUP BY $clients_table.currency";
-        return $this->db->query($sql);
-    }
-
-    function count_total_leads($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-
-        $where = "";
-        $show_own_leads_only_user_id = $this->_get_clean_value($options, "show_own_leads_only_user_id");
-        if ($show_own_leads_only_user_id) {
-            $where .= " AND $clients_table.owner_id=$show_own_leads_only_user_id";
-        }
-
-        $sql = "SELECT COUNT($clients_table.id) AS total
-        FROM $clients_table 
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=1 $where";
-        return $this->db->query($sql)->getRow()->total;
-    }
-
-    function get_lead_statistics($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-        $lead_status_table = $this->db->prefixTable('lead_status');
-
-        try {
-            $this->db->query("SET sql_mode = ''");
-        } catch (\Exception $e) {
-            
-        }
-        $where = "";
-
-        $show_own_leads_only_user_id = $this->_get_clean_value($options, "show_own_leads_only_user_id");
-        if ($show_own_leads_only_user_id) {
-            $where .= " AND ($clients_table.owner_id=$show_own_leads_only_user_id)";
-        }
-
-        $converted_to_client = "SELECT COUNT($clients_table.id) AS total
-        FROM $clients_table
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 AND $clients_table.lead_status_id!=0 $where";
-
-        $lead_statuses = "SELECT COUNT($clients_table.id) AS total, $clients_table.lead_status_id, $lead_status_table.title, $lead_status_table.color
-        FROM $clients_table
-        LEFT JOIN $lead_status_table ON $lead_status_table.id = $clients_table.lead_status_id
-        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=1 $where
-        GROUP BY $clients_table.lead_status_id
-        ORDER BY $lead_status_table.sort ASC";
-
-        $info = new \stdClass();
-        $info->converted_to_client = $this->db->query($converted_to_client)->getRow()->total;
-        $info->lead_statuses = $this->db->query($lead_statuses)->getResult();
-
-        return $info;
-    }
-
-    function is_currency_editable($client_id) {
-        $clients_table = $this->db->prefixTable('clients');
-        $invoices_table = $this->db->prefixTable('invoices');
-        $estimates_table = $this->db->prefixTable('estimates');
-        $orders_table = $this->db->prefixTable('orders');
-        $proposals_table = $this->db->prefixTable('proposals');
-        $contracts_table = $this->db->prefixTable('contracts');
-        $subscriptions_table = $this->db->prefixTable('subscriptions');
-
-        $client_id = $this->db->escapeString($client_id);
-
-        $invoices_sql = "SELECT $invoices_table.id
-                        FROM $invoices_table
-                        WHERE $invoices_table.deleted=0 
-                        AND $invoices_table.client_id=$client_id AND $invoices_table.status!='draft' AND $invoices_table.status!='cancelled'
-                        ORDER BY $invoices_table.id DESC LIMIT 1";
-
-        $invoices_count = $this->db->query($invoices_sql)->getRow();
-        $invoices_count = $invoices_count ? $invoices_count->id : 0;
-        if ($invoices_count) {
-            return false;
-        }
-
-        $estimates_sql = "SELECT $estimates_table.id 
-                        FROM $estimates_table
-                        WHERE $estimates_table.deleted=0 
-                        AND $estimates_table.client_id=$client_id AND $estimates_table.status!='draft' AND $estimates_table.status!='declined'
-                        ORDER BY $estimates_table.id DESC LIMIT 1";
-
-        $estimates_count = $this->db->query($estimates_sql)->getRow();
-        $estimates_count = $estimates_count ? $estimates_count->id : 0;
-        if ($estimates_count) {
-            return false;
-        }
-
-        $orders_sql = "SELECT $orders_table.id 
-                        FROM $orders_table
-                        WHERE $orders_table.deleted=0 AND $orders_table.client_id=$client_id
-                        ORDER BY $orders_table.id DESC LIMIT 1";
-
-        $orders_count = $this->db->query($orders_sql)->getRow();
-        $orders_count = $orders_count ? $orders_count->id : 0;
-        if ($orders_count) {
-            return false;
-        }
-
-        $proposals_sql = "SELECT $proposals_table.id 
-                        FROM $proposals_table
-                        WHERE $proposals_table.deleted=0
-                        AND $proposals_table.client_id=$client_id AND $proposals_table.status!='draft' AND $proposals_table.status!='declined'
-                        ORDER BY $proposals_table.id DESC LIMIT 1";
-
-        $proposals_count = $this->db->query($proposals_sql)->getRow();
-        $proposals_count = $proposals_count ? $proposals_count->id : 0;
-        if ($proposals_count) {
-            return false;
-        }
-
-        $contracts_sql = "SELECT $contracts_table.id 
-                        FROM $contracts_table
-                        WHERE $contracts_table.deleted=0
-                        AND $contracts_table.client_id=$client_id AND $contracts_table.status!='draft' AND $contracts_table.status!='declined'
-                        ORDER BY $contracts_table.id DESC LIMIT 1";
-
-        $contracts_count = $this->db->query($contracts_sql)->getRow();
-        $contracts_count = $contracts_count ? $contracts_count->id : 0;
-        if ($contracts_count) {
-            return false;
-        }
-
-        $subscriptions_sql = "SELECT $subscriptions_table.id 
-                        FROM $subscriptions_table
-                        WHERE $subscriptions_table.deleted=0
-                        AND $subscriptions_table.client_id=$client_id AND $subscriptions_table.status!='draft' AND $subscriptions_table.status!='cancelled'
-                        ORDER BY $subscriptions_table.id DESC LIMIT 1";
-
-        $subscriptions_count = $this->db->query($subscriptions_sql)->getRow();
-        $subscriptions_count = $subscriptions_count ? $subscriptions_count->id : 0;
-        if ($subscriptions_count) {
-            return false;
-        }
-
-        //have nothing, the currency is editable
-        return true;
-    }
-
-    function get_leads_team_members_summary($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-        $users_table = $this->db->prefixTable('users');
-
-        $clients_where = "";
-        $created_date_from = $this->_get_clean_value($options, "created_date_from");
-        $created_date_to = $this->_get_clean_value($options, "created_date_to");
-        if ($created_date_from && $created_date_to) {
-            $clients_where .= " AND ($clients_table.created_date BETWEEN '$created_date_from' AND '$created_date_to') ";
-        }
-
-        $source_id = $this->_get_clean_value($options, "source_id");
-        if ($source_id) {
-            $clients_where .= " AND $clients_table.lead_source_id='$source_id'";
-        }
-
-
-        $label_id = $this->_get_clean_value($options, "label_id");
-        if ($label_id) {
-            $clients_where .= " AND (FIND_IN_SET('$label_id', $clients_table.labels)) ";
-        }
-
-        $sql = "SELECT $users_table.id AS team_member_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS team_member_name, $users_table.image, leads_details.status_total_meta, leads_migrated.converted_to_client
-                FROM $users_table
-                INNER JOIN(
-                    SELECT leads_group_table.owner_id, GROUP_CONCAT(CONCAT(leads_group_table.lead_status_id,'_',leads_group_table.total_leads)) AS status_total_meta
-                    FROM (SELECT $clients_table.owner_id, $clients_table.lead_status_id, COUNT(1) AS total_leads FROM $clients_table WHERE $clients_table.is_lead=1 AND $clients_table.deleted=0 $clients_where GROUP BY $clients_table.owner_id, $clients_table.lead_status_id) AS leads_group_table
-                    GROUP BY leads_group_table.owner_id
-                ) AS leads_details ON leads_details.owner_id = $users_table.id
-                LEFT JOIN (SELECT $clients_table.owner_id, COUNT(1) AS converted_to_client FROM $clients_table WHERE $clients_table.is_lead=0 AND $clients_table.deleted=0 AND $clients_table.client_migration_date > '2000-01-01' $clients_where GROUP BY $clients_table.owner_id) as leads_migrated ON leads_migrated.owner_id = $users_table.id
-                WHERE $users_table.deleted=0 AND $users_table.status='active' AND $users_table.user_type='staff'
-                GROUP BY $users_table.id";
-        return $this->db->query($sql);
-    }
-
-    function get_converted_to_client_statistics($options = array()) {
-        $clients_table = $this->db->prefixTable('clients');
-        $users_table = $this->db->prefixTable('users');
-        $lead_source_table = $this->db->prefixTable('lead_source');
-
-        $where = "";
-
-        $date_range_type = $this->_get_clean_value($options, "date_range_type");
-
-        $start_date = $this->_get_clean_value($options, "start_date");
-        $end_date = $this->_get_clean_value($options, "end_date");
-        
-        $date_group_by_field = "$clients_table.created_date";
-
-        if ($start_date && $end_date && $date_range_type == "created_date_wise") {
-            $where .= " AND ($clients_table.created_date BETWEEN '$start_date' AND '$end_date') ";
-        } else if ($start_date && $end_date) {
-            $where .= " AND ($clients_table.client_migration_date BETWEEN '$start_date' AND '$end_date') ";
-            $date_group_by_field = "$clients_table.client_migration_date";
-        }
-
-        $owner_id = $this->_get_clean_value($options, "owner_id");
-        if ($owner_id) {
-            $where .= " AND $clients_table.owner_id=$owner_id";
-        }
-
-        $source_id = $this->_get_clean_value($options, "source_id");
-        if ($source_id) {
-            $where .= " AND $clients_table.lead_source_id=$source_id";
-        }
-
-        $group_by = $this->_get_clean_value($options, "group_by");
-
-        $sql = "";
-
-        if ($group_by == "created_date") {
-            $sql = "SELECT DATE_FORMAT($date_group_by_field,'%d') AS day, SUM(1) total_converted
-                FROM $clients_table 
-                WHERE $clients_table.is_lead=0 AND $clients_table.deleted=0 AND $clients_table.client_migration_date > '2000-01-01' $where
-                GROUP BY DATE($date_group_by_field)";
-        } else if ($group_by == "owner_id") {
-            $sql = "SELECT $clients_table.owner_id, SUM(1) total_converted, CONCAT($users_table.first_name, ' ' ,$users_table.last_name) AS owner_name  
-                FROM $clients_table 
-                LEFT JOIN $users_table ON $users_table.id = $clients_table.owner_id
-                WHERE $clients_table.is_lead=0 AND $clients_table.deleted=0 AND $clients_table.client_migration_date > '2000-01-01' $where
-                GROUP BY $clients_table.owner_id";
-        } else if ($group_by == "source_id") {
-            $sql = "SELECT $clients_table.lead_source_id, SUM(1) total_converted, $lead_source_table.title
-                FROM $clients_table 
-                LEFT JOIN $lead_source_table ON $lead_source_table.id = $clients_table.lead_source_id
-                WHERE $clients_table.is_lead=0 AND $clients_table.deleted=0 AND $clients_table.client_migration_date > '2000-01-01' $where
-                GROUP BY $clients_table.lead_source_id";
-        }
-
-        return $this->db->query($sql);
-    }
 
 }

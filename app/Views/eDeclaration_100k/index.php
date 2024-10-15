@@ -1,23 +1,16 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="section-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/sections_list/"); ?>" data-bs-target="#section_list"><?php echo app_lang('sections_list'); ?></a></li>
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("sections/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
-            <div class="tab-title clearfix no-border">
-                <div class="title-button-group">
-                    <?php
-                        echo modal_anchor(get_uri("sections/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_section'), array("class" => "btn btn-default", "title" => app_lang('add_section')));
-                    ?>
-                </div>
-            </div>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_100k/edeclaration_100k_arriving_list/"); ?>" data-bs-target="#edeclaration_100k_arriving_list"><?php echo app_lang('arriving'); ?></a></li>
+             
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade" id="overview">
-                <?php echo view("sections/overview/index"); ?>
+                <?php echo view("edeclaration_100k/overview/index"); ?>
             </div>
 
-            <div role="tabpanel" class="tab-pane fade" id="section_list"></div>
+            <div role="tabpanel" class="tab-pane fade" id="edeclaration_100k_arriving_list"></div>
+            
             <div role="tabpanel" class="tab-pane fade" id="contacts"></div>
         </div>
     </div>

@@ -5,7 +5,7 @@ if ($login_user->user_type == "staff") {
     if ($login_user->is_admin || $access_client) {
         ?>
         <li class="nav-item dropdown hidden-xs">
-            <?php echo ajax_anchor(get_uri("sections/show_my_starred_sections/"), "<i data-feather='briefcase' class='icon'></i>", array("class" => "nav-link dropdown-toggle", "data-bs-toggle" => "dropdown", "data-real-target" => "#clients-quick-list-container")); ?>
+            <?php echo ajax_anchor(get_uri("edeclaration_10k/show_my_starred_edeclaration_10k/"), "<i data-feather='briefcase' class='icon'></i>", array("class" => "nav-link dropdown-toggle", "data-bs-toggle" => "dropdown", "data-real-target" => "#clients-quick-list-container")); ?>
             <div class="dropdown-menu dropdown-menu-start w400">
                 <div id="clients-quick-list-container">
                     <div class="list-group">

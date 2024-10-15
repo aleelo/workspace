@@ -42,7 +42,7 @@ class eDeclaration_100k extends Security_Controller {
 
         
 
-        return $this->template->rander("sections/index", $view_data);
+        return $this->template->rander("edeclaration_100k/index", $view_data);
     }
 
   
@@ -67,7 +67,7 @@ class eDeclaration_100k extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Sections_model->get_one($Sections_id);
+        $view_data['model_info'] = $this->eDeclaration_10k_Model->get_one($Sections_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['departments'] = array("" => " -- Choose Section Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
@@ -89,7 +89,29 @@ class eDeclaration_100k extends Security_Controller {
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('sections/modal_form', $view_data);
+        return $this->template->view('edeclaration_100k/modal_form', $view_data);
+    }
+    /* load client add/edit modal */
+
+    function arriving100k_details() {
+        
+        $ref_number = $this->request->getPost('ref_number');
+        $id = $this->request->getPost('id');
+        // $this->_validate_client_manage_access($Sections_id);
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric"
+        ));
+
+        $options = array('ref_number'=> $ref_number);
+        
+        $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
+        $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
+        // print_r( $view_data['passenger_info']);die;
+
+        $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
+
+        return $this->template->view('edeclaration_100k/arrvin100k_details', $view_data);
     }
 
    
@@ -161,7 +183,7 @@ class eDeclaration_100k extends Security_Controller {
         //     exit();
         // }
 
-        $save_id = $this->Sections_model->ci_save($data, $Sections_id);
+        $save_id = $this->eDeclaration_10k_Model->ci_save($data, $Sections_id);
      
 
         if ($save_id) {
@@ -170,7 +192,7 @@ class eDeclaration_100k extends Security_Controller {
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Sections_model->get_details($options)->getRow();
+                $partner = $this->eDeclaration_10k_Model->get_details($options)->getRow();
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
 
@@ -201,7 +223,7 @@ class eDeclaration_100k extends Security_Controller {
             "id" => "required|numeric"
         ));
 
-        if ($this->Sections_model->delete($id)) {
+        if ($this->eDeclaration_10k_Model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -210,13 +232,14 @@ class eDeclaration_100k extends Security_Controller {
 
     /* list of clients, prepared for datatable  */
 
-    function list_data() {
+    function edeclaration_100k_arrival_list_data() {
 
         $this->access_only_allowed_members();
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
         
         $options = array(
+            "q_type" => 2,
             "custom_fields" => $custom_fields,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("clients", $this->login_user->is_admin, $this->login_user->user_type),
             "group_id" => $this->request->getPost("group_id"),
@@ -226,10 +249,12 @@ class eDeclaration_100k extends Security_Controller {
             "client_groups" => $this->allowed_client_groups,
             "label_id" => $this->request->getPost('label_id')
         );
+        
+        
 
         $all_options = append_server_side_filtering_commmon_params($options);
 
-        $result = $this->Sections_model->get_details($all_options);
+        $result = $this->eDeclaration_10k_Model->get_details($all_options);
 
         //by this, we can handel the server side or client side from the app table prams.
         if (get_array_value($all_options, "server_side")) {
@@ -257,7 +282,7 @@ class eDeclaration_100k extends Security_Controller {
             "id" => $id,
             "custom_fields" => $custom_fields
         );
-        $data = $this->Sections_model->get_details($options)->getRow();
+        $data = $this->eDeclaration_10k_Model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
     }
 
@@ -266,76 +291,27 @@ class eDeclaration_100k extends Security_Controller {
     private function _make_row($data, $custom_fields) {
 
 
-        // $image_url = get_avatar($data->contact_avatar);
-
-        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-
-        // $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
-
-        // $group_list = "";
-        // if ($data->client_groups) {
-        //     $groups = explode(",", $data->client_groups);
-        //     foreach ($groups as $group) {
-        //         if ($group) {
-        //             $group_list .= "<li>" . $group . "</li>";
-        //         }
-        //     }
-        // }
-
-        // if ($group_list) {
-        //     $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
-        // }
-
-        // // $client_labels = make_labels_view_data($data->labels_list, true);
-
-        // $due = 0;
-        // if ($data->invoice_value) {
-        //     $due = ignor_minor_value($data->invoice_value - $data->payment_received);
-        // }
-
-        // $owner = "-";
-        // if ($data->created_by) {
-        //     // $owner_image_url = get_avatar($data->owner_avatar);
-        //     // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-        //     // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-        //     $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
-        //     // $data->user; //
-
-        // }
-
-
         $row_data = array($data->id,
 
-            anchor(get_uri("sections/view/" . $data->id), $data->nameSo),
-            $data->short_name_SO,
-            $data->nameEn,
-            $data->short_name_EN,
-            $data->email,
-            // $data->department_id,
-            // $data->section_head_id,
-            $data->DepNameSo,
-            $data->SectionHead,
-            $data->secretary,
-            $data->remarks,
+            anchor(get_uri("edeclaration_100k/view/" . $data->id), $data->ref_number),
+            $data->fullName,
+            $data->travel_type,
+            $data->trip_type
             
-
-            // $data->primary_contact ? $primary_contact : "",
-            // $group_list,
-            // $client_labels,
-            // to_decimal_format($data->total_projects),
-            // to_currency($data->invoice_value, $data->currency_symbol),
-            // to_currency($data->payment_received, $data->currency_symbol),
-            // to_currency($due, $data->currency_symbol)
+ 
             
         );
+        $option_icon = "info";
 
         foreach ($custom_fields as $field) {
             $cf_id = "cfv_" . $field->id;
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("sections/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_section'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_section'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sections/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("edeclaration_100k/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_section'), "data-post-id" => $data->id))
+         . modal_anchor(get_uri("edeclaration_100k/arriving100k_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('arrvin10k_details'), "data-post-id" => $data->id, "data-post-ref_number" => $data->ref_number))
+
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_section'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("edeclaration_100k/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -371,7 +347,7 @@ class eDeclaration_100k extends Security_Controller {
 
         if ($Sections_id) {
             $options = array("id" => $Sections_id);
-            $section_info = $this->Sections_model->get_details($options)->getRow();
+            $section_info = $this->eDeclaration_10k_Model->get_details($options)->getRow();
             if ($section_info && !$section_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
@@ -393,7 +369,7 @@ class eDeclaration_100k extends Security_Controller {
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
-                return $this->template->rander("sections/view", $view_data);
+                return $this->template->rander("edeclaration_100k/view", $view_data);
             } else {
                 show_404();
             }
@@ -410,17 +386,17 @@ class eDeclaration_100k extends Security_Controller {
 
             if ($type === "add") {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "add");
-                return $this->template->view('sections/star/starred', $view_data);
+                return $this->template->view('edeclaration_100k/star/starred', $view_data);
             } else {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "remove");
-                return $this->template->view('sections/star/not_starred', $view_data);
+                return $this->template->view('edeclaration_100k/star/not_starred', $view_data);
             }
         }
     }
 
     function show_my_starred_clients() {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
-        return $this->template->view('sections/star/clients_list', $view_data);
+        return $this->template->view('edeclaration_100k/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
@@ -434,7 +410,7 @@ class eDeclaration_100k extends Security_Controller {
 
         $view_data['client_id'] = clean_data($client_id);
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
-        return $this->template->view("sections/projects/index", $view_data);
+        return $this->template->view("edeclaration_100k/projects/index", $view_data);
     }
 
     /* load payments tab  */
@@ -445,7 +421,7 @@ class eDeclaration_100k extends Security_Controller {
         if ($client_id) {
             $view_data["client_info"] = $this->Clients_model->get_one($client_id);
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("sections/payments/index", $view_data);
+            return $this->template->view("edeclaration_100k/payments/index", $view_data);
         }
     }
 
@@ -462,7 +438,7 @@ class eDeclaration_100k extends Security_Controller {
 
             $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
-            return $this->template->view("sections/tickets/index", $view_data);
+            return $this->template->view("edeclaration_100k/tickets/index", $view_data);
         }
     }
 
@@ -487,7 +463,7 @@ class eDeclaration_100k extends Security_Controller {
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
-            return $this->template->view("sections/invoices/index", $view_data);
+            return $this->template->view("edeclaration_100k/invoices/index", $view_data);
         }
     }
 
@@ -503,7 +479,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("estimates", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("estimates", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("sections/estimates/estimates", $view_data);
+            return $this->template->view("edeclaration_100k/estimates/estimates", $view_data);
         }
     }
 
@@ -519,7 +495,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("orders", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("orders", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("sections/orders/orders", $view_data);
+            return $this->template->view("edeclaration_100k/orders/orders", $view_data);
         }
     }
 
@@ -530,7 +506,7 @@ class eDeclaration_100k extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("sections/estimates/estimate_requests", $view_data);
+            return $this->template->view("edeclaration_100k/estimates/estimate_requests", $view_data);
         }
     }
 
@@ -541,7 +517,7 @@ class eDeclaration_100k extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("sections/notes/index", $view_data);
+            return $this->template->view("edeclaration_100k/notes/index", $view_data);
         }
     }
 
@@ -574,9 +550,9 @@ class eDeclaration_100k extends Security_Controller {
 
         if ($view_type == "page_view") {
             $view_data['page_view'] = true;
-            return $this->template->rander("sections/files/index", $view_data);
+            return $this->template->rander("edeclaration_100k/files/index", $view_data);
         } else {
-            return $this->template->view("sections/files/index", $view_data);
+            return $this->template->view("edeclaration_100k/files/index", $view_data);
         }
     }
 
@@ -590,7 +566,7 @@ class eDeclaration_100k extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data['client_id'] = $client_id;
-        return $this->template->view('sections/files/modal_form', $view_data);
+        return $this->template->view('edeclaration_100k/files/modal_form', $view_data);
     }
 
     /* save file data and move temp file to parmanent file directory */
@@ -671,7 +647,7 @@ class eDeclaration_100k extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("sections/view_file/" . $data->id)));
+                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("edeclaration_100k/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -679,10 +655,10 @@ class eDeclaration_100k extends Security_Controller {
             $description .= "</div>";
         }
 
-        $options = anchor(get_uri("sections/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
+        $options = anchor(get_uri("edeclaration_100k/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
 
         if ($this->login_user->user_type == "staff") {
-            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sections/delete_file"), "data-action" => "delete-confirmation"));
+            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("edeclaration_100k/delete_file"), "data-action" => "delete-confirmation"));
         }
 
 
@@ -720,7 +696,7 @@ class eDeclaration_100k extends Security_Controller {
 
             $view_data["file_info"] = $file_info;
             $view_data['file_id'] = clean_data($file_id);
-            return $this->template->view("sections/files/view", $view_data);
+            return $this->template->view("edeclaration_100k/files/view", $view_data);
         } else {
             show_404();
         }
@@ -793,7 +769,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data['show_cotact_info'] = true;
             $view_data['show_social_links'] = true;
             $view_data['social_link'] = $this->Social_links_model->get_one($contact_id);
-            return $this->template->rander("sections/contacts/view", $view_data);
+            return $this->template->rander("edeclaration_100k/contacts/view", $view_data);
         } else {
             show_404();
         }
@@ -820,7 +796,7 @@ class eDeclaration_100k extends Security_Controller {
 
         $view_data["hidden_topbar_menus_dropdown"] = $this->get_hidden_topbar_menus_dropdown();
 
-        return $this->template->view("sections/contacts/my_preferences", $view_data);
+        return $this->template->view("edeclaration_100k/contacts/my_preferences", $view_data);
     }
 
     function save_my_preferences() {
@@ -893,7 +869,7 @@ class eDeclaration_100k extends Security_Controller {
 
         $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-        return $this->template->view("sections/contacts/index", $view_data);
+        return $this->template->view("edeclaration_100k/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -909,7 +885,7 @@ class eDeclaration_100k extends Security_Controller {
         $this->_validate_client_manage_access($view_data['model_info']->Sections_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-        return $this->template->view('sections/contacts/modal_form', $view_data);
+        return $this->template->view('edeclaration_100k/contacts/modal_form', $view_data);
     }
 
     /* load contact's general info tab view */
@@ -925,7 +901,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients($view_data['model_info']->client_id);
-            return $this->template->view('sections/contacts/contact_general_info_tab', $view_data);
+            return $this->template->view('edeclaration_100k/contacts/contact_general_info_tab', $view_data);
         }
     }
 
@@ -935,7 +911,7 @@ class eDeclaration_100k extends Security_Controller {
         if ($Sections_id) {
             // $this->_validate_client_view_access($Sections_id);
 
-            $view_data['model_info'] = $this->Sections_model->get_one($Sections_id);
+            $view_data['model_info'] = $this->eDeclaration_10k_Model->get_one($Sections_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -965,7 +941,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
             $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
-            return $this->template->view('sections/contacts/company_info_tab', $view_data);
+            return $this->template->view('edeclaration_100k/contacts/company_info_tab', $view_data);
         }
     }
 
@@ -1036,7 +1012,7 @@ class eDeclaration_100k extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Sections_model->get_primary_contact($Sections_id);
+        $primary_contact = $this->eDeclaration_10k_Model->get_primary_contact($Sections_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1338,7 +1314,7 @@ class eDeclaration_100k extends Security_Controller {
             $removal_request_pending = "<span class='bg-danger badge'>" . app_lang("removal_request_pending") . "</span>";
         }
 
-        $contact_link = anchor(get_uri("sections/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
+        $contact_link = anchor(get_uri("edeclaration_100k/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
         if ($this->login_user->user_type === "client") {
             $contact_link = $full_name; //don't show clickable link to client
         }
@@ -1348,7 +1324,7 @@ class eDeclaration_100k extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("sections/view/" . $data->Sections_id), $client_info->company_name),
+            anchor(get_uri("edeclaration_100k/view/" . $data->Sections_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
@@ -1360,7 +1336,7 @@ class eDeclaration_100k extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("sections/delete_contact"), "data-action" => "delete"));
+        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("edeclaration_100k/delete_contact"), "data-action" => "delete"));
 
         return $row_data;
     }
@@ -1380,7 +1356,7 @@ class eDeclaration_100k extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-        return $this->template->view('sections/contacts/invitation_modal', $view_data);
+        return $this->template->view('edeclaration_100k/contacts/invitation_modal', $view_data);
     }
 
     //send a team member invitation to an email address
@@ -1438,7 +1414,7 @@ class eDeclaration_100k extends Security_Controller {
     function users() {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
-            return $this->template->rander("sections/contacts/users", $view_data);
+            return $this->template->rander("edeclaration_100k/contacts/users", $view_data);
         }
     }
 
@@ -1455,7 +1431,7 @@ class eDeclaration_100k extends Security_Controller {
     function import_clients_modal_form() {
         $this->_validate_client_manage_access();
 
-        return $this->template->view("sections/import_clients_modal_form");
+        return $this->template->view("edeclaration_100k/import_clients_modal_form");
     }
 
     private function _prepare_client_data($data_row, $allowed_headers) {
@@ -1891,7 +1867,7 @@ class eDeclaration_100k extends Security_Controller {
 
     function gdpr() {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
-        return $this->template->view("sections/contacts/gdpr", $view_data);
+        return $this->template->view("edeclaration_100k/contacts/gdpr", $view_data);
     }
 
     function export_my_data() {
@@ -1985,7 +1961,7 @@ class eDeclaration_100k extends Security_Controller {
             log_notification("client_contact_requested_account_removal", array("client_id" => $client_id), $user_id);
 
             $this->session->setFlashdata("success_message", app_lang("estimate_submission_message"));
-            app_redirect("sections/contact_profile/$user_id/gdpr");
+            app_redirect("edeclaration_100k/contact_profile/$user_id/gdpr");
         }
     }
 
@@ -2002,7 +1978,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("sections/expenses/index", $view_data);
+            return $this->template->view("edeclaration_100k/expenses/index", $view_data);
         }
     }
 
@@ -2016,11 +1992,11 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("sections/contracts/contracts", $view_data);
+            return $this->template->view("edeclaration_100k/contracts/contracts", $view_data);
         }
     }
 
-    function sections_list() {
+    function edeclaration_100k_arriving_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2034,7 +2010,7 @@ class eDeclaration_100k extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("sections/sections_list", $view_data);
+        return $this->template->view("edeclaration_100k/edeclaration_100k_arriving_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {
@@ -2075,7 +2051,7 @@ class eDeclaration_100k extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("proposals", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("proposals", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("sections/proposals/proposals", $view_data);
+            return $this->template->view("edeclaration_100k/proposals/proposals", $view_data);
         }
     }
 
@@ -2112,7 +2088,7 @@ class eDeclaration_100k extends Security_Controller {
         $view_data["can_create_task"] = $this->can_edit_clients();
 
         $view_data['client_id'] = clean_data($client_id);
-        return $this->template->view("sections/tasks/index", $view_data);
+        return $this->template->view("edeclaration_100k/tasks/index", $view_data);
     }
 }
 

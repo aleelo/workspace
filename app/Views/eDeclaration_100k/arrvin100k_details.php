@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Information Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 85%;
+            margin: 30px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        
+        .container-2m {
+            
+            width: 95%;
+            margin: 30px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            display: inline-block;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+        }
+
+        h3 {
+            color: #003399;
+            border-bottom: 2px solid #e1e1e1;
+            padding-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .info-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+
+        .info-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+
+        .info-table td:first-child { font-weight: bold; }
+
+        .materials-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .materials-table th, .materials-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .materials-table th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="">
+        <a href="#" class="back-button">&larr; Back</a>
+
+        <div class="section container">
+            <h3>&#128100; Person Information:</h3>
+            <table class="info-table">
+                <tr><td><i class="icon">&#128100;</i> Full Name</td> <td><?php echo isset($passenger_info->fullName) ? $passenger_info->fullName : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#9892;</i> Gender</td> <td><?php echo isset($passenger_info->gender) ? $passenger_info->gender : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128179;</i> Passport No</td> <td><?php echo isset($passenger_info->passport_no) ? $passenger_info->passport_no : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#127757;</i> City</td> <td><?php echo isset($passenger_info->city) ? $passenger_info->city : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#127968;</i> Local Address</td> <td><?php echo isset($passenger_info->local_address) ? $passenger_info->local_address : "N/A"; ?></td></tr>
+                 <tr><td><i class="icon">&#9993;</i> Email</td> <td><?php echo isset($passenger_info->email) ? $passenger_info->email : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128222;</i> Phone</td> <td><?php echo isset($passenger_info->phone) ? $passenger_info->phone : "N/A"; ?></td></tr>
+            </table>
+        </div>
+
+        <div class="section container">
+            <h3>&#9992; Travel Information:</h3>
+            <table class="info-table">
+                <tr><td><i class="icon">&#128640;</i> Travel Type</td> <td><?php echo isset($travel_info->travel_type) ? $travel_info->travel_type : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128652;</i> Vehicle Name</td> <td><?php echo isset($travel_info->vehicle_name) ? $travel_info->vehicle_name : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128197;</i> Departure Date</td> <td><?php echo isset($travel_info->departure_date) ? $travel_info->departure_date : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128197;</i> Transit Date</td> <td><?php echo isset($travel_info->transit_date) ? $travel_info->transit_date : "N/A"; ?></td></tr>
+                <tr><td><i class="icon">&#128197;</i> Arrival Date</td> <td><?php echo isset($travel_info->arrival_date) ? $travel_info->arrival_date : "N/A"; ?></td></tr>
+            </table>
+        </div>
+
+        <div class="section container-2m">
+            <h3>&#128230; Materials Information:</h3>
+            <table class="materials-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Purpose</th>
+                        <th>Has Document</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <?php foreach($materials as $m) {?>
+                    <tr>
+                        <td><?php echo $m->name ? $m->name : "N/A"; ?></td>
+                        <td><?php echo $m->totalValue? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
+                        <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
+                        <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
+                    </tr>
+                    <?php }?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

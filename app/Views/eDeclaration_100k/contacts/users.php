@@ -5,7 +5,7 @@
             <div class="title-button-group">
                 <?php
                 if (!get_setting("disable_user_invitation_option_by_clients")) {
-                    echo modal_anchor(get_uri("sections/invitation_modal"), "<i data-feather='mail' class='icon-16'></i> " . app_lang('send_invitation'), array("class" => "btn btn-default", "title" => app_lang('send_invitation'), "data-post-client_id" => $client_id));
+                    echo modal_anchor(get_uri("edeclaration_10k/invitation_modal"), "<i data-feather='mail' class='icon-16'></i> " . app_lang('send_invitation'), array("class" => "btn btn-default", "title" => app_lang('send_invitation'), "data-post-client_id" => $client_id));
                 }
                 ?>
             </div>
@@ -20,7 +20,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#contact-table").appTable({
-            source: '<?php echo_uri("sections/contacts_list_data/" . $client_id) ?>',
+            source: '<?php echo_uri("edeclaration_10k/contacts_list_data/" . $client_id) ?>',
             order: [[1, "asc"]],
             columns: [
                 {title: '', "class": "w50 text-center"},

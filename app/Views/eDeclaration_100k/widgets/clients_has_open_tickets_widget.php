@@ -5,7 +5,7 @@ if ($total_clients) {
 }
 ?>
 
-<a class="client-widget-link" data-filter="has_open_tickets" href="<?php echo get_uri("sections/index/clients_list#has_open_tickets"); ?>">
+<a class="client-widget-link" data-filter="has_open_tickets" href="<?php echo get_uri("edeclaration_10k/index/clients_list#has_open_tickets"); ?>">
     <div class="card">
         <div class="card-body p20">
             <div class="widget-title p0 text-default">

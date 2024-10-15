@@ -13,10 +13,10 @@
                         <?php if ($client_info->type != "person") { ?>
                             <p> 
                                 <?php
-                                $client_link = anchor(get_uri("sections/view/" . $client_info->id), $client_info->company_name, array("class" => "white-link"));
+                                $client_link = anchor(get_uri("edeclaration_10k/view/" . $client_info->id), $client_info->company_name, array("class" => "white-link"));
 
                                 if ($login_user->user_type === "client") {
-                                    $client_link = anchor(get_uri("sections/contact_profile/" . $login_user->id . "/company"), $client_info->company_name, array("class" => "white-link"));
+                                    $client_link = anchor(get_uri("edeclaration_10k/contact_profile/" . $login_user->id . "/company"), $client_info->company_name, array("class" => "white-link"));
                                 }
 
                                 echo app_lang("company_name") . ": <b>" . $client_link . "</b>";
@@ -63,18 +63,18 @@
 
 
     <ul id="client-contact-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs b-b rounded-0" role="tablist">
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('company'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('company'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
         <?php if ($user_info->id == $login_user->id) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
         <?php } ?>
         <?php if ($user_info->id == $login_user->id && !get_setting("disable_editing_left_menu_by_clients")) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("left_menus/index/user"); ?>" data-bs-target="#tab-user-left-menu"> <?php echo app_lang('left_menu'); ?></a></li>
         <?php } ?>
         <?php if ($user_info->id == $login_user->id && get_setting("enable_gdpr") && (get_setting("clients_can_request_account_removal") || get_setting("allow_clients_to_export_their_data"))) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/gdpr/" . $user_info->id); ?>" data-bs-target="#tab-gdpr">GDPR</a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/gdpr/" . $user_info->id); ?>" data-bs-target="#tab-gdpr">GDPR</a></li>
         <?php } ?>
 
         <?php

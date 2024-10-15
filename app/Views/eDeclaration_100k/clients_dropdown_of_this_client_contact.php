@@ -12,7 +12,7 @@
         <li>
             <?php
             foreach ($clients as $client) {
-                echo anchor(get_uri("sections/switch_account/$client->user_id"), $icon . $client->company_name, array("class" => "dropdown-item clearfix"));
+                echo anchor(get_uri("edeclaration_10k/switch_account/$client->user_id"), $icon . $client->company_name, array("class" => "dropdown-item clearfix"));
             }
             ?>
         </li>

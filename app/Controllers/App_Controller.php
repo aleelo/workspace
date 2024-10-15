@@ -119,6 +119,9 @@ class App_Controller extends Controller {
     public $Compliance_model;
     public $Training_funders_model;
     
+    public $eDeclaration_10k_Model;
+    public $PassengerDetails_model;
+    public $TravelDetails_model;
     public function __construct() {
         //main template to make frame of this app
         $this->template = new Template();
@@ -264,6 +267,9 @@ class App_Controller extends Controller {
             'Compliance_model',
             'University_names_model',
             'Training_funders_model',
+            'eDeclaration_10k_Model',
+            'PassengerDetails_model',
+            'TravelDetails_model',
         );
     }
 

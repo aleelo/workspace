@@ -8,9 +8,9 @@
                         <span id="star-mark">
                             <?php
                             if ($is_starred) {
-                                echo view('sections/star/starred', array("client_id" => $section_info->id));
+                                echo view('edeclaration_10k/star/starred', array("client_id" => $section_info->id));
                             } else {
-                                echo view('sections/star/not_starred', array("client_id" => $section_info->id));
+                                echo view('edeclaration_10k/star/not_starred', array("client_id" => $section_info->id));
                             }
                             ?>
                         </span>
@@ -43,12 +43,12 @@
                 </div>
 
                 <div>
-                    <?php// echo view("sections/info_widgets/index"); ?>
+                    <?php// echo view("edeclaration_10k/info_widgets/index"); ?>
                 </div>
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("sections/company_info_tab/" . $section_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('section_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_10k/company_info_tab/" . $section_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('section_info'); ?></a></li>
 \
 
                     <?php

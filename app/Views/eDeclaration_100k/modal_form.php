@@ -1,15 +1,15 @@
-<?php echo form_open(get_uri("sections/save"), array("id" => "client-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("edeclaration_100k/save"), array("id" => "client-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id; ?>" />
-        <?php echo view("sections/section_form_fields"); ?>
+        <?php echo view("edeclaration_100k/section_form_fields"); ?>
 
     </div>
 </div>
 
 <div class="modal-footer">
     <div id="link-of-add-contact-modal" class="hide">
-        <?php echo modal_anchor(get_uri("sections/add_new_contact_modal_form"), "", array()); ?>
+        <?php echo modal_anchor(get_uri("edeclaration_100k/add_new_contact_modal_form"), "", array()); ?>
     </div>
 
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>

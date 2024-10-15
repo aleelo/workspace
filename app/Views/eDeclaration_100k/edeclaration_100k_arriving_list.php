@@ -18,7 +18,7 @@
     }
 
     var ignoreSavedFilter = false;
-    var quick_filters_dropdown = <?php echo view("sections/quick_filters_dropdown"); ?>;
+    var quick_filters_dropdown = <?php echo view("edeclaration_100k/quick_filters_dropdown"); ?>;
     if (window.selectedClientQuickFilter){
     var filterIndex = quick_filters_dropdown.findIndex(x => x.id === window.selectedClientQuickFilter);
     if ([filterIndex] > - 1){
@@ -29,7 +29,7 @@
     }
 
     $(selector).appTable({
-    source: '<?php echo_uri("sections/list_data") ?>',
+    source: '<?php echo_uri("edeclaration_100k/edeclaration_100k_arrival_list_data") ?>',
             serverSide: true,
             smartFilterIdentity: "all_clients_list", //a to z and _ only. should be unique to avoid conflicts
             ignoreSavedFilter: ignoreSavedFilter,
@@ -44,15 +44,12 @@
             ],
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("section_name_so") ?>", "class": "all", order_by: "nameSo"},
-            {title: "<?php echo app_lang("short_name_so") ?>", order_by: "short_name_SO"},
-            {title: "<?php echo app_lang("section_name_en") ?>", order_by: "nameEn"},
-            {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
-            {title: "<?php echo app_lang("section_email") ?>", order_by: "email"},
-            {title: "<?php echo app_lang("section_department") ?>", order_by: "DepNameSo"},
-            {title: "<?php echo app_lang("section_head") ?>", order_by: "SectionHead"},
-            {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
-            {title: "<?php echo app_lang("section_remarks") ?>", order_by: "remarks"}
+            {title: "<?php echo app_lang("ref_number") ?>", "class": "all", order_by: "nameSo"},
+            {title: "<?php echo app_lang("first_name") ?>", "class": "all", order_by: "nameSo"},
+            {title: "<?php echo app_lang("travel_type") ?>", "class": "all", order_by: "nameSo"},
+            {title: "<?php echo app_lang("trip_type") ?>", "class": "all", order_by: "nameSo"}
+            
+            // {title: "<?php echo app_lang("short_name_so") ?>", order_by: "short_name_SO"}
 
             
 <?php echo $custom_field_headers; ?>,

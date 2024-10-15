@@ -5,9 +5,9 @@
             <div class="title-button-group">
                 <?php
                 if ($can_edit_clients) {
-                    echo modal_anchor(get_uri("sections/invitation_modal"), "<i data-feather='mail' class='icon-16'></i> " . app_lang('send_invitation'), array("class" => "btn btn-default", "title" => app_lang('send_invitation'), "data-post-partner_id" => $partner_id));
+                    echo modal_anchor(get_uri("edeclaration_10k/invitation_modal"), "<i data-feather='mail' class='icon-16'></i> " . app_lang('send_invitation'), array("class" => "btn btn-default", "title" => app_lang('send_invitation'), "data-post-partner_id" => $partner_id));
 
-                    echo modal_anchor(get_uri("sections/add_new_contact_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_contact'), array("class" => "btn btn-default", "title" => app_lang('add_contact'), "data-post-partner_id" => $partner_id));
+                    echo modal_anchor(get_uri("edeclaration_10k/add_new_contact_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_contact'), array("class" => "btn btn-default", "title" => app_lang('add_contact'), "data-post-partner_id" => $partner_id));
                 }
                 ?>
             </div>
@@ -44,7 +44,7 @@
             showOptions = false;
         }
 
-        var quick_filters_dropdown = <?php echo view("sections/contacts/quick_filters_dropdown"); ?>;
+        var quick_filters_dropdown = <?php echo view("edeclaration_10k/contacts/quick_filters_dropdown"); ?>;
         if (window.selectedContactQuickFilter) {
             var filterIndex = quick_filters_dropdown.findIndex(x => x.id === window.selectedContactQuickFilter);
             if ([filterIndex] > -1) {
@@ -54,7 +54,7 @@
         }
 
         $("#contact-table").appTable({
-            source: '<?php echo_uri("sections/contacts_list_data/" . $partner_id) ?>',
+            source: '<?php echo_uri("edeclaration_10k/contacts_list_data/" . $partner_id) ?>',
             serverSide: true,
             filterDropdown: [{name: "quick_filter", class: "w200", options: quick_filters_dropdown}, <?php echo $custom_field_filters; ?>],
             order: [[1, "asc"]],

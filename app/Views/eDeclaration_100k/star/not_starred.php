@@ -1,3 +1,3 @@
 <?php
 
-echo ajax_anchor(get_uri("sections/add_remove_star/" . $client_id . "/add"), "<i data-feather='star' class='icon-16'></i>", array("data-real-target" => "#star-mark", "class" => "star-icon"));
+echo ajax_anchor(get_uri("edeclaration_10k/add_remove_star/" . $client_id . "/add"), "<i data-feather='star' class='icon-16'></i>", array("data-real-target" => "#star-mark", "class" => "star-icon"));

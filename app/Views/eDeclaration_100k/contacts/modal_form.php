@@ -1,10 +1,10 @@
-<?php echo form_open(get_uri("sections/save_contact"), array("id" => "contact-form", "class" => "general-form", "role" => "form", "autocomplete" => "false")); ?>
+<?php echo form_open(get_uri("edeclaration_10k/save_contact"), array("id" => "contact-form", "class" => "general-form", "role" => "form", "autocomplete" => "false")); ?>
 <div class="modal-body clearfix">
-    <?php echo view("sections/contacts/contact_general_info_fields"); ?>
+    <?php echo view("edeclaration_10k/contacts/contact_general_info_fields"); ?>
 </div>
 <div class="modal-footer">
     <div id="link-of-add-contact-modal" class="hide">
-        <?php echo modal_anchor(get_uri("sections/add_new_contact_modal_form"), "", array()); ?>
+        <?php echo modal_anchor(get_uri("edeclaration_10k/add_new_contact_modal_form"), "", array()); ?>
     </div>
 
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>

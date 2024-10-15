@@ -122,6 +122,35 @@ $lang["section_remarks"] = "Remarks";
 $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
 
+//edeclaration
+$lang["ref_number"] = "Ref Number";
+$lang["fullName"] = "Full Name";
+$lang["travel_type"] = "Travel Type";
+$lang["arrvin10k_details"] = "10k for Arriving and Departure Details";
+$lang["PersonInformation"] = "Person Information";
+$lang["Gender"] = "Gender";
+$lang["PassportNumber"] = "Passport Number";
+$lang["City"] = "City";
+$lang["LocalAddress"] = "Local Address";
+$lang["ResidenceAddress"] = "Residence Address";
+$lang["Email"] = "Email";
+$lang["TravelInformation"] = "Travel Information";
+$lang["TravelType"] = "Travel Type";
+$lang["VehicleName"] = "Vehicle Name";
+$lang["TravelType"] = "Travel Type";
+$lang["VehicleName"] = "Vehicle Name";
+$lang["TravelType"] = "Travel Type";
+$lang["VehicleName"] = "Vehicle Name";
+$lang["TravelType"] = "Travel Type";
+$lang["DepartureDate"] = "Departure Date";
+$lang["TransitDate"] = "Transit Date";
+$lang["ArrivalDate"] = "Arrival Date";
+$lang["Name"] = "Material  Name";
+$lang["MaterialsInformation"] = "Materials Information";
+$lang["Amount"] = "Amount";
+$lang["Purpose"] = "Purpose";
+$lang["HasDocument"] = "Has Document";
+ 
 // Trainers:
 $lang["trainer"] = "Trainer";
 $lang["trainers"] = "Trainers";
@@ -1749,10 +1778,12 @@ $lang["favorite_projects"] = "Favorite projects";
 $lang["favorite_clients"] = "Favorite clients";
 $lang["dashboard_customization"] = "Dashboard customization";
 $lang["quick_add"] = "Quick add";
+$lang["eDeclaration_Dashboard"] = "Dashboard";
 
 $lang["assign_to_me"] = "Assign to me";
 
 $lang["favicon"] = "Favicon";
+$lang["trip_type"] = "Trip Type";
 
 $lang["enable_google_drive_api_to_upload_file"] = "Enable Google Drive API to upload file";
 $lang["drive_activation_help_message"] = "From now on, all files will be uploaded into Google Drive.";
@@ -2001,7 +2032,7 @@ $lang["decline"] = "Decline";
 $lang["eDeclaration"] = "e-Declaration";
 $lang["eDeclaration_10k"] = "10k Above";
 $lang["eDeclaration_100k"] = "100k Above";
-$lang["arriving"] = "Arriving";
+$lang["arriving"] = "10k for Arriving and Departure Details";
 $lang["departure"] = "Departure";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";
