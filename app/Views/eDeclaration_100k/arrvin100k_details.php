@@ -242,7 +242,7 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             // Event listeners for approve buttons
             $('.approve-icon').on('click', function (event) {
@@ -285,6 +285,6 @@
                 });
             }
         });
-    </script>
+    </script> -->
 </body>
 </html>
