@@ -141,34 +141,34 @@ class Leaves extends Security_Controller {
 
                     /** update leave signature start */
                         //get document row
-                        $doc = $this->db->query("select d.* from rise_documents d
-                        LEFT JOIN rise_leave_document ld on d.id = ld.document_id
-                        where d.deleted=0 and ld.leave_id =$applicaiton_id")->getRow();
+                        // $doc = $this->db->query("select d.* from rise_documents d
+                        // LEFT JOIN rise_leave_document ld on d.id = ld.document_id
+                        // where d.deleted=0 and ld.leave_id =$applicaiton_id")->getRow();
 
-                        // $drive_info = unserialize($doc->drive_info);
-                        $itemID = $doc->item_id;
-                        $siteId = getenv('SITE_ID');
-                        $driveId = getenv('DRIVE_ID');
-                        $accessToken = $this->AccesToken();
-                        $imageArr = unserialize($user_info->signature);
-                        $signatureImageUrl = get_array_value($imageArr[0],'file_name');
-                        //   print_r($imageArr);die;
+                        // // $drive_info = unserialize($doc->drive_info);
+                        // $itemID = $doc->item_id;
+                        // $siteId = getenv('SITE_ID');
+                        // $driveId = getenv('DRIVE_ID');
+                        // $accessToken = $this->AccesToken();
+                        // $imageArr = unserialize($user_info->signature);
+                        // $signatureImageUrl = get_array_value($imageArr[0],'file_name');
+                        // //   print_r($imageArr);die;
 
-                        if($signatureImageUrl){
-                            $resultArr = $this->downloadWordDocument($accessToken,$siteId,$driveId,$itemID);
+                        // if($signatureImageUrl){
+                        //     $resultArr = $this->downloadWordDocument($accessToken,$siteId,$driveId,$itemID);
 
-                            if($resultArr['success'] == true) {
-                                $localFilePath = $resultArr['result'];
-                                $updatedFilePath = $this->updateWordDocument($localFilePath, $signatureImageUrl);
-                                $respose = $this->uploadUpdatedDocument($accessToken,$siteId,$driveId,$itemID,$updatedFilePath);
+                        //     if($resultArr['success'] == true) {
+                        //         $localFilePath = $resultArr['result'];
+                        //         $updatedFilePath = $this->updateWordDocument($localFilePath, $signatureImageUrl);
+                        //         $respose = $this->uploadUpdatedDocument($accessToken,$siteId,$driveId,$itemID,$updatedFilePath);
                             
-                            }else{                
+                        //     }else{                
                                 
-                                $result = $resultArr['result'];
-                                echo json_encode(array("success" => false, "data" => null, 'message' => $result));
-                                die;
-                            }
-                        }
+                        //         $result = $resultArr['result'];
+                        //         echo json_encode(array("success" => false, "data" => null, 'message' => $result));
+                        //         die;
+                        //     }
+                        // }
                         
                         // print_r($respose);
                         // print_r($s);

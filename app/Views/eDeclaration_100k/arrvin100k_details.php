@@ -184,21 +184,7 @@
                         <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button">
-                                    <i class="fas fa-cogs"></i> Action
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="<?php echo base_url('controller/update_status/' . $m->id . '/approved'); ?>">
-                                        <i class="fas fa-check-circle"></i> Approve
-                                    </a>
-                                    <a class="dropdown-item" href="<?php echo base_url('controller/update_status/' . $m->id . '/rejected'); ?>">
-                                        <i class="fas fa-times-circle"></i> Reject
-                                    </a>
-                                </div>
-                            </div>
-                        </td>
+                        <td><?php echo $m->status ? $m->status : "N/A"; ?></td>
                     </tr>
                     <?php } ?>
                 </tbody>

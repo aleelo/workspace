@@ -106,6 +106,7 @@
                             <thead class="table-header">
                                 <tr>
                                     <th>Passenger Name</th>
+                                    <th>Amount</th>
                                     <th>Departure Country</th>
                                     <th>Destination Country</th>
                                     <th>Transit Country</th>
