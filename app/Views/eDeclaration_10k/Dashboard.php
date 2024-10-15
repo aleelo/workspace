@@ -118,7 +118,7 @@
                                 <?php if (isset($materials) && count($materials) > 0): ?>
                                     <?php foreach ($materials as $data): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($data->name ?? 'N/A'); ?></td>
+                                            <td><?= htmlspecialchars($data->fullName ?? 'N/A'); ?></td>
                                             <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>
                                             <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
                                             <td><?= htmlspecialchars($data->transit_country ?? 'N/A'); ?></td>
