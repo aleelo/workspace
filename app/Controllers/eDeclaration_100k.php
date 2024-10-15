@@ -339,8 +339,7 @@ class eDeclaration_100k extends Security_Controller {
         }
     }
 
-    /* load client details view */
-
+    
     function view($Sections_id = 0, $tab = "") {
         
         // $this->_validate_client_view_access($Sections_id);

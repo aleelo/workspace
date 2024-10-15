@@ -116,46 +116,66 @@
                             </thead>
                             <tbody>
                                 <?php if (isset($materials) && count($materials) > 0): ?>
-                                    <?php foreach ($materials as $data): ?>
+                                    <?php
+                                    $now = new DateTime(); // Get current date and time
+
+                                    // Filter materials to only include upcoming departures and arrivals
+                                    $filtered_materials = array_filter($materials, function ($data) use ($now) {
+                                        $departure_date = !empty($data->departure_date) ? new DateTime($data->departure_date) : null;
+                                        $arrival_date = !empty($data->arrival_date) ? new DateTime($data->arrival_date) : null;
+
+                                        // Keep records where either departure_date or arrival_date is still upcoming
+                                        return ($departure_date && $departure_date >= $now) || ($arrival_date && $arrival_date >= $now);
+                                    });
+                                    ?>
+
+                                    <?php if (count($filtered_materials) > 0): ?>
+                                        <?php foreach ($filtered_materials as $data): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($data->fullName ?? 'N/A'); ?></td>
+                                                <td><?php echo $data->totalValue? $data->totalValue . ' ' . $data->currency_id : "N/A"; ?></td>
+
+                                                <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>
+                                                <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
+                                                <td><?= htmlspecialchars($data->transit_country ?? 'N/A'); ?></td>
+                                                <td><?= htmlspecialchars($data->departure_date ?? 'N/A'); ?></td>
+                                                <td><?= htmlspecialchars($data->arrival_date ?? 'N/A'); ?></td>
+                                                <td class="text-center">
+                                                    <div style="display: flex; justify-content: center; gap: 5px;">
+                                                        <?php if ($data->trip_type == 'Arrival' && $data->q_type == 1) { ?>
+                                                            <span style="background-color: #4caf50; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
+                                                                Arrival - 10K Above
+                                                                <i class="mdi mdi-airplane-landing"></i>
+                                                            </span>
+                                                        <?php } elseif ($data->trip_type == 'Arrival' && $data->q_type == 2) { ?>
+                                                            <span style="background-color: #f44336; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
+                                                                Arrival - 100K Above
+                                                                <i class="mdi mdi-airplane-landing"></i>
+                                                            </span>
+                                                        <?php } elseif ($data->trip_type == 'Departure' && $data->q_type == 1) { ?>
+                                                            <span style="background-color: #ff9800; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
+                                                                Departure - 10K Above
+                                                                <i class="mdi mdi-airplane-takeoff"></i>
+                                                            </span>
+                                                        <?php } elseif ($data->trip_type == 'Departure' && $data->q_type == 2) { ?>
+                                                            <span style="background-color: #9c27b0; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
+                                                                Departure - 100K Above
+                                                                <i class="mdi mdi-airplane-takeoff"></i>
+                                                            </span>
+                                                        <?php } else { ?>
+                                                            <span style="font-weight: bold; font-size: 12px;">
+                                                                <?= htmlspecialchars($data->trip_type) ?>
+                                                            </span>
+                                                        <?php } ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($data->fullName ?? 'N/A'); ?></td>
-                                            <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>
-                                            <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
-                                            <td><?= htmlspecialchars($data->transit_country ?? 'N/A'); ?></td>
-                                            <td><?= htmlspecialchars($data->departure_date ?? 'N/A'); ?></td>
-                                            <td><?= htmlspecialchars($data->arrival_date ?? 'N/A'); ?></td>
-                                            <td class="text-center">
-                                            <div style="display: flex; justify-content: center; gap: 5px;">
-                                            <?php if($data->trip_type == 'Arrival' && $data->q_type == 1) { ?>
-                                                    <span style="background-color: #4caf50; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
-                                                        Arrival - 10K Above
-                                                        <i class="mdi mdi-airplane-landing"></i>
-                                                    </span>
-                                                    <?php } elseif($data->trip_type == 'Arrival' && $data->q_type == 2) {?>
-                                                    <span style="background-color: #f44336; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
-                                                        Arrival - 100K Above
-                                                        <i class="mdi mdi-airplane-landing"></i>
-                                                    </span>
-                                                    <?php }elseif($data->trip_type == 'Departure' && $data->q_type == 1) {  ?>
-                                                    <span style="background-color: #ff9800; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
-                                                        Departure - 10K Above
-                                                        <i class="mdi mdi-airplane-takeoff"></i>
-                                                    </span>
-                                                    <?php } elseif($data->trip_type == 'Departure' && $data->q_type == 2) {  ?>
-                                                    <span style="background-color: #9c27b0; color: white; font-weight: bold; padding: 4px 8px; border-radius: 5px; font-size: 12px;">
-                                                        Departure - 100K Above
-                                                        <i class="mdi mdi-airplane-takeoff"></i>
-                                                    </span>
-                                                    <?php } else{ ?>
-                                                    <span style="font-weight: bold; font-size: 12px;">
-                                                    <?php  echo $data->trip_type ?>
-                                                    </span>
-                                                    <?php  } ?>
-                                                
-                                            </div>
-                                        </td>
+                                            <td colspan="7" class="text-center">No data available</td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <tr>
                                         <td colspan="7" class="text-center">No data available</td>

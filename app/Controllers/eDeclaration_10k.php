@@ -2106,15 +2106,24 @@ class eDeclaration_10k extends Security_Controller {
             $result = array();
         }
     
+        $now = new DateTime(); // Get current date and time
+    
         $result_data = array();
         foreach ($list_data as $data) {
-            $result_data[] = $this->_make_row($data, $custom_fields);
+            $departure_date = !empty($data->departure_date) ? new DateTime($data->departure_date) : null;
+            $arrival_date = !empty($data->arrival_date) ? new DateTime($data->arrival_date) : null;
+    
+            // Check if the departure or arrival date is still upcoming
+            if (($departure_date && $departure_date >= $now) || ($arrival_date && $arrival_date >= $now)) {
+                $result_data[] = $this->_make_row($data, $custom_fields);
+            }
         }
     
         $result["data"] = $result_data;
     
         echo json_encode($result);
     }
+    
     
     
     
