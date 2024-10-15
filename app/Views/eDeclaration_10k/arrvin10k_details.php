@@ -43,7 +43,7 @@
             color: #003399;
             border-bottom: 2px solid #e1e1e1;
             padding-bottom: 10px;
-            font-size: 1.5em;
+            font-size: 1.3em;
         }
 
         .section {
@@ -112,22 +112,22 @@
         <div class="section">
             <h3>&#128100; Person Information:</h3>
             <table class="info-table">
-                <tr><td><i class="icon">&#128100;</i> Full Name</td> <td><?php echo isset($passenger_info->fullName) ? $passenger_info->fullName : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#9892;</i> Gender</td> <td><?php echo isset($passenger_info->gender) ? $passenger_info->gender : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#128179;</i> Passport No</td> <td><?php echo isset($passenger_info->passport_no) ? $passenger_info->passport_no : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#127757;</i> City</td> <td><?php echo isset($passenger_info->city) ? $passenger_info->city : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#127968;</i> Local Address</td> <td><?php echo isset($passenger_info->local_address) ? $passenger_info->local_address : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#9993;</i> Email</td> <td><?php echo isset($passenger_info->email) ? $passenger_info->email : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#128222;</i> Phone</td> <td><?php echo isset($passenger_info->phone) ? $passenger_info->phone : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128100;</i> Full Name</td> <td><?php echo isset($passenger_info->fullName) ? $passenger_info->fullName : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#9892;</i> Gender</td> <td><?php echo isset($passenger_info->gender) ? $passenger_info->gender : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128179;</i> Passport No</td> <td><?php echo isset($passenger_info->passport_no) ? $passenger_info->passport_no : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#127757;</i> City</td> <td><?php echo isset($passenger_info->city) ? $passenger_info->city : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#127968;</i> Local Address</td> <td><?php echo isset($passenger_info->local_address) ? $passenger_info->local_address : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#9993;</i> Email</td> <td><?php echo isset($passenger_info->email) ? $passenger_info->email : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128222;</i> Phone</td> <td><?php echo isset($passenger_info->phone) ? $passenger_info->phone : "N/A"; ?></td></tr>
             </table>
         </div>
 
         <div class="section">
             <h3>&#9992; Travel Information:</h3>
             <table class="info-table">
-                <tr><td><i class="icon">&#128640;</i> Travel Type</td> <td><?php echo isset($travel_info->travel_type) ? $travel_info->travel_type : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#128652;</i> Vehicle Name</td> <td><?php echo isset($travel_info->vehicle_name) ? $travel_info->vehicle_name : "N/A"; ?></td></tr>
-                <tr><td><i class="icon">&#128197;</i> Departure Date</td> <td><?php echo isset($travel_info->departure_date) ? $travel_info->departure_date : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128640;</i> Travel Type</td> <td><?php echo isset($travel_info->travel_type) ? $travel_info->travel_type : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128652;</i> Vehicle Name</td> <td><?php echo isset($travel_info->vehicle_name) ? $travel_info->vehicle_name : "N/A"; ?></td></tr>
+                <tr><td><i class="icon" style="font-size: 1.2em; color: #555;">&#128197;</i> Departure Date</td> <td><?php echo isset($travel_info->departure_date) ? $travel_info->departure_date : "N/A"; ?></td></tr>
                 <tr><td><i class="icon">&#128197;</i> Transit Date</td> <td><?php echo isset($travel_info->transit_date) ? $travel_info->transit_date : "N/A"; ?></td></tr>
                 <tr><td><i class="icon">&#128197;</i> Arrival Date</td> <td><?php echo isset($travel_info->arrival_date) ? $travel_info->arrival_date : "N/A"; ?></td></tr>
             </table>

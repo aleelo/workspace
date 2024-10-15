@@ -22,7 +22,33 @@ class eDeclaration_100k extends Security_Controller {
             app_redirect("forbidden");
         }
     }
-
+     ///
+     public function update_status() {
+        // Load the input data
+        $input = json_decode(trim(file_get_contents('php://input')), true);
+    
+        if (isset($input['id']) && isset($input['status'])) {
+            $material_id = $input['id'];
+            $status = $input['status'];
+    
+            // Load the PassengerDetails model
+            $this->load->model('PassengerDetails_model');
+    
+            // Update status in the model
+            $success = $this->PassengerDetails_model->update_status($material_id, $status);
+    
+            if ($success) {
+                echo json_encode(array('success' => true));
+            } else {
+                echo json_encode(array('success' => false, 'message' => 'Failed to update status.'));
+            }
+        } else {
+            echo json_encode(array('success' => false, 'message' => 'Invalid input.'));
+        }
+    }
+    
+    
+    
     /* load clients list view */
 
     function index($tab = "") {
@@ -94,6 +120,7 @@ class eDeclaration_100k extends Security_Controller {
     /* load client add/edit modal */
 
     function arriving100k_details() {
+      
         
         $ref_number = $this->request->getPost('ref_number');
         $id = $this->request->getPost('id');
@@ -104,6 +131,7 @@ class eDeclaration_100k extends Security_Controller {
         ));
 
         $options = array('ref_number'=> $ref_number);
+        
         
         $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
         $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();

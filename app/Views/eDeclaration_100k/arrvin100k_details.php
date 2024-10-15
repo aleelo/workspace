@@ -45,40 +45,63 @@
             border-bottom: 2px solid #e1e1e1;
             padding-bottom: 10px;
             font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 i {
+            margin-right: 10px;
         }
 
         .section {
             margin-bottom: 25px;
         }
 
-        .info-table {
+        .info-table, .materials-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+        }
+
+        .info-table tr, .materials-table tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .info-table td, .materials-table th, .materials-table td {
+            padding: 15px;
+            text-align: left;
         }
 
         .info-table td {
             padding: 15px;
-            border: 1px solid #ddd;
             text-align: left;
+            font-size: 1.1em;
         }
 
-        .info-table td:first-child {
-            font-weight: bold;
-            background-color: #f7f7f7;
-            width: 30%;
-        }
-
-        .materials-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .materials-table th, .materials-table td {
-            border: 1px solid #ddd;
+        .info-table th {
             padding: 15px;
-            text-align: center;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #f7f7f7;
+        }
+        }
+
+        .materials-table th {
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #f7f7f7;
+        }
+        }
+
+        .info-table td {
+            display: flex;
+            align-items: center;
+        }
+
+        .info-table td i {
+            margin-right: 10px;
+            color: #007bff;
         }
 
         .materials-table th {
@@ -86,39 +109,26 @@
             font-weight: bold;
         }
 
-        .icon {
-            margin-right: 8px;
+        .action-icon {
+            cursor: pointer;
+            font-size: 1.5em;
+            margin: 0 8px;
         }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
+        .approve-icon {
+            color: #28a745;
         }
 
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            z-index: 1;
-            border-radius: 5px;
-            right: 0;
+        .approve-icon:hover {
+            color: #218838;
         }
 
-        .dropdown:hover .dropdown-menu {
-            display: block;
+        .reject-icon {
+            color: #dc3545;
         }
 
-        .dropdown-item {
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f7f7f7;
+        .reject-icon:hover {
+            color: #c82333;
         }
 
         @media (max-width: 768px) {
@@ -144,24 +154,59 @@
         <div class="section">
             <h3><i class="fas fa-user"></i> Person Information:</h3>
             <table class="info-table">
-                <tr><td><i class="icon fas fa-user"></i> Full Name</td> <td><?php echo isset($passenger_info->fullName) ? $passenger_info->fullName : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-venus-mars"></i> Gender</td> <td><?php echo isset($passenger_info->gender) ? $passenger_info->gender : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-passport"></i> Passport No</td> <td><?php echo isset($passenger_info->passport_no) ? $passenger_info->passport_no : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-city"></i> City</td> <td><?php echo isset($passenger_info->city) ? $passenger_info->city : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-home"></i> Local Address</td> <td><?php echo isset($passenger_info->local_address) ? $passenger_info->local_address : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-envelope"></i> Email</td> <td><?php echo isset($passenger_info->email) ? $passenger_info->email : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-phone"></i> Phone</td> <td><?php echo isset($passenger_info->phone) ? $passenger_info->phone : "N/A"; ?></td></tr>
+                <tr>
+                    <th><i class="fas fa-id-badge"></i> Full Name</th>
+                    <td><?php echo isset($passenger_info->fullName) ? $passenger_info->fullName : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-venus-mars"></i> Gender</th>
+                    <td><?php echo isset($passenger_info->gender) ? $passenger_info->gender : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-passport"></i> Passport No</th>
+                    <td><?php echo isset($passenger_info->passport_no) ? $passenger_info->passport_no : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-city"></i> City</th>
+                    <td><?php echo isset($passenger_info->city) ? $passenger_info->city : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-map-marker-alt"></i> Local Address</th>
+                    <td><?php echo isset($passenger_info->local_address) ? $passenger_info->local_address : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-envelope"></i> Email</th>
+                    <td><?php echo isset($passenger_info->email) ? $passenger_info->email : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-phone"></i> Phone</th>
+                    <td><?php echo isset($passenger_info->phone) ? $passenger_info->phone : "N/A"; ?></td>
+                </tr>
             </table>
         </div>
-
         <div class="section">
             <h3><i class="fas fa-plane"></i> Travel Information:</h3>
             <table class="info-table">
-                <tr><td><i class="icon fas fa-suitcase-rolling"></i> Travel Type</td> <td><?php echo isset($travel_info->travel_type) ? $travel_info->travel_type : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-bus-alt"></i> Vehicle Name</td> <td><?php echo isset($travel_info->vehicle_name) ? $travel_info->vehicle_name : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-calendar-day"></i> Departure Date</td> <td><?php echo isset($travel_info->departure_date) ? $travel_info->departure_date : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-calendar-day"></i> Transit Date</td> <td><?php echo isset($travel_info->transit_date) ? $travel_info->transit_date : "N/A"; ?></td></tr>
-                <tr><td><i class="icon fas fa-calendar-day"></i> Arrival Date</td> <td><?php echo isset($travel_info->arrival_date) ? $travel_info->arrival_date : "N/A"; ?></td></tr>
+                <tr>
+                    <th><i class="fas fa-suitcase-rolling"></i> Travel Type</th>
+                    <td><?php echo isset($travel_info->travel_type) ? $travel_info->travel_type : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-bus"></i> Vehicle Name</th>
+                    <td><?php echo isset($travel_info->vehicle_name) ? $travel_info->vehicle_name : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-calendar-alt"></i> Departure Date</th>
+                    <td><?php echo isset($travel_info->departure_date) ? $travel_info->departure_date : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-calendar-alt"></i> Transit Date</th>
+                    <td><?php echo isset($travel_info->transit_date) ? $travel_info->transit_date : "N/A"; ?></td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-calendar-alt"></i> Arrival Date</th>
+                    <td><?php echo isset($travel_info->arrival_date) ? $travel_info->arrival_date : "N/A"; ?></td>
+                </tr>
             </table>
         </div>
 
@@ -170,26 +215,76 @@
             <table class="materials-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Amount</th>
-                        <th>Purpose</th>
-                        <th>Has Document</th>
-                        <th>Action</th>
+                        <th><i class="fas fa-box"></i> Name</th>
+                        <th><i class="fas fa-money-bill"></i> Amount</th>
+                        <th><i class="fas fa-bullseye"></i> Purpose</th>
+                        <th><i class="fas fa-file-alt"></i> Has Document</th>
+                        <th><i class="fas fa-info-circle"></i> Status</th>
+                        <th><i class="fas fa-tasks"></i> Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($materials as $m) { ?>
-                    <tr>
+                    <tr data-id="<?php echo $m->id; ?>">
                         <td><?php echo $m->name ? $m->name : "N/A"; ?></td>
                         <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
                         <td><?php echo $m->status ? $m->status : "N/A"; ?></td>
+                        <td>
+                            <i class="fas fa-check-circle action-icon approve-icon" title="Approve"></i>
+                            <i class="fas fa-times-circle action-icon reject-icon" title="Reject"></i>
+                        </td>
                     </tr>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            // Event listeners for approve buttons
+            $('.approve-icon').on('click', function (event) {
+                event.preventDefault();
+                const materialId = $(this).closest('tr').data('id');
+                alert('clicked');
+                console.log("Approve clicked for ID:", materialId); // Debugging
+                updateStatus(materialId, 'approved');
+            });
+
+            // Event listeners for reject buttons
+            $('.reject-icon').on('click', function (event) {
+                event.preventDefault();
+                const materialId = $(this).closest('tr').data('id');
+                console.log("Reject clicked for ID:", materialId); // Debugging
+                updateStatus(materialId, 'rejected');
+            });
+
+            function updateStatus(id, status) {
+                console.log("Sending request for ID:", id, "with status:", status); // Debugging
+                
+                $.ajax({
+                    url: '<?php echo site_url('edeclaration_100k/update_status'); ?>',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({ id: id, status: status }),
+                    success: function (data) {
+                        if (data.success) {
+                            alert('Status updated successfully!');
+                            location.reload(); // Optionally reload page to reflect changes
+                        } else {
+                            alert('Error updating status: ' + data.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating the status.');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

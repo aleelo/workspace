@@ -10,7 +10,19 @@ class PassengerDetails_model extends Crud_model {
         $this->table = 'passenger_details';
         parent::__construct($this->table);
     }
-
+    public function update_status($id, $status) {
+        $data = array(
+            'status' => $status,
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+    
+        $this->db->where('id', $id);
+        return $this->db->update($this->table, $data);
+    }
+    
+    
+    
+   
     function get_details($options = array()) {
         $passenger_details_table = $this->db->prefixTable('passenger_details');
         $departments_table = $this->db->prefixTable('departments');
@@ -91,7 +103,7 @@ class PassengerDetails_model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $passenger_details_table.*,
-        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,$countries_table.name
+        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,$passenger_table.status,$countries_table.name
         FROM $passenger_details_table
            LEFT JOIN $countries_table on $countries_table.id=$passenger_table.country_id
                 
