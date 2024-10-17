@@ -2033,6 +2033,7 @@ $lang["eDeclaration"] = "e-Declaration";
 $lang["eDeclaration_10k"] = "10k Above";
 $lang["eDeclaration_100k"] = "100k Above";
 $lang["arriving"] = "10k for Arriving and Departure Details";
+$lang["arriving100K"] = "100K for Arriving and Departure Details";
 $lang["departure"] = "Departure";
 
 $lang["send_task_reminder_on_the_day_of_deadline"] = "Send task reminder on the day of deadline";

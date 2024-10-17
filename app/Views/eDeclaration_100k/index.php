@@ -1,7 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="section-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_100k/edeclaration_100k_arriving_list/"); ?>" data-bs-target="#edeclaration_100k_arriving_list"><?php echo app_lang('arriving'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("edeclaration_100k/edeclaration_100k_arriving_list/"); ?>" data-bs-target="#edeclaration_100k_arriving_list"><?php echo app_lang('arriving100K'); ?></a></li>
              
         </ul>
         <div class="tab-content">
