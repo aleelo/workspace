@@ -2137,7 +2137,8 @@ class eDeclaration_10k extends Security_Controller {
         ));
     
         $options = array('ref_number'=> $ref_number);
-    
+           
+
         $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
         $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
         $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();

@@ -225,12 +225,12 @@
                 </thead>
                 <tbody>
                     <?php foreach($materials as $m) { ?>
-                    <tr data-id="<?php echo $m->id; ?>">
+                    <tr data-id="<?php echo $m->passenger_id; ?>">
                         <td><?php echo $m->name ? $m->name : "N/A"; ?></td>
                         <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
-                        <td><?php echo $m->status ? $m->status : "N/A"; ?></td>
+                        <td><?php echo $m->NewStatus ?></td>
                         <td>
                             <i class="fas fa-check-circle action-icon approve-icon" title="Approve"></i>
                             <i class="fas fa-times-circle action-icon reject-icon" title="Reject"></i>
@@ -242,7 +242,9 @@
         </div>
     </div>
 
-    <!-- <script>
+    <script>
+        var csrfHash = '<?php echo csrf_hash(); ?>';
+        
         $(document).ready(function () {
             // Event listeners for approve buttons
             $('.approve-icon').on('click', function (event) {
@@ -266,10 +268,10 @@
                 
                 $.ajax({
                     url: '<?php echo site_url('edeclaration_100k/update_status'); ?>',
-                    method: 'POST',
+                    method: 'POST',                    
                     contentType: 'application/json',
                     dataType: 'json',
-                    data: JSON.stringify({ id: id, status: status }),
+                    data: JSON.stringify({ id: id, status: status,'rise_csrf_token': csrfHash }),
                     success: function (data) {
                         if (data.success) {
                             alert('Status updated successfully!');
@@ -285,6 +287,6 @@
                 });
             }
         });
-    </script> -->
+    </script>
 </body>
 </html>

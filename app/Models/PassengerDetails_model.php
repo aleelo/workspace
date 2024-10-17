@@ -11,15 +11,38 @@ class PassengerDetails_model extends Crud_model {
         parent::__construct($this->table);
     }
     public function update_status($id, $status) {
+        parent::use_table("passenger_details");
+
         $data = array(
             'status' => $status,
             'updated_at' => date('Y-m-d H:i:s')
         );
+        // $where = array("id" => $id);
+        // // $where = array("id" => $this->_get_clean_value($data, "user_id"));
+        // $exists = parent::get_one_where($where);
+
+        // if ($exists->id) {
+        //     //job info found. update the record
+        //     return parent::update_where($data, $where);
+        // } 
     
-        $this->db->where('id', $id);
-        return $this->db->update($this->table, $data);
+        return $this->ci_save($data, $id);
+        // return $this->db->update($this->table, $data);
     }
-    
+    // function save_job_info($data) {
+    //     parent::use_table("team_member_job_info");
+
+    //     //check if job info already exists
+    //     $where = array("user_id" => $this->_get_clean_value($data, "user_id"));
+    //     $exists = parent::get_one_where($where);
+    //     if ($exists->user_id) {
+    //         //job info found. update the record
+    //         return parent::update_where($data, $where);
+    //     } else {
+    //         //insert new one
+    //         return parent::ci_save($data);
+    //     }
+    // }
     
     
    

@@ -107,7 +107,7 @@ class eDeclaration_10k_Model extends Crud_model {
 
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
-        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,$passenger_table.status,
+        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,$passenger_table.status as NewStatus,
         $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date, dpc.name as departure_country,
          dcc.name as destination_country, tcc.name as transit_country
         FROM $materials_table

@@ -32,8 +32,7 @@ class eDeclaration_100k extends Security_Controller {
             $status = $input['status'];
     
             // Load the PassengerDetails model
-            $this->load->model('PassengerDetails_model');
-    
+     
             // Update status in the model
             $success = $this->PassengerDetails_model->update_status($material_id, $status);
     
@@ -133,11 +132,12 @@ class eDeclaration_100k extends Security_Controller {
         $options = array('ref_number'=> $ref_number);
         
         
+        
         $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
         $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
-        // print_r( $view_data['passenger_info']);die;
-
+        
         $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
+        // print_r( $view_data['materials']);die;
 
         return $this->template->view('edeclaration_100k/arrvin100k_details', $view_data);
     }
