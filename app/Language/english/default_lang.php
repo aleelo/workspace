@@ -123,6 +123,8 @@ $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
 
 //edeclaration
+
+$lang["status"] = "Status";
 $lang["ref_number"] = "Ref Number";
 $lang["fullName"] = "Full Name";
 $lang["travel_type"] = "Travel Type";
