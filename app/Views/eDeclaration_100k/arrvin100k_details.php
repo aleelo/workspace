@@ -85,13 +85,11 @@
             font-size: 1.2em;
             background-color: #f7f7f7;
         }
-        }
 
         .materials-table th {
             font-weight: bold;
             font-size: 1.2em;
             background-color: #f7f7f7;
-        }
         }
 
         .info-table td {
@@ -104,11 +102,6 @@
             color: #007bff;
         }
 
-        .materials-table th {
-            background-color: #f7f7f7;
-            font-weight: bold;
-        }
-
         .action-icon {
             cursor: pointer;
             font-size: 1.5em;
@@ -117,6 +110,36 @@
 
         .approve-icon {
             color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .action-buttons i {
+            cursor: pointer;
+            font-size: 1.8em;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .approve-icon {
+            color: #28a745;
+            background-color: #e6f4ea;
+        }
+        .approve-icon:hover {
+           
+            color: #fff;
+            transform: scale(1.1);
+        }
+        .reject-icon {
+            color: #dc3545;
+            background-color: #fce4e4;
+        }
+        .reject-icon:hover {
+           
+            color: #fff;
+            transform: scale(1.1);
         }
 
         .approve-icon:hover {
@@ -231,15 +254,24 @@
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
                         <td><?php echo $m->NewStatus ?></td>
-                        <td>
-                            <i class="fas fa-check-circle action-icon approve-icon" title="Approve"></i>
-                            <i class="fas fa-times-circle action-icon reject-icon" title="Reject"></i>
+                        <td class="action-buttons">
+                      
+                        <i class="fas fa-check-circle approve-icon" title="Approve"></i>
+                        <i class="fas fa-times-circle reject-icon" title="Reject"></i>
                         </td>
                     </tr>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
+
+        <!-- <div class="section">
+            <h3><i class="fas fa-box"></i> Status Action:</h3>
+            <td>
+                <i class="fas fa-check-circle action-icon approve-icon" title="Approve">  </i>
+                <i class="fas fa-times-circle action-icon reject-icon" title="Reject"> </i>
+            </td>
+        </div> -->
     </div>
 
     <script>
