@@ -123,6 +123,7 @@ $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
 
 //edeclaration
+// Bachelor of Science in Economics 
 
 $lang["status"] = "Status";
 $lang["ref_number"] = "Ref Number";

@@ -163,6 +163,10 @@ class Team_members extends Security_Controller
 
         $view_data['field_of_study'] = array("" => " -- Choose Field of Study -- ") + $this->Field_of_study_model->get_dropdown_list(array("name"), "id");
 
+        /** new form education info tab */
+        $view_data['university_names'] = array("" => " -- Choose University Name -- ") + $this->University_names_model->get_dropdown_list(array("university_name"), "id");
+        /** end new from education info tab */
+
         $age_levels = [
             '' => '-- Choose Age Level --',
             '18 - 25' => '18 - 25',

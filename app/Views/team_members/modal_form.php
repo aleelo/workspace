@@ -371,7 +371,7 @@
                                 "id" => "primary_school_name",
                                 "name" => "primary_school_name",
                                 "class" => "form-control",
-                                "value" => $model_info->faculty,
+                                // "value" => $model_info->faculty,
                                 "placeholder" => 'Primary School Name',
                             ));
                             ?>
@@ -443,14 +443,12 @@
                         <label for="university_name_diploma" class=" col-md-3"><?php echo 'University Name Diploma'; ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
+                             echo form_dropdown(array(
                                 "id" => "university_name_diploma",
                                 "name" => "university_name_diploma",
-                                "class" => "form-control",
-                                "value" => $model_info->faculty,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Diploma',
-                            ));
-                            ?>
+                            ),$university_names); ?>
                         </div>
                     </div>
                 </div>
@@ -497,14 +495,12 @@
                         <label for="university_name_foculty_1" class=" col-md-3"><?php echo 'University Name Foculty'; ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
+                             echo form_dropdown(array(
                                 "id" => "university_name_foculty_1",
                                 "name" => "university_name_foculty_1",
-                                "class" => "form-control",
-                                "value" => $model_info->faculty,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name Foculty',
-                            ));
-                            ?>
+                            ),$university_names); ?>
                         </div>
                     </div>
                 </div>
@@ -556,7 +552,6 @@
                                 "id" => "university_name_foculty_2",
                                 "name" => "university_name_foculty_2",
                                 "class" => "form-control",
-                                "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Faculty 2',
                                 "autocomplete" => "off",
                             ));
@@ -611,7 +606,6 @@
                                 "id" => "university_name_master_1",
                                 "name" => "university_name_master_1",
                                 "class" => "form-control",
-                                "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Master',
                                 "autocomplete" => "off",
                             ));
@@ -667,7 +661,6 @@
                                 "id" => "university_name_master_2",
                                 "name" => "university_name_master_2",
                                 "class" => "form-control",
-                                "value" => $model_info->faculty2,
                                 "placeholder" => 'University Name Master 2',
                                 "autocomplete" => "off",
                             ));
@@ -718,15 +711,13 @@
                         <label for="university_name_phd" class=" col-md-3"><?php echo 'University Name PHD'; ?></label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
+                            echo form_dropdown(array(
                                 "id" => "university_name_phd",
                                 "name" => "university_name_phd",
-                                "class" => "form-control",
-                                "value" => $model_info->faculty2,
+                                "class" => "form-control select2",
                                 "placeholder" => 'University Name PHD',
                                 "autocomplete" => "off",
-                            ));
-                            ?>
+                            ),$university_names); ?>
                         </div>
                     </div>
                 </div> 
