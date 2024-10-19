@@ -325,7 +325,7 @@ class eDeclaration_100k extends Security_Controller {
             $data->fullName,
             $data->travel_type,
             $data->trip_type,
-            $data->status
+            $data->NewStatus
             
  
             
