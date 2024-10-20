@@ -1128,10 +1128,20 @@ class Team_members extends Security_Controller
     //show general information of a team member
     function bank_details($user_id)
     {
+        
+        $role = $this->get_user_role(); // Assuming this method returns the user's role
+        $view_data['is_admin'] = ($role === 'admin'); // Check if the user is an admin        
+        
+        // Set readonly attribute based on user's role
+        $view_data['readonly'] = ($role === 'admin') ? array() : array('readonly' => true);
+        $view_data['disabled'] = ($role === 'admin') ? array() : array('disabled' => true);
+         
         validate_numeric_value($user_id);
         $this->update_only_allowed_members($user_id);
 
+
         // array_unshift($view_data['departments'],'Choose Department');
+        
 
         $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 

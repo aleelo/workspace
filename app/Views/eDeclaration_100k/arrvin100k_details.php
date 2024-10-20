@@ -241,37 +241,37 @@
                         <th><i class="fas fa-box"></i> Name</th>
                         <th><i class="fas fa-money-bill"></i> Amount</th>
                         <th><i class="fas fa-bullseye"></i> Purpose</th>
-                        <th><i class="fas fa-file-alt"></i> Has Document</th>
+                        <th><i class="fas fa-file-alt"></i>Document</th>
                         <th><i class="fas fa-info-circle"></i> Status</th>
-                        <th><i class="fas fa-tasks"></i> Action</th>
+                         
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($materials as $m) { ?>
                     <tr data-id="<?php echo $m->passenger_id; ?>">
                         <td><?php echo $m->name ? $m->name : "N/A"; ?></td>
-                        <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
+                        <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_code : "N/A"; ?></td>
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
                         <td><?php echo $m->NewStatus ?></td>
-                        <td class="action-buttons">
+                        <!-- <td class="action-buttons">
                       
                         <i class="fas fa-check-circle approve-icon" title="Approve"></i>
                         <i class="fas fa-times-circle reject-icon" title="Reject"></i>
-                        </td>
+                        </td> -->
                     </tr>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- <div class="section">
+        <div class="section">
             <h3><i class="fas fa-box"></i> Status Action:</h3>
-            <td>
-                <i class="fas fa-check-circle action-icon approve-icon" title="Approve">  </i>
-                <i class="fas fa-times-circle action-icon reject-icon" title="Reject"> </i>
-            </td>
-        </div> -->
+            
+            <i class="fas fa-check-circle approve-icon" title="Approve"></i>
+            <i class="fas fa-times-circle reject-icon" title="Reject"></i>
+            
+        </div>
     </div>
 
     <script>
@@ -281,18 +281,18 @@
             // Event listeners for approve buttons
             $('.approve-icon').on('click', function (event) {
                 event.preventDefault();
-                const materialId = $(this).closest('tr').data('id');
+                const passengerId = "<?php echo $passenger_info?->id?>"
                 alert('clicked');
-                console.log("Approve clicked for ID:", materialId); // Debugging
-                updateStatus(materialId, 'approved');
+                console.log("Approve clicked for ID:", passengerId); // Debugging
+                updateStatus(passengerId, 'approved');
             });
 
             // Event listeners for reject buttons
             $('.reject-icon').on('click', function (event) {
                 event.preventDefault();
-                const materialId = $(this).closest('tr').data('id');
-                console.log("Reject clicked for ID:", materialId); // Debugging
-                updateStatus(materialId, 'rejected');
+                const passengerId = "<?php echo $passenger_info?->id?>";
+                console.log("Reject clicked for ID:", passengerId); // Debugging
+                updateStatus(passengerId, 'rejected');
             });
 
             function updateStatus(id, status) {

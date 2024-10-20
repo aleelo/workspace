@@ -134,7 +134,7 @@
                                         <?php foreach ($filtered_materials as $data): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($data->fullName ?? 'N/A'); ?></td>
-                                                <td><?php echo $data->totalValue? $data->totalValue . ' ' . $data->currency_id : "N/A"; ?></td>
+                                                <td><?php echo $data->totalValue? $data->totalValue . ' ' . $data->currency_code : "N/A"; ?></td>
 
                                                 <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>
                                                 <td><?= htmlspecialchars($data->destination_country ?? 'N/A'); ?></td>
