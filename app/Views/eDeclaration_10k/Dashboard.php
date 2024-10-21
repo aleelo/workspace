@@ -106,6 +106,7 @@
                             <thead class="table-header">
                                 <tr>
                                     <th>Passenger Name</th>
+                                    <th>Type</th>
                                     <th>Amount</th>
                                     <th>Departure Country</th>
                                     <th>Destination Country</th>
@@ -134,6 +135,8 @@
                                         <?php foreach ($filtered_materials as $data): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($data->fullName ?? 'N/A'); ?></td>
+                                                <td><?= htmlspecialchars($data->name ?? 'N/A'); ?></td>
+                                                 
                                                 <td><?php echo $data->totalValue? $data->totalValue . ' ' . $data->currency_code : "N/A"; ?></td>
 
                                                 <td><?= htmlspecialchars($data->departure_country ?? 'N/A'); ?></td>

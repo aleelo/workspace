@@ -148,7 +148,7 @@
                     <?php foreach($materials as $m) { ?>
                     <tr>
                         <td><?php echo $m->name ? $m->name : "N/A"; ?></td>
-                        <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_id : "N/A"; ?></td>
+                        <td><?php echo $m->totalValue ? $m->totalValue . ' ' . $m->currency_code : "N/A"; ?></td>
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
                     </tr>
