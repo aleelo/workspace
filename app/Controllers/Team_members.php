@@ -331,6 +331,43 @@ class Team_members extends Security_Controller
 
             $this->Users_model->save_job_info($job_data);
 
+            $education_data = array(
+                "user_id" => $user_id,
+                "education_level" => $this->request->getPost('education_level'),
+                "primary_school_name" => $this->request->getPost('primary_school_name'),
+                "primary_graduation_date" => $this->request->getPost('primary_graduation_date'),
+                "secondary_school_name" => $this->request->getPost('secondary_school_name'),
+                "secondary_graduation_date" => $this->request->getPost('secondary_graduation_date'),
+                "university_name_diploma" => $this->request->getPost('university_name_diploma'),
+                "field_of_study_diploma" => $this->request->getPost('field_of_study_diploma'),
+                "graduation_date_diploma" => $this->request->getPost('graduation_date_diploma'),
+                "university_name_foculty_1" => $this->request->getPost('university_name_foculty_1'),
+                "field_of_study_foculty_1" => $this->request->getPost('field_of_study_foculty_1'),
+                "graduation_date_foculty_1" => $this->request->getPost('graduation_date_foculty_1'),
+                "university_name_foculty_2" => $this->request->getPost('university_name_foculty_2'),
+                "field_of_study_foculty_2" => $this->request->getPost('field_of_study_foculty_2'),
+                "graduation_date_foculty_2" => $this->request->getPost('graduation_date_foculty_2'),
+                "university_name_master_1" => $this->request->getPost('university_name_master_1'),
+                "field_of_study_master_1" => $this->request->getPost('field_of_study_master_1'),
+                "graduation_date_master_1" => $this->request->getPost('graduation_date_master_1'),
+                "university_name_master_2" => $this->request->getPost('university_name_master_2'),
+                "field_of_study_master_2" => $this->request->getPost('field_of_study_master_2'),
+                "graduation_date_master_2" => $this->request->getPost('graduation_date_master_2'),
+                "university_name_phd" => $this->request->getPost('university_name_phd'),
+                "field_of_study_phd" => $this->request->getPost('field_of_study_phd'),
+                "graduation_date_phd" => $this->request->getPost('graduation_date_phd'),
+                "other_skills" => $this->request->getPost('other_skills'),
+                "graduation_date_other_skills" => $this->request->getPost('graduation_date_other_skills'),
+            );
+           
+    
+    
+            $this->Users_model->save_education_info($education_data);
+                 
+            print_r($user_id);
+            print_r($user_data);
+            print_r($job_data);
+            print_r($education_data);die;
             save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
 
             //send login details to user
@@ -353,6 +390,8 @@ class Team_members extends Security_Controller
 
                 send_app_mail($this->request->getPost('email'), $subject, $message);
             }
+        }else {
+            echo json_encode(array("success" => false, 'message' => 'Data Saving error.'));
         }
 
         if ($user_id) {
