@@ -364,10 +364,7 @@ class Team_members extends Security_Controller
     
             $this->Users_model->save_education_info($education_data);
                  
-            print_r($user_id);
-            print_r($user_data);
-            print_r($job_data);
-            print_r($education_data);die;
+             
             save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
 
             //send login details to user
