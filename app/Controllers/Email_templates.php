@@ -166,6 +166,12 @@ class Email_templates extends Security_Controller {
             "leave_request_verified" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
             "leave_request_approved" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
             "leave_request_rejected" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
+ 
+        );
+        $templates_array["Training"] = array(
+             "employee_training_email" =>array("TRAINING_ID","TRAINING_NAME", "START_DATE", "END_DATE", "TRAINING_DURATION", "TRAINING_LOCATION", "TYPE", "TECHNICAL_SKILLS", "SOFT_SKILLS", "DELIVERY_MODE", "PLATFORM", "LOGO_URL", "SIGNATURE", "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
+
+
         );
         
         $templates_array["payers"] = array(

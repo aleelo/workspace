@@ -254,11 +254,7 @@
                         <td><?php echo $m->purpose ? $m->purpose : "N/A"; ?></td>
                         <td><?php echo $m->has_document ? $m->has_document : "N/A"; ?></td>
                         <td><?php echo $m->NewStatus ?></td>
-                        <!-- <td class="action-buttons">
-                      
-                        <i class="fas fa-check-circle approve-icon" title="Approve"></i>
-                        <i class="fas fa-times-circle reject-icon" title="Reject"></i>
-                        </td> -->
+                        
                     </tr>
                     <?php } ?>
                 </tbody>

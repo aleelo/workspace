@@ -137,6 +137,8 @@ class eDeclaration_10k_Model extends Crud_model {
             return $raw_query;
         }
     }
+    
+    
 
     private function make_quick_filter_query($filter, $clients_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table) {
         $query = "";

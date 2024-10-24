@@ -266,7 +266,7 @@ class Appointments extends Security_Controller {
         }
 
  
-     }
+    }
 
     public function send_appointment_created_email_participant($data = array()) {
 

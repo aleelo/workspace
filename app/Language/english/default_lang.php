@@ -121,10 +121,12 @@ $lang["section_head"] = "Section Head";
 $lang["section_remarks"] = "Remarks";
 $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
+$lang["employee_training_email"] = "Traning Email";
+$lang["Training"] = "Traning Email";
 
 //edeclaration
 // Bachelor of Science in Economics 
-
+ 
 $lang["status"] = "Status";
 $lang["ref_number"] = "Ref Number";
 $lang["fullName"] = "Full Name";
@@ -1782,6 +1784,7 @@ $lang["favorite_clients"] = "Favorite clients";
 $lang["dashboard_customization"] = "Dashboard customization";
 $lang["quick_add"] = "Quick add";
 $lang["eDeclaration_Dashboard"] = "Dashboard";
+$lang["eDeclaration_Report"] = "Report";
 
 $lang["assign_to_me"] = "Assign to me";
 

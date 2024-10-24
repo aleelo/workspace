@@ -182,7 +182,50 @@ class Training extends Security_Controller {
    
 
     /* insert or update a client */
-    
+    public function send_appointment_created_email($data = array()) {
+
+        $HRM_EMAIL = $data['hr_email'];
+        
+
+        $email_template = $this->Email_templates_model->get_final_template("employee_training_email", true);
+  
+        $parser_data["TRAINING_ID"] = $data['TRAINING_ID'];
+        $parser_data["TRAINING_NAME"] = $data['TRAINING_NAME'];
+        $parser_data["START_DATE"] = $data['START_DATE'];
+        $parser_data["END_DATE"] = $data['END_DATE'];
+        $parser_data["TRAINING_DURATION"] = $data['TRAINING_DURATION'];
+        $parser_data["TRAINING_LOCATION"] = $data['TRAINING_LOCATION'];
+        $parser_data["TYPE"] = $data['TYPE'];
+        $parser_data["TECHNICAL_SKILLS"] = $data['TECHNICAL_SKILLS'];
+        $parser_data["SOFT_SKILLS"] = $data['SOFT_SKILLS'];
+        $parser_data["DELIVERY_MODE"] = $data['DELIVERY_MODE'];
+        $parser_data["PLATFORM"] = $data['SOFT_SKILLS'];
+        
+       
+      
+       
+
+          $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+ 
+        $host_message =  get_array_value($email_template, "message_default");
+        $host_subject =  get_array_value($email_template, "subject_default");
+
+        $host_message = $this->parser->setData($parser_data)->renderString($host_message);
+        $host_subject = $this->parser->setData($parser_data)->renderString($host_subject);
+
+        // if(!empty($HRM_EMAIL)){
+        //     $HRM_EMAIL =  send_app_mail($HRM_EMAIL);
+        // }
+
+        if(!empty($host_email)){
+            $hrm_email =  send_app_mail($host_email, $host_subject, $host_message);
+        }
+ 
+    }
     function save() {
         
         $training_id = $this->request->getPost('id');
@@ -255,15 +298,38 @@ class Training extends Security_Controller {
 
         $save_id = $this->Training_model->ci_save($data, $training_id);
 
+        $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
+
+
         if ($save_id) {
 
             if(!$training_id){
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Training_model->get_details($options)->getRow();
+                $traininginfo = $this->Training_model->get_details($options)->getRow();
 
-                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
+                $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $traininginfo?->created_by")->getRow();
+
+                $training_email_data = [
+                    'TRAINING_ID' => $save_id,
+                    'TRAINING_NAME' => $traininginfo->training_name,
+                    'START_DATE' => $traininginfo->start_date,
+                    'END_DATE' => $traininginfo->end_date,
+                    'TRAINING_DURATION' => $traininginfo->training_duration,
+                    'TRAINING_LOCATION' => $traininginfo->training_location,
+                    'TYPE' => $traininginfo->type,
+                    'TECHNICAL_SKILLS' => $traininginfo->technical_skills,
+                    'SOFT_SKILLS' => $traininginfo->soft_skills,
+                    'DELIVERY_MODE' => $traininginfo->delivery_mode,
+                    'PLATFORM' => $traininginfo->platform,
+                    'hr_email' => $hrm_info->private_email
+                    
+                
+                     ,  // The names in bullet format with a bold header
+                ];
+        
+                $r = $this->send_appointment_created_email($training_email_data);
 
             }
 

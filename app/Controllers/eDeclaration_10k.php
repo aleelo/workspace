@@ -6,10 +6,16 @@ class eDeclaration_10k extends Security_Controller {
 
     function __construct() {
         parent::__construct();
+       
 
         //check permission to access this module
         $this->init_permission_checker("edeclaration");
     }
+        public function get_report()
+         {
+        $data['report'] = $this->eDeclaration_10k->get_departure_and_arrival_report();
+        $this->load->view('travel_report', $data);
+        }
 
     private function _validate_client_manage_access($client_id = 0) {
         if (!$this->can_edit_clients($client_id)) {
@@ -47,7 +53,7 @@ class eDeclaration_10k extends Security_Controller {
 
   
     /* load client add/edit modal */
-
+    
     function modal_form() {
         
         $Sections_id = $this->request->getPost('id');
@@ -112,6 +118,28 @@ class eDeclaration_10k extends Security_Controller {
         $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
 
         return $this->template->view('edeclaration_10k/arrvin10k_details', $view_data);
+    }
+    public function arriving10k_details1() {
+        $ref_number = $this->request->getPost('ref_number');
+        $id = $this->request->getPost('id');
+        
+        $this->validate_submitted_data(array(
+            "id" => "numeric"
+        ));
+    
+        $options = array('ref_number' => $ref_number);
+        
+        // Fetch passenger details
+        $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
+        
+        // Fetch travel information
+        $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
+        
+        // Fetch associated materials
+        $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
+    
+        // Generate Report View
+        return $this->template->view('edeclaration_10k/Report', $view_data);
     }
 
    

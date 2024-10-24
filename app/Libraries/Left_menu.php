@@ -250,6 +250,9 @@ class Left_menu {
             if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
                 $team_submenu["eDeclaration_Dashboard"] = array("name" => "eDeclaration_Dashboard", "url" => "edeclaration_10k/arriving100k_details", "class" => "bell");
             }
+            if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
+                $team_submenu["eDeclaration_Report"] = array("name" => "eDeclaration_Report", "url" => "edeclaration_10k/arriving10k_details1", "class" => "bell");
+            }
 
             if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
                 $team_submenu["eDeclaration_10k"] = array("name" => "eDeclaration_10k", "url" => "edeclaration_10k", "class" => "bell");
