@@ -844,27 +844,27 @@ class Users_model extends Crud_model {
          
         $sql_graduate = "SELECT COUNT($users_table.id) AS total_graduate
             FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.gender='Graduate'";
+            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.education_level='Graduate'";
             $total_graduate = $this->db->query($sql_graduate)->getRow()?->total_graduate;
          
         $sql_bachelor = "SELECT COUNT($users_table.id) AS total_bachelor
             FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.gender='Bachelor'";
+            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.education_level='Bachelor'";
             $total_bachelor = $this->db->query($sql_bachelor)->getRow()?->total_bachelor;
          
         $sql_master = "SELECT COUNT($users_table.id) AS total_master
             FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.gender='Master'";
+            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.education_level='Master'";
             $total_master = $this->db->query($sql_master)->getRow()?->total_master;
          
         $sql_doctorate = "SELECT COUNT($users_table.id) AS total_doctorate
             FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.gender='Doctorate'";
+            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.education_level='Doctorate'";
             $total_doctorate = $this->db->query($sql_doctorate)->getRow()?->total_doctorate;
          
         $sql_other = "SELECT COUNT($users_table.id) AS total_other
             FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.gender='Other/Skill'";
+            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.education_level='Other/Skill'";
             $total_other = $this->db->query($sql_other)->getRow()?->total_other;
 
         return [
@@ -915,12 +915,11 @@ class Users_model extends Crud_model {
     function count_users_by_department() {
         $users_table = $this->db->prefixTable('users');
         $team_member_job_info = $this->db->prefixTable('team_member_job_info');
-        $department_table = $this->db->prefixTable('departments');
 
-        $sql = "SELECT CASE WHEN $department_table.nameSo is null THEN 'No Department' ELSE $department_table.nameSo END department,count(j.department_id) count
+        $sql = "SELECT CASE WHEN d.nameSo is null THEN 'No Department' ELSE d.nameSo END department,count(j.department_id) count
             FROM $users_table u            
             left join $team_member_job_info j on u.id = j.user_id
-            left join $department_table  on $department_table.id = j.department_id
+            left join rise_departments  d on d.id = j.department_id
 
             WHERE u.deleted=0 AND u.user_type='staff' AND u.status='active' AND  d.nameSo is not null 
             Group by d.id";

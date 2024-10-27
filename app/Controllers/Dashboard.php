@@ -463,7 +463,6 @@ class Dashboard extends Security_Controller {
 
         return $row_widgets;
     }
-
     private function _get_first_row_of_admin_and_team_dashboard($widgets) {
 
         $row = array();
@@ -526,21 +525,21 @@ class Dashboard extends Security_Controller {
     private function _get_second_and_third_row_of_admin_and_team_dashboard_widget_columns($widgets) {
         $columns = array();
 
-        if (get_array_value($widgets, "projects_overview")) {
+        if (get_array_value($widgets, "team_members_overview")) { //projects_overview
             if (get_array_value($widgets, "next_reminder")) {
-                $columns[] = array("projects_overview", "next_reminder");
+                $columns[] = array("team_members_overview"); //next_reminder was here in array
             } else {
-                $columns[] = array("projects_overview");
+                $columns[] = array("team_members_overview");
             }
         }
 
 
-        if (get_array_value($widgets, "invoice_overview")) {
-            $columns[] = array("invoice_overview");
+        if (get_array_value($widgets, "team_members_agegroup_education_widget")) { //invoice_overview
+            $columns[] = array("team_members_agegroup_education_widget");
         }
 
-        if (get_array_value($widgets, "income_vs_expenses")) {
-            $columns[] = array("income_vs_expenses");
+        if (get_array_value($widgets, "team_members_by_department_widget")) {  //income_vs_expenses
+            $columns[] = array("team_members_by_department_widget");
         }
 
 
@@ -548,16 +547,16 @@ class Dashboard extends Security_Controller {
             $columns[] = array("all_tasks_overview");
         }
 
-        if (get_array_value($widgets, "team_members_overview")) {
+        if (get_array_value($widgets, "visitors_overview_widget")) { //team_members_overview
             if (get_array_value($widgets, "last_announcement")) {
-                $columns[] = array("team_members_overview", "last_announcement");
+                $columns[] = array("visitors_overview_widget", "last_announcement");
             } else {
-                $columns[] = array("team_members_overview");
+                $columns[] = array("visitors_overview_widget");
             }
         }
 
-        if (get_array_value($widgets, "ticket_status")) {
-            $columns[] = array("ticket_status");
+        if (get_array_value($widgets, "projects_overview")) {  //ticket_status
+            $columns[] = array("projects_overview","next_reminder");
         }
 
 
@@ -668,16 +667,238 @@ class Dashboard extends Security_Controller {
 
         $row = array();
         $columns = array();
-
-        $columns[] = array("sticky_note");//array("team_members_overview_widget");
-        $columns[] = array("team_members_by_department_widget");
+        // $access_leave = $this->get_access_info("leave");
+        // $access_attendance = $this->get_access_info("attendance");
+        // return team_members_overview_widget(array(
+        //     "leave_access_type" => $access_leave->access_type,
+        //     "leave_allowed_members" => $access_leave->allowed_members,
+        //     "attendance_access_type" => $access_attendance->access_type,
+        //     "attendance_allowed_members" => $access_attendance->allowed_members
+        // ));
+        $columns[] = array("team_members_overview"); //array("sticky_note");team_members_overview_widget
         $columns[] = array("team_members_agegroup_education_widget");
+        $columns[] = array("team_members_by_department_widget");
 
         $row["columns"] = $columns;
-        $row["ratio"] = "8-4";
+        $row["ratio"] = "4-4-4";
 
         return $row;
     }
+
+    // private function _get_first_row_of_admin_and_team_dashboard($widgets) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     if (get_array_value($widgets, "clock_in_out")) {
+    //         $columns[] = array("clock_in_out");
+    //     }
+
+    //     $columns[] = array("my_open_tasks");
+
+    //     if (get_array_value($widgets, "events_today")) {
+    //         $columns[] = array("events_today");
+    //     }
+
+    //     if (get_array_value($widgets, "total_due")) {
+    //         $columns[] = array("total_due");
+    //     }
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "total_clients")) {
+    //         $columns[] = array("total_clients");
+    //     }
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "total_leads")) {
+    //         $columns[] = array("total_leads");
+    //     }
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "total_contacts")) {
+    //         $columns[] = array("total_contacts");
+    //     }
+
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "new_posts")) {
+    //         $columns[] = array("new_posts");
+    //     }
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "total_hours_worked")) {
+    //         $columns[] = array("total_hours_worked");
+    //     }
+
+    //     if (count($columns) < 4 && get_array_value($widgets, "open_projects")) {
+    //         $columns[] = array("open_projects");
+    //     }
+
+
+    //     $ratio = "3-3-3-3";
+    //     if (count($columns) == 3) {
+    //         $ratio = "4-4-4";
+    //     } else if (count($columns) == 2) {
+    //         $ratio = "6-6";
+    //     }
+
+
+    //     $row["columns"] = $columns;
+    //     $row["ratio"] = $ratio;
+
+    //     return $row;
+    // }
+
+    // private function _get_second_and_third_row_of_admin_and_team_dashboard_widget_columns($widgets) {
+    //     $columns = array();
+
+    //     if (get_array_value($widgets, "projects_overview")) {
+    //         if (get_array_value($widgets, "next_reminder")) {
+    //             $columns[] = array("projects_overview", "next_reminder");
+    //         } else {
+    //             $columns[] = array("projects_overview");
+    //         }
+    //     }
+
+
+    //     if (get_array_value($widgets, "invoice_overview")) {
+    //         $columns[] = array("invoice_overview");
+    //     }
+
+    //     if (get_array_value($widgets, "income_vs_expenses")) {
+    //         $columns[] = array("income_vs_expenses");
+    //     }
+
+
+    //     if (get_array_value($widgets, "all_tasks_overview")) {
+    //         $columns[] = array("all_tasks_overview");
+    //     }
+
+    //     if (get_array_value($widgets, "team_members_overview")) {
+    //         if (get_array_value($widgets, "last_announcement")) {
+    //             $columns[] = array("team_members_overview", "last_announcement");
+    //         } else {
+    //             $columns[] = array("team_members_overview");
+    //         }
+    //     }
+
+    //     if (get_array_value($widgets, "ticket_status")) {
+    //         $columns[] = array("ticket_status");
+    //     }
+
+
+    //     if (get_array_value($widgets, "all_timesheets_statistics")) {
+    //         $columns[] = array("all_timesheets_statistics");
+    //     } else if (get_array_value($widgets, "my_timesheet_statistics")) {
+    //         $columns[] = array("my_timesheet_statistics");
+    //     }
+
+    //     if (get_array_value($widgets, "estimate_sent_statistics")) {
+    //         $columns[] = array("estimate_sent_statistics");
+    //     }
+
+    //     if (get_array_value($widgets, "invoice_statistics")) {
+    //         $columns[] = array("invoice_statistics");
+    //     }
+
+    //     return $columns;
+    // }
+
+    // private function _get_second_row_of_admin_and_team_dashboard($all_columns) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     $column1 = get_array_value($all_columns, 0);
+    //     $column2 = get_array_value($all_columns, 1);
+    //     $column3 = get_array_value($all_columns, 2);
+
+    //     if ($column1) {
+    //         $columns[] = $column1;
+    //     }
+    //     if ($column2) {
+    //         $columns[] = $column2;
+    //     }
+    //     if ($column3) {
+    //         $columns[] = $column3;
+    //     }
+
+    //     $row["columns"] = $columns;
+
+    //     $row["ratio"] = "4-4-4";
+
+    //     return $row;
+    // }
+
+    // private function _get_third_row_of_admin_and_team_dashboard($all_columns) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     $column1 = get_array_value($all_columns, 3);
+    //     $column2 = get_array_value($all_columns, 4);
+    //     $column3 = get_array_value($all_columns, 5);
+
+    //     if ($column1) {
+    //         $columns[] = $column1;
+    //     }
+    //     if ($column2) {
+    //         $columns[] = $column2;
+    //     }
+    //     if ($column3) {
+    //         $columns[] = $column3;
+    //     }
+
+    //     $row["columns"] = $columns;
+
+    //     $row["ratio"] = "4-4-4";
+
+    //     return $row;
+    // }
+
+    // private function _get_fourth_row_of_admin_and_team_dashboard($widgets) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     $columns[] = array("project_timeline");
+    //     if (get_array_value($widgets, "events") && get_array_value($widgets, "open_projects_list")) {
+    //         $columns[] = array("events", "open_projects_list");
+    //     } else if (get_array_value($widgets, "open_projects_list") && get_array_value($widgets, "starred_projects")) {
+    //         $columns[] = array("open_projects_list", "starred_projects");
+    //     }
+
+    //     $columns[] = array("todo_list");
+
+    //     $row["columns"] = $columns;
+    //     $row["ratio"] = "4-4-4";
+
+    //     return $row;
+    // }
+
+    // private function _get_fifth_row_of_admin_and_team_dashboard($widgets) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     $columns[] = array("my_tasks_list");
+    //     $columns[] = array("sticky_note");
+
+    //     $row["columns"] = $columns;
+    //     $row["ratio"] = "8-4";
+
+    //     return $row;
+    // }
+
+    // private function _get_sixth_row_of_admin_and_team_dashboard($widgets) {
+
+    //     $row = array();
+    //     $columns = array();
+
+    //     $columns[] = array("sticky_note");//array("team_members_overview_widget");
+    //     $columns[] = array("team_members_by_department_widget");
+    //     $columns[] = array("team_members_agegroup_education_widget");
+
+    //     $row["columns"] = $columns;
+    //     $row["ratio"] = "8-4";
+
+    //     return $row;
+    // }
 
     private function _get_admin_and_team_dashboard_data() {
         $row_widgets = $this->_get_admin_and_team_dashboard_widgets();

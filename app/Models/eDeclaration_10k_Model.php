@@ -10,59 +10,354 @@ class eDeclaration_10k_Model extends Crud_model {
         $this->table = 'materials';
         parent::__construct($this->table);
     }
+    // public function get_details($options = array()) {
+    //     $materials_table = $this->db->prefixTable('materials');
+    //     $passenger_table = $this->db->prefixTable('passenger_details');
+    //     $travel_table = $this->db->prefixTable('travel_details');
+    //     $countries_table = $this->db->prefixTable('countries');
+    
+    //     $where = " WHERE $materials_table.deleted = 0";
+    
+    //     // Filtering by reference number
+    //     $ref_number = $this->_get_clean_value($options, "ref_number");
+    //     if ($ref_number) {
+    //         $where .= " AND $materials_table.ref_number = '$ref_number'";
+    //     }
+    
+    //     // Filtering by start_date and end_date for both Arrival Date and Departure Date
+    //     $start_date = $this->_get_clean_value($options, "start_date");
+    //     if ($start_date) {
+    //         $where .= " AND ($travel_table.arrival_date >= '$start_date' OR $travel_table.departure_date >= '$start_date')";
+    //     }
+    
+    //     $end_date = $this->_get_clean_value($options, "end_date");
+    //     if ($end_date) {
+    //         $where .= " AND ($travel_table.arrival_date <= '$end_date' OR $travel_table.departure_date <= '$end_date')";
+    //     }
+    
+    //     // Building the SQL query
+    //     $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
+    //         CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name) as fullName,
+    //         $passenger_table.status as NewStatus,
+    //         $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date,
+    //         dpc.name as departure_country, dcc.name as destination_country, tcc.name as transit_country,
+    //         ccd.currency_code
+    //         FROM $materials_table
+    //         LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+    //         LEFT JOIN $travel_table ON $travel_table.passenger_id = $passenger_table.id
+    //         LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
+    //         LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
+    //         LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
+    //         LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
+    //         $where
+    //         ORDER BY $materials_table.id DESC";
+    
+    //     $raw_query = $this->db->query($sql);
+    
+    //     return $raw_query; // Return query object
+    // }
+    
 
-    function get_details($options = array()) {
+    // public function get_details($options = array()) {
+    //     $materials_table = $this->db->prefixTable('materials');
+    //     $departments_table = $this->db->prefixTable('departments');
+    //     $passenger_table = $this->db->prefixTable('passenger_details');
+    //     $travel_table = $this->db->prefixTable('travel_details');
+    //     $projects_table = $this->db->prefixTable('projects');
+    //     $users_table = $this->db->prefixTable('users');
+    //     $invoices_table = $this->db->prefixTable('invoices');
+    //     $invoice_payments_table = $this->db->prefixTable('invoice_payments');
+    //     $client_groups_table = $this->db->prefixTable('client_groups');
+    //     $lead_status_table = $this->db->prefixTable('lead_status');
+    //     $estimates_table = $this->db->prefixTable('estimates');
+    //     $estimate_requests_table = $this->db->prefixTable('estimate_requests');
+    //     $tickets_table = $this->db->prefixTable('tickets');
+    //     $orders_table = $this->db->prefixTable('orders');
+    //     $proposals_table = $this->db->prefixTable('proposals');
+    //     $countries_table = $this->db->prefixTable('countries');
+    
+    //     $where = "";
+    //     $id = $this->_get_clean_value($options, "id");
+    //     if ($id) {
+    //         $where .= " AND $materials_table.id=$id";
+    //     }
+    
+    //     $ref_number = $this->_get_clean_value($options, "ref_number");
+    //     if ($ref_number) {
+    //         $where .= " AND $materials_table.ref_number=$ref_number";
+    //     }
+    
+    //     $q_type = $this->_get_clean_value($options, "q_type");
+    //     if ($q_type) {
+    //         $where .= " AND $materials_table.q_type='$q_type'";
+    //     }
+    //     $start_date = $this->_get_clean_value($options, "start_date");
+    //     if ($start_date) {
+    //         $where .= " AND ($travel_table.arrival_date >= '$start_date' OR $travel_table.departure_date >= '$start_date')";
+    //     }
+    
+    //     $end_date = $this->_get_clean_value($options, "end_date");
+    //     if ($end_date) {
+    //         $where .= " AND ($travel_table.arrival_date <= '$end_date' OR $travel_table.departure_date <= '$end_date')";
+    //     }
+    
+    //     $created_by = $this->_get_clean_value($options, "created_by");
+    //     if ($created_by) {
+    //         $where .= " AND $materials_table.created_by=$created_by";
+    //     }
+    
+    //     $trip_type = $this->_get_clean_value($options, "trip_type");
+    //     if ($trip_type == "Arrival_list") {
+    //         $where .= " AND $materials_table.trip_type = 'Arrival'";
+    //     } elseif ($trip_type == "Depature_list") {
+    //         $where .= " AND $materials_table.trip_type = 'Departure'";
+    //     }
+    
+    //     // Add filtering for start_date and end_date
+    //     $start_date = $this->_get_clean_value($options, "start_date");
+    //     if ($start_date) {
+    //         $where .= " AND $travel_table.arrival_date >= '$start_date'";
+    //     }
+    
+    //     $end_date = $this->_get_clean_value($options, "end_date");
+    //     if ($end_date) {
+    //         $where .= " AND $travel_table.arrival_date <= '$end_date'";
+    //     }
+    
+    //     $this->db->query('SET SQL_BIG_SELECTS=1');
+    
+    //     $limit_offset = "";
+    //     $limit = $this->_get_clean_value($options, "limit");
+    //     if ($limit) {
+    //         $skip = $this->_get_clean_value($options, "skip");
+    //         $offset = $skip ? $skip : 0;
+    //         $limit_offset = " LIMIT $limit OFFSET $offset ";
+    //     }
+    
+    //     $available_order_by_list = array(
+    //         "id" => $materials_table . ".id",
+    //         "name" => $materials_table . ".name",
+    //         "ref_number" => $materials_table . ".ref_number",
+    //         "fullName" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
+    //         "trip_type" => $materials_table . ".trip_type",
+    //     );
+    
+    //     $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
+    //     $order = "";
+    
+    //     if ($order_by) {
+    //         $order_dir = $this->_get_clean_value($options, "order_dir");
+    //         $order = " ORDER BY $order_by $order_dir ";
+    //     }
+    
+    //     $search_by = get_array_value($options, "search_by");
+    //     if ($search_by) {
+    //         $search_by = $this->db->escapeLikeString($search_by);
+    //         $labels_table = $this->db->prefixTable("labels");
+    
+    //         $where .= " AND (";
+    //         $where .= " $materials_table.id LIKE '%$search_by%' ESCAPE '!' ";
+    //         $where .= " OR $materials_table.name LIKE '%$search_by%' ESCAPE '!' ";
+    //         $where .= " OR $materials_table.trip_type LIKE '%$search_by%' ESCAPE '!' ";
+    //         $where .= " OR $materials_table.ref_number LIKE '%$search_by%' ESCAPE '!' ";
+    //         $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
+    //         $where .= " )";
+    //     }
+    
+    //     $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
+    //         CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName, $passenger_table.status as NewStatus,
+    //         $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date, dpc.name as departure_country,
+    //         dcc.name as destination_country, tcc.name as transit_country, ccd.currency_code
+    //         FROM $materials_table
+    //         LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+    //         LEFT JOIN $travel_table on $travel_table.passenger_id=$passenger_table.id
+    //         LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
+    //         LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
+    //         LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
+    //         LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
+    //         WHERE $materials_table.deleted=0 $where    
+    //         $order $limit_offset";
+    
+    //     // print_r($sql);die;
+    
+    //     $raw_query = $this->db->query($sql);
+    //     $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+    
+    //     if ($limit) {
+    //         return array(
+    //             "data" => $raw_query->getResult(),
+    //             "recordsTotal" => $total_rows->found_rows,
+    //             "recordsFiltered" => $total_rows->found_rows,
+    //         );
+    //     } else {
+    //         return $raw_query;
+    //     }
+    // }
+    // public function get_details($options = array()) {
+    //     $materials_table = $this->db->prefixTable('materials');
+    //     $departments_table = $this->db->prefixTable('departments');
+    //     $passenger_table = $this->db->prefixTable('passenger_details');
+    //     $travel_table = $this->db->prefixTable('travel_details');
+    //     $countries_table = $this->db->prefixTable('countries');
+    
+    //     // Initialize the where clause with non-deleted materials
+    //     $where = "$materials_table.deleted = 0";
+    
+    //     // Apply reference number filter if provided
+    //     $ref_number = $this->_get_clean_value($options, "ref_number");
+    //     if ($ref_number) {
+    //         $where .= " AND $materials_table.ref_number = '$ref_number'";
+    //     } else {
+    //         // Only apply date filters if reference number is not provided
+    //         $start_date = $this->_get_clean_value($options, "start_date");
+    //         if ($start_date) {
+    //             $where .= " AND ($travel_table.arrival_date >= '$start_date' OR $travel_table.departure_date >= '$start_date')";
+    //         }
+    
+    //         $end_date = $this->_get_clean_value($options, "end_date");
+    //         if ($end_date) {
+    //             $where .= " AND ($travel_table.arrival_date <= '$end_date' OR $travel_table.departure_date <= '$end_date')";
+    //         }
+    //     }
+    
+    //     // Additional filtering options
+    //     $q_type = $this->_get_clean_value($options, "q_type");
+    //     if ($q_type) {
+    //         $where .= " AND $materials_table.q_type = '$q_type'";
+    //     }
+    
+    //     $created_by = $this->_get_clean_value($options, "created_by");
+    //     if ($created_by) {
+    //         $where .= " AND $materials_table.created_by = $created_by";
+    //     }
+    
+    //     $trip_type = $this->_get_clean_value($options, "trip_type");
+    //     if ($trip_type == "Arrival_list") {
+    //         $where .= " AND $materials_table.trip_type = 'Arrival'";
+    //     } elseif ($trip_type == "Depature_list") {
+    //         $where .= " AND $materials_table.trip_type = 'Departure'";
+    //     }
+    
+    //     // Order by clause
+    //     $available_order_by_list = array(
+    //         "id" => $materials_table . ".id",
+    //         "name" => $materials_table . ".name",
+    //         "ref_number" => $materials_table . ".ref_number",
+    //         "fullName" => "CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name)",
+    //         "trip_type" => $materials_table . ".trip_type",
+    //     );
+    
+    //     $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
+    //     $order = "";
+    
+    //     if ($order_by) {
+    //         $order_dir = $this->_get_clean_value($options, "order_dir");
+    //         $order = " ORDER BY $order_by $order_dir ";
+    //     }
+    
+    //     // Limit and offset for pagination
+    //     $limit_offset = "";
+    //     $limit = $this->_get_clean_value($options, "limit");
+    //     if ($limit) {
+    //         $skip = $this->_get_clean_value($options, "skip");
+    //         $offset = $skip ? $skip : 0;
+    //         $limit_offset = " LIMIT $limit OFFSET $offset ";
+    //     }
+    
+    //     // SQL Query Construction
+    //     $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
+    //             CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name) as fullName, 
+    //             $passenger_table.status as NewStatus,
+    //             $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date,
+    //             dpc.name as departure_country, dcc.name as destination_country, tcc.name as transit_country, ccd.currency_code
+    //             FROM $materials_table
+    //             LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+    //             LEFT JOIN $travel_table ON $travel_table.passenger_id = $passenger_table.id
+    //             LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
+    //             LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
+    //             LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
+    //             LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
+    //             WHERE $where
+    //             $order $limit_offset";
+    
+    //     // Debugging SQL query
+    //     // Uncomment the line below for debugging purposes
+    //     // echo $sql; die;
+    
+    //     // Execute the query and handle results
+    //     $raw_query = $this->db->query($sql);
+    //     $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+    
+    //     if ($limit) {
+    //         return array(
+    //             "data" => $raw_query->getResult(),
+    //             "recordsTotal" => $total_rows->found_rows,
+    //             "recordsFiltered" => $total_rows->found_rows,
+    //         );
+    //     } else {
+    //         return $raw_query;
+    //     }
+    // }
+    public function get_details($options = array()) {
         $materials_table = $this->db->prefixTable('materials');
         $departments_table = $this->db->prefixTable('departments');
-        $passenger_table=$this->db->prefixTable('passenger_details');
-      
-        $travel_table=$this->db->prefixTable('travel_details');
-        $projects_table = $this->db->prefixTable('projects');
-        $users_table = $this->db->prefixTable('users');
-        $invoices_table = $this->db->prefixTable('invoices');
-        $invoice_payments_table = $this->db->prefixTable('invoice_payments');
-        $client_groups_table = $this->db->prefixTable('client_groups');
-        $lead_status_table = $this->db->prefixTable('lead_status');
-        $estimates_table = $this->db->prefixTable('estimates');
-        $estimate_requests_table = $this->db->prefixTable('estimate_requests');
-        $tickets_table = $this->db->prefixTable('tickets');
-        $orders_table = $this->db->prefixTable('orders');
-        $proposals_table = $this->db->prefixTable('proposals');
-        
+        $passenger_table = $this->db->prefixTable('passenger_details');
+        $travel_table = $this->db->prefixTable('travel_details');
         $countries_table = $this->db->prefixTable('countries');
-
-        $where = "";
-        $id = $this->_get_clean_value($options, "id");
-        if ($id) {
-            $where .= " AND $materials_table.id=$id";
-        }
-
+    
+        // Initialize the where clause with non-deleted materials
+        $where = "$materials_table.deleted = 0";
+    
+        // Apply reference number filter if provided
         $ref_number = $this->_get_clean_value($options, "ref_number");
         if ($ref_number) {
-            $where .= " AND $materials_table.ref_number=$ref_number";
+            $where .= " AND $materials_table.ref_number = '$ref_number'";
+        } else {
+            // Only apply month filter if reference number is not provided
+            $year = $this->_get_clean_value($options, "year");
+            $month = $this->_get_clean_value($options, "month");
+            if ($year && $month) {
+                $where .= " AND (YEAR($travel_table.arrival_date) = '$year' OR YEAR($travel_table.departure_date) = '$year')";
+                $where .= " AND (MONTH($travel_table.arrival_date) = '$month' OR MONTH($travel_table.departure_date) = '$month')";
+            }
         }
-
+    
+        // Additional filtering options
         $q_type = $this->_get_clean_value($options, "q_type");
         if ($q_type) {
-            $where .= " AND $materials_table.q_type='$q_type'";
+            $where .= " AND $materials_table.q_type = '$q_type'";
         }
-
+    
         $created_by = $this->_get_clean_value($options, "created_by");
         if ($created_by) {
-            $where .= " AND $materials_table.created_by=$created_by";
+            $where .= " AND $materials_table.created_by = $created_by";
         }
-
-
+    
         $trip_type = $this->_get_clean_value($options, "trip_type");
-        
-        if($trip_type == "Arrival_list"){
+        if ($trip_type == "Arrival_list") {
             $where .= " AND $materials_table.trip_type = 'Arrival'";
-        }elseif($trip_type == "Depature_list"){
+        } elseif ($trip_type == "Depature_list") {
             $where .= " AND $materials_table.trip_type = 'Departure'";
         }
-
-        $this->db->query('SET SQL_BIG_SELECTS=1');
-
+    
+        // Order by clause
+        $available_order_by_list = array(
+            "id" => $materials_table . ".id",
+            "name" => $materials_table . ".name",
+            "ref_number" => $materials_table . ".ref_number",
+            "fullName" => "CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name)",
+            "trip_type" => $materials_table . ".trip_type",
+        );
+    
+        $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
+        $order = "";
+    
+        if ($order_by) {
+            $order_dir = $this->_get_clean_value($options, "order_dir");
+            $order = " ORDER BY $order_by $order_dir ";
+        }
+    
+        // Limit and offset for pagination
         $limit_offset = "";
         $limit = $this->_get_clean_value($options, "limit");
         if ($limit) {
@@ -70,63 +365,31 @@ class eDeclaration_10k_Model extends Crud_model {
             $offset = $skip ? $skip : 0;
             $limit_offset = " LIMIT $limit OFFSET $offset ";
         }
-        
-
-        $available_order_by_list = array(
-            "id" => $materials_table . ".id",
-            "name" => $materials_table . ".name",
-            "ref_number" => $materials_table . ".ref_number",
-            "fullName" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
-            "trip_type" => $materials_table . ".trip_type",
-        );
-
-        $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
-
-        $order = "";
-
-        if ($order_by) {
-            $order_dir = $this->_get_clean_value($options, "order_dir");
-            $order = " ORDER BY $order_by $order_dir ";
-        }
-
-
-        $search_by = get_array_value($options, "search_by");
-        if ($search_by) {
-            $search_by = $this->db->escapeLikeString($search_by);
-            $labels_table = $this->db->prefixTable("labels");
-
-            $where .= " AND (";
-            $where .= " $materials_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $materials_table.name LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $materials_table.trip_type LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $materials_table.ref_number LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            
-            $where .= " )";
-        }
-
-
+    
+        // SQL Query Construction
         $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
-        CONCAT($passenger_table.first_name,' ',$passenger_table.middle_name,' ',$passenger_table.last_name) as fullName,$passenger_table.status as NewStatus,
-        $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date, dpc.name as departure_country,
-         dcc.name as destination_country, tcc.name as transit_country,ccd.currency_code
-        FROM $materials_table
-        LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
-        LEFT JOIN $travel_table on $travel_table.passenger_id=$passenger_table.id
-        LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
-        LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
-        LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
-        LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
-                 
-        WHERE $materials_table.deleted=0 $where    
-        $order $limit_offset";
-
-        // print_r($sql);die;
-
+                CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name) as fullName, 
+                $passenger_table.status as NewStatus,
+                $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date,
+                dpc.name as departure_country, dcc.name as destination_country, tcc.name as transit_country, ccd.currency_code
+                FROM $materials_table
+                LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+                LEFT JOIN $travel_table ON $travel_table.passenger_id = $passenger_table.id
+                LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
+                LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
+                LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
+                LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
+                WHERE $where
+                $order $limit_offset";
+    
+        // Debugging SQL query
+        // Uncomment the line below for debugging purposes
+        // echo $sql; die;
+    
+        // Execute the query and handle results
         $raw_query = $this->db->query($sql);
-
         $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
-
+    
         if ($limit) {
             return array(
                 "data" => $raw_query->getResult(),
@@ -137,6 +400,9 @@ class eDeclaration_10k_Model extends Crud_model {
             return $raw_query;
         }
     }
+    
+    
+    
     
     
 

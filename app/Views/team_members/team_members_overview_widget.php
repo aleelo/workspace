@@ -11,7 +11,7 @@ if ($total_team_members) {
     <div class="card-header">
         <i data-feather="users" class="icon-16"></i> &nbsp;<?php echo app_lang("total_team_members_overview"); ?>
     </div>
-    <div class="rounded-bottom">
+    <div class="rounded-bottom mb-3">
         <div class="box pt-2">
 
             <div class="box-content">

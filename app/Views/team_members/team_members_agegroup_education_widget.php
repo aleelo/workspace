@@ -15,7 +15,7 @@
     </div>
     <div class="rounded-bottom row p-3">
 
-        <div class="col-md-6 col b-r-2 ps-4 pe-4">
+        <div class="col-md-6 col b-r-2 ps-3 pe-4 mb-3">
             <h4>Employee Education Levels</h4>
             <div class="pb-2">
                 <div class="color-tag border-circle me-3 wh10" style="background-color: #9dacff;"></div>
@@ -43,26 +43,26 @@
             </div>
         </div>
 
-        <div class="col-md-6 col  ps-4 pe-4">
+        <div class="col-md-6 col  ps-3 pe-3">
             <h4>Employee Age Groups</h4>
             <div class="pb-2">
-                <div class="color-tag border-circle me-3 wh10" style="background-color: #DEA701;"></div>
+                <div class="color-tag border-circle me-3 wh10" style="background-color: #7cff58;"></div>
                 Between 15 - 31                        <span class="strong float-end"><?php echo floor($total_1530); ?></span>
             </div>
             <div class="pb-2">
-                <div class="color-tag border-circle me-3 wh10" style="background-color: #DEA701;"></div>
+                <div class="color-tag border-circle me-3 wh10" style="background-color: #64cc47;"></div>
                 Between 31 - 45                        <span class="strong float-end"><?php echo floor($total_3145); ?></span>
             </div>
             <div class="pb-2">
-                <div class="color-tag border-circle me-3 wh10" style="background-color: #DEA701;"></div>
+                <div class="color-tag border-circle me-3 wh10" style="background-color: #4ea237;"></div>
                 Between 46 - 59                        <span class="strong float-end"><?php echo floor($total_4660); ?></span>
             </div>
             <div class="pb-2">
-                <div class="color-tag border-circle me-3 wh10" style="background-color: #DEA701;"></div>
+                <div class="color-tag border-circle me-3 wh10" style="background-color: #3f6b32;"></div>
                 Between 60 - 75                        <span class="strong float-end"><?php echo floor($total_6075); ?></span>
             </div>
             <div class="pb-2">
-                <div class="color-tag border-circle me-3 wh10" style="background-color: #DEA701;"></div>
+                <div class="color-tag border-circle me-3 wh10" style="background-color: #294521;"></div>
                 76 & Above                        <span class="strong float-end"><?php echo floor($total_76up); ?></span>
             </div>
            

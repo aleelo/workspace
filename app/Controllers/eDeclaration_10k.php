@@ -11,11 +11,7 @@ class eDeclaration_10k extends Security_Controller {
         //check permission to access this module
         $this->init_permission_checker("edeclaration");
     }
-        public function get_report()
-         {
-        $data['report'] = $this->eDeclaration_10k->get_departure_and_arrival_report();
-        $this->load->view('travel_report', $data);
-        }
+         
 
     private function _validate_client_manage_access($client_id = 0) {
         if (!$this->can_edit_clients($client_id)) {
@@ -121,26 +117,86 @@ class eDeclaration_10k extends Security_Controller {
     }
     public function arriving10k_details1() {
         $ref_number = $this->request->getPost('ref_number');
-        $id = $this->request->getPost('id');
-        
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+        $month = $this->request->getPost('month');
     
-        $options = array('ref_number' => $ref_number);
-        
-        // Fetch passenger details
-        $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
-        
-        // Fetch travel information
-        $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
-        
-        // Fetch associated materials
-        $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
+        // Prepare options for fetching data
+        $options = array();
+    
+        if ($ref_number) {
+            // If reference number is provided, use only this to filter
+            $options['ref_number'] = $ref_number;
+            $view_data['is_search_by_ref'] = true;  // Mark as search by reference
+        } elseif ($month) {
+            // If no reference number is provided but month is provided, filter by month
+            $year = date('Y', strtotime($month));
+            $month_num = date('m', strtotime($month));
+            $options['year'] = $year;
+            $options['month'] = $month_num;
+            $view_data['is_search_by_ref'] = false;  // Mark as not a reference search
+        } else {
+            // If no filter is applied, display nothing
+            $view_data['is_empty'] = true;
+            $view_data['passenger_info'] = null;
+            $view_data['travel_info'] = null;
+            $view_data['materials'] = [];
+            
+            // Pass filter values to the view
+            $view_data['month'] = $month;
+            $view_data['ref_number'] = $ref_number;
+            return $this->template->rander('edeclaration_10k/Report', $view_data);
+        }
+    
+        // Fetch travel details based on the options
+        $passenger_info = $this->PassengerDetails_model->get_details($options)->getRow();
+        $travel_info = $this->TravelDetails_model->get_details($options)->getRow();
+        $materials_data = $this->eDeclaration_10k_Model->get_details($options);
+    
+        // If month is provided and no data is found for that month
+        if ($month && (!$passenger_info || !$travel_info)) {
+            // No travel records found for the selected month
+            $view_data['no_travel_data_for_month'] = true;
+        } else {
+            $view_data['no_travel_data_for_month'] = false; // Data exists for the selected month
+        }
+    
+        // If no data found and searched by reference number, set flag for incorrect reference number
+        if ($ref_number && !$passenger_info) {
+            $view_data['invalid_ref_number'] = true; // Reference number is incorrect
+        } else {
+            $view_data['invalid_ref_number'] = false; // Reference number is correct or not searched
+            $view_data['passenger_info'] = $passenger_info;
+            $view_data['travel_info'] = $travel_info;
+    
+            if ($materials_data instanceof \CodeIgniter\Database\ResultInterface) {
+                $view_data['materials'] = $materials_data->getResult();
+            } else {
+                $view_data['materials'] = [];
+            }
+        }
+    
+        // Pass filter values to the view
+        $view_data['month'] = $month;
+        $view_data['ref_number'] = $ref_number;
     
         // Generate Report View
-        return $this->template->view('edeclaration_10k/Report', $view_data);
+        return $this->template->rander('edeclaration_10k/Report', $view_data);
     }
+    
+    
+    
+    
+    
+    
+    
+     
+    
+    
+    
+    
+    
+    
+    
+    
 
    
 
@@ -260,10 +316,10 @@ class eDeclaration_10k extends Security_Controller {
 
     /* list of clients, prepared for datatable  */
 
-    function edeclaration_10k_arrival_list_data() {
+    function edeclaration_10k_arrival_list_data() { 
 
         $this->access_only_allowed_members();
-
+    
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
         
         $options = array(
@@ -277,28 +333,38 @@ class eDeclaration_10k extends Security_Controller {
             "client_groups" => $this->allowed_client_groups,
             "label_id" => $this->request->getPost('label_id')
         );
-
+    
         $all_options = append_server_side_filtering_commmon_params($options);
-
+    
+        // Fetch the result object from the model
         $result = $this->eDeclaration_10k_Model->get_details($all_options);
-
-        //by this, we can handel the server side or client side from the app table prams.
+    
+        // Fetch result as an array
         if (get_array_value($all_options, "server_side")) {
-            $list_data = get_array_value($result, "data");
+            // In case of server-side processing, fetch the data appropriately
+            $list_data = get_array_value($result, "data"); // Assuming server-side returns an array with 'data'
         } else {
-            $list_data = $result->getResult();
-            $result = array();
+            // Use getResultArray() to convert the result object to an array
+            $list_data = $result->getResultArray(); // Fetch as an array
         }
-
+    
+        // Ensure $list_data is an array
+        if (!is_array($list_data)) {
+            $list_data = array(); // Initialize as an empty array if it’s not an array
+        }
+    
         $result_data = array();
         foreach ($list_data as $data) {
             $result_data[] = $this->_make_row($data, $custom_fields);
         }
-
+    
         $result["data"] = $result_data;
-
+    
         echo json_encode($result);
     }
+    
+    
+    
 
     /* return a row of client list  table */
 

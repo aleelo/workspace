@@ -398,7 +398,22 @@ class Team_members extends Security_Controller
         }
     }
 
-
+    public function get_departments_count_ajax() {
+        // Fetch the data from the count_users_by_department function
+        $data = $this->Users_model->count_users_by_department();
+    
+        // Format the data into an array suitable for JSON encoding
+        $formatted_data = [];
+        foreach ($data as $row) {
+            $formatted_data[] = [
+                'department' => $row->department,
+                'count' => $row->count
+            ];
+        }
+    
+        // Return the data as JSON
+        echo json_encode($formatted_data);
+    }
 
     /* open invitation modal */
 
