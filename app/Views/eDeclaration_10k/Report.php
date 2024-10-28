@@ -131,7 +131,7 @@
                     <tr>
                         <td><?= htmlspecialchars($passenger_info->ref_number) ?></td>
                         <td class="passenger-name"><?= htmlspecialchars($passenger_info->fullName) ?></td>
-                        <td><?= htmlspecialchars($passenger_info->passport_no ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($passenger_info->passport_no?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->arrival_date ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->departure_date ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->destination_country ?? 'N/A') ?></td>
