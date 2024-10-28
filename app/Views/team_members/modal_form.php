@@ -343,421 +343,442 @@
 
                 <div role="tabpanel" class="tab-pane" id="education-info-tab">
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                <div class="row">
-                    <label for="education_level" class="col-md-3"><?php echo 'Education Level'; ?></label>
-                    <div class="col-md-9">
-                        <?php
-                        echo form_dropdown(array(
-                            "id" => "education_level",
-                            "name" => "education_level",
-                            "class" => "form-control select2",
-                            "value" => $model_info->education_level,
-                            "placeholder" => 'Education Level'
-                        ),$education_levels, [$model_info->education_level =>$education_levels[$model_info->education_level]]);
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-            <div id="primary_school_section">
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="primary_school_name" class="col-md-3"><?php echo 'Primary School Name'; ?></label>
-                        <div class="col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "primary_school_name",
-                                "name" => "primary_school_name",
-                                "class" => "form-control",
-                                // "value" => $model_info->faculty,
-                                "placeholder" => 'Primary School Name',
-                            ));
-                            ?>
+                    <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                        <div class="row">
+                            <label for="education_level" class="col-md-2"><?php echo 'Education Level'; ?></label>
+                            <div class="col-md-10">
+                                <?php
+                                echo form_dropdown(array(
+                                    "id" => "education_level",
+                                    "name" => "education_level",
+                                    "class" => "form-control select2",
+                                    "placeholder" => 'Education Level'
+                                ),$education_levels);//$education_levels[$user_info->education_level]);
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="primary_graduation_date" class="col-md-3"><?php echo 'Primary Graduation Date'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "primary_graduation_date",
-                                "name" => "primary_graduation_date",
-                                "class" => "form-control",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Primary Graduation Date',
-                            ));
-                            ?>
+                    <div id="primary_school_section">
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="primary_school_name" class="col-md-2"><?php echo 'Primary School Name'; ?></label>
+                                <div class="col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "primary_school_name",
+                                        "name" => "primary_school_name",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Primary School Name',
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-            </div>
-            
-            <div id="secondary_school_section">
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="secondary_school_name" class="col-md-3"><?php echo 'Secondary School Name'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "secondary_school_name",
-                                "name" => "secondary_school_name",
-                                "class" => "form-control",
-                                "value" => $model_info->faculty,
-                                "placeholder" => 'Secondary School Name',
-                            ));
-                            ?>
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="primary_graduation_date" class="col-md-2"><?php echo 'Primary Graduation Date'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "primary_graduation_date",
+                                        "name" => "primary_graduation_date",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Primary Graduation Date',
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="secondary_graduation_date" class=" col-md-3"><?php echo 'Secondary Graduation Date'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "secondary_graduation_date",
-                                "name" => "secondary_graduation_date",
-                                "class" => "form-control",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Secondary Graduation Date',
-                            ));
-                            ?>
+                    </div>
+                    
+                    <div id="secondary_school_section">
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="secondary_school_name" class="col-md-2"><?php echo 'Secondary School Name'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "secondary_school_name",
+                                        "name" => "secondary_school_name",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Secondary School Name',
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-            </div>
-
-            <div id="diploma_section">
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_diploma" class=" col-md-3"><?php echo 'University Name Diploma'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                             echo form_dropdown(array(
-                                "id" => "university_name_diploma",
-                                "name" => "university_name_diploma",
-                                "class" => "form-control select2",
-                                "placeholder" => 'University Name Diploma',
-                            ),$university_names); ?>
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="secondary_graduation_date" class=" col-md-2"><?php echo 'Secondary Graduation Date'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "secondary_graduation_date",
+                                        "name" => "secondary_graduation_date",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Secondary Graduation Date',
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_diploma" class=" col-md-3"><?php echo 'Field of Study Diploma'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_diploma",
-                                'name'=> "field_of_study_diploma",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study Diploma',
-                            ),$field_of_study,[$model_info->education_field]); ?>
+                    </div>
+
+                    <div id="diploma_section">
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_diploma" class=" col-md-2"><?php echo 'University Name Diploma'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_diploma",
+                                        "name" => "university_name_diploma",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name Diploma',
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_diploma" class=" col-md-3"><?php echo 'Graduation Date Diploma'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_diploma",
-                                "name" => "graduation_date_diploma",
-                                "class" => "form-control date",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date Diploma',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_diploma" class=" col-md-2"><?php echo 'Field of Study Diploma'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_diploma",
+                                        'name'=> "field_of_study_diploma",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study Diploma',
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_diploma" class=" col-md-2"><?php echo 'Graduation Date Diploma'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_diploma",
+                                        "name" => "graduation_date_diploma",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date Diploma',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                </div>
 
-            </div>
+                    <div id="foculty_1_section">
 
-            <div id="foculty_1_section">
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_foculty_1" class=" col-md-3"><?php echo 'University Name Foculty'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                             echo form_dropdown(array(
-                                "id" => "university_name_foculty_1",
-                                "name" => "university_name_foculty_1",
-                                "class" => "form-control select2",
-                                "placeholder" => 'University Name Foculty',
-                            ),$university_names); ?>
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_foculty_1" class=" col-md-2"><?php echo 'University Name Foculty'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_foculty_1",
+                                        "name" => "university_name_foculty_1",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name Foculty',
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_foculty_1" class=" col-md-3"><?php echo 'Field of Study Foculty'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_foculty_1",
-                                'name'=> "field_of_study_foculty_1",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study Foculty',
-                                "autocomplete" => "off"
-                            ),$field_of_study,[$model_info->education_field]); ?>
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_foculty_1" class=" col-md-2"><?php echo 'Field of Study Foculty'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_foculty_1",
+                                        'name'=> "field_of_study_foculty_1",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study Foculty',
+                                        "autocomplete" => "off"
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_foculty_1" class="col-md-2"><?php echo 'Graduation Date Foculty'; ?></label>
+                                <div class="col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_foculty_1",
+                                        "name" => "graduation_date_foculty_1",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Graduation Date Foculty',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_foculty_1" class="col-md-3"><?php echo 'Graduation Date Foculty'; ?></label>
-                        <div class="col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_foculty_1",
-                                "name" => "graduation_date_foculty_1",
-                                "class" => "form-control",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date Foculty',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
                         </div>
-                    </div>
-                </div>
 
-                </div>
+                    <div id="foculty_2_section">
+                    
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_foculty_2" class=" col-md-2"><?php echo 'University Name Faculty 2'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_foculty_2",
+                                        "name" => "university_name_foculty_2",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name Faculty 2',
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
+                        </div> 
 
-            <div id="foculty_2_section">
-            
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_foculty_2" class=" col-md-3"><?php echo 'University Name Faculty 2'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "university_name_foculty_2",
-                                "name" => "university_name_foculty_2",
-                                "class" => "form-control",
-                                "placeholder" => 'University Name Faculty 2',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_foculty_2" class=" col-md-2"><?php echo 'Field of Study Foculty 2'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_foculty_2",
+                                        'name'=> "field_of_study_foculty_2",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study Foculty 2',
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_foculty_2" class=" col-md-2"><?php echo 'Graduation Date Foculty 2'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_foculty_2",
+                                        "name" => "graduation_date_foculty_2",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date Foculty 2',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_foculty_2" class=" col-md-3"><?php echo 'Field of Study Foculty 2'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_foculty_2",
-                                'name'=> "field_of_study_foculty_2",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study Foculty 2',
-                            ),$field_of_study,[$model_info->education_field]); ?>
+                    </div>
+
+                    <div id="master_1_section">
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_master_1" class=" col-md-2"><?php echo 'University Name Master'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php 
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_master_1",
+                                        "name" => "university_name_master_1",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name Master',
+                                        "autocomplete" => "off",
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_master_1" class=" col-md-2"><?php echo 'Field of Study Master'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_master_1",
+                                        'name'=> "field_of_study_master_1",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study Master',
+                                        "autocomplete" => "off"
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_master_1" class=" col-md-2"><?php echo 'Graduation Date Master'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_master_1",
+                                        "name" => "graduation_date_master_1",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date Master',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_foculty_2" class=" col-md-3"><?php echo 'Graduation Date Foculty 2'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_foculty_2",
-                                "name" => "graduation_date_foculty_2",
-                                "class" => "form-control date",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date Foculty 2',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
+                    </div>
+
+                    <div id="master_2_section">
+                    
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_master_2" class=" col-md-2"><?php echo 'University Name Master 2'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_master_2",
+                                        "name" => "university_name_master_2",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name Master 2',
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_master_2" class=" col-md-2"><?php echo 'Field of Study Master 2'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_master_2",
+                                        'name'=> "field_of_study_master_2",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study Master 2',
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_master_2" class=" col-md-2"><?php echo 'Graduation Date Master 2'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_master_2",
+                                        "name" => "graduation_date_master_2",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date Master 2',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                </div>
 
-            </div>
+                    <div id="php_section">
+                    
+                    <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="university_name_phd" class=" col-md-2"><?php echo 'University Name PHD'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_dropdown(array(
+                                        "id" => "university_name_phd",
+                                        "name" => "university_name_phd",
+                                        "class" => "form-control select2",
+                                        "placeholder" => 'University Name PHD',
+                                        "autocomplete" => "off",
+                                    ),$university_names); ?>
+                                </div>
+                            </div>
+                        </div> 
 
-            <div id="master_1_section">
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="field_of_study_phd" class=" col-md-2"><?php echo 'Field of Study PHD'; ?></label>
+                                <div class=" col-md-10">
+                                <?php 
+                                echo form_dropdown(array( 
+                                        'id'=> "field_of_study_phd",
+                                        'name'=> "field_of_study_phd",
+                                        'class' => "form-control select2",
+                                        'placeholder' => 'Field of Study PHD',
+                                    ),$field_of_study); ?>
+                                </div>
+                            </div>
+                        </div> 
 
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_master_1" class=" col-md-3"><?php echo 'University Name Master'; ?></label>
-                        <div class=" col-md-9">
-                            <?php 
-                            echo form_input(array(
-                                "id" => "university_name_master_1",
-                                "name" => "university_name_master_1",
-                                "class" => "form-control",
-                                "placeholder" => 'University Name Master',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_phd" class=" col-md-2"><?php echo 'Graduation Date PHD'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_phd",
+                                        "name" => "graduation_date_phd",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date PHD',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_master_1" class=" col-md-3"><?php echo 'Field of Study Master'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_master_1",
-                                'name'=> "field_of_study_master_1",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study Master',
-                                "autocomplete" => "off"
-                            ),$field_of_study,[$model_info->education_field]); ?>
+                    </div>
+
+                    <div id="other_skills_section">
+
+                        <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="other_skills" class=" col-md-2"><?php echo 'Other Skills'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_textarea(array(
+                                        "id" => "other_skills",
+                                        "name" => "other_skills",
+                                        "class" => "form-control",
+                                        "placeholder" => 'Other Skills'
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> 
 
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_master_1" class=" col-md-3"><?php echo 'Graduation Date Master'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_master_1",
-                                "name" => "graduation_date_master_1",
-                                "class" => "form-control date",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date Master',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
+                        <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
+                            <div class="row">
+                                <label for="graduation_date_other_skills" class=" col-md-2"><?php echo 'Graduation Date Other Skills'; ?></label>
+                                <div class=" col-md-10">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "graduation_date_other_skills",
+                                        "name" => "graduation_date_other_skills",
+                                        "class" => "form-control date",
+                                        "placeholder" => 'Graduation Date PHD',
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                </div>
 
-            </div>
-
-            <div id="master_2_section">
-            
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_master_2" class=" col-md-3"><?php echo 'University Name Master 2'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "university_name_master_2",
-                                "name" => "university_name_master_2",
-                                "class" => "form-control",
-                                "placeholder" => 'University Name Master 2',
-                                "autocomplete" => "off",
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div> 
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_master_2" class=" col-md-3"><?php echo 'Field of Study Master 2'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_master_2",
-                                'name'=> "field_of_study_master_2",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study Master 2',
-                            ),$field_of_study,[$model_info->education_field]); ?>
-                        </div>
-                    </div>
-                </div> 
-
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_master_2" class=" col-md-3"><?php echo 'Graduation Date Master 2'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_master_2",
-                                "name" => "graduation_date_master_2",
-                                "class" => "form-control date",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date Master 2',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div id="php_section">
-            
-            <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="university_name_phd" class=" col-md-3"><?php echo 'University Name PHD'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_dropdown(array(
-                                "id" => "university_name_phd",
-                                "name" => "university_name_phd",
-                                "class" => "form-control select2",
-                                "placeholder" => 'University Name PHD',
-                                "autocomplete" => "off",
-                            ),$university_names); ?>
-                        </div>
-                    </div>
-                </div> 
-
-                <div class="form-group" style="border-bottom:none; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="field_of_study_phd" class=" col-md-3"><?php echo 'Field of Study PHD'; ?></label>
-                        <div class=" col-md-9">
-                        <?php 
-                        echo form_dropdown(array( 
-                                'id'=> "field_of_study_phd",
-                                'name'=> "field_of_study_phd",
-                                'class' => "form-control select2",
-                                'placeholder' => 'Field of Study PHD',
-                            ),$field_of_study,[$model_info->education_field]); ?>
-                        </div>
-                    </div>
-                </div> 
-
-                <div class="form-group" style="border-bottom: 1px dashed #e2e4e8; padding-bottom: 15px;">
-                    <div class="row">
-                        <label for="graduation_date_phd" class=" col-md-3"><?php echo 'Graduation Date PHD'; ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "graduation_date_phd",
-                                "name" => "graduation_date_phd",
-                                "class" => "form-control date",
-                                'value'=> $model_info->date_of_foculty,
-                                "placeholder" => 'Graduation Date PHD',
-                                "autocomplete" => "off"
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-                 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
+                    <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
 
                 </div>
 
@@ -1428,7 +1449,7 @@
         setDatePicker("#graduation_date_master_1");
         setDatePicker("#graduation_date_master_2");
         setDatePicker("#graduation_date_phd");
-
+        setDatePicker("#graduation_date_other_skills");
 
         // Initially hide all sections
         function hideAllSections() {
@@ -1440,6 +1461,7 @@
             $('#master_1_section').hide();
             $('#master_2_section').hide();
             $('#php_section').hide();
+            $('#other_skills_section').hide();
         }
 
     // Call this function whenever the education level changes
@@ -1484,6 +1506,9 @@
                 break;
             case 'Doctor':
                 $('#php_section').show();
+                break;
+            case 'Other/Skill':
+                $('#other_skills_section').show();
                 break;
             default:
                 hideAllSections(); // If no valid selection is made, hide all sections
