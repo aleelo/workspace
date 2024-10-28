@@ -876,40 +876,31 @@ class Users_model extends Crud_model {
 
     function count_users_by_age_groups() {
         $users_table = $this->db->prefixTable('users');
-        // '15-30','31-45','46-60','60 & above'
-
-        $sql_1530 = "SELECT '15 - 30' as g, DATEDIFF(now(), birth_date)/365 AS total_1530
-            FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND DATEDIFF(now(), birth_date)/365 between 15 AND 30";
-            $total_1530 = $this->db->query($sql_1530)->getRow()?->total_1530;
-         
-        $sql_3145 = "SELECT '31 - 45' as g, DATEDIFF(now(), birth_date)/365  AS total_3145
-            FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND DATEDIFF(now(), birth_date)/365 between 31 AND 45";
-            $total_3145 = $this->db->query($sql_3145)->getRow()?->total_3145;      
-         
-        $sql_4660 = "SELECT '46 - 59' as g, DATEDIFF(now(), birth_date)/365  AS total_4660
-            FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND DATEDIFF(now(), birth_date)/365 between 46 AND 60";
-            $total_4660 = $this->db->query($sql_4660)->getRow()?->total_4660;
-      
-        $sql_6075 = "SELECT '60 - 75' as g, DATEDIFF(now(), birth_date)/365  AS total_6075
-            FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND DATEDIFF(now(), birth_date)/365 between 60 AND 76";
-            $total_6075 = $this->db->query($sql_6075)->getRow()?->total_6075;
-      
-      
-        $sql_76up = "SELECT '76 & Above' as g, DATEDIFF(now(), birth_date)/365  AS total_76up
-            FROM $users_table 
-            WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active' AND DATEDIFF(now(), birth_date)/365 > 75";
-            $total_76up = $this->db->query($sql_76up)->getRow()?->total_76up;
-      
-
+    
+        $sql = "
+            SELECT
+                SUM(CASE WHEN DATEDIFF(now(), birth_date)/365 BETWEEN 15 AND 30 THEN 1 ELSE 0 END) AS total_1530,
+                SUM(CASE WHEN DATEDIFF(now(), birth_date)/365 BETWEEN 31 AND 45 THEN 1 ELSE 0 END) AS total_3145,
+                SUM(CASE WHEN DATEDIFF(now(), birth_date)/365 BETWEEN 46 AND 60 THEN 1 ELSE 0 END) AS total_4660,
+                SUM(CASE WHEN DATEDIFF(now(), birth_date)/365 BETWEEN 61 AND 75 THEN 1 ELSE 0 END) AS total_6075,
+                SUM(CASE WHEN DATEDIFF(now(), birth_date)/365 > 75 THEN 1 ELSE 0 END) AS total_76up
+            FROM $users_table
+            WHERE $users_table.deleted = 0 
+              AND $users_table.user_type = 'staff' 
+              AND $users_table.status = 'active'
+        ";
+    
+        $result = $this->db->query($sql)->getRow();
+    
         return [
-            'total_1530' => $total_1530, 'total_3145' => $total_3145,
-            'total_4660' => $total_4660, 'total_6075' => $total_6075,'total_76up' => $total_76up
+            'total_1530' => $result->total_1530 ?? 0,
+            'total_3145' => $result->total_3145 ?? 0,
+            'total_4660' => $result->total_4660 ?? 0,
+            'total_6075' => $result->total_6075 ?? 0,
+            'total_76up' => $result->total_76up ?? 0
         ];
     }
+    
 
     
     function count_users_by_department() {

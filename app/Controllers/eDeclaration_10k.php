@@ -127,9 +127,27 @@ class eDeclaration_10k extends Security_Controller {
             $options['ref_number'] = $ref_number;
             $view_data['is_search_by_ref'] = true;  // Mark as search by reference
         } elseif ($month) {
-            // If no reference number is provided but month is provided, filter by month
+            // If month is provided, filter by month
             $year = date('Y', strtotime($month));
             $month_num = date('m', strtotime($month));
+            
+            // Ensure the selected month matches the current month
+            $current_year = date('Y');
+            $current_month = date('m');
+            
+            if ($year != $current_year || $month_num != $current_month) {
+                // If the selected month is not the current month, do not show anything
+                $view_data['is_empty'] = true;
+                $view_data['passenger_info'] = null;
+                $view_data['travel_info'] = null;
+                $view_data['materials'] = [];
+                
+                // Pass filter values to the view
+                $view_data['month'] = $month;
+                $view_data['ref_number'] = $ref_number;
+                return $this->template->rander('edeclaration_10k/Report', $view_data);
+            }
+            
             $options['year'] = $year;
             $options['month'] = $month_num;
             $view_data['is_search_by_ref'] = false;  // Mark as not a reference search
@@ -182,6 +200,7 @@ class eDeclaration_10k extends Security_Controller {
         return $this->template->rander('edeclaration_10k/Report', $view_data);
     }
     
+   
     
     
     

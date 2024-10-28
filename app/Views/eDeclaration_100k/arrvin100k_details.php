@@ -66,6 +66,48 @@
         .info-table tr, .materials-table tr {
             border-bottom: 1px solid #ddd;
         }
+        .section {
+    text-align: center; /* Center the heading */
+    margin-bottom: 30px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Center icons horizontally */
+    align-items: center; /* Center icons vertically */
+    gap: 50px; /* Space between icons */
+    margin-top: 20px;
+}
+
+.approve-icon, .reject-icon {
+    cursor: pointer;
+    font-size: 4em; /* Increase icon size */
+    padding: 20px; /* Add padding to make icons larger */
+    border-radius: 50%; /* Make the icons circular */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Add shadow for modern look */
+}
+
+.approve-icon {
+    color: #28a745;
+    background-color: #e6f4ea;
+}
+
+.approve-icon:hover {
+    transform: scale(1.15); /* Enlarge on hover */
+    box-shadow: 0 10px 20px rgba(0, 255, 0, 0.3); /* Highlight effect */
+}
+
+.reject-icon {
+    color: #dc3545;
+    background-color: #fce4e4;
+}
+
+.reject-icon:hover {
+    transform: scale(1.15); /* Enlarge on hover */
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3); /* Highlight effect */
+}
+
 
         .info-table td, .materials-table th, .materials-table td {
             padding: 15px;
@@ -102,57 +144,7 @@
             color: #007bff;
         }
 
-        .action-icon {
-            cursor: pointer;
-            font-size: 1.5em;
-            margin: 0 8px;
-        }
-
-        .approve-icon {
-            color: #28a745;
-        }
-        .action-buttons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-        .action-buttons i {
-            cursor: pointer;
-            font-size: 1.8em;
-            padding: 8px 12px;
-            border-radius: 5px;
-            transition: transform 0.2s ease-in-out;
-        }
-        .approve-icon {
-            color: #28a745;
-            background-color: #e6f4ea;
-        }
-        .approve-icon:hover {
-           
-            color: #fff;
-            transform: scale(1.1);
-        }
-        .reject-icon {
-            color: #dc3545;
-            background-color: #fce4e4;
-        }
-        .reject-icon:hover {
-           
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .approve-icon:hover {
-            color: #218838;
-        }
-
-        .reject-icon {
-            color: #dc3545;
-        }
-
-        .reject-icon:hover {
-            color: #c82333;
-        }
+        
 
         @media (max-width: 768px) {
             .container {
@@ -260,15 +252,17 @@
                 </tbody>
             </table>
         </div>
-
         <div class="section">
-            <h3><i class="fas fa-box"></i> Status Action:</h3>
-            
-            <i class="fas fa-check-circle approve-icon" title="Approve"></i>
-            <i class="fas fa-times-circle reject-icon" title="Reject"></i>
-            
+             <h3><i class="fas fa-box"></i> Status Action:</h3>
+    
+            <div class="action-buttons">
+                <i class="fas fa-check-circle approve-icon" title="Approve"></i>
+                <i class="fas fa-times-circle reject-icon" title="Reject"></i>
+            </div>
         </div>
-    </div>
+
+
+         
 
     <script>
         var csrfHash = '<?php echo csrf_hash(); ?>';

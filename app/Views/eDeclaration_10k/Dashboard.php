@@ -200,31 +200,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Initialize bar chart using Chart.js
-        const ctx = document.getElementById('barChart').getContext('2d');
-        const barChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Departures', 'Arrivals'],
-                datasets: [{
-                    label: 'Total Flights',
-                    data: [100000, 100000],
-                    backgroundColor: ['#007bff', '#28a745'],
-                    borderColor: ['#007bff', '#28a745'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+     
 </body>
 
 </html>

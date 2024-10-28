@@ -109,7 +109,10 @@
     <?php if (!empty($is_empty) && $is_empty): ?>
         <!-- Display message when no filter is applied -->
         <p>Please select a month or enter a reference number to view travel details.</p>
-    <?php elseif (!$invalid_ref_number): ?>
+    <?php elseif (!empty($no_travel_data_for_month) && $no_travel_data_for_month): ?>
+        <!-- Display error message for no matching record found for the given month -->
+        <p style="color: red;">No matching record found for the given month.</p>
+    <?php elseif (!$invalid_ref_number && empty($no_travel_data_for_month)): ?>
         <table>
             <thead>
                 <tr>
@@ -120,7 +123,7 @@
                     <th><i class="fas fa-calendar-alt icon"></i>Departure_Date</th>
                     <th><i class="fas fa-map-marker-alt icon"></i>Destination</th>
                     <th><i class="fas fa-box icon"></i>Material Name</th>
-                    <th><i class="fas fa-money-bill icon"></i>Value</th>
+                    <th><i class="fas fa-money-bill icon"></i>Amount</th>
                     
                 </tr>
             </thead>
