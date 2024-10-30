@@ -115,6 +115,7 @@ class eDeclaration_10k extends Security_Controller {
 
         return $this->template->view('edeclaration_10k/arrvin10k_details', $view_data);
     }
+    
     // public function arriving10k_details1() {
     //     $ref_number = $this->request->getPost('ref_number');
     //     $month = $this->request->getPost('month');
@@ -130,8 +131,8 @@ class eDeclaration_10k extends Security_Controller {
     //         // If month is provided, filter by month
     //         $year = date('Y', strtotime($month));
     //         $month_num = date('m', strtotime($month));
-            
-    //         // Pass the selected year and month to filter the records
+    
+    //         // Add the selected year and month to filter the records
     //         $options['year'] = $year;
     //         $options['month'] = $month_num;
     //         $view_data['is_search_by_ref'] = false;  // Mark as not a reference search
@@ -149,31 +150,30 @@ class eDeclaration_10k extends Security_Controller {
     //     }
     
     //     // Fetch travel details based on the options
-    //     $passenger_info = $this->PassengerDetails_model->get_details($options)->getRow();
-    //     $travel_info = $this->TravelDetails_model->get_details($options)->getRow();
-    //     $materials_data = $this->eDeclaration_10k_Model->get_details($options);
+    //     $result = $this->eDeclaration_10k_Model->get_details($options);
     
-    //     // If month is provided and no data is found for that month
-    //     if ($month && (!$passenger_info || !$travel_info)) {
-    //         // No travel records found for the selected month
-    //         $view_data['no_travel_data_for_month'] = true;
+    //     // Convert $result to an array if it is a database result object
+    //     if ($result instanceof \CodeIgniter\Database\ResultInterface) {
+    //         $data = $result->getResult();
     //     } else {
-    //         $view_data['no_travel_data_for_month'] = false; // Data exists for the selected month
+    //         $data = $result; // If already an array, use it directly
     //     }
     
-    //     // If no data found and searched by reference number, set flag for incorrect reference number
-    //     if ($ref_number && !$passenger_info) {
-    //         $view_data['invalid_ref_number'] = true; // Reference number is incorrect
-    //     } else {
+    //     // Handle results based on whether data was found
+    //     if (!empty($data) && count($data) > 0) {
+    //         $view_data['no_travel_data_for_month'] = false; // Data exists for the selected month
     //         $view_data['invalid_ref_number'] = false; // Reference number is correct or not searched
-    //         $view_data['passenger_info'] = $passenger_info;
-    //         $view_data['travel_info'] = $travel_info;
+    //         $view_data['passenger_info'] = $data[0]; // Assuming there's only one passenger_info
+    //         $view_data['travel_info'] = $data[0]; // Assuming travel details are included
     
-    //         if ($materials_data instanceof \CodeIgniter\Database\ResultInterface) {
-    //             $view_data['materials'] = $materials_data->getResult();
-    //         } else {
-    //             $view_data['materials'] = [];
-    //         }
+    //         $view_data['materials'] = $data;
+    //     } else {
+    //         // If no data is found
+    //         $view_data['no_travel_data_for_month'] = true;
+    //         $view_data['invalid_ref_number'] = ($ref_number) ? true : false; // Reference number not found
+    //         $view_data['passenger_info'] = null;
+    //         $view_data['travel_info'] = null;
+    //         $view_data['materials'] = [];
     //     }
     
     //     // Pass filter values to the view
@@ -185,7 +185,8 @@ class eDeclaration_10k extends Security_Controller {
     // }
     public function arriving10k_details1() {
         $ref_number = $this->request->getPost('ref_number');
-        $month = $this->request->getPost('month');
+        $start_date = $this->request->getPost('start_date');
+        $end_date = $this->request->getPost('end_date');
     
         // Prepare options for fetching data
         $options = array();
@@ -194,14 +195,10 @@ class eDeclaration_10k extends Security_Controller {
             // If reference number is provided, use only this to filter
             $options['ref_number'] = $ref_number;
             $view_data['is_search_by_ref'] = true;  // Mark as search by reference
-        } elseif ($month) {
-            // If month is provided, filter by month
-            $year = date('Y', strtotime($month));
-            $month_num = date('m', strtotime($month));
-    
-            // Add the selected year and month to filter the records
-            $options['year'] = $year;
-            $options['month'] = $month_num;
+        } elseif ($start_date && $end_date) {
+            // If start and end dates are provided, filter by this range
+            $options['start_date'] = $start_date;
+            $options['end_date'] = $end_date;
             $view_data['is_search_by_ref'] = false;  // Mark as not a reference search
         } else {
             // If no filter is applied, display nothing
@@ -211,7 +208,8 @@ class eDeclaration_10k extends Security_Controller {
             $view_data['materials'] = [];
             
             // Pass filter values to the view
-            $view_data['month'] = $month;
+            $view_data['start_date'] = $start_date;
+            $view_data['end_date'] = $end_date;
             $view_data['ref_number'] = $ref_number;
             return $this->template->rander('edeclaration_10k/Report', $view_data);
         }
@@ -228,11 +226,10 @@ class eDeclaration_10k extends Security_Controller {
     
         // Handle results based on whether data was found
         if (!empty($data) && count($data) > 0) {
-            $view_data['no_travel_data_for_month'] = false; // Data exists for the selected month
+            $view_data['no_travel_data_for_month'] = false; // Data exists for the selected date range
             $view_data['invalid_ref_number'] = false; // Reference number is correct or not searched
             $view_data['passenger_info'] = $data[0]; // Assuming there's only one passenger_info
             $view_data['travel_info'] = $data[0]; // Assuming travel details are included
-    
             $view_data['materials'] = $data;
         } else {
             // If no data is found
@@ -244,12 +241,14 @@ class eDeclaration_10k extends Security_Controller {
         }
     
         // Pass filter values to the view
-        $view_data['month'] = $month;
+        $view_data['start_date'] = $start_date;
+        $view_data['end_date'] = $end_date;
         $view_data['ref_number'] = $ref_number;
     
         // Generate Report View
         return $this->template->rander('edeclaration_10k/Report', $view_data);
     }
+    
     
    
     

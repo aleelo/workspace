@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
         label {
             margin-right: 10px;
         }
-        input[type="month"], input[type="text"] {
+        input[type="date"], input[type="text"] {
             flex: 1 1 30%;
             margin-right: 10px;
             padding: 8px;
@@ -74,7 +74,7 @@
             form {
                 flex-direction: column;
             }
-            input[type="month"], input[type="text"], button {
+            input[type="date"], input[type="text"], button {
                 margin-bottom: 10px;
             }
             table {
@@ -92,8 +92,11 @@
 
     <!-- Date Filter Form -->
     <?php echo form_open(get_uri("edeclaration_10k/arriving10k_details1"), array("id" => "arrival-form")); ?>
-        <label for="month">Select Month:</label>
-        <input type="month" id="month" name="month" value="<?= htmlspecialchars($month ?? '') ?>">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($start_date ?? '') ?>">
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($end_date ?? '') ?>">
 
         <label for="ref_number">Reference Number:</label>
         <input type="text" id="ref_number" name="ref_number" placeholder="Enter Reference Number" value="<?= htmlspecialchars($ref_number ?? '') ?>">
@@ -104,15 +107,14 @@
     <?php if (!empty($invalid_ref_number) && $invalid_ref_number): ?>
         <!-- Display error message for incorrect reference number -->
         <p style="color: red;">No matching record found for the given reference number.</p>
-    <?php endif; ?>
-
-    <?php if (!empty($is_empty) && $is_empty): ?>
+    <?php elseif (!empty($is_empty) && $is_empty): ?>
         <!-- Display message when no filter is applied -->
-        <p>Please select a month or enter a reference number to view travel details.</p>
+        <p>Please select a date range or enter a reference number to view travel details.</p>
     <?php elseif (!empty($no_travel_data_for_month) && $no_travel_data_for_month): ?>
-        <!-- Display error message for no matching record found for the given month -->
-        <p style="color: red;">No matching record found for the selected month.</p>
-    <?php elseif (!$invalid_ref_number && !$no_travel_data_for_month): ?>
+        <!-- Display error message for no matching record found for the given date range -->
+        <p style="color: red;">No matching record found for the selected date range or reference number.</p>
+    <?php else: ?>
+        <!-- Show table if data is available -->
         <table>
             <thead>
                 <tr>
@@ -131,7 +133,7 @@
                     <tr>
                         <td><?= htmlspecialchars($passenger_info->ref_number) ?></td>
                         <td class="passenger-name"><?= htmlspecialchars($passenger_info->fullName) ?></td>
-                        <td><?= htmlspecialchars($passenger_info->passport_no?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($passenger_info->passport_no ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->arrival_date ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->departure_date ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($travel_info->destination_country ?? 'N/A') ?></td>
