@@ -6,6 +6,7 @@
 $lang["language_locale"] = "en"; //locale code
 $lang["language_locale_long"] = "en-US"; //long locale code
 $lang["text_direction"] = "ltr"; //supported value ltr/rtl
+$lang["NewStatus"] = "Status"; //supported value ltr/rtl
 
 ///
 // added by aleelo developers

@@ -438,7 +438,7 @@ class eDeclaration_10k extends Security_Controller {
             anchor(get_uri("edeclaration_10k/view/" . $data->id), $data->ref_number),
             $data->fullName,
             $data->travel_type,
-            $data->trip_type
+            $data->trip_type 
             
  
             

@@ -48,7 +48,7 @@
             {title: "<?php echo app_lang("first_name") ?>", "class": "all", order_by: "nameSo"},
             {title: "<?php echo app_lang("travel_type") ?>", "class": "all", order_by: "nameSo"},
             {title: "<?php echo app_lang("trip_type") ?>", "class": "all", order_by: "nameSo"},
-            {title: "<?php echo app_lang("status") ?>", "class": "all", order_by: "nameSo"}
+            {title: "<?php echo app_lang("NewStatus") ?>", "class": "all", order_by: "nameSo"}
             
             // {title: "<?php echo app_lang("short_name_so") ?>", order_by: "short_name_SO"}
 
