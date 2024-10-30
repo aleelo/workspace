@@ -125,9 +125,9 @@
         <table>
             <thead>
                 <tr>
-                    <th><i class="fas fa-id-badge icon"></i>Reference_No</th>
+                    <th><i class="fas fa-id-badge icon"></i>Reference No</th>
                     <th><i class="fas fa-user icon"></i>Name</th>
-                    <th><i class="fas fa-passport icon"></i>PassportNo</th>
+                    <th><i class="fas fa-passport icon"></i>Passport No</th>
                     <th><i class="fas fa-calendar-alt icon"></i>Arrival Date</th>
                     <th><i class="fas fa-calendar-alt icon"></i>Departure Date</th>
                     <th><i class="fas fa-map-marker-alt icon"></i>Destination</th>
@@ -136,24 +136,19 @@
                 </tr>
             </thead>
             <tbody>
-                <?php if ($passenger_info && $travel_info): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($passenger_info->ref_number) ?></td>
-                        <td class="passenger-name"><?= htmlspecialchars($passenger_info->fullName) ?></td>
-                        <td><?= htmlspecialchars($passenger_info->passport_no ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($travel_info->arrival_date ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($travel_info->departure_date ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($travel_info->destination_country ?? 'N/A') ?></td>
-
-                        <?php if (!empty($materials)): ?>
-                            <?php foreach ($materials as $material): ?>
-                                <td><?= htmlspecialchars($material->name ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars(($material->totalValue ? $material->totalValue . ' ' . $material->currency_code : "N/A")) ?></td>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <td colspan="2">No materials available</td>
-                        <?php endif; ?>
-                    </tr>
+                <?php if (!empty($materials)): ?>
+                    <?php foreach ($materials as $data): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($data->ref_number) ?></td>
+                            <td class="passenger-name"><?= htmlspecialchars($data->fullName) ?></td>
+                            <td><?= htmlspecialchars($data->passport_no ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($data->arrival_date ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($data->departure_date ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($data->destination_country ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($data->name ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars(($data->totalValue ? $data->totalValue . ' ' . $data->currency_code : "N/A")) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
                         <td colspan="9">No data available for the given filter criteria.</td>

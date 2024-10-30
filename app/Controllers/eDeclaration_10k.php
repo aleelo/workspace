@@ -201,8 +201,6 @@ class eDeclaration_10k extends Security_Controller {
         } else {
             // If no filter is applied, display nothing
             $view_data['is_empty'] = true;
-            $view_data['passenger_info'] = null;
-            $view_data['travel_info'] = null;
             $view_data['materials'] = [];
             
             // Pass filter values to the view
@@ -213,28 +211,17 @@ class eDeclaration_10k extends Security_Controller {
         }
     
         // Fetch travel details based on the options
-        $result = $this->eDeclaration_10k_Model->get_details1($options);
-    
-        // Convert $result to an array if it is a database result object
-        if ($result instanceof \CodeIgniter\Database\ResultInterface) {
-            $data = $result->getResult();
-        } else {
-            $data = $result; // If already an array, use it directly
-        }
+        $data = $this->eDeclaration_10k_Model->get_details1($options);
     
         // Handle results based on whether data was found
-        if (!empty($data) && count($data) > 0) {
-            $view_data['no_travel_data_for_month'] = false; // Data exists for the selected date range
+        if (!empty($data)) {
+            $view_data['no_travel_data_for_month'] = false; // Data exists for the selected date range or reference number
             $view_data['invalid_ref_number'] = false; // Reference number is correct or not searched
-            $view_data['passenger_info'] = $data[0]; // Assuming there's only one passenger_info
-            $view_data['travel_info'] = $data[0]; // Assuming travel details are included
-            $view_data['materials'] = $data;
+            $view_data['materials'] = $data; // Assign all retrieved records to the materials array
         } else {
             // If no data is found
             $view_data['no_travel_data_for_month'] = true;
             $view_data['invalid_ref_number'] = ($ref_number) ? true : false; // Reference number not found
-            $view_data['passenger_info'] = null;
-            $view_data['travel_info'] = null;
             $view_data['materials'] = [];
         }
     
@@ -246,6 +233,7 @@ class eDeclaration_10k extends Security_Controller {
         // Generate Report View
         return $this->template->rander('edeclaration_10k/Report', $view_data);
     }
+    
     
     
        
