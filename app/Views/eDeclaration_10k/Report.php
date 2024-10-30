@@ -125,14 +125,14 @@
         <table>
             <thead>
                 <tr>
-                    <th><i class="fas fa-id-badge icon"></i> Reference No</th>
-                    <th><i class="fas fa-user icon"></i> Name</th>
-                    <th><i class="fas fa-passport icon"></i> Passport No</th>
-                    <th><i class="fas fa-calendar-alt icon"></i> Arrival Date</th>
-                    <th><i class="fas fa-calendar-alt icon"></i> Departure Date</th>
-                    <th><i class="fas fa-map-marker-alt icon"></i> Destination</th>
-                    <th><i class="fas fa-box icon"></i> Material Name</th>
-                    <th><i class="fas fa-money-bill icon"></i> Amount</th>
+                    <th><i class="fas fa-id-badge icon"></i>Reference_No</th>
+                    <th><i class="fas fa-user icon"></i>Name</th>
+                    <th><i class="fas fa-passport icon"></i>PassportNo</th>
+                    <th><i class="fas fa-calendar-alt icon"></i>Arrival Date</th>
+                    <th><i class="fas fa-calendar-alt icon"></i>Departure Date</th>
+                    <th><i class="fas fa-map-marker-alt icon"></i>Destination</th>
+                    <th><i class="fas fa-box icon"></i>Material Name</th>
+                    <th><i class="fas fa-money-bill icon"></i>Amount</th>
                 </tr>
             </thead>
             <tbody>
