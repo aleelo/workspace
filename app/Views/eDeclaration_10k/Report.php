@@ -1,87 +1,104 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10K Arrival Report</title>
+    <title>Modern 10K Arrival Report</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f9fafb;
             color: #333;
             margin: 0;
             padding: 20px;
         }
         h2 {
-            color: #0056b3;
+            color: #007bff;
             margin-bottom: 20px;
+            font-weight: bold;
         }
         form {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        label {
-            margin-right: 10px;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         input[type="date"], input[type="text"] {
-            flex: 1 1 30%;
-            margin-right: 10px;
-            padding: 8px;
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="date"]:focus, input[type="text"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+            outline: none;
         }
         button {
-            flex: 1 1 15%;
-            padding: 10px;
-            background-color: #0056b3;
+            padding: 12px 20px;
+            background-color: #007bff;
             color: #fff;
             border: none;
+            border-radius: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         button:hover {
-            background-color: #004494;
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+        button:active {
+            transform: translateY(0);
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
-            border: 1px solid #ddd;
+            border: 1px solid #f0f0f0;
         }
         th {
-            background-color: #6c757d;
-            color: white;
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
         }
         tr:nth-child(even) {
             background-color: #f8f9fa;
         }
         .icon {
             margin-right: 8px;
-            color: #0056b3;
-        }
-        /* Ensure Passenger Name stays on one line */
-        td.passenger-name {
-            white-space: nowrap;
+            color: #007bff;
         }
         /* Responsive design */
         @media (max-width: 768px) {
             form {
                 flex-direction: column;
+                align-items: stretch;
             }
             input[type="date"], input[type="text"], button {
-                margin-bottom: 10px;
+                width: 100%;
             }
             table {
-                font-size: 12px;
+                font-size: 14px;
             }
             th, td {
-                padding: 8px;
+                padding: 10px;
             }
         }
     </style>
@@ -92,29 +109,22 @@
 
     <!-- Date Filter Form -->
     <?php echo form_open(get_uri("edeclaration_10k/arriving10k_details1"), array("id" => "arrival-form")); ?>
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($start_date ?? '') ?>">
+        <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($start_date ?? '') ?>" placeholder="Start Date">
 
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($end_date ?? '') ?>">
+        <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($end_date ?? '') ?>" placeholder="End Date">
 
-        <label for="ref_number">Reference Number:</label>
         <input type="text" id="ref_number" name="ref_number" placeholder="Enter Reference Number" value="<?= htmlspecialchars($ref_number ?? '') ?>">
         
         <button type="submit"><i class="fas fa-search icon"></i> Filter</button>
     <?php echo form_close(); ?>
 
     <?php if (!empty($invalid_ref_number) && $invalid_ref_number): ?>
-        <!-- Display error message for incorrect reference number -->
         <p style="color: red;">No matching record found for the given reference number.</p>
     <?php elseif (!empty($is_empty) && $is_empty): ?>
-        <!-- Display message when no filter is applied -->
         <p>Please select a date range or enter a reference number to view travel details.</p>
     <?php elseif (!empty($no_travel_data_for_month) && $no_travel_data_for_month): ?>
-        <!-- Display error message for no matching record found for the given date range -->
         <p style="color: red;">No matching record found for the selected date range or reference number.</p>
     <?php else: ?>
-        <!-- Show table if data is available -->
         <table>
             <thead>
                 <tr>
@@ -148,7 +158,6 @@
                         <?php endif; ?>
                     </tr>
                 <?php else: ?>
-                    <!-- If no data available for the given filter criteria -->
                     <tr>
                         <td colspan="9">No data available for the given filter criteria.</td>
                     </tr>
