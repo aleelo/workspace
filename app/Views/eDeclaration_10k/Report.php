@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -110,11 +110,8 @@
     <!-- Date Filter Form -->
     <?php echo form_open(get_uri("edeclaration_10k/arriving10k_details1"), array("id" => "arrival-form")); ?>
         <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($start_date ?? '') ?>" placeholder="Start Date">
-
         <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($end_date ?? '') ?>" placeholder="End Date">
-
         <input type="text" id="ref_number" name="ref_number" placeholder="Enter Reference Number" value="<?= htmlspecialchars($ref_number ?? '') ?>">
-        
         <button type="submit"><i class="fas fa-search icon"></i> Filter</button>
     <?php echo form_close(); ?>
 

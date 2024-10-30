@@ -503,57 +503,59 @@ class eDeclaration_10k_Model extends Crud_model {
             return $raw_query;
         }
     }
-    // public function get_details($options = array()) {
-    //     $materials_table = $this->db->prefixTable('materials');
-    //     $passenger_table = $this->db->prefixTable('passenger_details');
-    //     $travel_table = $this->db->prefixTable('travel_details');
-    //     $countries_table = $this->db->prefixTable('countries');
+    public function get_details1($options = array()) {
+        $materials_table = $this->db->prefixTable('materials');
+        $passenger_table = $this->db->prefixTable('passenger_details');
+        $travel_table = $this->db->prefixTable('travel_details');
+        $countries_table = $this->db->prefixTable('countries');
     
-    //     // Initialize the where clause with non-deleted materials
-    //     $where = "$materials_table.deleted = 0";
+        // Initialize the where clause with non-deleted materials
+        $where = "$materials_table.deleted = 0";
     
-    //     // Apply reference number filter if provided
-    //     $ref_number = $this->_get_clean_value($options, "ref_number");
-    //     if ($ref_number) {
-    //         $where .= " AND $materials_table.ref_number = '$ref_number'";
-    //     } else {
-    //         // Apply start and end date filter if provided
-    //         $start_date = $this->_get_clean_value($options, "start_date");
-    //         $end_date = $this->_get_clean_value($options, "end_date");
-    //         if ($start_date && $end_date) {
-    //             // Filter by arrival date within the specified range
-    //             $where .= " AND $travel_table.arrival_date BETWEEN '$start_date' AND '$end_date'";
-    //         }
-    //     }
+        // Apply reference number filter if provided
+        $ref_number = $this->_get_clean_value($options, "ref_number");
+        if ($ref_number) {
+            $where .= " AND $materials_table.ref_number = '$ref_number'";
+        } else {
+            // Apply start and end date filter if provided
+            $start_date = $this->_get_clean_value($options, "start_date");
+            $end_date = $this->_get_clean_value($options, "end_date");
+            if ($start_date && $end_date) {
+                // Filter by arrival date within the specified range
+                $where .= " AND $travel_table.arrival_date BETWEEN '$start_date' AND '$end_date'";
+            }
+        }
     
-    //     // SQL Query Construction
-    //     $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
-    //             CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name) as fullName, 
-    //             $passenger_table.status as NewStatus,
-    //             $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date,
-    //             dpc.name as departure_country, dcc.name as destination_country, tcc.name as transit_country, ccd.currency_code
-    //             FROM $materials_table
-    //             LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
-    //             LEFT JOIN $travel_table ON $travel_table.passenger_id = $passenger_table.id
-    //             LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
-    //             LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
-    //             LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
-    //             LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
-    //             WHERE $where";
+        // SQL Query Construction
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $materials_table.*,
+                CONCAT($passenger_table.first_name, ' ', $passenger_table.middle_name, ' ', $passenger_table.last_name) as fullName, 
+                $passenger_table.status as NewStatus,
+                $travel_table.travel_type, $travel_table.departure_date, $travel_table.arrival_date,
+                dpc.name as departure_country, dcc.name as destination_country, tcc.name as transit_country, ccd.currency_code
+                FROM $materials_table
+                LEFT JOIN $passenger_table ON $passenger_table.id = $materials_table.passenger_id
+                LEFT JOIN $travel_table ON $travel_table.passenger_id = $passenger_table.id
+                LEFT JOIN $countries_table dpc ON dpc.id = $travel_table.departure_country_id
+                LEFT JOIN $countries_table dcc ON dcc.id = $travel_table.destination_country_id
+                LEFT JOIN $countries_table tcc ON tcc.id = $travel_table.transit_country_id   
+                LEFT JOIN $countries_table ccd ON ccd.id = $materials_table.currency_id
+                WHERE $where";
     
-    //     // Debugging - Uncomment this line to see the SQL query
-    //     // echo $sql; die;
+        // Debugging - Uncomment this line to see the SQL query
+        // echo $sql; die;
     
-    //     // Execute the query and handle results
-    //     $raw_query = $this->db->query($sql);
-    //     $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
+        // Execute the query and handle results
+        $raw_query = $this->db->query($sql);
+        $total_rows = $this->db->query("SELECT FOUND_ROWS() as found_rows")->getRow();
     
-    //     if ($raw_query->getResult()) {
-    //         return $raw_query->getResult();
-    //     } else {
-    //         return [];
-    //     }
-    // }
+        if ($raw_query->getResult()) {
+            return $raw_query->getResult();
+        } else {
+            return [];
+        }
+    }
+    
+    
     
     
     
