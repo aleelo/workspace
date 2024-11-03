@@ -75,8 +75,8 @@
                 <?php echo $custom_field_headers; ?>,
                 {visible: visibleDelete, title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: combineCustomFieldsColumns([1, 2, 3, 4], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([1, 2, 3, 4], '<?php echo $custom_field_headers; ?>')
+            printColumns: combineCustomFieldsColumns([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], '<?php echo $custom_field_headers; ?>'),
+            xlsColumns: combineCustomFieldsColumns([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], '<?php echo $custom_field_headers; ?>')
 
         });
     });
