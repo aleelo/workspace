@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Combined Profile Chart</title>
+    <title>Leave Reports</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <style>
         body {
@@ -13,7 +12,6 @@
             padding: 20px;
             background-color: #f7f7f7;
         }
-
         .chart-container {
             width: 100%;
             height: 400px;
@@ -23,7 +21,6 @@
             margin-bottom: 40px;
             padding: 20px;
         }
-
         h2 {
             text-align: center;
             font-size: 24px;
@@ -32,257 +29,147 @@
         }
     </style>
 </head>
-
 <body>
-
     <?php echo get_reports_topbar(); ?>
 
     <div id="page-content" class="page-wrapper clearfix grid-button">
         <div class="card clearfix">
-
-            <!-- Profile Info Chart -->
-            <div class="chart-container" id="profile_chart">
-                <h2>Profile Info Chart</h2>
+             <div class="chart-container" id="leave_application_chart">
+                <h2>Leave Applications by Type</h2>
+            </div>
+            <div class="chart-container" id="monthly_leave_chart">
+                <h2>Monthly Leave Applications</h2>
             </div>
 
-            <!-- Bank Usage Chart -->
-            <div class="chart-container" id="bank_chart">
-                <h2>Bank Usage Chart</h2>
+            <div class="chart-container" id="department_leave_chart">
+                <h2>Leave Applications by Department</h2>
             </div>
 
-            <!-- Job Info Chart -->
-            <div class="chart-container" id="job_chart">
-                <h2>Job Info Chart</h2>
+            <div class="chart-container" id="employee_leave_chart">
+                <h2>Total Leave Days by Employee</h2>
             </div>
 
+            
+
+            
+
+            <div class="chart-container" id="leave_status_chart">
+                <h2>Leave Applications by Status</h2>
+            </div>
         </div>
     </div>
 
     <script type="text/javascript">
-        // Data passed from the controller
-        var genderData = <?php echo $gender_data; ?>;
-        var maritalStatusData = <?php echo $marital_status_data; ?>;
-        var ageLevelData = <?php echo $age_level_data; ?>;
-        var bankUsageData = <?php echo $bank_usage_data; ?>;
-        var jobInfoData = <?php echo $job_info_data; ?>;
+        var monthlyLeaveData = <?php echo $monthly_leave_data; ?>;
+        var departmentLeaveData = <?php echo $department_leave_data; ?>;
+        var employeeLeaveData = <?php echo $employee_leave_data; ?>;
+        var leaveTypeStatusData = <?php echo $leave_type_status_data; ?>;
+        var leaveApplicationData = <?php echo $leave_application_data; ?>;
+        var leaveStatusData = <?php echo $leave_status_data; ?>;
 
-        // Helper function to find age level counts
-        function getAgeLevelCount(level) {
-            var data = ageLevelData.find(a => a.age_level === level);
-            return data ? data.count : 0;
+        // Monthly Leave Applications Chart
+        var monthlyChart = echarts.init(document.getElementById('monthly_leave_chart'));
+monthlyChart.setOption({
+    title: { text: 'Monthly Leave Applications', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Applications', 'Trend'], bottom: 0 },
+    xAxis: {
+        type: 'category',
+        data: monthlyLeaveData.map(item => item.month),
+        axisLabel: { rotate: 45 }
+    },
+    yAxis: { type: 'value' },
+    series: [
+        {
+            name: 'Applications',
+            data: monthlyLeaveData.map(item => item.count),
+            type: 'bar',
+            itemStyle: { color: '#3498db' },
+            label: { show: true, position: 'top', color: '#333' }
+        },
+        {
+            name: 'Trend',
+            data: monthlyLeaveData.map(item => item.count),
+            type: 'line',
+            smooth: true,
+            itemStyle: { color: '#e74c3c' },
+            lineStyle: { width: 2 }
         }
+    ]
+});
 
-        // Profile Info Chart
-        var profileChart = echarts.init(document.getElementById('profile_chart'));
-        var profileOption = {
-            title: {
-                text: 'Profile Information Breakdown',
-                left: 'center'
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                },
-                formatter: function(params) {
-                    var result = '';
-                    params.forEach(function(item) {
-                        result += item.seriesName + ': ' + item.data + '<br>';
-                    });
-                    return result;
-                }
-            },
-            legend: {
-                bottom: '0',
-                data: ['Male', 'Female', 'Single', 'Married', '10-20', '20-30', '30+']
-            },
-            xAxis: {
-                type: 'category',
-                data: ['Gender', 'Marital Status', 'Age Level'],
-                axisLabel: {
-                    fontSize: 14,
-                    color: '#666'
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    fontSize: 14,
-                    color: '#666'
-                }
-            },
-            series: [{
-                    name: 'Male',
-                    type: 'bar',
-                    stack: 'Gender',
-                    data: [genderData.find(g => g.gender === 'male')?.count || 0, 0, 0],
-                    itemStyle: {
-                        color: '#3498db'
-                    }
-                },
-                {
-                    name: 'Female',
-                    type: 'bar',
-                    stack: 'Gender',
-                    data: [genderData.find(g => g.gender === 'female')?.count || 0, 0, 0],
-                    itemStyle: {
-                        color: '#e74c3c'
-                    }
-                },
-                {
-                    name: 'Single',
-                    type: 'bar',
-                    stack: 'Marital Status',
-                    data: [0, maritalStatusData.find(m => m.marital_status === 'single')?.count || 0, 0],
-                    itemStyle: {
-                        color: '#2ecc71'
-                    }
-                },
-                {
-                    name: 'Married',
-                    type: 'bar',
-                    stack: 'Marital Status',
-                    data: [0, maritalStatusData.find(m => m.marital_status === 'maried')?.count || 0, 0],
-                    itemStyle: {
-                        color: '#f39c12'
-                    }
-                },
-                {
-                    name: '10-20',
-                    type: 'bar',
-                    stack: 'Age Level',
-                    data: [0, 0, getAgeLevelCount('10-20')],
-                    itemStyle: {
-                        color: '#9b59b6'
-                    }
-                },
-                {
-                    name: '20-30',
-                    type: 'bar',
-                    stack: 'Age Level',
-                    data: [0, 0, getAgeLevelCount('20-30')],
-                    itemStyle: {
-                        color: '#34495e'
-                    }
-                },
-                {
-                    name: '30+',
-                    type: 'bar',
-                    stack: 'Age Level',
-                    data: [0, 0, getAgeLevelCount('30+')],
-                    itemStyle: {
-                        color: '#d35400'
-                    }
-                }
-            ],
-            animationDuration: 2000
-        };
-        profileChart.setOption(profileOption);
 
-        // Bank Usage Chart
-        var bankChart = echarts.init(document.getElementById('bank_chart'));
-        var bankOption = {
-            title: {
-                text: 'Bank Usage Statistics',
-                left: 'center'
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            xAxis: {
-                type: 'category',
-                data: bankUsageData.map(function(item) {
-                    return item.bank_name;
-                }),
-                axisLabel: {
-                    fontSize: 12,
-                    color: '#666'
-                }
-            },
-            yAxis: {
-                type: 'value'
-            },
+        // Department Leave Applications Chart
+        var departmentChart = echarts.init(document.getElementById('department_leave_chart'));
+        departmentChart.setOption({
+            title: { text: 'Leave Applications by Department', left: 'center' },
+            xAxis: { type: 'category', data: departmentLeaveData.map(item => item.department) },
+            yAxis: { type: 'value' },
+            series: [{ data: departmentLeaveData.map(item => item.count), type: 'bar', itemStyle: { color: '#e74c3c' } }]
+        });
+
+        // Employee Leave Days Chart
+        var employeeChart = echarts.init(document.getElementById('employee_leave_chart'));
+        employeeChart.setOption({
+            title: { text: 'Total Leave Days by Employee', left: 'center' },
+            xAxis: { type: 'category', data: employeeLeaveData.map(item => item.employee) },
+            yAxis: { type: 'value' },
+            series: [{ data: employeeLeaveData.map(item => item.total_leave_days), type: 'bar', itemStyle: { color: '#2ecc71' } }]
+        });
+
+        // Leave Status by Type Chart
+        // var leaveTypeStatusChart = echarts.init(document.getElementById('leave_type_status_chart'));
+        // leaveTypeStatusChart.setOption({
+        //     title: { text: 'Leave Status by Type', left: 'center' },
+        //     tooltip: { trigger: 'item' },
+        //     series: [{
+        //         type: 'sunburst',
+        //         data: leaveTypeStatusData.reduce((acc, item) => {
+        //             let type = acc.find(i => i.name === item.leave_type);
+        //             if (!type) {
+        //                 type = { name: item.leave_type, children: [] };
+        //                 acc.push(type);
+        //             }
+        //             type.children.push({ name: item.status, value: item.count });
+        //             return acc;
+        //         }, []),
+        //         radius: [0, '80%'],
+        //         label: { rotate: 'tangential' }
+        //     }]
+        // });
+
+        // Leave Applications by Type Chart
+        var leaveApplicationChart = echarts.init(document.getElementById('leave_application_chart'));
+        leaveApplicationChart.setOption({
+            title: { text: 'Leave Applications by Type', left: 'center' },
+            tooltip: { trigger: 'item' },
             series: [{
-                data: bankUsageData.map(function(item) {
-                    return item.count;
-                }),
-                type: 'bar',
-                barWidth: '50%',
-                itemStyle: {
-                    color: '#2ecc71'
-                }
+                type: 'pie',
+                radius: '50%',
+                data: leaveApplicationData.map(function (item) {
+                    return { value: item.count, name: item.leave_type };
+                })
             }]
-        };
-        bankChart.setOption(bankOption);
+        });
 
-        // Job Info Chart
-        var jobChart = echarts.init(document.getElementById('job_chart'));
-        var jobOption = {
-            title: {
-                text: 'Job Information (Salary and Experience)',
-                left: 'center'
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            legend: {
-                bottom: '0',
-                data: ['Static Salary', 'Work Experience']
-            },
-            xAxis: {
-                type: 'category',
-                data: jobInfoData.map(function(item) {
-                    return item.salary;
-                }),
-                axisLabel: {
-                    fontSize: 12,
-                    color: '#666'
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    fontSize: 12,
-                    color: '#666'
-                }
-            },
-            series: [{
-                    name: 'Static Salary',
-                    type: 'bar',
-                    data: jobInfoData.map(function(item) {
-                        return item.salary;
-                    }),
-                    itemStyle: {
-                        color: '#3498db'
-                    }
-                },
-                {
-                    name: 'Work Experience',
-                    type: 'bar',
-                    data: jobInfoData.map(function(item) {
-                        return item.work_experience;
-                    }),
-                    itemStyle: {
-                        color: '#e74c3c'
-                    }
-                }
-            ]
-        };
-        jobChart.setOption(jobOption);
+        // Leave Applications by Status Chart
+        var leaveStatusChart = echarts.init(document.getElementById('leave_status_chart'));
+        leaveStatusChart.setOption({
+            title: { text: 'Leave Applications by Status', left: 'center' },
+            xAxis: { type: 'category', data: leaveStatusData.map(item => item.status) },
+            yAxis: { type: 'value' },
+            series: [{ data: leaveStatusData.map(item => item.count), type: 'bar', itemStyle: { color: '#8e44ad' } }]
+        });
 
         // Resize charts on window resize
         window.addEventListener('resize', function() {
-            profileChart.resize();
-            bankChart.resize();
-            jobChart.resize();
+            monthlyChart.resize();
+            departmentChart.resize();
+            employeeChart.resize();
+            leaveTypeStatusChart.resize();
+            leaveApplicationChart.resize();
+            leaveStatusChart.resize();
         });
     </script>
 </body>
-
 </html>

@@ -516,39 +516,169 @@ class Team_members extends Security_Controller
         return $assigned_to_dropdown;
     }
 
-    public function charts()
-    {
-        // Fetch bank usage data
-        $data['bank_usage_data'] = $this->db->query("SELECT bank_name, COUNT(*) as count FROM rise_users JOIN rise_bank_names ON rise_users.bank_id = rise_bank_names.id GROUP BY bank_name")->getResultArray();
+    // public function charts()
+    // {
+    //     // Fetch bank usage data
+    //     $data['bank_usage_data'] = $this->db->query("SELECT bank_name, COUNT(*) as count FROM rise_users JOIN rise_bank_names ON rise_users.bank_id = rise_bank_names.id GROUP BY bank_name")->getResultArray();
 
-        // Fetch gender data
-        // Fetch gender data
-        $data['gender_data'] = $this->db->query("SELECT LOWER(gender) as gender, COUNT(*) as count FROM rise_users GROUP BY gender")->getResultArray();
+    //     // Fetch gender data
+    //     // Fetch gender data
+    //     $data['gender_data'] = $this->db->query("SELECT LOWER(gender) as gender, COUNT(*) as count FROM rise_users GROUP BY gender")->getResultArray();
 
-        // Fetch marital status data
-        $data['marital_status_data'] = $this->db->query("SELECT marital_status, COUNT(*) as count FROM rise_users GROUP BY marital_status")->getResultArray();
+    //     // Fetch marital status data
+    //     $data['marital_status_data'] = $this->db->query("SELECT marital_status, COUNT(*) as count FROM rise_users GROUP BY marital_status")->getResultArray();
 
-        // Fetch age level data
-        $data['age_level_data'] = $this->db->query("SELECT age_level, COUNT(*) as count FROM rise_users GROUP BY age_level")->getResultArray();
+    //     // Fetch age level data
+    //     $data['age_level_data'] = $this->db->query("SELECT age_level, COUNT(*) as count FROM rise_users GROUP BY age_level")->getResultArray();
 
-        // Fetch marital status data
-        $view_data['gender_data'] = json_encode($data['gender_data']);
-        $view_data['marital_status_data'] = json_encode($data['marital_status_data']);
-        $view_data['age_level_data'] = json_encode($data['age_level_data']);
+    //     // Fetch marital status data
+    //     $view_data['gender_data'] = json_encode($data['gender_data']);
+    //     $view_data['marital_status_data'] = json_encode($data['marital_status_data']);
+    //     $view_data['age_level_data'] = json_encode($data['age_level_data']);
 
-        // Fetch age level data
+    //     // Fetch age level data
 
-        // Fetch job info data (static_salary and work_experience)
-        $data['job_info_data'] = $this->db->query("SELECT salary, work_experience FROM rise_team_member_job_info")->getResultArray();
+    //     // Fetch job info data (static_salary and work_experience)
+    //     $data['job_info_data'] = $this->db->query("SELECT salary, work_experience FROM rise_team_member_job_info")->getResultArray();
 
-        // Convert the data into JSON format for use in the view
-        $view_data['bank_usage_data'] = json_encode($data['bank_usage_data']);
+    //     // Convert the data into JSON format for use in the view
+    //     $view_data['bank_usage_data'] = json_encode($data['bank_usage_data']);
 
-        $view_data['job_info_data'] = json_encode($data['job_info_data']);
+    //     $view_data['job_info_data'] = json_encode($data['job_info_data']);
 
-        // Render the view with the prepared data
-        return $this->template->rander("team_members/reports/chart_report_container", $view_data);
-    }
+    //     // Render the view with the prepared data
+    //     return $this->template->rander("team_members/reports/chart_report_container", $view_data);
+    // }
+//     public function charts()
+// {
+//     // Fetch leave application data grouped by leave type
+//     $data['leave_application_data'] = $this->db->query("
+//         SELECT rise_leave_types.title AS leave_type, COUNT(*) as count
+//         FROM rise_leave_applications 
+//         JOIN rise_leave_types ON rise_leave_applications.leave_type_id = rise_leave_types.id 
+//         GROUP BY leave_type
+//     ")->getResultArray();
+
+//     // Fetch leave application status data
+//     $data['leave_status_data'] = $this->db->query("
+//         SELECT status, COUNT(*) as count 
+//         FROM rise_leave_applications 
+//         GROUP BY status
+//     ")->getResultArray();
+
+//     // Convert data to JSON for the view
+//     $view_data['leave_application_data'] = json_encode($data['leave_application_data']);
+//     $view_data['leave_status_data'] = json_encode($data['leave_status_data']);
+
+//     // Render the view with the prepared data
+//     return $this->template->rander("team_members/reports/chart_report_container", $view_data);
+// }
+//  public function charts()
+// {
+//     // Fetch monthly leave application data
+//     $data['monthly_leave_data'] = $this->db->query("
+//         SELECT DATE_FORMAT(start_date, '%Y-%m') as month, COUNT(*) as count 
+//         FROM rise_leave_applications 
+//         GROUP BY month
+//         ORDER BY month
+//     ")->getResultArray();
+
+//     // Fetch leave applications by department, using `nameEn` as the department name
+//     $data['department_leave_data'] = $this->db->query("
+//         SELECT rise_departments.nameEn AS department, COUNT(*) as count 
+//         FROM rise_leave_applications 
+//         JOIN rise_departments ON rise_leave_applications.department_id = rise_departments.id 
+//         GROUP BY department
+//     ")->getResultArray();
+
+//     // Fetch total leave days by employee, using `first_name` and `last_name` from `rise_users`
+//     $data['employee_leave_data'] = $this->db->query("
+//         SELECT CONCAT(rise_users.first_name, ' ', rise_users.last_name) AS employee, SUM(total_days) as total_leave_days 
+//         FROM rise_leave_applications 
+//         JOIN rise_users ON rise_leave_applications.applicant_id = rise_users.id 
+//         GROUP BY employee
+//     ")->getResultArray();
+
+//     // Fetch leave type and status distribution
+//     $data['leave_type_status_data'] = $this->db->query("
+//         SELECT rise_leave_types.title AS leave_type, rise_leave_applications.status, COUNT(*) as count 
+//         FROM rise_leave_applications 
+//         JOIN rise_leave_types ON rise_leave_applications.leave_type_id = rise_leave_types.id 
+//         GROUP BY leave_type, status
+//     ")->getResultArray();
+
+//     // Convert data to JSON for the view
+//     $view_data['monthly_leave_data'] = json_encode($data['monthly_leave_data']);
+//     $view_data['department_leave_data'] = json_encode($data['department_leave_data']);
+//     $view_data['employee_leave_data'] = json_encode($data['employee_leave_data']);
+//     $view_data['leave_type_status_data'] = json_encode($data['leave_type_status_data']);
+
+//     // Render the view with the prepared data
+//     return $this->template->rander("team_members/reports/chart_report_container", $view_data);
+// }
+public function charts()
+{
+    // Fetch monthly leave application data
+    $data['monthly_leave_data'] = $this->db->query("
+        SELECT DATE_FORMAT(start_date, '%Y-%m') as month, COUNT(*) as count 
+        FROM rise_leave_applications 
+        GROUP BY month
+        ORDER BY month
+    ")->getResultArray();
+
+    // Fetch leave applications by department
+    $data['department_leave_data'] = $this->db->query("
+        SELECT rise_departments.nameEn AS department, COUNT(*) as count 
+        FROM rise_leave_applications 
+        JOIN rise_departments ON rise_leave_applications.department_id = rise_departments.id 
+        GROUP BY department
+    ")->getResultArray();
+
+    // Fetch total leave days by employee
+    $data['employee_leave_data'] = $this->db->query("
+        SELECT CONCAT(rise_users.first_name, ' ', rise_users.last_name) AS employee, SUM(total_days) as total_leave_days 
+        FROM rise_leave_applications 
+        JOIN rise_users ON rise_leave_applications.applicant_id = rise_users.id 
+        GROUP BY employee
+    ")->getResultArray();
+
+    // Fetch leave type and status distribution
+    $data['leave_type_status_data'] = $this->db->query("
+        SELECT rise_leave_types.title AS leave_type, rise_leave_applications.status, COUNT(*) as count 
+        FROM rise_leave_applications 
+        JOIN rise_leave_types ON rise_leave_applications.leave_type_id = rise_leave_types.id 
+        GROUP BY leave_type, status
+    ")->getResultArray();
+
+    // Fetch leave application data grouped by leave type
+    $data['leave_application_data'] = $this->db->query("
+        SELECT rise_leave_types.title AS leave_type, COUNT(*) as count
+        FROM rise_leave_applications 
+        JOIN rise_leave_types ON rise_leave_applications.leave_type_id = rise_leave_types.id 
+        GROUP BY leave_type
+    ")->getResultArray();
+
+    // Fetch leave application status data
+    $data['leave_status_data'] = $this->db->query("
+        SELECT status, COUNT(*) as count 
+        FROM rise_leave_applications 
+        GROUP BY status
+    ")->getResultArray();
+
+    // Convert data to JSON for the view
+    $view_data['monthly_leave_data'] = json_encode($data['monthly_leave_data']);
+    $view_data['department_leave_data'] = json_encode($data['department_leave_data']);
+    $view_data['employee_leave_data'] = json_encode($data['employee_leave_data']);
+    $view_data['leave_type_status_data'] = json_encode($data['leave_type_status_data']);
+    $view_data['leave_application_data'] = json_encode($data['leave_application_data']);
+    $view_data['leave_status_data'] = json_encode($data['leave_status_data']);
+
+    // Render the view with the prepared data
+    return $this->template->rander("team_members/reports/chart_report_container", $view_data);
+}
+
+
+
 
 
 

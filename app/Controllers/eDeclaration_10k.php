@@ -2,24 +2,26 @@
 
 namespace App\Controllers;
 
-class eDeclaration_10k extends Security_Controller {
+class eDeclaration_10k extends Security_Controller
+{
 
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-       
 
         //check permission to access this module
         $this->init_permission_checker("edeclaration");
     }
-         
 
-    private function _validate_client_manage_access($client_id = 0) {
+    private function _validate_client_manage_access($client_id = 0)
+    {
         if (!$this->can_edit_clients($client_id)) {
             app_redirect("forbidden");
         }
     }
 
-    private function _validate_client_view_access($client_id = 0) {
+    private function _validate_client_view_access($client_id = 0)
+    {
         if (!$this->can_view_clients($client_id)) {
             app_redirect("forbidden");
         }
@@ -27,7 +29,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load clients list view */
 
-    function index($tab = "") {
+    public function index($tab = "")
+    {
 
         $this->check_module_availability("module_edeclaration");
         $this->access_only_allowed_members();
@@ -42,21 +45,19 @@ class eDeclaration_10k extends Security_Controller {
 
         $view_data['tab'] = clean_data($tab);
 
-        
-
         return $this->template->rander("edeclaration_10k/index", $view_data);
     }
 
-  
     /* load client add/edit modal */
-    
-    function modal_form() {
-        
+
+    public function modal_form()
+    {
+
         $Sections_id = $this->request->getPost('id');
         // $this->_validate_client_manage_access($Sections_id);
 
         $this->validate_submitted_data(array(
-            "id" => "numeric"
+            "id" => "numeric",
         ));
 
         $view_data['label_column'] = "col-md-3 text-right";
@@ -83,7 +84,6 @@ class eDeclaration_10k extends Security_Controller {
         //prepare groups dropdown list
         $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
-
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
 
         //prepare label suggestions
@@ -95,18 +95,19 @@ class eDeclaration_10k extends Security_Controller {
     }
     /* load client add/edit modal */
 
-    function arriving10k_details() {
-        
+    public function arriving10k_details()
+    {
+
         $ref_number = $this->request->getPost('ref_number');
         $id = $this->request->getPost('id');
         // $this->_validate_client_manage_access($Sections_id);
 
         $this->validate_submitted_data(array(
-            "id" => "numeric"
+            "id" => "numeric",
         ));
 
-        $options = array('ref_number'=> $ref_number);
-        
+        $options = array('ref_number' => $ref_number);
+
         $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
         $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
         // print_r( $view_data['passenger_info']);die;
@@ -115,15 +116,15 @@ class eDeclaration_10k extends Security_Controller {
 
         return $this->template->view('edeclaration_10k/arrvin10k_details', $view_data);
     }
-   
+
     // public function arriving10k_details1() {
     //     $ref_number = $this->request->getPost('ref_number');
     //     $start_date = $this->request->getPost('start_date');
     //     $end_date = $this->request->getPost('end_date');
-    
+
     //     // Prepare options for fetching data
     //     $options = array();
-    
+
     //     if ($ref_number) {
     //         // If reference number is provided, use only this to filter
     //         $options['ref_number'] = $ref_number;
@@ -139,24 +140,24 @@ class eDeclaration_10k extends Security_Controller {
     //         $view_data['passenger_info'] = null;
     //         $view_data['travel_info'] = null;
     //         $view_data['materials'] = [];
-            
+
     //         // Pass filter values to the view
     //         $view_data['start_date'] = $start_date;
     //         $view_data['end_date'] = $end_date;
     //         $view_data['ref_number'] = $ref_number;
     //         return $this->template->rander('edeclaration_10k/Report', $view_data);
     //     }
-    
+
     //     // Fetch travel details based on the options
     //     $result = $this->eDeclaration_10k_Model->get_details($options);
-    
+
     //     // Convert $result to an array if it is a database result object
     //     if ($result instanceof \CodeIgniter\Database\ResultInterface) {
     //         $data = $result->getResult();
     //     } else {
     //         $data = $result; // If already an array, use it directly
     //     }
-    
+
     //     // Handle results based on whether data was found
     //     if (!empty($data) && count($data) > 0) {
     //         $view_data['no_travel_data_for_month'] = false; // Data exists for the selected date range
@@ -172,47 +173,50 @@ class eDeclaration_10k extends Security_Controller {
     //         $view_data['travel_info'] = null;
     //         $view_data['materials'] = [];
     //     }
-    
+
     //     // Pass filter values to the view
     //     $view_data['start_date'] = $start_date;
     //     $view_data['end_date'] = $end_date;
     //     $view_data['ref_number'] = $ref_number;
-    
+
     //     // Generate Report View
     //     return $this->template->rander('edeclaration_10k/Report', $view_data);
     // }
-    public function arriving10k_details1() {
+    public function arriving10k_details1()
+    {
+        $this->check_module_availability("module_edeclaration");
+        $this->access_only_allowed_members();
         $ref_number = $this->request->getPost('ref_number');
         $start_date = $this->request->getPost('start_date');
         $end_date = $this->request->getPost('end_date');
-    
+
         // Prepare options for fetching data
         $options = array();
-    
+
         if ($ref_number) {
             // If reference number is provided, use only this to filter
             $options['ref_number'] = $ref_number;
-            $view_data['is_search_by_ref'] = true;  // Mark as search by reference
+            $view_data['is_search_by_ref'] = true; // Mark as search by reference
         } elseif ($start_date && $end_date) {
             // If start and end dates are provided, filter by this range
             $options['start_date'] = $start_date;
             $options['end_date'] = $end_date;
-            $view_data['is_search_by_ref'] = false;  // Mark as not a reference search
+            $view_data['is_search_by_ref'] = false; // Mark as not a reference search
         } else {
             // If no filter is applied, display nothing
             $view_data['is_empty'] = true;
             $view_data['materials'] = [];
-            
+
             // Pass filter values to the view
             $view_data['start_date'] = $start_date;
             $view_data['end_date'] = $end_date;
             $view_data['ref_number'] = $ref_number;
             return $this->template->rander('edeclaration_10k/Report', $view_data);
         }
-    
+
         // Fetch travel details based on the options
         $data = $this->eDeclaration_10k_Model->get_details1($options);
-    
+
         // Handle results based on whether data was found
         if (!empty($data)) {
             $view_data['no_travel_data_for_month'] = false; // Data exists for the selected date range or reference number
@@ -224,27 +228,24 @@ class eDeclaration_10k extends Security_Controller {
             $view_data['invalid_ref_number'] = ($ref_number) ? true : false; // Reference number not found
             $view_data['materials'] = [];
         }
-    
+
         // Pass filter values to the view
         $view_data['start_date'] = $start_date;
         $view_data['end_date'] = $end_date;
         $view_data['ref_number'] = $ref_number;
-    
+
         // Generate Report View
         return $this->template->rander('edeclaration_10k/Report', $view_data);
     }
-    
-    
-    
-       
-    
+
     /* insert or update a client */
-    
-    function save() {
-        
+
+    public function save()
+    {
+
         $Sections_id = $this->request->getPost('id');
         // $this->_validate_client_manage_access($Sections_id);
-        
+
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -268,11 +269,9 @@ class eDeclaration_10k extends Security_Controller {
             $data["labels"] = $this->request->getPost('labels');
         }
 
-
         if (!$Sections_id) {
             $data["created_at"] = get_current_utc_time();
         }
-
 
         // if ($this->login_user->is_admin) {
         //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
@@ -306,13 +305,12 @@ class eDeclaration_10k extends Security_Controller {
         // }
 
         $save_id = $this->eDeclaration_10k_Model->ci_save($data, $Sections_id);
-     
 
         if ($save_id) {
 
-            if(!$Sections_id){
-                    
-                $options = array('id'=>$save_id);
+            if (!$Sections_id) {
+
+                $options = array('id' => $save_id);
 
                 $partner = $this->eDeclaration_10k_Model->get_details($options)->getRow();
 
@@ -337,12 +335,13 @@ class eDeclaration_10k extends Security_Controller {
 
     /* delete or undo a client */
 
-    function delete() {
+    public function delete()
+    {
 
         $id = $this->request->getPost('id');
 
         $this->validate_submitted_data(array(
-            "id" => "required|numeric"
+            "id" => "required|numeric",
         ));
 
         if ($this->eDeclaration_10k_Model->delete($id)) {
@@ -354,12 +353,13 @@ class eDeclaration_10k extends Security_Controller {
 
     /* list of clients, prepared for datatable  */
 
-    function edeclaration_10k_arrival_list_data() { 
+    public function edeclaration_10k_arrival_list_data()
+    {
 
         $this->access_only_allowed_members();
-    
+
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
-        
+
         $options = array(
             "q_type" => 1,
             "custom_fields" => $custom_fields,
@@ -369,14 +369,14 @@ class eDeclaration_10k extends Security_Controller {
             "quick_filter" => $this->request->getPost("quick_filter"),
             "created_by" => $this->request->getPost("created_by"),
             "client_groups" => $this->allowed_client_groups,
-            "label_id" => $this->request->getPost('label_id')
+            "label_id" => $this->request->getPost('label_id'),
         );
-    
+
         $all_options = append_server_side_filtering_commmon_params($options);
-    
+
         // Fetch the result object from the model
         $result = $this->eDeclaration_10k_Model->get_details($all_options);
-    
+
         // Fetch result as an array
         if (get_array_value($all_options, "server_side")) {
             // In case of server-side processing, fetch the data appropriately
@@ -385,32 +385,30 @@ class eDeclaration_10k extends Security_Controller {
             // Use getResultArray() to convert the result object to an array
             $list_data = $result->getResultArray(); // Fetch as an array
         }
-    
+
         // Ensure $list_data is an array
         if (!is_array($list_data)) {
             $list_data = array(); // Initialize as an empty array if it’s not an array
         }
-    
+
         $result_data = array();
         foreach ($list_data as $data) {
             $result_data[] = $this->_make_row($data, $custom_fields);
         }
-    
+
         $result["data"] = $result_data;
-    
+
         echo json_encode($result);
     }
-    
-    
-    
 
     /* return a row of client list  table */
 
-    private function _row_data($id) {
+    private function _row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
             "id" => $id,
-            "custom_fields" => $custom_fields
+            "custom_fields" => $custom_fields,
         );
         $data = $this->eDeclaration_10k_Model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
@@ -418,18 +416,16 @@ class eDeclaration_10k extends Security_Controller {
 
     /* prepare a row of client list table */
 
-    private function _make_row($data, $custom_fields) {
-
+    private function _make_row($data, $custom_fields)
+    {
 
         $row_data = array($data->id,
 
             anchor(get_uri("edeclaration_10k/view/" . $data->id), $data->ref_number),
             $data->fullName,
             $data->travel_type,
-            $data->trip_type 
-            
- 
-            
+            $data->trip_type,
+
         );
         $option_icon = "info";
 
@@ -439,17 +435,15 @@ class eDeclaration_10k extends Security_Controller {
         }
 
         $row_data[] = modal_anchor(get_uri("edeclaration_10k/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_section'), "data-post-id" => $data->id))
-         . modal_anchor(get_uri("edeclaration_10k/arriving10k_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('arrvin10k_details'), "data-post-id" => $data->id, "data-post-ref_number" => $data->ref_number))
+        . modal_anchor(get_uri("edeclaration_10k/arriving10k_details"), "<i data-feather='$option_icon' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('arrvin10k_details'), "data-post-id" => $data->id, "data-post-ref_number" => $data->ref_number))
 
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_section'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("edeclaration_10k/delete"), "data-action" => "delete-confirmation"));
+        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_section'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("edeclaration_10k/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
 
-
-
-
-    private function can_view_files() {
+    private function can_view_files()
+    {
         if ($this->login_user->user_type == "staff") {
             $this->access_only_allowed_members();
         } else {
@@ -459,7 +453,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    private function can_add_files() {
+    private function can_add_files()
+    {
         if ($this->login_user->user_type == "staff") {
             $this->access_only_allowed_members();
         } else {
@@ -471,8 +466,9 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load client details view */
 
-    function view($Sections_id = 0, $tab = "") {
-        
+    public function view($Sections_id = 0, $tab = "")
+    {
+
         // $this->_validate_client_view_access($Sections_id);
 
         if ($Sections_id) {
@@ -510,7 +506,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* add-remove start mark from client */
 
-    function add_remove_star($client_id, $type = "add") {
+    public function add_remove_star($client_id, $type = "add")
+    {
         if ($client_id) {
             $view_data["client_id"] = clean_data($client_id);
 
@@ -524,14 +521,16 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function show_my_starred_clients() {
+    public function show_my_starred_clients()
+    {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
         return $this->template->view('edeclaration_10k/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
 
-    function projects($client_id) {
+    public function projects($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         $view_data['can_create_projects'] = $this->can_create_projects();
@@ -545,7 +544,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load payments tab  */
 
-    function payments($client_id) {
+    public function payments($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -557,7 +557,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load tickets tab  */
 
-    function tickets($client_id) {
+    public function tickets($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -574,7 +575,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load invoices tab  */
 
-    function invoices($client_id) {
+    public function invoices($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -589,7 +591,7 @@ class eDeclaration_10k extends Security_Controller {
             $type_suggestions = array(
                 array("id" => "", "text" => "- " . app_lang('type') . " -"),
                 array("id" => "invoice", "text" => app_lang("invoice")),
-                array("id" => "credit_note", "text" => app_lang("credit_note"))
+                array("id" => "credit_note", "text" => app_lang("credit_note")),
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
@@ -599,7 +601,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load estimates tab  */
 
-    function estimates($client_id) {
+    public function estimates($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -615,7 +618,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load orders tab  */
 
-    function orders($client_id) {
+    public function orders($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -631,7 +635,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load estimate requests tab  */
 
-    function estimate_requests($client_id) {
+    public function estimate_requests($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -642,7 +647,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load notes tab  */
 
-    function notes($client_id) {
+    public function notes($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -653,7 +659,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load events tab  */
 
-    function events($client_id) {
+    public function events($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         if ($client_id) {
@@ -666,7 +673,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load files tab */
 
-    function files($client_id, $view_type = "") {
+    public function files($client_id, $view_type = "")
+    {
         $this->can_view_files();
 
         if ($this->login_user->user_type == "client") {
@@ -688,7 +696,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* file upload modal */
 
-    function file_modal_form() {
+    public function file_modal_form()
+    {
         $this->can_add_files();
 
         $view_data['model_info'] = $this->General_files_model->get_one($this->request->getPost('id'));
@@ -701,12 +710,13 @@ class eDeclaration_10k extends Security_Controller {
 
     /* save file data and move temp file to parmanent file directory */
 
-    function save_file() {
+    public function save_file()
+    {
         $this->can_add_files();
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "client_id" => "required|numeric"
+            "client_id" => "required|numeric",
         ));
 
         $client_id = $this->request->getPost('client_id');
@@ -732,7 +742,7 @@ class eDeclaration_10k extends Security_Controller {
                         "description" => $this->request->getPost('description_' . $file),
                         "file_size" => $this->request->getPost('file_size_' . $file),
                         "created_at" => $now,
-                        "uploaded_by" => $this->login_user->id
+                        "uploaded_by" => $this->login_user->id,
                     );
                     $success = $this->General_files_model->ci_save($data);
                 } else {
@@ -740,7 +750,6 @@ class eDeclaration_10k extends Security_Controller {
                 }
             }
         }
-
 
         if ($success) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
@@ -751,7 +760,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* list of files, prepared for datatable  */
 
-    function files_list_data($client_id = 0) {
+    public function files_list_data($client_id = 0)
+    {
         $this->can_view_files();
         $this->_validate_client_view_access($client_id);
 
@@ -764,7 +774,8 @@ class eDeclaration_10k extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _make_file_row($data) {
+    private function _make_file_row($data)
+    {
         $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
 
         $image_url = get_avatar($data->uploaded_by_user_image);
@@ -777,7 +788,7 @@ class eDeclaration_10k extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("edeclaration_10k/view_file/" . $data->id)));
+        js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("edeclaration_10k/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -791,17 +802,17 @@ class eDeclaration_10k extends Security_Controller {
             $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("edeclaration_10k/delete_file"), "data-action" => "delete-confirmation"));
         }
 
-
         return array($data->id,
             "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
             convert_file_size($data->file_size),
             $uploaded_by,
             format_to_datetime($data->created_at),
-            $options
+            $options,
         );
     }
 
-    function view_file($file_id = 0) {
+    public function view_file($file_id = 0)
+    {
         $file_info = $this->General_files_model->get_details(array("id" => $file_id))->getRow();
 
         if ($file_info) {
@@ -834,7 +845,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* download a file */
 
-    function download_file($id) {
+    public function download_file($id)
+    {
         $this->can_view_files();
 
         $file_info = $this->General_files_model->get_one($id);
@@ -853,19 +865,22 @@ class eDeclaration_10k extends Security_Controller {
 
     /* upload a post file */
 
-    function upload_file() {
+    public function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for client */
 
-    function validate_file() {
+    public function validate_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete a file */
 
-    function delete_file() {
+    public function delete_file()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->General_files_model->get_one($id);
@@ -887,7 +902,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function contact_profile($contact_id = 0, $tab = "") {
+    public function contact_profile($contact_id = 0, $tab = "")
+    {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
@@ -906,7 +922,8 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //show account settings of a user
-    function account_settings($contact_id) {
+    public function account_settings($contact_id)
+    {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
         $view_data['can_edit_clients'] = $this->can_edit_clients();
@@ -915,7 +932,8 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //show my preference settings of a team member
-    function my_preferences() {
+    public function my_preferences()
+    {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
 
         //language dropdown
@@ -929,7 +947,8 @@ class eDeclaration_10k extends Security_Controller {
         return $this->template->view("edeclaration_10k/contacts/my_preferences", $view_data);
     }
 
-    function save_my_preferences() {
+    public function save_my_preferences()
+    {
         //setting preferences
         $settings = array("notification_sound_volume", "disable_push_notification", "disable_keyboard_shortcuts", "reminder_sound_volume", "reminder_snooze_length");
 
@@ -971,7 +990,8 @@ class eDeclaration_10k extends Security_Controller {
         echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
     }
 
-    function save_personal_language($language) {
+    public function save_personal_language($language)
+    {
         if (!get_setting("disable_language_selector_for_clients") && ($language || $language === "0")) {
 
             $language = clean_data($language);
@@ -983,7 +1003,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load contacts tab  */
 
-    function contacts($Sections_id = 0) {
+    public function contacts($Sections_id = 0)
+    {
 
         $this->_validate_client_view_access($Sections_id);
 
@@ -1004,7 +1025,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* contact add modal */
 
-    function add_new_contact_modal_form() {
+    public function add_new_contact_modal_form()
+    {
         $this->_validate_client_manage_access();
 
         $view_data['model_info'] = $this->Users_model->get_one(0);
@@ -1020,7 +1042,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load contact's general info tab view */
 
-    function contact_general_info_tab($contact_id = 0) {
+    public function contact_general_info_tab($contact_id = 0)
+    {
         if ($contact_id) {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -1037,7 +1060,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load contact's company info tab view */
 
-    function company_info_tab($Sections_id = 0) {
+    public function company_info_tab($Sections_id = 0)
+    {
         if ($Sections_id) {
             // $this->_validate_client_view_access($Sections_id);
 
@@ -1050,7 +1074,6 @@ class eDeclaration_10k extends Security_Controller {
 
             $view_data['Merchant_types_dropdown_js'] = $this->get_merchant_types_dropdown_js();
             $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-
 
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Sections_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
@@ -1077,7 +1100,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load contact's social links tab view */
 
-    function contact_social_links_tab($contact_id = 0) {
+    public function contact_social_links_tab($contact_id = 0)
+    {
         if ($contact_id) {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -1094,7 +1118,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* insert/upadate a contact */
 
-    function save_contact() {
+    public function save_contact()
+    {
 
         $contact_id = $this->request->getPost('contact_id');
         $Sections_id = $this->request->getPost('Sections_id');
@@ -1102,7 +1127,7 @@ class eDeclaration_10k extends Security_Controller {
 
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
-        $user_data = array(            
+        $user_data = array(
             'uuid' => $this->db->query("select replace(uuid(),'-','') as uuid;")->getRow()->uuid,
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
@@ -1110,13 +1135,13 @@ class eDeclaration_10k extends Security_Controller {
             "skype" => $this->request->getPost('skype'),
             "job_title" => $this->request->getPost('job_title'),
             "gender" => is_null($this->request->getPost('gender')) ? "" : $this->request->getPost('gender'),
-            "note" => $this->request->getPost('note')
+            "note" => $this->request->getPost('note'),
         );
 
         $this->validate_submitted_data(array(
             "first_name" => "required",
             "last_name" => "required",
-            "Sections_id" => "required|numeric"
+            "Sections_id" => "required|numeric",
         ));
 
         if (!$contact_id) {
@@ -1191,7 +1216,8 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //save social links of a contact
-    function save_contact_social_links($contact_id = 0) {
+    public function save_contact_social_links($contact_id = 0)
+    {
         $contact_id = clean_data($contact_id);
 
         $this->access_only_allowed_members_or_contact_personally($contact_id);
@@ -1220,7 +1246,7 @@ class eDeclaration_10k extends Security_Controller {
             "vine" => $this->request->getPost('vine'),
             "whatsapp" => $this->request->getPost('whatsapp'),
             "user_id" => $contact_id,
-            "id" => $id ? $id : $contact_id
+            "id" => $id ? $id : $contact_id,
         );
 
         $social_link_data = clean_data($social_link_data);
@@ -1230,14 +1256,15 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //save account settings of a client contact (user)
-    function save_account_settings($user_id) {
+    public function save_account_settings($user_id)
+    {
         $this->access_only_allowed_members_or_contact_personally($user_id);
 
         $contact_info = $this->Users_model->get_one($user_id);
         $this->_validate_client_manage_access($contact_info->client_id);
 
         $this->validate_submitted_data(array(
-            "email" => "required|valid_email"
+            "email" => "required|valid_email",
         ));
 
         $email = $this->request->getPost('email');
@@ -1249,8 +1276,8 @@ class eDeclaration_10k extends Security_Controller {
         }
 
         $account_data = array(
-            "email" => $email,            
-            "login_type" => $this->request->getPost('login_type')
+            "email" => $email,
+            "login_type" => $this->request->getPost('login_type'),
         );
 
         //don't reset password if user doesn't entered any password
@@ -1262,7 +1289,6 @@ class eDeclaration_10k extends Security_Controller {
         if ($this->login_user->is_admin) {
             $account_data['disable_login'] = $this->request->getPost('disable_login');
         }
-
 
         if ($this->Users_model->ci_save($account_data, $user_id)) {
 
@@ -1294,7 +1320,8 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //save profile image of a contact
-    function save_profile_image($user_id = 0) {
+    public function save_profile_image($user_id = 0)
+    {
         $this->access_only_allowed_members_or_contact_personally($user_id);
         $user_info = $this->Users_model->get_one($user_id);
         $this->_validate_client_manage_access($user_info->client_id);
@@ -1340,13 +1367,14 @@ class eDeclaration_10k extends Security_Controller {
 
     /* delete or undo a contact */
 
-    function delete_contact() {
+    public function delete_contact()
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
 
         $this->validate_submitted_data(array(
-            "id" => "required|numeric"
+            "id" => "required|numeric",
         ));
 
         $id = $this->request->getPost('id');
@@ -1371,7 +1399,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* list of contacts, prepared for datatable  */
 
-    function contacts_list_data($Sections_id = 0) {
+    public function contacts_list_data($Sections_id = 0)
+    {
 
         $this->_validate_client_view_access($Sections_id);
 
@@ -1384,7 +1413,7 @@ class eDeclaration_10k extends Security_Controller {
             "show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("client_contacts", $this->login_user->is_admin, $this->login_user->user_type),
             "quick_filter" => $this->request->getPost("quick_filter"),
-            "client_groups" => $this->allowed_client_groups
+            "client_groups" => $this->allowed_client_groups,
         );
 
         $all_options = append_server_side_filtering_commmon_params($options);
@@ -1416,12 +1445,13 @@ class eDeclaration_10k extends Security_Controller {
 
     /* return a row of contact list table */
 
-    private function _contact_row_data($id) {
+    private function _contact_row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
             "id" => $id,
             "user_type" => "client",
-            "custom_fields" => $custom_fields
+            "custom_fields" => $custom_fields,
         );
         $data = $this->Users_model->get_details($options)->getRow();
         return $this->_make_contact_row($data, $custom_fields);
@@ -1429,7 +1459,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* prepare a row of contact list table */
 
-    private function _make_contact_row($data, $custom_fields, $hide_primary_contact_label = false) {
+    private function _make_contact_row($data, $custom_fields, $hide_primary_contact_label = false)
+    {
 
         $image_url = get_avatar($data?->image);
         $user_avatar = "<span class='avatar avatar-xs'><img src='$image_url' alt='...'></span>";
@@ -1458,7 +1489,7 @@ class eDeclaration_10k extends Security_Controller {
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
-            $data->skype ? $data->skype : "-"
+            $data->skype ? $data->skype : "-",
         );
 
         foreach ($custom_fields as $field) {
@@ -1473,13 +1504,14 @@ class eDeclaration_10k extends Security_Controller {
 
     /* open invitation modal */
 
-    function invitation_modal() {
+    public function invitation_modal()
+    {
         if (get_setting("disable_user_invitation_option_by_clients") && $this->login_user->user_type == "client") {
             app_redirect("forbidden");
         }
 
         $this->validate_submitted_data(array(
-            "client_id" => "required|numeric"
+            "client_id" => "required|numeric",
         ));
 
         $client_id = $this->request->getPost('client_id');
@@ -1490,7 +1522,8 @@ class eDeclaration_10k extends Security_Controller {
     }
 
     //send a team member invitation to an email address
-    function send_invitation() {
+    public function send_invitation()
+    {
         if (get_setting("disable_user_invitation_option_by_clients") && $this->login_user->user_type == "client") {
             app_redirect("forbidden");
         }
@@ -1502,7 +1535,7 @@ class eDeclaration_10k extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "client_id" => "required|numeric",
-            "email" => "required|valid_email|trim"
+            "email" => "required|valid_email|trim",
         ));
 
         $email_template = $this->Email_templates_model->get_final_template("client_contact_invitation"); //use default template since sending new invitation
@@ -1519,8 +1552,8 @@ class eDeclaration_10k extends Security_Controller {
                 "email" => $email,
                 "type" => "client",
                 "client_id" => $client_id,
-                "expire_time" => time() + (24 * 60 * 60) //make the invitation url with 24hrs validity
-            ))
+                "expire_time" => time() + (24 * 60 * 60), //make the invitation url with 24hrs validity
+            )),
         );
 
         $save_id = $this->Verification_model->ci_save($verification_data);
@@ -1541,7 +1574,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* only visible to client  */
 
-    function users() {
+    public function users()
+    {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
             return $this->template->rander("edeclaration_10k/contacts/users", $view_data);
@@ -1550,21 +1584,25 @@ class eDeclaration_10k extends Security_Controller {
 
     /* show keyboard shortcut modal form */
 
-    function keyboard_shortcut_modal_form() {
+    public function keyboard_shortcut_modal_form()
+    {
         return $this->template->view('team_members/keyboard_shortcut_modal_form');
     }
 
-    function upload_excel_file() {
+    public function upload_excel_file()
+    {
         upload_file_to_temp(true);
     }
 
-    function import_clients_modal_form() {
+    public function import_clients_modal_form()
+    {
         $this->_validate_client_manage_access();
 
         return $this->template->view("edeclaration_10k/import_clients_modal_form");
     }
 
-    private function _prepare_client_data($data_row, $allowed_headers) {
+    private function _prepare_client_data($data_row, $allowed_headers)
+    {
         //prepare client data
         $client_data = array();
         $client_contact_data = array("user_type" => "client", "is_primary_contact" => 1);
@@ -1603,18 +1641,19 @@ class eDeclaration_10k extends Security_Controller {
         return array(
             "client_data" => $client_data,
             "client_contact_data" => $client_contact_data,
-            "custom_field_values_array" => $custom_field_values_array
+            "custom_field_values_array" => $custom_field_values_array,
         );
     }
 
-    private function _get_existing_custom_field_id($title = "") {
+    private function _get_existing_custom_field_id($title = "")
+    {
         if (!$title) {
             return false;
         }
 
         $custom_field_data = array(
             "title" => $title,
-            "related_to" => "clients"
+            "related_to" => "clients",
         );
 
         $existing = $this->Custom_fields_model->get_one_where(array_merge($custom_field_data, array("deleted" => 0)));
@@ -1623,7 +1662,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    private function _prepare_headers_for_submit($headers_row, $headers) {
+    private function _prepare_headers_for_submit($headers_row, $headers)
+    {
         foreach ($headers_row as $key => $header) {
             if (!((count($headers) - 1) < $key)) { //skip default headers
                 continue;
@@ -1641,7 +1681,8 @@ class eDeclaration_10k extends Security_Controller {
         return $headers;
     }
 
-    function save_client_from_excel_file() {
+    public function save_client_from_excel_file()
+    {
         $this->_validate_client_manage_access();
 
         if (!$this->validate_import_clients_file_data(true)) {
@@ -1649,7 +1690,7 @@ class eDeclaration_10k extends Security_Controller {
         }
 
         $file_name = $this->request->getPost('file_name');
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php";
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -1698,7 +1739,8 @@ class eDeclaration_10k extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    private function _save_custom_fields_of_client($client_id, $custom_field_values_array) {
+    private function _save_custom_fields_of_client($client_id, $custom_field_values_array)
+    {
         if (!$custom_field_values_array) {
             return false;
         }
@@ -1708,7 +1750,7 @@ class eDeclaration_10k extends Security_Controller {
                 "related_to_type" => "clients",
                 "related_to_id" => $client_id,
                 "custom_field_id" => $key,
-                "value" => $custom_field_value
+                "value" => $custom_field_value,
             );
 
             $field_value_data = clean_data($field_value_data);
@@ -1717,7 +1759,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    private function _get_client_group_ids($client_groups_data) {
+    private function _get_client_group_ids($client_groups_data)
+    {
         $explode_client_groups = explode(", ", $client_groups_data);
         if (!($explode_client_groups && count($explode_client_groups))) {
             return false;
@@ -1749,7 +1792,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    private function _get_allowed_headers() {
+    private function _get_allowed_headers()
+    {
         return array(
             "company_name",
             "contact_first_name",
@@ -1765,11 +1809,12 @@ class eDeclaration_10k extends Security_Controller {
             "vat_number",
             "client_groups",
             "currency",
-            "currency_symbol"
+            "currency_symbol",
         );
     }
 
-    private function _store_headers_position($headers_row = array()) {
+    private function _store_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
 
         //check if all headers are correct and on the right position
@@ -1810,7 +1855,8 @@ class eDeclaration_10k extends Security_Controller {
         return $final_headers;
     }
 
-    function validate_import_clients_file() {
+    public function validate_import_clients_file()
+    {
         $this->access_only_allowed_members();
 
         $file_name = $this->request->getPost("file_name");
@@ -1827,7 +1873,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function validate_import_clients_file_data($check_on_submit = false) {
+    public function validate_import_clients_file_data($check_on_submit = false)
+    {
         $this->access_only_allowed_members();
 
         $table_data = "";
@@ -1838,7 +1885,7 @@ class eDeclaration_10k extends Security_Controller {
 
         $file_name = $this->request->getPost("file_name");
 
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php";
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -1952,7 +1999,8 @@ class eDeclaration_10k extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data, $has_contact_first_name, $headers = array()) {
+    private function _row_data_validation_and_get_error_message($key, $data, $has_contact_first_name, $headers = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
@@ -1990,17 +2038,20 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function download_sample_excel_file() {
+    public function download_sample_excel_file()
+    {
         $this->access_only_allowed_members();
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-clients-sample.xlsx"))));
     }
 
-    function gdpr() {
+    public function gdpr()
+    {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
         return $this->template->view("edeclaration_10k/contacts/gdpr", $view_data);
     }
 
-    function export_my_data() {
+    public function export_my_data()
+    {
         if (get_setting("enable_gdpr") && get_setting("allow_clients_to_export_their_data")) {
             $user_info = $this->Users_model->get_one($this->login_user->id);
 
@@ -2029,7 +2080,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    private function _make_export_data($user_info) {
+    private function _make_export_data($user_info)
+    {
         $required_general_info_array = array("first_name", "last_name", "email", "job_title", "phone", "gender", "skype", "created_at");
 
         $data = strtoupper(app_lang("general_info")) . "\n";
@@ -2080,7 +2132,8 @@ class eDeclaration_10k extends Security_Controller {
         return $data;
     }
 
-    function request_my_account_removal() {
+    public function request_my_account_removal()
+    {
         if (get_setting("enable_gdpr") && get_setting("clients_can_request_account_removal")) {
 
             $user_id = $this->login_user->id;
@@ -2097,7 +2150,8 @@ class eDeclaration_10k extends Security_Controller {
 
     /* load expenses tab  */
 
-    function expenses($client_id) {
+    public function expenses($client_id)
+    {
         $this->can_access_expenses();
         $this->_validate_client_view_access($client_id);
 
@@ -2112,7 +2166,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function contracts($client_id) {
+    public function contracts($client_id)
+    {
         $this->access_only_allowed_members();
 
         if ($client_id) {
@@ -2126,7 +2181,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function edeclaration_10k_arriving_list() {
+    public function edeclaration_10k_arriving_list()
+    {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2143,7 +2199,8 @@ class eDeclaration_10k extends Security_Controller {
         return $this->template->view("edeclaration_10k/edeclaration_10k_arriving_list", $view_data);
     }
 
-    private function make_access_permissions_view_data() {
+    private function make_access_permissions_view_data()
+    {
 
         $access_invoice = $this->get_access_info("invoice");
         $view_data["show_invoice_info"] = (get_setting("module_invoice") && $access_invoice->access_type == "all") ? true : false;
@@ -2170,7 +2227,8 @@ class eDeclaration_10k extends Security_Controller {
         return $view_data;
     }
 
-    function proposals($client_id) {
+    public function proposals($client_id)
+    {
         validate_numeric_value($client_id);
         $this->access_only_allowed_members();
 
@@ -2185,7 +2243,8 @@ class eDeclaration_10k extends Security_Controller {
         }
     }
 
-    function switch_account($user_id) {
+    public function switch_account($user_id)
+    {
         validate_numeric_value($user_id);
         $this->access_only_clients();
 
@@ -2195,7 +2254,7 @@ class eDeclaration_10k extends Security_Controller {
             'status' => 'active',
             'deleted' => 0,
             'disable_login' => 0,
-            'user_type' => 'client'
+            'user_type' => 'client',
         );
 
         $user_info = $this->Users_model->get_one_where($options);
@@ -2209,12 +2268,12 @@ class eDeclaration_10k extends Security_Controller {
         app_redirect('dashboard/view');
     }
 
-
-    public function scheduled_departures_arrivals_list() {
+    public function scheduled_departures_arrivals_list()
+    {
         $this->access_only_allowed_members();
-        
+
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
-        
+
         $options = array(
             "q_type" => $this->input->post("q_type"), // 1 for departures, 2 for arrivals
             "custom_fields" => $custom_fields,
@@ -2224,64 +2283,62 @@ class eDeclaration_10k extends Security_Controller {
             "quick_filter" => $this->input->post("quick_filter"),
             "created_by" => $this->input->post("created_by"),
             "client_groups" => $this->allowed_client_groups,
-            "label_id" => $this->input->post('label_id')
+            "label_id" => $this->input->post('label_id'),
         );
-    
+
         $all_options = append_server_side_filtering_commmon_params($options);
-    
+
         $result = $this->eDeclaration_10k_Model->get_details($all_options);
-    
+
         if (get_array_value($all_options, "server_side")) {
             $list_data = get_array_value($result, "data");
         } else {
             $list_data = $result->result();
             $result = array();
         }
-    
+
         $now = new DateTime(); // Get current date and time
-    
+
         $result_data = array();
         foreach ($list_data as $data) {
             $departure_date = !empty($data->departure_date) ? new DateTime($data->departure_date) : null;
             $arrival_date = !empty($data->arrival_date) ? new DateTime($data->arrival_date) : null;
-    
+
             // Check if the departure or arrival date is still upcoming
             if (($departure_date && $departure_date >= $now) || ($arrival_date && $arrival_date >= $now)) {
                 $result_data[] = $this->_make_row($data, $custom_fields);
             }
         }
-    
+
         $result["data"] = $result_data;
-    
+
         echo json_encode($result);
     }
-    
-    
-    
-    
-    
-    public function arriving100k_details() {
+
+    public function arriving100k_details()
+    {
+        $this->check_module_availability("module_edeclaration");
+        $this->access_only_allowed_members();
         $ref_number = $this->request->getPost('ref_number');
         $id = $this->request->getPost('id');
-    
+
         $this->validate_submitted_data(array(
-            "id" => "numeric"
+            "id" => "numeric",
         ));
-    
-        $options = array('ref_number'=> $ref_number);
-           
+
+        $options = array('ref_number' => $ref_number);
 
         $view_data['passenger_info'] = $this->PassengerDetails_model->get_details($options)->getRow();
         $view_data['travel_info'] = $this->TravelDetails_model->get_details($options)->getRow();
         $view_data['materials'] = $this->eDeclaration_10k_Model->get_details($options)->getResult();
-    
+
         return $this->template->rander('edeclaration_10k/Dashboard', $view_data);
     }
-    
 
     /* load tasks tab  */
 
-    function tasks($client_id) {
+    public function tasks($client_id)
+    {
         $this->_validate_client_view_access($client_id);
 
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
