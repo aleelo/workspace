@@ -45,9 +45,9 @@
                 <h2>Leave Applications by Department</h2>
             </div>
 
-            <div class="chart-container" id="employee_leave_chart">
+            <!-- <div class="chart-container" id="employee_leave_chart">
                 <h2>Total Leave Days by Employee</h2>
-            </div>
+            </div> -->
 
             
 
