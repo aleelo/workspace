@@ -272,7 +272,7 @@
             $('.approve-icon').on('click', function (event) {
                 event.preventDefault();
                 const passengerId = "<?php echo $passenger_info?->id?>"
-                alert('clicked');
+                // alert('clicked');
                 console.log("Approve clicked for ID:", passengerId); // Debugging
                 updateStatus(passengerId, 'approved');
             });
