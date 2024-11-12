@@ -10,6 +10,55 @@ class Leave_applications_model extends Crud_model {
         $this->table = 'leave_applications';
         parent::__construct($this->table);
     }
+    public function get_months() {
+        // Return list of months
+        return [
+            '01' => 'January',
+            '02' => 'February',
+            '03' => 'March',
+            '04' => 'April',
+            '05' => 'May',
+            '06' => 'June',
+            '07' => 'July',
+            '08' => 'August',
+            '09' => 'September',
+            '10' => 'October',
+            '11' => 'November',
+            '12' => 'December'
+        ];
+    }
+    public function get_leave_report($month, $department_id) {
+        // Filter leave applications based on the selected month and department
+        $leave_applications_table = $this->db->prefixTable('leave_applications');
+        $users_table = $this->db->prefixTable('users');
+        $departments_table = $this->db->prefixTable('departments');
+
+        $this->db->select('u.first_name, u.last_name, d.nameEn as department_name, la.start_date, la.end_date, la.total_days');
+        $this->db->from("$leave_applications_table la");
+        $this->db->join("$users_table u", 'u.id = la.applicant_id', 'left');
+        $this->db->join("$departments_table d", 'd.id = la.department_id', 'left');
+        $this->db->where('la.deleted', 0); // Filter non-deleted records
+        
+        if (!empty($month)) {
+            $this->db->where('MONTH(la.start_date)', $month);
+        }
+
+        if (!empty($department_id)) {
+            $this->db->where('la.department_id', $department_id);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_director_department_id() {
+        $Users_model = model("App\Models\Users_model");
+        $user = $Users_model->get_access_info($Users_model->login_user_id());
+
+        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.dep_head_id = us.id WHERE us.id = ?", [$user->id])->getRow();
+
+        return $dep_info ? $dep_info->id : null;
+    }
 
     function get_details_info($id = 0) {
         $leave_applications_table = $this->db->prefixTable('leave_applications');
@@ -28,15 +77,37 @@ class Leave_applications_model extends Crud_model {
         return $this->db->query($sql)->getRow();
     }
 
-    public function get_director_department_id(){
-        
-        $Users_model = model("App\Models\Users_model");
-        $user = $Users_model->get_access_info($Users_model->login_user_id());
-
-        $dep_info = $this->db->query("SELECT dp.id FROM rise_departments dp LEFT JOIN rise_users us ON dp.dep_head_id = us.id WHERE us.id = $user->id")->getRow();
-
-        return $dep_info?->id;
+    public function get_departments() {
+        // Get all departments from the rise_departments table
+        $this->db->select('id, nameEn');
+        $this->db->from('rise_departments');
+        $query = $this->db->get();
+        return $query->result();
     }
+    public function get_filtered_leave_report($month, $department_id) {
+        // Filter leave applications based on the selected month and department
+        $leave_applications_table = $this->db->prefixTable('leave_applications');
+        $users_table = $this->db->prefixTable('users');
+        $departments_table = $this->db->prefixTable('departments');
+
+        $this->db->select('u.first_name, u.last_name, d.nameEn as department_name, la.start_date, la.end_date, la.total_days');
+        $this->db->from("$leave_applications_table la");
+        $this->db->join("$users_table u", 'u.id = la.applicant_id', 'left');
+        $this->db->join("$departments_table d", 'd.id = la.department_id', 'left');
+        $this->db->where('la.deleted', 0); // Filter non-deleted records
+        
+        if (!empty($month)) {
+            $this->db->where('MONTH(la.start_date)', $month);
+        }
+
+        if (!empty($department_id)) {
+            $this->db->where('la.department_id', $department_id);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
 
 
     function get_list($options = array()) {

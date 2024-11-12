@@ -281,7 +281,7 @@
             $('.reject-icon').on('click', function (event) {
                 event.preventDefault();
                 const passengerId = "<?php echo $passenger_info?->id?>";
-                console.log("Reject clicked for ID:", passengerId); // Debugging
+                // console.log("Reject clicked for ID:", passengerId); // Debugging
                 updateStatus(passengerId, 'rejected');
             });
 
@@ -296,7 +296,7 @@
                     data: JSON.stringify({ id: id, status: status,'rise_csrf_token': csrfHash }),
                     success: function (data) {
                         if (data.success) {
-                            alert('Status updated successfully!');
+                            // alert('Status updated successfully!');
                             location.reload(); // Optionally reload page to reflect changes
                         } else {
                             alert('Error updating status: ' + data.message);

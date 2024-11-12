@@ -9,7 +9,22 @@ class Team_members extends Security_Controller
     {
         parent::__construct();
         $this->access_only_team_members();
+        
     }
+    public function index1()
+    {
+        $db = \Config\Database::connect();
+
+        // Fetch all departments to populate the department dropdown
+        $departments = $db->table('rise_departments')
+                          ->select('id, nameEn')
+                          ->where('deleted', 0)
+                          ->get()
+                          ->getResultArray();
+
+        return view('leave_report', ['departments' => $departments]);
+    }
+    
 
     // private function can_view_team_members_contact_info()
     // {
@@ -494,27 +509,22 @@ class Team_members extends Security_Controller
         }
     }
 
-    function tickets_chart_report()
-    {
-        $this->_validate_tickets_report_access();
+    // function tickets_chart_report()
+    // {
+    //     $this->_validate_tickets_report_access();
 
-        $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
-        $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
-        $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
+    //     $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
+    //     $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
+    //     $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
 
-        return $this->template->rander("tickets/reports/chart_report_container", $view_data);
-    }
+    //     return $this->template->rander("tickets/reports/chart_report_container", $view_data);
+    // }
 
-    private function _get_assiged_to_dropdown()
-    {
-        $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
 
-        $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
-        foreach ($assigned_to_list as $key => $value) {
-            $assigned_to_dropdown[] = array("id" => $key, "text" => $value);
-        }
-        return $assigned_to_dropdown;
-    }
+    
+    
+    
+
 
     // public function charts()
     // {
