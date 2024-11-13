@@ -184,7 +184,7 @@ class Training extends Security_Controller {
     /* insert or update a client */
     public function send_appointment_created_email($data = array()) {
 
-        $HRM_EMAIL = $data['hr_email'];
+        $HRM_EMAIL = $data['hrm_email'];
         
 
         $email_template = $this->Email_templates_model->get_final_template("employee_training_email", true);
@@ -200,29 +200,25 @@ class Training extends Security_Controller {
         $parser_data["SOFT_SKILLS"] = $data['SOFT_SKILLS'];
         $parser_data["DELIVERY_MODE"] = $data['DELIVERY_MODE'];
         $parser_data["PLATFORM"] = $data['SOFT_SKILLS'];
-        
-       
-      
-       
 
-          $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser_data["SITE_URL"] = get_uri();
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
  
-        $host_message =  get_array_value($email_template, "message_default");
-        $host_subject =  get_array_value($email_template, "subject_default");
+        $hrm_message =  get_array_value($email_template, "message_default");
+        $hrm_subject =  get_array_value($email_template, "subject_default");
 
-        $host_message = $this->parser->setData($parser_data)->renderString($host_message);
-        $host_subject = $this->parser->setData($parser_data)->renderString($host_subject);
+        $hrm_subject = $this->parser->setData($parser_data)->renderString($hrm_subject);
+        $hrm_message = $this->parser->setData($parser_data)->renderString($hrm_message);
 
         // if(!empty($HRM_EMAIL)){
         //     $HRM_EMAIL =  send_app_mail($HRM_EMAIL);
         // }
 
-        if(!empty($host_email)){
-            $hrm_email =  send_app_mail($host_email, $host_subject, $host_message);
+        if(!empty($HRM_EMAIL)){
+            $HRM_EMAIL =  send_app_mail($HRM_EMAIL, $hrm_subject, $hrm_message);
         }
  
     }
@@ -323,7 +319,7 @@ class Training extends Security_Controller {
                     'SOFT_SKILLS' => $traininginfo->soft_skills,
                     'DELIVERY_MODE' => $traininginfo->delivery_mode,
                     'PLATFORM' => $traininginfo->platform,
-                    'hr_email' => $hrm_info->private_email
+                    'hrm_email' => $hrm_info->private_email
                     
                 
                      ,  // The names in bullet format with a bold header
