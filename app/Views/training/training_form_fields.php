@@ -300,7 +300,8 @@
         <label for="training_participant" class=" <?php echo $label_column; ?>"><?php echo 'Participant'; ?></label>
         <div class=" col-md-10">
             <?php
-            $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
+            // $participant = [''=>'-- choose a participant --','Employees'=>'Employees','Units'=>'Units','Sections'=>'Sections','Departments'=>'Departments'];
+            $participant = [''=>'-- choose a participant --','Employees'=>'Employees'];
             echo form_dropdown(array(
                 "id" => "training_participant",
                 "name" => "training_participant",

@@ -202,6 +202,8 @@ class Training extends Security_Controller {
         $parser_data["LOCATION"] = $data['LOCATION'];
         $parser_data["OBJECTIVES"] = $data['OBJECTIVES'];
         $parser_data["HRM_NAME"] = $data['HRM_NAME'];
+        $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
+        $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
 
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
@@ -299,6 +301,13 @@ class Training extends Security_Controller {
         $hrm_info = $this->db->query("SELECT us.id,concat(us.first_name,' ',us.last_name) as hrm_name,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
         $trainer_info = $this->db->query("SELECT tr.trainer as trainer_name FROM rise_trainers tr LEFT JOIN rise_training t ON t.trainer_id = tr.id WHERE t.id = $save_id")->getRow();
 
+        $regard_name = $this->login_user->first_name.' '.$this->login_user->last_name;
+        $loginuser = $this->login_user->id;
+        $regard_position = $this->db->query("SELECT tj.job_title_en as job_title 
+            FROM rise_team_member_job_info tj 
+            LEFT JOIN rise_users us ON us.id = tj.user_id 
+            WHERE us.id = $loginuser")->getRow();
+
         if ($save_id) {
 
             if(!$training_id){
@@ -324,10 +333,12 @@ class Training extends Security_Controller {
                     'LOCATION' => $traininginfo->training_location,
                     'OBJECTIVES' => $traininginfo->objectives,
                     'HRM_NAME' => $hrm_info->hrm_name,
-                    'HRM_email' => $hrm_info->private_email
+                    'HRM_email' => $hrm_info->private_email,
+                    'REGARD_NAME' => $regard_name,
+                    'REGARD_POSITION' => $regard_position->job_title,
                     
                 
-                     ,  // The names in bullet format with a bold header
+                       // The names in bullet format with a bold header
                 ];
         
                 $r = $this->send_training_hrm_created_email($training_email_data);

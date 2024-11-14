@@ -74,12 +74,12 @@ class Email_templates extends Security_Controller {
         $templates_array["Training"] = array(
             
             "training_created_to_hrm_email" =>array("TRAINING_ID", "TRAINING_NAME", "TRAINER_NAME", "TRAINER_TYPE", "TECHNICAL_SKILL", "SOFT_SKILL", 
-            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES","HRM_NAME", "LOGO_URL", "SIGNATURE", 
-            "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
+            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES","HRM_NAME", "REGARD_NAME", "REGARD_POSITION", 
+            "LOGO_URL", "SIGNATURE", "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
 
             "training_created_to_participant_email" =>array("TRAINING_ID", "TRAINING_NAME", "TRAINER_NAME", "TRAINER_TYPE", "TECHNICAL_SKILL", "SOFT_SKILL", 
-            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES", "HRM_NAME", "LOGO_URL", "SIGNATURE", 
-            "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
+            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES", "PARTICIPANT_NAME", "REGARD_NAME", "REGARD_POSITION",
+            "LOGO_URL", "SIGNATURE", "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
 
        );
 
