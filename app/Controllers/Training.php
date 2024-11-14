@@ -226,6 +226,55 @@ class Training extends Security_Controller {
         }
  
     }
+
+    /* insert or update a client */
+    public function send_training_created_email_participant($data = array()) {
+
+        $PARTICIPANT_EMAIL = $data['PARTICIPANT_EMAIL'];
+
+        $email_template = $this->Email_templates_model->get_final_template("training_created_to_participant_email", true);
+  
+        $parser_data["TRAINING_ID"] = $data['TRAINING_ID'];
+        $parser_data["TRAINING_NAME"] = $data['TRAINING_NAME'];
+        $parser_data["TRAINER_NAME"] = $data['TRAINER_NAME'];
+        $parser_data["TRAINER_TYPE"] = $data['TRAINER_TYPE'];
+        $parser_data["TECHNICAL_SKILL"] = $data['TECHNICAL_SKILL'];
+        $parser_data["SOFT_SKILL"] = $data['SOFT_SKILL'];
+        $parser_data["DELIVERY_MODE"] = $data['DELIVERY_MODE'];
+        $parser_data["PLATFORM"] = $data['PLATFORM'];
+        $parser_data["START_DATE"] = $data['START_DATE'];
+        $parser_data["END_DATE"] = $data['END_DATE'];
+        $parser_data["DURATION"] = $data['DURATION'];
+        $parser_data["LOCATION"] = $data['LOCATION'];
+        $parser_data["OBJECTIVES"] = $data['OBJECTIVES'];
+        $parser_data["HRM_NAME"] = $data['HRM_NAME'];
+        $parser_data["PARTICIPANT_NAME"] = $data['PARTICIPANT_NAME'];
+        $parser_data["REGARD_NAME"] = $data['REGARD_NAME'];
+        $parser_data["REGARD_POSITION"] = $data['REGARD_POSITION'];
+
+        $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["SITE_URL"] = get_uri();
+        $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
+        $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
+ 
+        $hrm_message =  get_array_value($email_template, "message_default");
+        $hrm_subject =  get_array_value($email_template, "subject_default");
+
+        $hrm_subject = $this->parser->setData($parser_data)->renderString($hrm_subject);
+        $hrm_message = $this->parser->setData($parser_data)->renderString($hrm_message);
+
+        // if(!empty($PARTICIPANT_EMAIL)){
+        //     $PARTICIPANT_EMAIL =  send_app_mail($PARTICIPANT_EMAIL);
+        // }
+
+        if(!empty($PARTICIPANT_EMAIL)){
+            $PARTICIPANT_EMAIL =  send_app_mail($PARTICIPANT_EMAIL, $hrm_subject, $hrm_message);
+        }
+ 
+    }
+
+
     function save() {
         
         $training_id = $this->request->getPost('id');
@@ -242,7 +291,6 @@ class Training extends Security_Controller {
         $new_files = unserialize($files_data);
 
         $participant = $this->request->getPost('training_participant');
-
 
         $department_ids = ($participant === 'Departments') ? implode(',', $this->request->getPost('training_department_ids')) : null;
         $section_ids = ($participant === 'Sections') ? implode(',', $this->request->getPost('training_section_ids')) : null;
@@ -318,6 +366,49 @@ class Training extends Security_Controller {
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $traininginfo?->created_by")->getRow();
 
+                $participant_with_names = '';
+                $participants = [];
+                $participant_with_header = ucfirst($participant);
+    
+                if ($participant === 'Departments' && !empty($department_ids)) {
+                    $department_info = $this->db->query("SELECT dp.nameEn as name, dp.email FROM rise_departments dp WHERE id IN ($department_ids)")
+                        ->getResultArray();
+                    $participant_with_names = implode('', array_map(function($info) use (&$participants) {
+                        $participants[] = ['name' => $info['name'], 'email' => $info['email']];  // Collect participant names and emails
+                        return '<li>' . $info['name'] . '</li>';
+                    }, $department_info));
+                    $participant_with_header = "<strong>Departments List</strong>";
+
+                } elseif ($participant === 'Sections' && !empty($section_ids)) {
+                    $section_info = $this->db->query("SELECT se.nameEn as name, se.email FROM rise_sections se WHERE id IN ($section_ids)")
+                        ->getResultArray();
+                    $participant_with_names = implode('', array_map(function($info) use (&$participants) {
+                        $participants[] = ['name' => $info['name'], 'email' => $info['email']];
+                        return '<li>' . $info['name'] . '</li>';
+                    }, $section_info));
+                    $participant_with_header = "<strong>Sections List</strong>";
+
+                } elseif ($participant === 'Units' && !empty($unit_ids)) {
+                    $unit_info = $this->db->query("SELECT un.nameEn as name, un.email FROM rise_units un WHERE id IN ($unit_ids)")
+                        ->getResultArray();
+                    $participant_with_names = implode('', array_map(function($info) use (&$participants) {
+                        $participants[] = ['name' => $info['name'], 'email' => $info['email']];
+                        return '<li>' . $info['name'] . '</li>';
+                    }, $unit_info));
+                    $participant_with_header = "<strong>Units List</strong>";
+                    
+                } elseif ($participant === 'Employees' && !empty($employee_ids)) {
+                    $employee_info = $this->db->query("SELECT CONCAT(first_name, ' ', last_name) AS name, private_email as email FROM rise_users WHERE id IN ($employee_ids)")
+                        ->getResultArray();
+                    $participant_with_names = implode('', array_map(function($info) use (&$participants) {
+                        $participants[] = ['name' => $info['name'], 'email' => $info['email']];
+                        return '<li>' . $info['name'] . '</li>';
+                    }, $employee_info));
+                    $participant_with_header = "<strong>Employees List</strong>";
+                }
+
+                $participant_with_names = $participant_with_header  . $participant_with_names ;
+
                 $training_email_data = [
                     'TRAINING_ID' => $save_id,
                     'TRAINING_NAME' => $traininginfo->training_name,
@@ -336,12 +427,19 @@ class Training extends Security_Controller {
                     'HRM_email' => $hrm_info->private_email,
                     'REGARD_NAME' => $regard_name,
                     'REGARD_POSITION' => $regard_position->job_title,
+                    'PARTICIPANT_WITH_NAMES' => $participant_with_names,  // The names in bullet format with a bold header
                     
-                
                        // The names in bullet format with a bold header
                 ];
         
                 $r = $this->send_training_hrm_created_email($training_email_data);
+
+                  // Send email to each participant with their name included
+                  foreach ($participants as $participant) {
+                    $training_email_data['PARTICIPANT_EMAIL'] = $participant['email'];
+                    $training_email_data['PARTICIPANT_NAME'] = $participant['name'];
+                    $this->send_training_created_email_participant($training_email_data);
+                }
 
             }
 
