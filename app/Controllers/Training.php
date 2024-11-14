@@ -182,24 +182,26 @@ class Training extends Security_Controller {
    
 
     /* insert or update a client */
-    public function send_appointment_created_email($data = array()) {
+    public function send_training_hrm_created_email($data = array()) {
 
-        $HRM_EMAIL = $data['hrm_email'];
-        
+        $HRM_EMAIL = $data['HRM_email'];
 
-        $email_template = $this->Email_templates_model->get_final_template("employee_training_email", true);
+        $email_template = $this->Email_templates_model->get_final_template("training_created_to_hrm_email", true);
   
         $parser_data["TRAINING_ID"] = $data['TRAINING_ID'];
         $parser_data["TRAINING_NAME"] = $data['TRAINING_NAME'];
+        $parser_data["TRAINER_NAME"] = $data['TRAINER_NAME'];
+        $parser_data["TRAINER_TYPE"] = $data['TRAINER_TYPE'];
+        $parser_data["TECHNICAL_SKILL"] = $data['TECHNICAL_SKILL'];
+        $parser_data["SOFT_SKILL"] = $data['SOFT_SKILL'];
+        $parser_data["DELIVERY_MODE"] = $data['DELIVERY_MODE'];
+        $parser_data["PLATFORM"] = $data['PLATFORM'];
         $parser_data["START_DATE"] = $data['START_DATE'];
         $parser_data["END_DATE"] = $data['END_DATE'];
-        $parser_data["TRAINING_DURATION"] = $data['TRAINING_DURATION'];
-        $parser_data["TRAINING_LOCATION"] = $data['TRAINING_LOCATION'];
-        $parser_data["TYPE"] = $data['TYPE'];
-        $parser_data["TECHNICAL_SKILLS"] = $data['TECHNICAL_SKILLS'];
-        $parser_data["SOFT_SKILLS"] = $data['SOFT_SKILLS'];
-        $parser_data["DELIVERY_MODE"] = $data['DELIVERY_MODE'];
-        $parser_data["PLATFORM"] = $data['SOFT_SKILLS'];
+        $parser_data["DURATION"] = $data['DURATION'];
+        $parser_data["LOCATION"] = $data['LOCATION'];
+        $parser_data["OBJECTIVES"] = $data['OBJECTIVES'];
+        $parser_data["HRM_NAME"] = $data['HRM_NAME'];
 
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
@@ -294,8 +296,8 @@ class Training extends Security_Controller {
 
         $save_id = $this->Training_model->ci_save($data, $training_id);
 
-        $hrm_info = $this->db->query("SELECT us.id,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
-
+        $hrm_info = $this->db->query("SELECT us.id,concat(us.first_name,' ',us.last_name) as hrm_name,us.private_email FROM rise_users us LEFT JOIN rise_roles rl ON us.role_id = rl.id WHERE rl.title = 'HRM'")->getRow();
+        $trainer_info = $this->db->query("SELECT tr.trainer as trainer_name FROM rise_trainers tr LEFT JOIN rise_training t ON t.trainer_id = tr.id WHERE t.id = $save_id")->getRow();
 
         if ($save_id) {
 
@@ -310,22 +312,25 @@ class Training extends Security_Controller {
                 $training_email_data = [
                     'TRAINING_ID' => $save_id,
                     'TRAINING_NAME' => $traininginfo->training_name,
-                    'START_DATE' => $traininginfo->start_date,
-                    'END_DATE' => $traininginfo->end_date,
-                    'TRAINING_DURATION' => $traininginfo->training_duration,
-                    'TRAINING_LOCATION' => $traininginfo->training_location,
-                    'TYPE' => $traininginfo->type,
-                    'TECHNICAL_SKILLS' => $traininginfo->technical_skills,
-                    'SOFT_SKILLS' => $traininginfo->soft_skills,
+                    'TRAINER_NAME' => $trainer_info->trainer_name,
+                    'TRAINER_TYPE' => $traininginfo->type,
+                    'TECHNICAL_SKILL' => $traininginfo->technical_skills,
+                    'SOFT_SKILL' => $traininginfo->soft_skills,
                     'DELIVERY_MODE' => $traininginfo->delivery_mode,
                     'PLATFORM' => $traininginfo->platform,
-                    'hrm_email' => $hrm_info->private_email
+                    'START_DATE' => $traininginfo->start_date,
+                    'END_DATE' => $traininginfo->end_date,
+                    'DURATION' => $traininginfo->training_duration,
+                    'LOCATION' => $traininginfo->training_location,
+                    'OBJECTIVES' => $traininginfo->objectives,
+                    'HRM_NAME' => $hrm_info->hrm_name,
+                    'HRM_email' => $hrm_info->private_email
                     
                 
                      ,  // The names in bullet format with a bold header
                 ];
         
-                $r = $this->send_appointment_created_email($training_email_data);
+                $r = $this->send_training_hrm_created_email($training_email_data);
 
             }
 

@@ -71,6 +71,18 @@ class Email_templates extends Security_Controller {
             ];
         }
 
+        $templates_array["Training"] = array(
+            
+            "training_created_to_hrm_email" =>array("TRAINING_ID", "TRAINING_NAME", "TRAINER_NAME", "TRAINER_TYPE", "TECHNICAL_SKILL", "SOFT_SKILL", 
+            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES","HRM_NAME", "LOGO_URL", "SIGNATURE", 
+            "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
+
+            "training_created_to_participant_email" =>array("TRAINING_ID", "TRAINING_NAME", "TRAINER_NAME", "TRAINER_TYPE", "TECHNICAL_SKILL", "SOFT_SKILL", 
+            "DELIVERY_MODE", "PLATFORM", "START_DATE", "END_DATE", "DURATION", "LOCATION", "OBJECTIVES", "HRM_NAME", "LOGO_URL", "SIGNATURE", 
+            "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
+
+       );
+
         if (get_setting("module_announcement")) {
             $templates_array["announcement"] = array(
                 "announcement_created" => array("ANNOUNCEMENT_TITLE", "ANNOUNCEMENT_CONTENT", "USER_NAME", "APP_TITLE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
@@ -168,11 +180,7 @@ class Email_templates extends Security_Controller {
             "leave_request_rejected" => array("LEAVE_ID", "LEAVE_TITLE", "EMPLOYEE_NAME", "LEAVE_URL", "LOGO_URL", "SIGNATURE", "LEAVE_STATUS","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),
  
         );
-        $templates_array["Training"] = array(
-             "employee_training_email" =>array("TRAINING_ID","TRAINING_NAME", "START_DATE", "END_DATE", "TRAINING_DURATION", "TRAINING_LOCATION", "TYPE", "TECHNICAL_SKILLS", "SOFT_SKILLS", "DELIVERY_MODE", "PLATFORM", "LOGO_URL", "SIGNATURE", "EMAIL_HEADER_URL", "EMAIL_FOOTER_URL"),
-
-
-        );
+       
         
         $templates_array["payers"] = array(
             "new_payer_registered" => array("PAYER_ID", "PAYER_NAME", "REG_NO", "START_DATE", "END_DATE", "LOGO_URL", "SIGNATURE","EMAIL_HEADER_URL","EMAIL_FOOTER_URL"),

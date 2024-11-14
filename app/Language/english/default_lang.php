@@ -122,8 +122,12 @@ $lang["section_head"] = "Section Head";
 $lang["section_remarks"] = "Remarks";
 $lang["section_info"] = "Section Info";
 $lang["section_details"] = "Section Details";
-$lang["employee_training_email"] = "Traning Email";
 $lang["Training"] = "Traning Email";
+
+//Training Email
+$lang["training_created_to_hrm_email"] = "Created HRM Email";
+$lang["training_created_to_participant_email"] = "Created Participant Email";
+
 
 //edeclaration
 // Bachelor of Science in Economics 
