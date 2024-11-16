@@ -217,10 +217,6 @@ class Training extends Security_Controller {
         $hrm_subject = $this->parser->setData($parser_data)->renderString($hrm_subject);
         $hrm_message = $this->parser->setData($parser_data)->renderString($hrm_message);
 
-        // if(!empty($HRM_EMAIL)){
-        //     $HRM_EMAIL =  send_app_mail($HRM_EMAIL);
-        // }
-
         if(!empty($HRM_EMAIL)){
             $HRM_EMAIL =  send_app_mail($HRM_EMAIL, $hrm_subject, $hrm_message);
         }
