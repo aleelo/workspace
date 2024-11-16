@@ -17,26 +17,53 @@
         <div class="card-body">
             <input type="hidden" name="first_name" value="<?php echo $user_info->first_name; ?>" />
             <input type="hidden" name="last_name" value="<?php echo $user_info->last_name; ?>" />
-            <div class="form-group">
-                <div class="row">
-                    
-                    <label for="login_type" class=" col-md-2"><?php echo 'Login Type'; ?></label>
-                    <div class="col-md-10">
 
-                        <?php
-                        echo form_dropdown(array(
-                            "id" => "login_type",
-                            "name" => "login_type",
-                            "class" => "form-control select2",
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required")
-                        ),['azure_login' => 'Azure Login','normal_login'=>'Normal Login'],['Azure Login' => $user_info->login_type]);
-                        ?>
+        <!----------------------------------------- Login Type  ------------------------------------>
+
+            <?php if ($can_edit_profile) { ?>
+                <div class="form-group">
+                    <div class="row">
+                        
+                        <label for="login_type" class=" col-md-2"><?php echo 'Login Type'; ?></label>
+                        <div class="col-md-10">
+                            <?php
+                            echo form_dropdown(array(
+                                "id" => "login_type",
+                                "name" => "login_type",
+                                "class" => "form-control select2",
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required")
+                            ),['azure_login' => 'Azure Login','normal_login'=>'Normal Login'],['Azure Login' => $user_info->login_type]);
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
+            <?php } else { ?>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="email" class=" col-md-2"><?php echo 'Login Type'; ?></label>
+                        <div class=" col-md-10">
+                            <label for="email" class=" col-md-10"><?php echo $user_info->login_type; ?></label>
+                            <?php
+                            echo form_dropdown(array(
+                                "id" => "login_type",
+                                "name" => "login_type",
+                                "style" => "display:none;",
+                                "class" => "form-control select2",
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required")
+                            ),['azure_login' => 'Azure Login','normal_login'=>'Normal Login'],['Azure Login' => $user_info->login_type]);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+
+            <!----------------------------------------- LogIn Email  ------------------------------------>
+
+            <?php if ($can_edit_profile) { ?>
+                <div class="form-group">
                     <div class="row">
                         <label for="email" class=" col-md-2"><?php echo 'Login '.app_lang('email'); ?></label>
                         <div class=" col-md-10">
@@ -57,6 +84,34 @@
                         </div>
                     </div>
                 </div>
+            <?php } else { ?>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="email" class=" col-md-2"><?php echo 'Login '.app_lang('email'); ?></label>
+                        <div class=" col-md-10">
+                            <label for="email" class="col-md-10"><?php echo $user_info->email; ?></label>
+                            <?php
+                            echo form_input(array(
+                                "id" => "email",
+                                "name" => "email",
+                                "value" => $user_info->email,
+                                "style" => "display:none;",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('email').': Microsoft 365 azure email',
+                                "autocomplete" => "off",
+                                "data-rule-email" => true,
+                                "data-msg-email" => app_lang("enter_valid_email"),
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required"),
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <!----------------------------------------- Private Email  ------------------------------------>
+                        
                 <div class="form-group">
                     <div class="row">
                         <label for="private_email" class=" col-md-2"><?php echo app_lang('private_email'); ?></label>
@@ -79,44 +134,48 @@
                     </div>
                 </div>
 
-            <?php if (($user_info->id == $login_user->id) || $login_user->is_admin) { ?> 
-                <div class="form-group" id="password_div">
-                    <div class="row">
-                        <label for="password" class=" col-md-2"><?php echo app_lang('password'); ?></label>
-                        <div class=" col-md-10">
-                            <?php
-                            echo form_password(array(
-                                "id" => "password",
-                                "name" => "password",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('password'),
-                                "autocomplete" => "off",
-                                "data-rule-minlength" => 6,
-                                "data-msg-minlength" => app_lang("enter_minimum_6_characters"),
-                            ));
-                            ?>
+            <!----------------------------------------- Change Password  ------------------------------------>
+
+
+                <!-- <?php //if (($user_info->id == $login_user->id) || $login_user->is_admin) { ?>  -->
+                <?php if ( $login_user->is_admin) { ?> 
+                    <div class="form-group" id="password_div">
+                        <div class="row">
+                            <label for="password" class=" col-md-2"><?php echo app_lang('password'); ?></label>
+                            <div class=" col-md-10">
+                                <?php
+                                echo form_password(array(
+                                    "id" => "password",
+                                    "name" => "password",
+                                    "class" => "form-control",
+                                    "placeholder" => app_lang('password'),
+                                    "autocomplete" => "off",
+                                    "data-rule-minlength" => 6,
+                                    "data-msg-minlength" => app_lang("enter_minimum_6_characters"),
+                                ));
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group" id="retype_password_div">
-                    <div class="row">
-                        <label for="retype_password" class=" col-md-2"><?php echo app_lang('retype_password'); ?></label>
-                        <div class=" col-md-10">
-                            <?php
-                            echo form_password(array(
-                                "id" => "retype_password",
-                                "name" => "retype_password",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('retype_password'),
-                                "autocomplete" => "off",
-                                "data-rule-equalTo" => "#password",
-                                "data-msg-equalTo" => app_lang("enter_same_value")
-                            ));
-                            ?>
+                    <div class="form-group" id="retype_password_div">
+                        <div class="row">
+                            <label for="retype_password" class=" col-md-2"><?php echo app_lang('retype_password'); ?></label>
+                            <div class=" col-md-10">
+                                <?php
+                                echo form_password(array(
+                                    "id" => "retype_password",
+                                    "name" => "retype_password",
+                                    "class" => "form-control",
+                                    "placeholder" => app_lang('retype_password'),
+                                    "autocomplete" => "off",
+                                    "data-rule-equalTo" => "#password",
+                                    "data-msg-equalTo" => app_lang("enter_same_value")
+                                ));
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php } ?> 
+                <?php } ?> 
 
             <?php if ($user_info->user_type === "staff" && ($login_user->is_admin || (!$user_info->is_admin && get_array_value($login_user->permissions, "can_manage_user_role_and_permissions") && $login_user->id !== $user_info->id))) { ?>
                 <div class="form-group">
@@ -180,13 +239,11 @@
                 </div>
             <?php } ?>
         </div>
-        <?php if ($can_edit_profile) { ?>
             <?php if ($show_submit) { ?>
                 <div class="card-footer rounded-0">
                     <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
                 </div>
             <?php } ?>
-        <?php } ?>
     </div>
     <?php echo form_close(); ?>
 </div>

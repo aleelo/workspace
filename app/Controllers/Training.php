@@ -258,18 +258,14 @@ class Training extends Security_Controller {
         $parser_data["EMAIL_HEADER_URL"] = get_uri('assets/images/email_header.jpg');
         $parser_data["EMAIL_FOOTER_URL"] = get_uri('assets/images/email_footer.png');
  
-        $hrm_message =  get_array_value($email_template, "message_default");
-        $hrm_subject =  get_array_value($email_template, "subject_default");
+        $participant_message =  get_array_value($email_template, "message_default");
+        $participant_subject =  get_array_value($email_template, "subject_default");
 
-        $hrm_subject = $this->parser->setData($parser_data)->renderString($hrm_subject);
-        $hrm_message = $this->parser->setData($parser_data)->renderString($hrm_message);
-
-        // if(!empty($PARTICIPANT_EMAIL)){
-        //     $PARTICIPANT_EMAIL =  send_app_mail($PARTICIPANT_EMAIL);
-        // }
+        $participant_subject = $this->parser->setData($parser_data)->renderString($participant_subject);
+        $participant_message = $this->parser->setData($parser_data)->renderString($participant_message);
 
         if(!empty($PARTICIPANT_EMAIL)){
-            $PARTICIPANT_EMAIL =  send_app_mail($PARTICIPANT_EMAIL, $hrm_subject, $hrm_message);
+            $PARTICIPANT_EMAIL =  send_app_mail($PARTICIPANT_EMAIL, $participant_subject, $participant_message);
         }
  
     }
