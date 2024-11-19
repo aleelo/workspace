@@ -3,6 +3,29 @@
 <input type="hidden" name="view" value="<?php echo isset($view) ? $view : ""; ?>" />
 
 
+<!-----------------------------------------  Appointment Title  ------------------------------------>
+
+
+<div class="form-group">
+    <div class="row">
+        <label for="appointment_title" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('appointment_title'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "appointment_title",
+                "name" => "appointment_title",
+                "value" => $model_info->title,
+                "class" => "form-control company_name_input_section",
+                "placeholder" => app_lang('appointment_title'),
+                //"autofocus" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => app_lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
 <!----------------------------------------- Appointment Date  ------------------------------------>
 
 
