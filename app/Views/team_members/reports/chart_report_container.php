@@ -49,10 +49,6 @@
                 <h2>Total Leave Days by Employee</h2>
             </div>
 
-            
-
-            
-
             <div class="chart-container" id="leave_status_chart">
                 <h2>Leave Applications by Status</h2>
             </div>

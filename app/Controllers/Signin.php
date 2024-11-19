@@ -207,7 +207,7 @@ class Signin extends App_Controller
 
         $params = array(
             'client_id' => $appid,
-            'redirect_uri' => $env == 'development' ? 'https://localhost/emof/signin/aad_callback' : 'https://workspace.revenuedirectorate.gov.so/signin/aad_callback',
+            'redirect_uri' => $env == 'development' ? 'https://localhost/workspace/signin/aad_callback' : 'https://workspace.aleelo.gov.so/signin/aad_callback',
             'response_type' => 'code',
             'login_hint' => $email, //'admin@presidency@gov.so',
             // 'prompt'=>'consent',
