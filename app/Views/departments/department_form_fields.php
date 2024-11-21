@@ -3,12 +3,12 @@
 <input type="hidden" name="view" value="<?php echo isset($view) ? $view : ""; ?>" />
 
 
-<!-----------------------------------------  Department Name SO  ------------------------------------>
+<!-----------------------------------------  Company Name  ------------------------------------>
 
 
 <div class="form-group">
     <div class="row">
-        <label for="department_name_so" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('department_name_so'); ?></label>
+        <label for="department_name_so" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('company_name'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -16,7 +16,7 @@
                 "name" => "department_name_so",
                 "value" => $model_info->nameSo,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => app_lang('department_name_so'),
+                "placeholder" => app_lang('company_name'),
                 //"autofocus" => true,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
@@ -27,7 +27,7 @@
 </div>
 
 <!----------------------------------------- Short Name SO  ------------------------------------>
-
+<!-- 
 
 <div class="form-group">
     <div class="row">
@@ -44,11 +44,11 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 <!----------------------------------------- Department Name EN  ------------------------------------>
 
-
+<!-- 
 <div class="form-group">
     <div class="row">
         <label for="department_name_en" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('department_name_en'); ?></label>
@@ -64,12 +64,12 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 <!----------------------------------------- Short Name EN  ------------------------------------>
 
 
-<div class="form-group">
+<!-- <div class="form-group">
     <div class="row">
         <label for="short_name_en" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('short_name_en'); ?></label>
         <div class="<?php echo $field_column; ?>">
@@ -84,12 +84,12 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 <!----------------------------------------- Department Email  ------------------------------------>
 
 
-<div class="form-group">
+<!-- <div class="form-group">
     <div class="row">
         <label for="department_email" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('department_email'); ?></label>
         <div class="<?php echo $field_column; ?>">
@@ -104,13 +104,13 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 
 
 <!----------------------------------------- Department Head  ------------------------------------>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <div class="row">
         <label for="department_head" class=" <?php echo $label_column; ?>"><?php echo 'Department Head'; ?></label>
         <div class=" col-md-9">
@@ -125,11 +125,11 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 <!----------------------------------------- Secretary  ------------------------------------>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <div class="row">
         <label for="secretary" class=" <?php echo $label_column; ?>"><?php echo 'Secretary'; ?></label>
         <div class=" col-md-9">
@@ -144,11 +144,11 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 <!----------------------------------------- Section Remarks  ------------------------------------>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <div class="row">
     <label for="section_remarks" class="<?php echo $label_column; ?> company_name_section"><?php echo app_lang('section_remarks'); ?></label>
         <div class="<?php echo $field_column; ?>">
@@ -163,7 +163,7 @@
             ?>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => $label_column, "field_column" => $field_column)); ?> 

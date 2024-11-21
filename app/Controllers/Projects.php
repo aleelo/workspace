@@ -253,6 +253,8 @@ class Projects extends Security_Controller {
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("projects", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
+        $view_data['departments'] = array("" => " -- Choose Company -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+
         $view_data['hide_clients_dropdown'] = false;
 
         if (!$this->login_user->is_admin && !get_array_value($this->login_user->permissions, "client") && !get_array_value($this->login_user->permissions, "client_specific")) {
@@ -315,6 +317,7 @@ class Projects extends Security_Controller {
             "description" => $this->request->getPost('description'),
             "client_id" => ($project_type === "internal_project") ? 0 : $this->request->getPost('client_id'),
             "start_date" => $this->request->getPost('start_date'),
+            "department_id" => $this->request->getPost('department_id'),
             "deadline" => $this->request->getPost('deadline'),
             "project_type" => $project_type,
             "price" => unformat_currency($this->request->getPost('price')),

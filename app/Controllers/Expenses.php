@@ -106,6 +106,8 @@ class Expenses extends Security_Controller {
         $view_data['can_access_expenses'] = $this->can_access_expenses();
         $view_data['can_access_clients'] = $this->can_access_clients();
 
+        $view_data['departments'] = array("" => " -- Choose Company -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+
         //clone invoice
         $is_clone = $this->request->getPost('is_clone');
         $view_data['is_clone'] = $is_clone;
@@ -140,6 +142,7 @@ class Expenses extends Security_Controller {
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
             "category_id" => $this->request->getPost('category_id'),
+            "department_id" => $this->request->getPost('department_id'),
             "amount" => unformat_currency($this->request->getPost('amount')),
             "client_id" => $this->request->getPost('expense_client_id') ? $this->request->getPost('expense_client_id') : 0,
             "project_id" => $this->request->getPost('expense_project_id'),

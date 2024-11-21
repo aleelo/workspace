@@ -575,6 +575,7 @@ class Tasks extends Security_Controller {
             }
         }
 
+        $view_data['departments'] = array("" => " -- Choose Company -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
 
         if ($add_type == "multiple" && $last_id) {
             //we've to show the lastly added information if it's the operation of adding multiple tasks
@@ -983,6 +984,7 @@ class Tasks extends Security_Controller {
             "subscription_id" => $subscription_id ? $subscription_id : 0,
             "priority_id" => $priority_id ? $priority_id : 0,
             "labels" => $this->request->getPost('labels'),
+            "department_id" => $this->request->getPost('department_id'),
             "start_date" => $start_date,
             "deadline" => $deadline,
             "recurring" => $recurring,

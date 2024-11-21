@@ -304,13 +304,13 @@ class Departments extends Security_Controller {
         $row_data = array($data->id,
 
             anchor(get_uri("departments/view/" . $data->id), $data->nameSo),
-            $data->short_name_SO,
-            $data->nameEn,
-            $data->short_name_EN,
-            $data->email,
-            $data->DeptHead,
-            $data->secretary,
-            $data->remarks,
+            // $data->short_name_SO,
+            // $data->nameEn,
+            // $data->short_name_EN,
+            // $data->email,
+            // $data->DeptHead,
+            // $data->secretary,
+            // $data->remarks,
             
 
             // $data->primary_contact ? $primary_contact : "",

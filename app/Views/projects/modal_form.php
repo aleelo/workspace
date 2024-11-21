@@ -4,6 +4,25 @@
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
         <input type="hidden" name="estimate_id" value="<?php echo $model_info->estimate_id; ?>" />
         <input type="hidden" name="order_id" value="<?php echo $model_info->order_id; ?>" />
+
+        <div class="form-group">
+            <div class="row">
+                <label for="department_id" class=" col-md-3"><?php echo 'Company'; ?></label>
+                <div class=" col-md-9">
+                <?php 
+                echo form_dropdown(array( 
+                        'id'=> "department_id",
+                        'name'=> "department_id",
+                        'class' => "form-control select2",
+                        'placeholder' => 'Company',
+                        'autocomplete'=> "off",
+                        'data-rule-required' => true,
+                        'data-msg-required' =>   app_lang('field_required')
+                    ),$departments,[$model_info->department_id]); ?>
+                </div>
+            </div>
+        </div> 
+
         <div class="form-group">
             <div class="row">
                 <label for="title" class=" col-md-3"><?php echo app_lang('title'); ?></label>

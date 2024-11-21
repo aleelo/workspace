@@ -84,7 +84,7 @@ class Left_menu {
             }
 
             if (get_setting("module_department") == "1" && ($this->ci->login_user->is_admin || $access_department)) {
-                $sidebar_menu["department"] = array("name" => "department", "url" => "departments", "class" => "briefcase");
+                $sidebar_menu["company"] = array("name" => "company", "url" => "departments", "class" => "briefcase");
             }
             
 
@@ -100,6 +100,9 @@ class Left_menu {
             if ($this->ci->login_user->is_admin || $access_training) {
                 $sidebar_menu["training"] = array("name" => "training", "url" => "training", "class" => "briefcase");
             }
+
+            $sidebar_menu["pixel"] = array("name" => "pixel", "url" => "", "class" => "check-circle");
+            $sidebar_menu["solutions"] = array("name" => "solutions", "url" => "", "class" => "book-open");
             
             if (get_setting("module_appointment") == "1" && ($this->ci->login_user->is_admin || $access_appointment)) {
                 $sidebar_menu["appointments"] = array("name" => "appointments", "url" => "", "class" => "book-open");
@@ -234,6 +237,8 @@ class Left_menu {
                 $team_submenu["leaves"] = array("name" => "leaves", "url" => "leaves", "class" => "log-out");
             }
 
+            $team_submenu["setting"] = array("name" => "setting", "url" => "", "class" => "settings");
+
             if (get_setting("module_timeline") == "1" && $access_timeline) {
                 $team_submenu["timeline"] = array("name" => "timeline", "url" => "timeline", "class" => "send");
             }
@@ -242,6 +247,7 @@ class Left_menu {
             if (get_setting("module_announcement") == "1" && ($this->ci->login_user->is_admin || $access_announcement)) {
                 $team_submenu["announcements"] = array("name" => "announcements", "url" => "announcements", "class" => "bell");
             }
+            $team_submenu["accounting"] = array("name" => "accounting", "url" => "", "class" => "bell");
 
             if (get_setting("module_edeclaration") == "1" && ($this->ci->login_user->is_admin || $access_edeclaration)) {
                 $team_submenu["eDeclaration"] = array("name" => "eDeclaration", "url" => "", "class" => "arrow-right-circle");

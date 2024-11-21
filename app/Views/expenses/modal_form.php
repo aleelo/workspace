@@ -8,6 +8,24 @@
                 <input type="hidden" name="is_clone" value="1" />
             <?php } ?>
 
+            <div class="form-group">
+                <div class="row">
+                    <label for="department_id" class=" col-md-3"><?php echo 'Company'; ?></label>
+                    <div class=" col-md-9">
+                    <?php 
+                    echo form_dropdown(array( 
+                            'id'=> "department_id",
+                            'name'=> "department_id",
+                            'class' => "form-control select2",
+                            'placeholder' => 'Company',
+                            'autocomplete'=> "off",
+                            'data-rule-required' => true,
+                            'data-msg-required' =>   app_lang('field_required')
+                        ),$departments,[$model_info->department_id]); ?>
+                    </div>
+                </div>
+            </div> 
+
             <div class=" form-group">
                 <div class="row">
                     <label for="expense_date" class=" col-md-3"><?php echo app_lang('date_of_expense'); ?></label>

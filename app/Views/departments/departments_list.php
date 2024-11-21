@@ -44,14 +44,14 @@
             ],
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("department_name_so") ?>", "class": "all", order_by: "nameSo"},
-            {title: "<?php echo app_lang("shot_name_so") ?>", order_by: "short_name_SO"},
-            {title: "<?php echo app_lang("department_name_en") ?>", order_by: "nameEn"},
-            {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
-            {title: "<?php echo app_lang("department_email") ?>", order_by: "email"},
-            {title: "<?php echo app_lang("department_head") ?>", order_by: "DeptHead"},
-            {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
-            {title: "<?php echo app_lang("remarks") ?>", order_by: "remarks"}
+            {title: "<?php echo app_lang("company_name") ?>", "class": "all", order_by: "nameSo"}
+            // {title: "<?php echo app_lang("shot_name_so") ?>", order_by: "short_name_SO"},
+            // {title: "<?php echo app_lang("department_name_en") ?>", order_by: "nameEn"},
+            // {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
+            // {title: "<?php echo app_lang("department_email") ?>", order_by: "email"},
+            // {title: "<?php echo app_lang("department_head") ?>", order_by: "DeptHead"},
+            // {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
+            // {title: "<?php echo app_lang("remarks") ?>", order_by: "remarks"}
 
             
 <?php echo $custom_field_headers; ?>,

@@ -1460,7 +1460,7 @@ class Security_Controller extends App_Controller {
         }
 
         $depts = $this->db->query("select id,nameSo from rise_departments where id like '$dept_id'");
-        $data[] = array('id' => '', 'text' => 'Choose Department');
+        $data[] = array('id' => '', 'text' => 'Choose Company');
 
         if(!$depts){
             return [];

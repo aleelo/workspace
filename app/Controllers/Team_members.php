@@ -155,7 +155,7 @@ class Team_members extends Security_Controller
         // $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
 
         // $view_data['departments'] = $this->Team_model->get_departments_for_select();
-        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['departments'] = array("" => " -- Choose Company -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Sections'] = array("" => " -- Choose Section -- ") + $this->Sections_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['Units'] = array("" => " -- Choose Unit -- ") + $this->Units_model->get_dropdown_list(array("nameSo"), "id");
         $view_data['grades'] = array("" => " -- Choose Grade -- ") + $this->Grades_model->get_dropdown_list(array("grade"), "id");
@@ -778,17 +778,11 @@ public function charts()
 
         $row_data = array(
             $user_avatar,
-            "<span title='" . htmlspecialchars($data->employee_id) . "'>" . $this->truncateText($data->employee_id, 20) . "</span>", // Job title with tooltip
-            get_team_member_profile_link($data->id, "<span title='$full_name'>" . $this->truncateText($full_name, 20) . "</span>"),
-            "<span title='" . htmlspecialchars($data->job_title) . "'>" . $this->truncateText($data->job_title, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->sc_name_so) . "'>" . $this->truncateText($data->sc_name_so, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->dp_name_so) . "'>" . $this->truncateText($data->dp_name_so, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->dp_short_name_so) . "'>" . $this->truncateText($data->dp_short_name_so, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->dp_name_en) . "'>" . $this->truncateText($data->dp_name_en, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->dp_short_name_en) . "'>" . $this->truncateText($data->dp_short_name_en, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->place_of_work) . "'>" . $this->truncateText($data->place_of_work, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->email) . "'>" . $this->truncateText($data->email, 20) . "</span>", // Job title with tooltip
-            "<span title='" . htmlspecialchars($data->phone) . "'>" . $this->truncateText($data->phone, 20) . "</span>", // Job title with tooltip
+            get_team_member_profile_link($data->id, $full_name),
+            $data->job_title,
+            $data->dp_name_so,
+            $data->email,
+            $data->phone,
         );
 
         foreach ($custom_fields as $field) {
@@ -985,7 +979,7 @@ public function charts()
         }
 
         // $view_data['departments'] = $this->get_departments_for_select();
-        $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
+        $view_data['departments'] = array("" => " -- Choose Company -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
 
         // echo json_encode($view_data['departments']);
         // die('ok');

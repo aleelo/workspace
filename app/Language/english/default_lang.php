@@ -69,6 +69,22 @@ $lang["team_members_educaction_age_overview"] = "Employee Education/Age Groups O
 $lang["team_members_agegroup_education_widget"] = "Employee Education/Age Groups Overview";
 $lang["total_team_members_overview"] = "Total Employee Overview";
 
+//Aleelo Pixel:
+$lang["pixel"] = "Aleelo Pixel";
+$lang["-----------"] = "_________________________";
+
+//Aleelo Solutions:
+$lang["solutions"] = "Aleelo Solutions";
+
+
+//Companies
+$lang["company"] = "Company";
+$lang["company_list"] = "Company List";
+$lang["add_company"] = "Add Company";
+$lang["edit_company"] = "Edit Company";
+$lang["delete_company"] = "Delete Company";
+$lang["company_name"] = "Company Name";
+
 //Departments:
 $lang["departments"] = "Departments";
 $lang["add_department"] = "Add Department";
@@ -327,7 +343,7 @@ $lang["merchant_type"] = "Merchant Type";
 $lang["merchant_number"] = "Merchant Number";
 $lang["merchant_number"] = "Merchant Number";
 
-//Company:
+//Payers:
 
 $lang["new_payer_registered"] = "New Payer Registered";
 $lang["new_payer_registered_to_registerer"] = "New Payer Registered to the Registerer";
@@ -822,6 +838,7 @@ $lang["email_smtp_port"] = "SMTP Port";
 $lang["send_test_mail_to"] = "Send a test mail to";
 $lang["test_mail_sent"] = "The test mail has been sent!";
 $lang["test_mail_send_failed"] = "Failed to send the test email.";
+$lang["setting"] = "Setting";
 $lang["settings"] = "Settings";
 $lang["updates"] = "Updates";
 $lang["current_version"] = "Current Version";
@@ -835,6 +852,8 @@ $lang["client_settings"] = "Client settings";
 $lang["disable_client_login_and_signup"] = "Disable client login and signup";
 $lang["disable_client_login_help_message"] = "Client contacts will not be able to login/sign up in this system until you revert this setting.";
 $lang["who_can_send_or_receive_message_to_or_from_clients"] = "Who can send/receive message to/from clients";
+
+$lang["accounting"] = "Accounting";
 
 /* account */
 $lang["authentication_failed"] = "Authentication failed!";
@@ -854,6 +873,10 @@ $lang["account_already_exists_for_your_mail"] = "Account already exists for your
 $lang["create_an_account_as_a_new_client"] = "Create an account as a new client.";
 $lang["create_an_account_as_a_team_member"] = "Create an account as an employee.";
 $lang["create_an_account_as_a_client_contact"] = "Create an account as a client contact.";
+
+/* messages */
+$lang["company"] = "Company";
+
 
 /* messages */
 $lang["messages"] = "Messages";

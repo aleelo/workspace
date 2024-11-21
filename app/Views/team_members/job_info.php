@@ -30,14 +30,14 @@
 
                 <div class="form-group">
                     <div class="row">
-                        <label for="department_id" class=" col-md-3"><?php echo 'Employee Department'; ?></label>
+                        <label for="department_id" class=" col-md-3"><?php echo 'Employee Company'; ?></label>
                         <div class=" col-md-9">
                         <?php 
                         echo form_dropdown(array( 
                                 'id'=> "department_id",
                                 'name'=> "department_id",
                                 'class' => "form-control select2",
-                                'placeholder' => 'Employee Department',
+                                'placeholder' => 'Employee Company',
                                 'autocomplete'=> "off",
                                 'data-rule-required' => true,
                                 'data-msg-required' =>   app_lang('field_required')
