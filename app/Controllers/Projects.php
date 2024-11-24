@@ -916,12 +916,14 @@ class Projects extends Security_Controller {
     /* load project details view */
 
     function view($project_id = 0, $tab = "") {
+        
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
-
+        
         $view_data = $this->_get_project_info_data($project_id);
 
         $access_info = $this->get_access_info("invoice");
+        
         $view_data["show_invoice_info"] = (get_setting("module_invoice") && $this->can_view_invoices()) ? true : false;
 
         $expense_access_info = $this->get_access_info("expense");
@@ -989,6 +991,7 @@ class Projects extends Security_Controller {
     /* prepare project info data for reuse */
 
     private function _get_project_info_data($project_id) {
+        
         $options = array(
             "id" => $project_id,
             "client_id" => $this->login_user->client_id,
@@ -997,11 +1000,16 @@ class Projects extends Security_Controller {
         if (!$this->can_manage_all_projects()) {
             $options["user_id"] = $this->login_user->id;
         }
+        
 
         $project_info = $this->Projects_model->get_details($options)->getRow();
         $view_data['project_info'] = $project_info;
+        
+        // print_r($project_id);die;
+        
 
         if ($project_info) {
+            
             $view_data['project_info'] = $project_info;
             $timer = $this->Timesheets_model->get_timer_info($project_id, $this->login_user->id)->getRow();
             $user_has_any_timer_except_this_project = $this->Timesheets_model->user_has_any_timer_except_this_project($project_id, $this->login_user->id);
