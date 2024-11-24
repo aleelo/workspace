@@ -243,6 +243,7 @@ class Left_menu {
                 $team_submenu["timeline"] = array("name" => "timeline", "url" => "timeline", "class" => "send");
             }
 
+            $team_submenu["timeline"] = array("name" => "timeline", "url" => "timeline", "class" => "send");
 
             if (get_setting("module_announcement") == "1" && ($this->ci->login_user->is_admin || $access_announcement)) {
                 $team_submenu["announcements"] = array("name" => "announcements", "url" => "announcements", "class" => "bell");
