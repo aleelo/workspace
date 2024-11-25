@@ -994,23 +994,20 @@ class Projects extends Security_Controller {
         
         $options = array(
             "id" => $project_id,
-            "client_id" => $this->login_user->client_id,
+            // "client_id" => $this->login_user->client_id,
         );
 
         if (!$this->can_manage_all_projects()) {
             $options["user_id"] = $this->login_user->id;
         }
-        
+        // $view_data['project_info'] = $project_info;
 
         $project_info = $this->Projects_model->get_details($options)->getRow();
+        // print_r($project_info);die;
         $view_data['project_info'] = $project_info;
         
-        // print_r($project_id);die;
-        
-
         if ($project_info) {
             
-            $view_data['project_info'] = $project_info;
             $timer = $this->Timesheets_model->get_timer_info($project_id, $this->login_user->id)->getRow();
             $user_has_any_timer_except_this_project = $this->Timesheets_model->user_has_any_timer_except_this_project($project_id, $this->login_user->id);
 
