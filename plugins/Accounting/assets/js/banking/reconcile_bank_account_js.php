@@ -15,6 +15,7 @@
     requestGet(site_url + 'accounting/get_info_reconcile_bank_account/' + $('select[name="account"]').val()).done(function(response) {
           response = JSON.parse(response);
           if(response.resume_reconciling == true || response.resume_reconciling == 'true'){
+            //appValidateForm($('#reconcile-account-form'),{});
             if(response.approval_reconciling == true || response.approval_reconciling == 'true'){
               $('.btnApproval').removeClass('hide');
               $('.btnResume').addClass('hide');
@@ -31,6 +32,7 @@
 
             $('.edit_reconcile').removeClass('hide');
           }else{
+            //appValidateForm($('#reconcile-account-form'),{ending_balance:'required', ending_date:'required'});
 
             $('input[name="resume"]').val(0);
             $('input[name="beginning_balance"]').val(response.beginning_balance);
@@ -157,6 +159,7 @@
         data.reconcile_id = $('input[name="reconcile_id"]').val();
 
     $.get(admin_url+'accounting/update_bank_reconcile', data, function (response) {
+          // response = JSON.parse(response);
           if(response.success == true || response.success == 'true'){
             appAlert.success(response.message);
           }else{

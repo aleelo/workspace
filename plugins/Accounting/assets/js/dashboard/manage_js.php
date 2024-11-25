@@ -385,8 +385,6 @@ function change_currency_sales_chart(currency){
 
 // General helper function for $.get ajax requests
 function requestGet(uri, params) {
-    "use strict";
-    
     params = typeof (params) == 'undefined' ? {} : params;
     var options = {
         type: 'GET',

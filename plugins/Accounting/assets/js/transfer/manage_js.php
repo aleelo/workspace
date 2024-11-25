@@ -77,16 +77,16 @@ function transfer_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success == 'close_the_book' || $.isNumeric(response.success)) {
-          appAlert.error(response.message);
+          alert_float('warning', response.message);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          alert_float('success', response.message);
 	 		    init_transfer_table();
         }else {
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#transfer-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(error.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;

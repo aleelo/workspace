@@ -165,6 +165,6 @@
 </div>
 <hr>
 <div class="col-md-12">
-  <button type="submit" class="btn btn-info pull-right text-white <?php if(!acc_has_permission('acc_can_edit_setting')){echo 'hide';} ?>"><i data-feather="check-circle" class="icon-16"></i> <?php echo app_lang('submit'); ?></button>
+  <button type="submit" class="btn btn-info pull-right text-white"><i data-feather="check-circle" class="icon-16"></i> <?php echo app_lang('submit'); ?></button>
 </div>
 <?php echo form_close(); ?>

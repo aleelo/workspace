@@ -62,20 +62,6 @@ var admin_url = $('input[name="site_url"]').val();
           }
       });
   });
-  $('.btn_start_reconciling').on('click', function(){
-      var ending_balance = $('input[name="ending_balance"]').val();
-      var ending_date = $('input[name="ending_date"]').val();
-
-      if(ending_balance != '' && ending_date != ''){
-        $('#reconcile-account-form').submit();
-      }else{
-        if(ending_balance == ''){
-          alert('Please enter the ending balance');
-        }else{
-          alert('Please enter the ending date');
-        }        
-      }
-  });
 
 	$("input[data-type='currency']").on({
       keyup: function() {

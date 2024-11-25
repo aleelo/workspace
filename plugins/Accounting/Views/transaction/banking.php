@@ -77,13 +77,13 @@
             <h4 class="modal-title"><?php echo _l('bulk_actions'); ?></h4>
          </div>
          <div class="modal-body">
-            <?php if(acc_has_permission('acc_can_detele_banking')){ ?>
+            <?php if(has_permission('accounting_transaction','','detele')){ ?>
                <div class="checkbox checkbox-danger">
                   <input type="checkbox" name="mass_delete_convert" id="mass_delete_convert">
                   <label for="mass_delete_convert"><?php echo _l('mass_delete_convert'); ?></label>
                </div>
             <?php } ?>
-            <?php if(acc_has_permission('acc_can_detele_banking')){ ?>
+            <?php if(has_permission('accounting_transaction','','detele')){ ?>
                <div class="checkbox checkbox-danger">
                   <input type="checkbox" name="mass_delete" id="mass_delete">
                   <label for="mass_delete"><?php echo _l('mass_delete'); ?></label>

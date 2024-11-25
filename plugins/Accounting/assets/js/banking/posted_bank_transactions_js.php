@@ -48,7 +48,7 @@ function init_banking_table() {
               }
             ],
             filterDropdown: [
-              {name: "bank_account", class: "w200", options: <?php echo html_entity_decode($bank_account_dropdown); ?>},
+              {name: "bank_account", class: "w200", options: <?php echo $bank_account_dropdown; ?>},
             ],
             rangeDatepicker: [{startDate: {name: "from_date", value: ""}, endDate: {name: "to_date", value: ""}, showClearButton: true}],
             columns: [

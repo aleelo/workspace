@@ -101,8 +101,8 @@ class Left_menu {
                 $sidebar_menu["training"] = array("name" => "training", "url" => "training", "class" => "briefcase");
             }
 
-            $sidebar_menu["pixel"] = array("name" => "pixel", "url" => "", "class" => "check-circle");
-            $sidebar_menu["solutions"] = array("name" => "solutions", "url" => "", "class" => "book-open");
+            // $sidebar_menu["pixel"] = array("name" => "pixel", "url" => "", "class" => "check-circle");
+            // $sidebar_menu["solutions"] = array("name" => "solutions", "url" => "", "class" => "book-open");
             
             if (get_setting("module_appointment") == "1" && ($this->ci->login_user->is_admin || $access_appointment)) {
                 $sidebar_menu["appointments"] = array("name" => "appointments", "url" => "", "class" => "book-open");

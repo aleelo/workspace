@@ -1,22 +1,31 @@
-<div class="card">
-    <div class="clearfix">
-        <ul id="transaction-sale-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs rounded classic mb20 scrollable-tabs" role="tablist">
-            <li class="title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang('warehouse') ?></h4></li>
-            <li>
-                <a role="presentation" href="<?php echo get_uri('accounting/transaction?group=warehouse&tab=stock_import'); ?>" data-bs-target="#transaction_stock_import"><?php echo app_lang('stock_import'); ?> <span class="text-danger"><?php echo '('.$count_stock_import.')'; ?></span></a></li>
-            
-            <li><a role="presentation" href="<?php echo_uri("accounting/transaction_stock_export_list"); ?>" data-bs-target="#transaction_stock_export"><?php echo app_lang('stock_export'); ?> <span class="text-danger"><?php echo '('.$count_stock_export.')'; ?></span></a></li>
-            <li><a role="presentation" href="<?php echo_uri("accounting/transaction_loss_adjustment_list"); ?>" data-bs-target="#transaction_loss_adjustment"><?php echo app_lang('loss_adjustment'); ?> <span class="text-danger"><?php echo '('.$count_loss_adjustment.')'; ?></span></a></li>
-            <li><a role="presentation" href="<?php echo_uri("accounting/transaction_opening_stock_list"); ?>" data-bs-target="#transaction_opening_stock"><?php echo app_lang('opening_stock'); ?> <span class="text-danger"><?php echo '('.$count_opening_stock.')'; ?></span></a></li>
-        </ul>
+<div class="horizontal-scrollable-tabs">
+   <div class="scroller arrow-left"><i class="fa fa-angle-left"></i></div>
+   <div class="scroller arrow-right"><i class="fa fa-angle-right"></i></div>
+   <div class="horizontal-tabs">
+      <ul class="nav nav-tabs profile-tabs row customer-profile-tabs nav-tabs-horizontal" role="tablist">
+         <li role="presentation" class="<?php if($tab_2 == 'stock_import'){echo 'active';}; ?>">
+            <a href="<?php echo admin_url('accounting/transaction?group=warehouse&tab=stock_import'); ?>">
+              <i class="fa fa-object-group"></i>&nbsp;<?php echo _l('stock_import'); ?> <span class="text-danger"><?php echo '('.$count_stock_import.')'; ?></span>
+            </a>
+         </li>
+         <li role="presentation" class="<?php if($tab_2 == 'stock_export'){echo 'active';}; ?>">
+            <a href="<?php echo admin_url('accounting/transaction?group=warehouse&tab=stock_export'); ?>">
+              <i class="fa fa-object-ungroup"></i>&nbsp;<?php echo _l('stock_export'); ?> <span class="text-danger"><?php echo '('.$count_stock_export.')'; ?></span>
+            </a>
+         </li>
+         <li role="presentation" class="<?php if($tab_2 == 'loss_adjustment'){echo 'active';}; ?>">
+            <a href="<?php echo admin_url('accounting/transaction?group=warehouse&tab=loss_adjustment'); ?>">
+              <i class="fa fa-adjust"></i>&nbsp;<?php echo _l('loss_adjustment'); ?> <span class="text-danger"><?php echo '('.$count_loss_adjustment.')'; ?></span>
+            </a>
+         </li>
+         <li role="presentation" class="<?php if($tab_2 == 'opening_stock'){echo 'active';}; ?>">
+            <a href="<?php echo admin_url('accounting/transaction?group=warehouse&tab=opening_stock'); ?>">
+              <i class="fa fa-calendar"></i>&nbsp;<?php echo _l('opening_stock'); ?> <span class="text-danger"><?php echo '('.$count_opening_stock.')'; ?></span>
+            </a>
+         </li>
+      </ul>
+   </div>
 
-        <div class="tab-content p-3">
-            <div role="tabpanel" class="tab-pane fade active" id="transaction_stock_import">
-               <?php  echo view('Accounting\Views\transaction/stock_import'); ?>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="transaction_loss_adjustment"></div>
-            <div role="tabpanel" class="tab-pane fade" id="transaction_stock_export"></div>
-            <div role="tabpanel" class="tab-pane fade" id="transaction_opening_stock"></div>
-        </div>
-    </div>
+   <?php echo form_hidden('currency_id', $currency->id); ?>
+   <?php $this->load->view($tab_2,array('bulk_actions'=>true)); ?>
 </div>

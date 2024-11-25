@@ -63,8 +63,8 @@
               <div class="row">
                 <div class="col-md-12">
                     <hr>
-                    <button type="button" class="btn_start_reconciling btn btn-info pull-right text-white <?php if(!acc_has_permission('acc_can_create_reconcile')){echo 'hide';} ?>"><i data-feather='play' class='icon-16'></i> <?php echo app_lang('start_reconciling'); ?></button>
-                    <button type="button" class="btn btn-warning pull-right text-white mright5 hide_restored <?php echo html_entity_decode($hide_restored); ?> <?php if(!acc_has_permission('acc_can_edit_reconcile')){echo 'hide';} ?>"><i data-feather='corner-up-left' class='icon-16'></i> <?php echo app_lang('acc_restored_last'); ?></button>
+                    <button type="submit" class="btn btn-info pull-right text-white <?php if(!has_permission('accounting_reconcile', '', 'create')){echo 'hide';} ?>"><i data-feather='play' class='icon-16'></i> <?php echo app_lang('start_reconciling'); ?></button>
+                    <button type="button" class="btn btn-warning pull-right text-white mright5 hide_restored <?php echo html_entity_decode($hide_restored); ?> <?php if(!has_permission('accounting_reconcile', '', 'edit')){echo 'hide';} ?>"><i data-feather='corner-up-left' class='icon-16'></i> <?php echo app_lang('acc_restored_last'); ?></button>
                 </div>
               </div>
             </div>
@@ -72,8 +72,8 @@
               <div class="row">
                 <div class="col-md-12">
                     <hr>
-                    <button type="submit" class="btn btn-info pull-right text-white <?php if(!acc_has_permission('acc_can_edit_reconcile')){echo 'hide';} ?>"><i data-feather='play' class='icon-16'></i> <?php echo app_lang('resume_reconciling'); ?></button>
-                    <button type="button" class="btn btn-warning pull-right text-white mright5 hide_restored <?php echo html_entity_decode($hide_restored); ?> <?php if(!acc_has_permission('acc_can_edit_reconcile')){echo 'hide';} ?>"><i data-feather='corner-up-left' class='icon-16'></i> <?php echo app_lang('acc_restored_last'); ?></button>
+                    <button type="submit" class="btn btn-info pull-right text-white <?php if(!has_permission('accounting_reconcile', '', 'edit')){echo 'hide';} ?>"><i data-feather='play' class='icon-16'></i> <?php echo app_lang('resume_reconciling'); ?></button>
+                    <button type="button" class="btn btn-warning pull-right text-white mright5 hide_restored <?php echo html_entity_decode($hide_restored); ?> <?php if(!has_permission('accounting_reconcile', '', 'edit')){echo 'hide';} ?>"><i data-feather='corner-up-left' class='icon-16'></i> <?php echo app_lang('acc_restored_last'); ?></button>
                    
                 </div>
               </div>

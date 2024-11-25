@@ -4,9 +4,7 @@
         <div class="page-title clearfix">
             <h1><?php echo html_entity_decode($title); ?></h1>
             <div class="title-button-group">
-                <?php if(acc_has_permission('acc_can_create_transfer')){
-                    echo modal_anchor(get_uri("accounting/transfer_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add'), array("class" => "btn btn-default ", "title" => app_lang('add')));
-                } ?>
+                <?php echo modal_anchor(get_uri("accounting/transfer_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add'), array("class" => "btn btn-default", "title" => app_lang('add'))); ?>
             </div>
         </div>
         <div class="table-responsive">

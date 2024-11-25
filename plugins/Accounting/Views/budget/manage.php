@@ -16,8 +16,8 @@
             </div>
           </div>
           <div class=" col-md-9 pull-right">
-            <a href="<?php echo get_uri('accounting/budget_import'); ?>" class="btn btn-success mtop25 pull-right mleft5 <?php if(!acc_has_permission('acc_can_create_budget')){echo 'hide';} ?>"><i data-feather='upload' class='icon-16'></i> <?php echo app_lang('import_budget'); ?></a>
-            <a href="#" onclick="creating_a_budget(); return false;" class="btn btn-default mtop25 pull-right <?php if(!acc_has_permission('acc_can_create_budget')){echo 'hide';} ?>"><i data-feather='plus-circle' class='icon-16'></i> <?php echo app_lang('add'); ?></a>
+            <a href="<?php echo get_uri('accounting/budget_import'); ?>" class="btn btn-success mtop25 pull-right mleft5 <?php if(!has_permission('accounting_budget', '', 'create')){echo 'hide';} ?>"><i data-feather='upload' class='icon-16'></i> <?php echo app_lang('import_budget'); ?></a>
+            <a href="#" onclick="creating_a_budget(); return false;" class="btn btn-default mtop25 pull-right <?php if(!has_permission('accounting_budget', '', 'create')){echo 'hide';} ?>"><i data-feather='plus-circle' class='icon-16'></i> <?php echo app_lang('add'); ?></a>
           </div>
         </div>
         <div id="div_data">
@@ -38,9 +38,9 @@
           <div class="row">
             <div class=" col-md-12">
               <hr>
-              <a href="#" onclick="save_budget(); return false;" class="btn btn-info display-block mleft5 pull-right text-white <?php if(!acc_has_permission('acc_can_edit_budget')){echo 'hide';} ?>"><i data-feather='check-circle' class='icon-16'></i> <?php echo app_lang('save'); ?></a>
-              <a href="#" onclick="clear_budget(); return false;" class="btn btn-default display-block mleft5 pull-right <?php if(!acc_has_permission('acc_can_edit_budget')){echo 'hide';} ?>"><i data-feather='x' class='icon-16'></i> <?php echo app_lang('clear'); ?></a>
-              <a href="#" onclick="delete_budget(); return false;" class="btn btn-danger display-block mleft5 pull-right <?php if(!acc_has_permission('acc_can_delete_budget')){echo 'hide';} ?>"><i data-feather='x-circle' class='icon-16'></i> <?php echo app_lang('delete'); ?></a>
+              <a href="#" onclick="save_budget(); return false;" class="btn btn-info display-block mleft5 pull-right text-white"><i data-feather='check-circle' class='icon-16'></i> <?php echo app_lang('save'); ?></a>
+              <a href="#" onclick="clear_budget(); return false;" class="btn btn-default display-block mleft5 pull-right"><i data-feather='x' class='icon-16'></i> <?php echo app_lang('clear'); ?></a>
+              <a href="#" onclick="delete_budget(); return false;" class="btn btn-danger display-block mleft5 pull-right"><i data-feather='x-circle' class='icon-16'></i> <?php echo app_lang('delete'); ?></a>
             </div>
           </div>
         </div>

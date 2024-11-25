@@ -32,7 +32,7 @@
                         <?php echo app_lang('this_quarter'); ?>
                     </a>
                 </li>
-                <li class="filter-group" data-filter-group="group-date">
+                <li class="filter-group <?php echo (!has_permission('tasks','','view') ? ' active' : ''); ?>" data-filter-group="group-date">
                     <a href="#" data-cview="this_year" onclick="dt_custom_view('this_year','','this_year'); return false;">
                         <?php echo app_lang('this_year'); ?>
                     </a>

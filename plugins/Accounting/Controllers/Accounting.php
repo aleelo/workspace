@@ -22,10 +22,8 @@ class Accounting extends Security_Controller
      */
     public function transaction($group = '')
     {
-        if(!acc_has_permission('acc_can_view_transaction')){
-            show_404();
-        }
-
+       
+        
         $data['currency'] = get_setting('default_currency');
 
         $data['tab_2'] = $this->request->getGet('tab');
@@ -33,29 +31,12 @@ class Accounting extends Security_Controller
 
         $data['group'] = $this->request->getGet('group');
 
+        
+
+      
         $data['tab'][] = 'sales';
         $data['tab'][] = 'expenses';
-
-        if(accounting_get_status_modules('Purchase')){
-            $data['tab'][] = 'purchase';
-        }
-
-        if(accounting_get_status_modules('Warehouse')){
-            $data['tab'][] = 'warehouse';
-        }
-
-        if(accounting_get_status_modules('Manufacturing')){
-            $data['tab'][] = 'manufacturing';
-        }
-
-        if(accounting_get_status_modules('Fixed_equipment')){
-            $data['tab'][] = 'fixed_equipment';
-        }
-
-        if(accounting_get_status_modules('Hr_payroll')){
-            $data['tab'][] = 'payslips';
-        }
-
+        
         if ($data['group'] == '') {
             $data['group'] = 'payment';
         }
@@ -65,8 +46,9 @@ class Accounting extends Security_Controller
             $data['count_payment'] = $this->Accounting_model->count_payment_not_convert_yet();
 
 
-            $data['payment_methods'] = $this->Payment_methods_model->get_all_where(array("deleted" => 0))->getResultArray();
+            $data['payment_method_dropdown'] = $this->get_payment_method_dropdown();
 
+          
             $data['payment_modes'] = [];
             $data['invoices'] = [];
 
@@ -76,8 +58,7 @@ class Accounting extends Security_Controller
 
 
         }elseif ($data['group'] == 'expenses') {
-            $data['categories'] = $this->Expense_categories_model->get_all_where(array("deleted" => 0), 0, 0, "title")->getResultArray();
-
+            $data['categories_dropdown'] = $this->_get_categories_dropdown();
             $data['members_dropdown'] = $this->_get_team_members_dropdown();
             $data['payment_method_dropdown'] = $this->get_payment_method_dropdown();
         }elseif ($data['group'] == 'warehouse') {
@@ -88,35 +69,15 @@ class Accounting extends Security_Controller
 
 
             if ($data['tab_2'] == '') {
-                $data['tab_2'] = 'Accounting\Views\transaction/stock_import';
-            }else{
-                $data['tab_2'] = 'Accounting\Views\transaction/'.$data['tab_2'];
+                $data['tab_2'] = 'stock_import';
             }
         }elseif ($data['group'] == 'purchase') {
             
             $data['count_purchase_order'] = $this->Accounting_model->count_purchase_order_not_convert_yet();
-            $data['count_purchase_invoice'] = $this->Accounting_model->count_purchase_invoice_not_convert_yet();
             $data['count_purchase_payment'] = $this->Accounting_model->count_purchase_payment_not_convert_yet();
 
             if ($data['tab_2'] == '') {
                 $data['tab_2'] = 'purchase_order';
-            }
-        }elseif ($data['group'] == 'manufacturing') {
-            $Manufacturing_model = model('Manufacturing\Models\Manufacturing_model');
-            
-            $data['products'] = $Manufacturing_model->get_product();
-            $data['routings'] = $Manufacturing_model->get_routings();
-        }elseif ($data['group'] == 'fixed_equipment') {
-            $data['count_asset'] = $this->Accounting_model->count_fe_asset_not_convert_yet();
-            $data['count_license'] = $this->Accounting_model->count_fe_license_not_convert_yet();
-            $data['count_component'] = $this->Accounting_model->count_fe_component_not_convert_yet();
-            $data['count_consumable'] = $this->Accounting_model->count_fe_consumable_not_convert_yet();
-            $data['count_maintenance'] = $this->Accounting_model->count_fe_maintenance_not_convert_yet();
-            $data['count_depreciation'] = $this->Accounting_model->count_fe_depreciation_not_convert_yet();
-
-
-            if ($data['tab_2'] == '') {
-                $data['tab_2'] = 'fe_assets';
             }
         }
         
@@ -142,7 +103,6 @@ class Accounting extends Security_Controller
         }
 
         $select = [
-            '1',
             get_db_prefix() . 'invoice_payments.id as id',
             'amount',
             'invoice_id',
@@ -151,11 +111,11 @@ class Accounting extends Security_Controller
             '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'invoice_payments.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payment") as count_account_historys'
         ];
         $where = [];
-        array_push($where, 'AND '. get_db_prefix() . 'invoice_payments.deleted = 0');
+            array_push($where, 'AND '. get_db_prefix() . 'invoice_payments.deleted = 0');
 
-        $payment_methods = $this->request->getPost('payment_methods') ? implode(",", $this->request->getPost('payment_methods')) : "";
-        if ($payment_methods != '') {
-            array_push($where, 'AND payment_method_id IN (' . $payment_methods . ')');
+        $payment_mode = $this->request->getPost('payment_method_id') ? $this->request->getPost('payment_method_id') : "";
+        if ($payment_mode != '') {
+            array_push($where, 'AND payment_method_id = "' . $payment_mode . '"');
         }
 
         if ($id != '') {
@@ -205,9 +165,8 @@ class Accounting extends Security_Controller
         $join         = ['LEFT JOIN ' . get_db_prefix() . 'payment_methods ON ' . get_db_prefix() . 'payment_methods.id = ' . get_db_prefix() . 'invoice_payments.payment_method_id',
                         'LEFT JOIN ' . get_db_prefix() . 'acc_account_history ON ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'invoice_payments.id and ' . get_db_prefix() . 'acc_account_history.rel_id = "payment"',
                         'LEFT JOIN ' . get_db_prefix() . 'invoices ON ' . get_db_prefix() . 'invoices.id = ' . get_db_prefix() . 'invoice_payments.invoice_id',
-                        'LEFT JOIN ' . get_db_prefix() . 'clients ON ' . get_db_prefix() . 'invoices.client_id = ' . get_db_prefix() . 'clients.id',
                     ];
-        $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['payment_method_id', 'currency_symbol']);
+        $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['payment_method_id']);
 
         $output  = $result['output'];
         $rResult = $result['rResult'];
@@ -215,10 +174,9 @@ class Accounting extends Security_Controller
         foreach ($rResult as $aRow) {
             $row   = [];
 
-            $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
             $row[] = format_to_date($aRow['date']);
 
-            $row[] = to_currency($aRow['amount'], $aRow['currency_symbol']);
+            $row[] = to_currency($aRow['amount'], $currency_symbol);
 
             $row[] = $aRow['name'];
             $row[] = '<a href="' . get_uri('invoices/view/' . $aRow['invoice_id']) . '" target="_blank">' . get_invoice_id($aRow['invoice_id']) . '</a>';
@@ -232,34 +190,29 @@ class Accounting extends Security_Controller
             } 
 
             $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-        
-            $options = '';
-            if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'payment'));
-            }else{
-                if(acc_has_permission('acc_can_edit_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'payment'));
-                }
+            if($aRow['count_account_historys'] == 0){
 
-                if(acc_has_permission('acc_can_delete_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "payment"));
-                }
+                $options = '';
+
+                $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'payment'));
+
+                $row[] =  $options;
+            }else{
+                $row[] =  $this->_convert_make_options_dropdown($aRow['id'], 'payment');
             }
 
-            $row[] = $options;
-
-            $output['aaData'][] = $row;
+            $output['data'][] = $row;
         }
 
         if($return_ajax) {
             echo json_encode($output);
             die();
         }else{
-            if($id != '' && isset($output['aaData'][0])){
-                return $output['aaData'][0];
+            if($id != '' && isset($output['data'][0])){
+                return $output['data'][0];
             }else{
 
-                return $output['aaData'];
+                return $output['data'];
             }
         }
     }
@@ -280,7 +233,6 @@ class Accounting extends Security_Controller
             $invoice_value_calculation_query = $this->Accounting_model->acc_get_invoice_value_calculation_query();
 
             $select = [
-                '1',
                 'client_id',
                 get_db_prefix() . 'invoices.id as id',
                 get_db_prefix() . 'invoices.due_date as due_date',
@@ -348,20 +300,17 @@ class Accounting extends Security_Controller
                         'LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM '.get_db_prefix().'invoice_items WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = '. get_db_prefix() . 'invoices.id'
                         ];
 
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['company_name', $invoice_value_calculation_query . ' as invoice_value', 'currency_symbol']);
-            $output = $result['output'];
-            $output['data'] = [];
+            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['company_name', $invoice_value_calculation_query . ' as invoice_value']);
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
 
                 $row[] = '<a href="' . get_uri('invoices/view/' . $aRow['id']) . '" target="_blank">' . get_invoice_id($aRow['id']) . '</a>';
 
                 $row[] = format_to_date($aRow['date']);
-                $row[] = to_currency($aRow['invoice_value'], $aRow['currency_symbol']);
+                $row[] = to_currency($aRow['invoice_value'], $currency_symbol);
 
                 $row[] = anchor(get_uri("clients/view/" . $aRow['client_id']), $aRow['company_name']);
 
@@ -378,33 +327,34 @@ class Accounting extends Security_Controller
 
                 $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
 
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'invoice'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'invoice'));
-                    }
 
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "invoice"));
-                    }
+
+                $options = '';
+               
+                if($aRow['count_account_historys'] == 0){
+
+                    $options = '';
+                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'invoice'));
+
+                    $row[] =  $options;
+                }else{
+                    $row[] =  $this->_convert_make_options_dropdown($aRow['id'], 'invoice');
                 }
 
-                $row[] = $options;
+                $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             if($return_ajax) {
                 echo json_encode($output);
                 die();
             }else{
-                if($id != '' && isset($output['aaData'][0])){
-                    return $output['aaData'][0];
+                if($id != '' && isset($output['data'][0])){
+                    return $output['data'][0];
                 }else{
 
-                    return $output['aaData'];
+                    return $output['data'];
                 }
             }
     }
@@ -422,7 +372,6 @@ class Accounting extends Security_Controller
             $currency_symbol = get_setting("currency_symbol");
             $Expenses_model = model('Expenses_model');
             $select = [
-                '1',
                 get_db_prefix() . 'expenses.id as id',
                 'amount',
                 get_db_prefix() . 'expense_categories.title as category_name',
@@ -432,11 +381,6 @@ class Accounting extends Security_Controller
             ];
             $where = [];
             array_push($where, 'AND '. get_db_prefix() . 'expenses.deleted = 0');
-
-            $category = $this->request->getPost('category') ? $this->request->getPost('category') : "";
-            if ($category != '') {
-                array_push($where, 'AND '.get_db_prefix() . 'expenses.category_id in ( '. implode(',', $category) . ')');
-            }
 
             $status = $this->request->getPost('status') ? $this->request->getPost('status') : "";
             if ($status != '') {
@@ -489,14 +433,11 @@ class Accounting extends Security_Controller
             ];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [$select_purchase]);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
                 $row[] = format_to_date($aRow['expense_date']);
                 
                 $row[] = $aRow['title'];
@@ -527,32 +468,31 @@ class Accounting extends Security_Controller
                 $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
                 
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['expense_date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'expense'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'expense'));
-                    }
+                if($aRow['count_account_historys'] == 0){
 
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "expense"));
-                    }
+                    $options = '';
+
+                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'expense'));
+
+                    $row[] =  $options;
+                }else{
+                    $row[] =  $this->_convert_make_options_dropdown($aRow['id'], 'expense');
                 }
 
-                $row[] = $options;
+                $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             if($return_ajax) {
                 echo json_encode($output);
                 die();
             }else{
-                if($id != '' && isset($output['aaData'][0])){
-                    return $output['aaData'][0];
+                if($id != '' && isset($output['data'][0])){
+                    return $output['data'][0];
                 }else{
 
-                    return $output['aaData'];
+                    return $output['data'];
                 }
             }
     }
@@ -563,6 +503,7 @@ class Accounting extends Security_Controller
      */
     public function banking_table()
     {
+        if ($this->input->is_ajax_request()) {
             $this->load->model('currencies_model');
 
             $currency = $this->currencies_model->get_base_currency();
@@ -638,25 +579,24 @@ class Accounting extends Security_Controller
             $join         = [];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, []);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
                 $categoryOutput = format_to_date($aRow['date']);
                 $amount = $aRow['withdrawals'] > 0 ? $aRow['withdrawals'] : $aRow['deposits'];
                 $categoryOutput .= '<div class="row-options">';
                 if ($aRow['count_account_historys'] == 0) {
-                    if (acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
                         $categoryOutput .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="banking-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="banking" data-amount="'.$amount.'">' . app_lang('acc_convert') . '</a>';
                     }
                 }else{
-                    if (acc_has_permission('acc_can_edit_transaction')) {
+                    if (has_permission('accounting_transaction', '', 'edit')) {
                         $categoryOutput .= '<a href="#" onclick="convert(this); return false;" id="banking-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="banking" data-amount="'.$amount.'">' . app_lang('edit') . '</a>';
                     }
-                    if (acc_has_permission('acc_can_delete_transaction')) {
+                    if (has_permission('accounting_transaction', '', 'delete')) {
                         $categoryOutput .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'banking\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
                     }
                 }
@@ -664,8 +604,8 @@ class Accounting extends Security_Controller
                 $categoryOutput .= '</div>';
                 $row[] = $categoryOutput;
 
-                $row[] = to_currency($aRow['withdrawals'], $currency_symbol);
-                $row[] = to_currency($aRow['deposits'], $currency_symbol);
+                $row[] = to_currency($aRow['withdrawals'], $currency->name);
+                $row[] = to_currency($aRow['deposits'], $currency->name);
 
                 $row[] = $aRow['payee'];
                 $row[] = $aRow['description'];
@@ -681,7 +621,7 @@ class Accounting extends Security_Controller
                 $row[] = '<span class="label label-' . $label_class . ' s-status payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
 
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
                     $options = icon_btn('#', 'share', 'btn-success', [
                         'title' => app_lang('acc_convert'),
                         'data-id' =>$aRow['id'],
@@ -698,27 +638,21 @@ class Accounting extends Security_Controller
 
             echo json_encode($output);
             die();
+        }
     }
 
     /**
      * manage chart of accounts
      */
     public function chart_of_accounts(){
-        if(!acc_has_permission('acc_can_view_account')){
-            show_404();
+        if (!has_permission('accounting_chart_of_accounts', '', 'view')) {
+            access_denied('chart_of_accounts');
         }
 
         $data['title'] = app_lang('chart_of_accounts');
         $data['account_types'] = $this->Accounting_model->get_account_types();
         $data['detail_types'] = $this->Accounting_model->get_account_type_details();
-        foreach ($data['detail_types'] as $key => $value) {
-            if ($value['id'] == 14) {
-                unset($data['detail_types'][$key]);
-            }
-        }
-
-        $data['accounts'] = $this->Accounting_model->get_accounts('', 'account_detail_type_id != 14');
-
+        $data['accounts'] = $this->Accounting_model->get_accounts();
         return $this->template->rander('Accounting\Views\chart_of_accounts/manage', $data);
     }
 
@@ -728,8 +662,8 @@ class Accounting extends Security_Controller
      */
     public function setting()
     {
-        if(!acc_has_permission('acc_can_view_setting')){
-            show_404();
+        if (!has_permission('accounting_setting', '', 'view')) {
+            access_denied('setting');
         }
         
         $data          = [];
@@ -741,16 +675,15 @@ class Accounting extends Security_Controller
         $data['tab'][] = 'mapping_setup';
         $data['tab'][] = 'account_type_details';
         $data['tab'][] = 'plaid_environment';
-        $data['tab'][] = 'permissions';
         
-        $data['child_tab_2'] = $this->request->getGet('tab');
+        $data['tab_2'] = $this->request->getGet('tab');
         if ($data['group'] == '') {
             $data['group'] = 'general';
         }
 
         if ($data['group'] == 'mapping_setup') {
-            if ($data['child_tab_2'] == '') {
-                $data['child_tab_2'] = 'general_mapping_setup';
+            if ($data['tab_2'] == '') {
+                $data['tab_2'] = 'general_mapping_setup';
             }
 
             $accounts_dropdown = [];
@@ -782,7 +715,7 @@ class Accounting extends Security_Controller
         }
         $data['title']        = app_lang($data['group']);
         $data['tabs']['view'] = 'Accounting\Views\setting/' . $data['group'];
-        $data['tab_2'] = 'Accounting\Views\setting/'.$data['child_tab_2'];
+        $data['tab_2'] = 'Accounting\Views\setting/'.$data['tab_2'];
 
         return $this->template->rander('Accounting\Views\setting/manage', $data);
     }
@@ -791,10 +724,9 @@ class Accounting extends Security_Controller
      * update general setting
      */
     public function update_general_setting(){
-        if(!acc_has_permission('acc_can_edit_setting')){
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
-
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_general_setting($data);
         if($success == true){
@@ -809,10 +741,9 @@ class Accounting extends Security_Controller
      * update automatic conversion
      */
     public function update_automatic_conversion(){
-        if(!acc_has_permission('acc_can_edit_setting')){
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
-
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_automatic_conversion($data);
         if($success == true){
@@ -880,15 +811,6 @@ class Accounting extends Security_Controller
 
             $where = [];
 
-            $menu_type = '';
-            if ($this->request->getPost('menu_type')) {
-                $menu_type = $this->request->getPost('menu_type');
-
-                array_push($where, 'AND account_detail_type_id = "14"');
-            }else{
-                array_push($where, 'AND account_detail_type_id != "14"');
-            }
-
             $accounting_method = get_setting('acc_accounting_method');
 
             if($accounting_method == 'cash'){
@@ -904,8 +826,7 @@ class Accounting extends Security_Controller
             $sTable       = get_db_prefix() . 'acc_accounts';
             $join         = [];
             $result       = $this->Accounting_model->get_account_data_tables($aColumns, $sIndexColumn, $sTable, $join, $where, ['number', 'description', 'balance_as_of', $debit, $credit, 'default_account']);
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -960,17 +881,14 @@ class Accounting extends Security_Controller
                 
                 $options = "";
 
-                if (acc_has_permission('acc_can_edit_account')) {
+                if (has_permission('accounting_chart_of_accounts', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_account(' . $aRow['id'] . '); return false;" class="edit"><i data-feather="edit" class="icon-16"></i></a>';
                 }
 
-                if (acc_has_permission('acc_can_delete_account') && $aRow['default_account'] == 0) {
-                	if($menu_type == ''){
-                    	$options .= '<a href="' . get_uri('accounting/delete_account/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
-                    }else{
-                    	$options .= '<a href="' . get_uri('accounting/delete_bank_account/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
-                    }
+                if (has_permission('accounting_chart_of_accounts', '', 'delete') && $aRow['default_account'] == 0) {
+                    $options .= '<a href="' . get_uri('accounting/delete_account/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
+
 
                 $row[] =  $options;
 
@@ -989,21 +907,16 @@ class Accounting extends Security_Controller
      */
     public function account()
     {
-        if (!acc_has_permission('acc_can_edit_account') && !acc_has_permission('acc_can_create_account')) {
-            show_404();
+        if (!has_permission('accounting_chart_of_accounts', '', 'edit') && !has_permission('accounting_chart_of_accounts', '', 'create')) {
+            access_denied('accounting');
         }
 
         if ($this->request->getPost()) {
             $data = $this->request->getPost();
-            $menu_type = '';
-            if(isset($data['menu_type'])){
-                $menu_type = $data['menu_type'];
-                unset($data['menu_type']);
-            }
             $message = '';
             if ($data['id'] == '') {
-                if (!acc_has_permission('acc_can_create_account')) {
-                    app_redirect('forbidden');
+                if (!has_permission('accounting_chart_of_accounts', '', 'create')) {
+                    access_denied('accounting');
                 }
                 $success = $this->Accounting_model->add_account($data);
                 if ($success) {
@@ -1014,8 +927,8 @@ class Accounting extends Security_Controller
                     $this->session->setFlashdata("error_message", $message);
                 }
             } else {
-                if (!acc_has_permission('acc_can_edit_account')) {
-                    app_redirect('forbidden');
+                if (!has_permission('accounting_chart_of_accounts', '', 'edit')) {
+                    access_denied('accounting');
                 }
                 $id = $data['id'];
                 unset($data['id']);
@@ -1027,10 +940,6 @@ class Accounting extends Security_Controller
                     $message = app_lang('updated_fail');
                     $this->session->setFlashdata("error_message", $message);
                 }
-            }
-
-            if($menu_type != ''){
-                app_redirect('accounting/banking?group=bank_accounts');
             }
 
             app_redirect('accounting/chart_of_accounts');
@@ -1046,23 +955,11 @@ class Accounting extends Security_Controller
     public function convert_modal_form(){
 
         $html = '';
-        $debit = '';
-        $credit = '';
         $list_item = [];
         $id = $this->request->getPost('id');
         $type = $this->request->getPost('type');
         $currency_symbol = get_setting("currency_symbol");
         $amount = 0;
-
-
-
-        $db = db_connect('default');
-
-        $accounts = $this->Accounting_model->get_accounts();
-        $accounts_dropdown = [];
-        foreach ($accounts as $account) {
-            $accounts_dropdown[$account['id']] = $account['name'];
-        }
 
         if($type == 'payment'){
             $Invoice_payments_model = model('Invoice_payments_model');
@@ -1071,13 +968,6 @@ class Accounting extends Security_Controller
             $payment_method = $Payment_methods_model->get_one(['id' => $payment->payment_method_id]);
             $Invoices_model = model('Invoices_model');
             $invoice = $Invoices_model->get_one(['id' => $payment->invoice_id]);
-
-            $Clients_model = model('Clients_model');
-            $client = $Clients_model->get_one(['id' => $invoice->client_id]);
-
-            $base_currency = get_base_currency();
-            $currency_symbol = get_setting("currency_symbol");
-
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                          <tr class="project-overview">
@@ -1087,7 +977,7 @@ class Accounting extends Security_Controller
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('acc_amount').'</td>
-                            <td>'. to_currency($payment->amount, $client->currency_symbol) .'</td>
+                            <td>'. to_decimal_format($payment->amount) .'</td>
                             <td></td>
                          </tr>
                          <tr class="project-overview">
@@ -1107,51 +997,12 @@ class Accounting extends Security_Controller
             $amount = $payment->amount;
             
             $_html = '';
-            if($base_currency != $client->currency && $client->currency != ''){
-                $convert_rate = acc_get_currency_rate($client->currency);
-
-                $html .=   '<tr class="project-overview">
-                                <td class="bold">'. _l('amount_after_convert').'</td>
-                                <td class="amount_after_convert">'.to_currency(round($payment->amount / $convert_rate, 4), $currency_symbol).'</td>
-                             </tr>';
-            }
            
             $html .=   '</tbody>
                   </table>';
-
+            
             $debit = get_setting('acc_payment_deposit_to');
             $credit = get_setting('acc_payment_payment_account');
-
-            $db_builder = $db->table(get_db_prefix().'acc_account_history');
-            $db_builder->where('rel_id', $id);
-            $db_builder->where('rel_type', $type);
-            $db_builder->where('(tax = 0 or tax is null)');
-            $account_history = $db_builder->get()->getResultArray();
-            foreach ($account_history as $key => $value) {
-                if($value['debit'] > 0){
-                    $debit = $value['account'];
-                }
-
-                if($value['credit'] > 0){
-                    $credit =  $value['account'];
-                }
-            }
-
-            $html .= '<div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="payment_account" class="">'. app_lang('payment_account').'</label>
-                                '.form_dropdown("payment_account", $accounts_dropdown, array($credit ? $credit : ''), "class='select2 validate-hidden' id='payment_account' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="deposit_to" class="">'. app_lang('deposit_to').'</label>
-                            '.form_dropdown("deposit_to", $accounts_dropdown, array($debit ? $debit : ''), "class='select2 validate-hidden' id='deposit_to' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                </div>';
-            
         }elseif ($type == 'expense') {
             $Expenses_model = model('Expenses_model');
             $expense = $Expenses_model->get_details(['id' => $id])->getRow();
@@ -1202,54 +1053,24 @@ class Accounting extends Security_Controller
 
             $html .=    '</tbody>
                   </table>';
+
             $debit = get_setting('acc_expense_deposit_to');
             $credit = get_setting('acc_expense_payment_account');
-
-            $db_builder = $db->table(get_db_prefix().'acc_account_history');
-            $db_builder->where('rel_id', $id);
-            $db_builder->where('rel_type', $type);
-            $db_builder->where('(tax = 0 or tax is null)');
-            $account_history = $db_builder->get()->getResultArray();
-            foreach ($account_history as $key => $value) {
-                if($value['debit'] > 0){
-                    $debit = $value['account'];
-                }
-
-                if($value['credit'] > 0){
-                    $credit =  $value['account'];
-                }
-            }
-
-            $html .= '<div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="payment_account" class="">'. app_lang('payment_account').'</label>
-                                '.form_dropdown("payment_account", $accounts_dropdown, array($credit ? $credit : ''), "class='select2 validate-hidden' id='payment_account' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="deposit_to" class="">'. app_lang('deposit_to').'</label>
-                            '.form_dropdown("deposit_to", $accounts_dropdown, array($debit ? $debit : ''), "class='select2 validate-hidden' id='deposit_to' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                </div>';
-            
         }elseif ($type == 'banking') {
             $banking = $this->Accounting_model->get_transaction_banking($id);
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                         <tr class="project-overview">
-                            <td class="bold" width="30%">'. app_lang('date').'</td>
+                            <td class="bold" width="30%">'. app_lang('expense_dt_table_heading_date').'</td>
                             <td>'. format_to_date($banking->date)  .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('withdrawals').'</td>
-                            <td>'. to_currency($banking->withdrawals, $currency_symbol) .'</td>
+                            <td>'. to_currency($banking->withdrawals, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('deposits').'</td>
-                            <td>'. to_currency($banking->deposits, $currency_symbol) .'</td>
+                            <td>'. to_currency($banking->deposits, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('payee').'</td>
@@ -1267,13 +1088,12 @@ class Accounting extends Security_Controller
         }elseif ($type == 'invoice') {
             $Invoices_model = model('Invoices_model');
             $invoice = $Invoices_model->get_one(['id' => $id]);
-
-            $Clients_model = model('Clients_model');
-            $client = $Clients_model->get_one(['id' => $invoice->client_id]);
-
             $invoice_summary = $Invoices_model->get_invoice_total_summary($id);
-            $base_currency = get_base_currency();
-            $currency_symbol = get_setting("currency_symbol");
+            $accounts = $this->Accounting_model->get_accounts();
+            $accounts_dropdown = [];
+            foreach ($accounts as $account) {
+                $accounts_dropdown[$account['id']] = $account['name'];
+            }
 
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
@@ -1299,21 +1119,12 @@ class Accounting extends Security_Controller
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('total').'</td>
-                            <td>'. to_currency($invoice_summary->invoice_total, $client->currency_symbol) .'</td>
+                            <td>'. to_currency($invoice_summary->invoice_total, $currency_symbol) .'</td>
                             <td></td>
                          </tr>';
 
             
             $amount = 1;
-
-            if($base_currency != $client->currency && $client->currency != ''){
-                $convert_rate = acc_get_currency_rate($client->currency);
-
-                $html .=   '<tr class="project-overview">
-                                <td class="bold">'. _l('amount_after_convert').'</td>
-                                <td class="amount_after_convert">'.to_currency(round($invoice_summary->invoice_total / $convert_rate, 4), $currency_symbol).'</td>
-                             </tr>';
-            }
 
             $html .=    '</tbody>
                   </table>';
@@ -1335,6 +1146,7 @@ class Accounting extends Security_Controller
                     }
                     $list_item[] = $item_id;
 
+                    $db = db_connect('default');
                     $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
 
                     $db_builder->where('rel_id', $id);
@@ -1354,7 +1166,7 @@ class Accounting extends Security_Controller
                     if($account_history){
                         $html .= '
                         <div class="div_content">
-                        <h5>'.$value['title'].': '.to_currency(($value['quantity'] * $value['rate']), $client->currency_symbol).'</h5>
+                        <h5>'.$value['title'].': '.to_currency(($value['quantity'] * $value['rate']), $currency_symbol).'</h5>
                         <div class="row">
                                 '.form_hidden('item_amount['.$value['id'].']', $value['quantity'] * $value['rate']).'
                               <div class="col-md-6"> 
@@ -1380,7 +1192,7 @@ class Accounting extends Security_Controller
                         if($item_automatic){
                             $html .= '
                             <div class="div_content">
-                                <h5>'.$value['title'].': '.to_currency(($value['quantity'] * $value['rate']), $client->currency_symbol).'</h5>
+                                <h5>'.$value['title'].'</h5>
                                 <div class="row">
                                 '.form_hidden('item_amount['.$value['id'].']', $value['quantity'] * $value['rate']).'
                                   <div class="col-md-6"> 
@@ -1404,7 +1216,7 @@ class Accounting extends Security_Controller
 
                             $html .= '
                             <div class="div_content">
-                                <h5>'.$value['title'].': '.to_currency(($value['quantity'] * $value['rate']), $client->currency_symbol).'</h5>
+                                <h5>'.$value['title'].'</h5>
                                 <div class="row">
                                 '.form_hidden('item_amount['.$value['id'].']', $value['quantity'] * $value['rate']).'
                                   <div class="col-md-6">
@@ -1432,13 +1244,14 @@ class Accounting extends Security_Controller
             $debit = get_setting('acc_invoice_deposit_to');
             $credit = get_setting('acc_invoice_payment_account');
         }elseif ($type == 'payslip') {
-            $db_builder = $db->table(get_db_prefix(). 'hrp_payslips');
-            $db_builder->where('id', $id);
-            $payslip = $db_builder->get()->getRow();
+            $this->db->where('id', $id);
+            $payslip = $this->db->get(get_db_prefix(). 'hrp_payslips')->row();
 
-            $db_builder = $db->table(get_db_prefix(). 'hrp_payslip_details');
-            $db_builder->where('payslip_id', $id);
-            $payslip_details = $db_builder->get()->getResultArray();
+            $this->db->where('payslip_id', $id);
+            $payslip_details = $this->db->get(get_db_prefix(). 'hrp_payslip_details')->result_array();
+
+            $accounts = $this->Accounting_model->get_accounts();
+
 
             $payment_account = get_setting('acc_pl_total_insurance_payment_account');
             $deposit_to = get_setting('acc_pl_total_insurance_deposit_to');
@@ -1481,7 +1294,7 @@ class Accounting extends Security_Controller
                          </tr>
                          <tr class="project-overview">
                             <td class="bold" width="30%">'. app_lang('date_created').'</td>
-                            <td>'. _d($payslip->date_created)  .'</td>
+                            <td>'. _dt($payslip->date_created)  .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold" width="30%">'. app_lang('status').'</td>
@@ -1489,24 +1302,23 @@ class Accounting extends Security_Controller
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('ps_total_insurance').'</td>
-                            <td>'. to_currency($total_insurance, $currency_symbol) .'</td>
+                            <td>'. to_currency($total_insurance, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('ps_income_tax_paye').'</td>
-                            <td>'. to_currency($income_tax_paye, $currency_symbol) .'</td>
+                            <td>'. to_currency($income_tax_paye, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('ps_net_pay').'</td>
-                            <td>'. to_currency($net_pay, $currency_symbol) .'</td>
+                            <td>'. to_currency($net_pay, $currency->name) .'</td>
                          </tr>
                         </tbody>
                   </table>';
 
-                $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-                $db_builder->where('rel_id', $id);
-                $db_builder->where('rel_type', $type);
-                $db_builder->where('payslip_type', 'total_insurance');
-                $account_history = $db_builder->get()->getResultArray();
+                $this->db->where('rel_id', $id);
+                $this->db->where('rel_type', $type);
+                $this->db->where('payslip_type', 'total_insurance');
+                $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
                 
                 $payment_account_insurance = get_setting('acc_pl_total_insurance_payment_account');
                 $deposit_to_insurance = get_setting('acc_pl_total_insurance_deposit_to');
@@ -1534,11 +1346,10 @@ class Accounting extends Security_Controller
                           </div>
                         </div>';
 
-                $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-                $db_builder->where('rel_id', $id);
-                $db_builder->where('rel_type', $type);
-                $db_builder->where('payslip_type', 'tax_paye');
-                $account_history = $db_builder->get()->getResultArray();
+                $this->db->where('rel_id', $id);
+                $this->db->where('rel_type', $type);
+                $this->db->where('payslip_type', 'tax_paye');
+                $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
                 
                 $payment_account_tax_paye = get_setting('acc_pl_tax_paye_payment_account');
                 $deposit_to_tax_paye = get_setting('acc_pl_tax_paye_deposit_to');
@@ -1566,11 +1377,10 @@ class Accounting extends Security_Controller
                           </div>
                         </div>';
                         
-                $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-                $db_builder->where('rel_id', $id);
-                $db_builder->where('rel_type', $type);
-                $db_builder->where('payslip_type', 'net_pay');
-                $account_history = $db_builder->get()->getResultArray();
+                $this->db->where('rel_id', $id);
+                $this->db->where('rel_type', $type);
+                $this->db->where('payslip_type', 'net_pay');
+                $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
                 
                 $payment_account_net_pay = get_setting('acc_pl_net_pay_payment_account');
                 $deposit_to_net_pay = get_setting('acc_pl_net_pay_deposit_to');
@@ -1603,16 +1413,9 @@ class Accounting extends Security_Controller
         }elseif ($type == 'purchase_order') {
             $accounts = $this->Accounting_model->get_accounts();
 
-            $purchase_model = model('Purchase\Models\Purchase_model');
-
-            $purchase_order = $purchase_model->get_pur_order($id);
-            $purchase_order_detail = $purchase_model->get_pur_order_detail($id);
-
-            $currency = get_base_currency();
-            $base_currency = get_base_currency();
-            if($purchase_order->currency != ''){
-                $base_currency = $purchase_order->currency;
-            }
+            $this->load->model('purchase/purchase_model');
+            $purchase_order = $this->purchase_model->get_pur_order($id);
+            $purchase_order_detail = $this->purchase_model->get_pur_order_detail($id);
 
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
@@ -1630,42 +1433,28 @@ class Accounting extends Security_Controller
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('po_value').'</td>
-                            <td>'. to_currency($purchase_order->subtotal, $base_currency) .'</td>
+                            <td>'. to_currency($purchase_order->subtotal, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('tax_value').'</td>
-                            <td>'. to_currency($purchase_order->total_tax, $base_currency) .'</td>
+                            <td>'. to_currency($purchase_order->total_tax, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
                             <td class="bold">'. app_lang('po_value_included_tax').'</td>
-                            <td>'. to_currency($purchase_order->total, $base_currency) .'</td>
-                         </tr>';
-                $amount = 1;
-
-                if($base_currency != $currency){
-                    $convert_rate = acc_get_currency_rate($base_currency);
-
-                    $html .=   '<tr class="project-overview">
-                                    <td class="bold">'. _l('amount_after_convert').'</td>
-                                    <td class="amount_after_convert">'.to_currency(round($purchase_order->total / $convert_rate, 4), $currency).'</td>
-                                 </tr>';
-                }
-
-                $html .= '</tbody>
+                            <td>'. to_currency($purchase_order->total, $currency->name) .'</td>
+                         </tr>
+                        </tbody>
                   </table>';
 
             if($purchase_order_detail){
-                $builder = db_connect('default');
-
                 $payment_account = get_setting('acc_pur_order_payment_account');
                 $deposit_to = get_setting('acc_pur_order_deposit_to');
 
                 $html .= '<h4>'.app_lang('list_of_items').'</h4>';
                 foreach ($purchase_order_detail as $value) {
 
-                    $db_builder = $builder->table(get_db_prefix().'items');
-                    $db_builder->where('id', $value['item_code']);
-                    $item = $db_builder->get()->getRow();
+                    $this->db->where('id', $value['item_code']);
+                    $item = $this->db->get(get_db_prefix().'items')->row();
 
                     $item_description = '';
                     if(isset($item) && isset($item->commodity_code) && isset($item->description)){
@@ -1682,12 +1471,10 @@ class Accounting extends Security_Controller
                     }
                     $list_item[] = $item_id;
 
-                    $history_builder = $builder->table(get_db_prefix(). 'acc_account_history');
-
-                    $history_builder->where('rel_id', $id);
-                    $history_builder->where('rel_type', $type);
-                    $history_builder->where('item', $item_id);
-                    $account_history = $history_builder->get()->getResultArray();
+                    $this->db->where('rel_id', $id);
+                    $this->db->where('rel_type', $type);
+                    $this->db->where('item', $item_id);
+                    $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
                     
                     foreach ($account_history as $key => $val) {
                         if($val['debit'] > 0){
@@ -1726,11 +1513,12 @@ class Accounting extends Security_Controller
                                 render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$payment_account,array(),array(),'','',false) .'
                               </div>
                               <div class="col-md-6">
-                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$item_automatic->expense_account,array(),array(),'','',false).'
+                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$item_automatic->expence_account,array(),array(),'','',false).'
                               </div>
                           </div>
                         </div>';
                         }else{
+
                             $html .= '
                         <div class="div_content">
                             <h5>'.$item_description.'</h5>
@@ -1751,80 +1539,60 @@ class Accounting extends Security_Controller
 
             $debit = 0;
             $credit = 0;
-        }elseif ($type == 'purchase_invoice') {
-            $data_convert = $this->Accounting_model->get_pur_invoice_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $list_item = $data_convert['list_item'];
-
-            $debit = 0;
-            $credit = 0;
         }elseif ($type == 'stock_export') {
-            $Warehouse_model = model('Warehouse\Models\Warehouse_model');
-
-            $goods_delivery = $Warehouse_model->get_goods_delivery($id);
-            $goods_delivery_detail = $Warehouse_model->get_goods_delivery_detail($id);
+            $this->load->model('warehouse/warehouse_model');
+            $goods_delivery = $this->warehouse_model->get_goods_delivery($id);
+            $goods_delivery_detail = $this->warehouse_model->get_goods_delivery_detail($id);
             $accounts = $this->Accounting_model->get_accounts();
             $status = '';
 
             if($goods_delivery->approval == 1){
-                $status = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'._l('approved').'</span><span class="hide">, </span></span>&nbsp';
+                $status = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'.app_lang('approved').'</span><span class="hide">, </span></span>&nbsp';
             }elseif($goods_delivery->approval == 0){
-                $status = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'._l('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
+                $status = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'.app_lang('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
             }elseif($goods_delivery->approval == -1){
-                $status = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'._l('reject').'</span><span class="hide">, </span></span>&nbsp';
+                $status = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'.app_lang('reject').'</span><span class="hide">, </span></span>&nbsp';
             }
 
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                         <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('date').'</td>
-                            <td><a href="' . admin_url('warehouse/view_delivery/' . $goods_delivery->id ).'">' . $goods_delivery->goods_delivery_code . '</a></td>
+                            <td class="bold" width="30%">'. app_lang('expense_dt_table_heading_date').'</td>
+                            <td><a href="' . get_uri('warehouse/view_delivery/' . $goods_delivery->id ).'">' . $goods_delivery->goods_delivery_code . '</a></td>
                          </tr>
                         <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('accounting_date').'</td>
-                            <td>'. _d($goods_delivery->date_c)  .'</td>
+                            <td class="bold" width="30%">'. app_lang('accounting_date').'</td>
+                            <td>'. format_to_date($goods_delivery->date_c)  .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('status').'</td>
+                            <td class="bold">'. app_lang('status').'</td>
                             <td>'. $status .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('subtotal').'</td>
-                            <td>'. to_currency($goods_delivery->total_money, $currency_symbol) .'</td>
+                            <td class="bold">'. app_lang('subtotal').'</td>
+                            <td>'. to_currency($goods_delivery->total_money, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('total_discount').'</td>
-                            <td>'. to_currency($goods_delivery->total_discount, $currency_symbol) .'</td>
+                            <td class="bold">'. app_lang('total_discount').'</td>
+                            <td>'. to_currency($goods_delivery->total_discount, $currency->name) .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('total_money').'</td>
-                            <td>'. to_currency($goods_delivery->after_discount, $currency_symbol) .'</td>
+                            <td class="bold">'. app_lang('total_money').'</td>
+                            <td>'. to_currency($goods_delivery->after_discount, $currency->name) .'</td>
                          </tr>
                         </tbody>
                   </table>';
 
             if($goods_delivery_detail){
-                $builder = db_connect('default');
                 $payment_account = get_setting('acc_wh_stock_export_payment_account');
                 $deposit_to = get_setting('acc_wh_stock_export_deposit_to');
-                $profit_payment_account = get_setting('acc_wh_stock_export_profit_payment_account');
-                $profit_deposit_to = get_setting('acc_wh_stock_export_profit_deposit_to');
 
-                $html .= '<h4>'._l('list_of_items').'</h4>';
+                $html .= '<h4>'.app_lang('list_of_items').'</h4>';
 
                 foreach ($goods_delivery_detail as $value) {
 
-                    $goods_transaction_detail = $this->Accounting_model->get_goods_transaction_detail($value['id']);
-                    $item_amount = 0;
-                    $profit_item_amount = 0;
-                    if($goods_transaction_detail){
-                        $item_amount = $goods_transaction_detail->quantity * $goods_transaction_detail->purchase_price;
-                        $profit_item_amount = ($goods_transaction_detail->quantity * $goods_transaction_detail->price) - $item_amount;
-                    }
-
-                    $item_builder = $builder->table(get_db_prefix(). 'items');
-                    $item_builder->where('id', $value['commodity_code']);
-                    $item = $item_builder->get()->getRow();
+                    $this->db->where('id', $value['commodity_code']);
+                    $item = $this->db->get(get_db_prefix().'items')->row();
 
                     $item_description = '';
                     if(isset($item) && isset($item->commodity_code) && isset($item->description)){
@@ -1842,211 +1610,10 @@ class Accounting extends Security_Controller
 
                     $list_item[] = $item_id;
 
-                    $history_builder = $builder->table(get_db_prefix(). 'acc_account_history');
-                    $history_builder->where('rel_id', $id);
-                    $history_builder->where('rel_type', $type);
-                    $history_builder->where('item', $item_id);
-                    $account_history = $history_builder->get()->getResultArray();
-
-                    foreach ($account_history as $key => $val) {
-                        if($val['sub_type'] == 'inventory'){
-                            if($val['debit'] > 0){
-                                $debit = $val['account'];
-                            }
-
-                            if($val['credit'] > 0){
-                                $credit =  $val['account'];
-                            }
-                        }else{
-                            if($val['debit'] > 0){
-                                $profit_debit = $val['account'];
-                            }
-
-                            if($val['credit'] > 0){
-                                $profit_credit =  $val['account'];
-                            }
-                        }
-                    }
-                    
-                    if($account_history){
-                        $html .= '
-                        <div class="div_content">
-                        <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h5>'. _l('acc_inventory').'('.to_currency($item_amount, $currency_symbol).')</h5>
-                              </div>
-                                '.form_hidden('item_amount['.$item_id.']', ($item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$credit,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$debit,array(),array(),'','',false).'
-                              </div>
-                          <div class="col-md-12">
-                                <h5>'. _l('profit').'('.to_currency($profit_item_amount, $currency_symbol).')</h5>
-                              </div>
-                            '.form_hidden('profit_item_amount['.$item_id.']', ($profit_item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('profit_payment_account['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'payment_account',$profit_credit,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('profit_deposit_to['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'deposit_to',$profit_debit,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                    }else{
-                        $item_automatic = $this->Accounting_model->get_item_automatic($item_id);
-
-                        if($item_automatic){
-                            $html .= '
-                        <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
-                            <div class="row">
-                            <div class="col-md-12">
-                                <h5>'. _l('acc_inventory').'('.to_currency($item_amount, $currency_symbol).')</h5>
-                              </div>
-                            '.form_hidden('item_amount['.$item_id.']', ($item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$item_automatic->inventory_asset_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$deposit_to,array(),array(),'','',false).'
-                              </div>
-                              <div class="col-md-12">
-                                <h5>'. _l('profit').'('.to_currency($profit_item_amount, $currency_symbol).')</h5>
-                              </div>
-                            '.form_hidden('profit_item_amount['.$item_id.']', ($profit_item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('profit_payment_account['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'payment_account',$item_automatic->income_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('profit_deposit_to['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'deposit_to',$profit_deposit_to,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                        }else{
-
-                            $html .= '
-                        <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
-                            <div class="row">
-                            <div class="col-md-12">
-                                <h5>'. _l('acc_inventory').'('.to_currency($item_amount, $currency_symbol).')</h5>
-                              </div>
-                            '.form_hidden('item_amount['.$item_id.']', ($item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'payment_account',$payment_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'deposit_to',$deposit_to,array(),array(),'','',false).'
-                              </div>
-                              <div class="col-md-12">
-                                <h5>'. _l('profit').'('.to_currency($profit_item_amount, $currency_symbol).')</h5>
-                              </div>
-                            '.form_hidden('profit_item_amount['.$item_id.']', ($profit_item_amount)).'
-                              <div class="col-md-6"> '.
-                                render_select('profit_payment_account['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'payment_account',$profit_payment_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('profit_deposit_to['.$item_id.']', $accounts,array('id','name', 'account_type_name'),'deposit_to',$profit_deposit_to,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                        }
-                    }
-                }
-            }
-
-            $debit = 0;
-            $credit = 0;
-        }elseif ($type == 'stock_import') {
-            $accounts = $this->Accounting_model->get_accounts();
-
-            $Warehouse_model = model('Warehouse\Models\Warehouse_model');
-
-            $goods_receipt = $Warehouse_model->get_goods_receipt($id);
-            $goods_receipt_detail = $Warehouse_model->get_goods_receipt_detail($id);
-
-            $status = '';
-
-            if($goods_receipt->approval == 1){
-                $status = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'._l('approved').'</span><span class="hide">, </span></span>&nbsp';
-            }elseif($goods_receipt->approval == 0){
-                $status = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'._l('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
-            }elseif($goods_receipt->approval == -1){
-                $status = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'._l('reject').'</span><span class="hide">, </span></span>&nbsp';
-            }
-
-            $html = '<table class="table border table-striped no-margin">
-                      <tbody>
-                        <tr class="project-overview">
-                            <td class="bold">'. _l('withdrawals').'</td>
-                            <td><a href="' . admin_url('warehouse/goods_receipt_detail/' . $goods_receipt->id) . '" target="_blank">' . $goods_receipt->goods_receipt_code . '</a></td>
-                        </tr>
-                        <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('accounting_date').'</td>
-                            <td>'. _d($goods_receipt->date_c)  .'</td>
-                         </tr>
-                         <tr class="project-overview">
-                            <td class="bold">'. _l('status').'</td>
-                            <td>'. $status .'</td>
-                         </tr>
-                         <tr class="project-overview">
-                            <td class="bold">'. _l('total_tax_money').'</td>
-                            <td>'. to_currency($goods_receipt->total_tax_money, $currency_symbol) .'</td>
-                         </tr>
-                         <tr class="project-overview">
-                            <td class="bold">'. _l('total_goods_money').'</td>
-                            <td>'. to_currency($goods_receipt->total_goods_money, $currency_symbol) .'</td>
-                         </tr>
-                         <tr class="project-overview">
-                            <td class="bold">'. _l('value_of_inventory').'</td>
-                            <td>'. to_currency($goods_receipt->value_of_inventory, $currency_symbol) .'</td>
-                         </tr>
-                         <tr class="project-overview">
-                            <td class="bold">'. _l('total_money').'</td>
-                            <td>'. to_currency($goods_receipt->total_money, $currency_symbol) .'</td>
-                         </tr>
-                        </tbody>
-                  </table>';
-
-            if($goods_receipt_detail){
-                $payment_account = get_setting('acc_wh_stock_import_payment_account');
-                $deposit_to = get_setting('acc_wh_stock_import_deposit_to');
-
-                $html .= '<h4>'._l('list_of_items').'</h4>';
-
-                foreach ($goods_receipt_detail as $value) {
-                    $db_builder = $db->table(get_db_prefix().'items');
-                    $db_builder->where('id', $value['commodity_code']);
-                    $item = $db_builder->get()->getRow();
-
-                    $item_description = '';
-                    if($item){
-                        if($item->commodity_code){
-                            $item_description .= $item->commodity_code.' - ';
-                        }
-                        
-                        $item_description .= $item->title;
-                    }
-
-                    $item_id = 0;
-                    if(isset($item->id)){
-                        $item_id = $item->id;
-                    }
-
-                    if($item_id == 0){
-                        continue;
-                    }
-
-                    $list_item[] = $item_id;
-
-                    $db_builder = $db->table(get_db_prefix().'acc_account_history');
-                    $db_builder->where('rel_id', $id);
-                    $db_builder->where('rel_type', $type);
-                    $db_builder->where('item', $item_id);
-                    $account_history = $db_builder->get()->getResultArray();
+                    $this->db->where('rel_id', $id);
+                    $this->db->where('rel_type', $type);
+                    $this->db->where('item', $item_id);
+                    $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
                     
                     foreach ($account_history as $key => $val) {
                         if($val['debit'] > 0){
@@ -2061,7 +1628,7 @@ class Accounting extends Security_Controller
                     if($account_history){
                         $html .= '
                         <div class="div_content">
-                        <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
+                        <h5>'.$item_description.'</h5>
                         <div class="row">
                                 '.form_hidden('item_amount['.$item_id.']', ($value['quantities'] * $value['unit_price'])).'
                               <div class="col-md-6"> '.
@@ -2078,9 +1645,154 @@ class Accounting extends Security_Controller
                         if($item_automatic){
                             $html .= '
                         <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
+                            <h5>'.$item_description.'</h5>
                             <div class="row">
                             '.form_hidden('item_amount['.$item_id.']', ($value['quantities'] * $value['unit_price'])).'
+                              <div class="col-md-6"> '.
+                                render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$item_automatic->inventory_asset_account,array(),array(),'','',false) .'
+                              </div>
+                              <div class="col-md-6">
+                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$deposit_to,array(),array(),'','',false).'
+                              </div>
+                          </div>
+                        </div>';
+                        }else{
+
+                            $html .= '
+                        <div class="div_content">
+                            <h5>'.$item_description.'</h5>
+                            <div class="row">
+                            '.form_hidden('item_amount['.$item_id.']', ($value['quantities'] * $value['unit_price'])).'
+                              <div class="col-md-6"> '.
+                                render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$payment_account,array(),array(),'','',false) .'
+                              </div>
+                              <div class="col-md-6">
+                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$deposit_to,array(),array(),'','',false).'
+                              </div>
+                          </div>
+                        </div>';
+                        }
+                    }
+                }
+            }
+
+            $debit = 0;
+            $credit = 0;
+        }elseif ($type == 'stock_import') {
+            $accounts = $this->Accounting_model->get_accounts();
+
+            $this->load->model('warehouse/warehouse_model');
+            $goods_receipt = $this->warehouse_model->get_goods_receipt($id);
+            $goods_receipt_detail = $this->warehouse_model->get_goods_receipt_detail($id);
+
+            $status = '';
+
+            if($goods_receipt->approval == 1){
+                $status = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'.app_lang('approved').'</span><span class="hide">, </span></span>&nbsp';
+            }elseif($goods_receipt->approval == 0){
+                $status = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'.app_lang('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
+            }elseif($goods_receipt->approval == -1){
+                $status = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'.app_lang('reject').'</span><span class="hide">, </span></span>&nbsp';
+            }
+
+            $html = '<table class="table border table-striped no-margin">
+                      <tbody>
+                        <tr class="project-overview">
+                            <td class="bold">'. app_lang('withdrawals').'</td>
+                            <td><a href="' . get_uri('warehouse/view_purchase/' . $goods_receipt->id) . '" target="_blank">' . $goods_receipt->goods_receipt_code . '</a></td>
+                        </tr>
+                        <tr class="project-overview">
+                            <td class="bold" width="30%">'. app_lang('accounting_date').'</td>
+                            <td>'. format_to_date($goods_receipt->date_c)  .'</td>
+                         </tr>
+                         <tr class="project-overview">
+                            <td class="bold">'. app_lang('status').'</td>
+                            <td>'. $status .'</td>
+                         </tr>
+                         <tr class="project-overview">
+                            <td class="bold">'. app_lang('total_tax_money').'</td>
+                            <td>'. to_currency($goods_receipt->total_tax_money, $currency->name) .'</td>
+                         </tr>
+                         <tr class="project-overview">
+                            <td class="bold">'. app_lang('total_goods_money').'</td>
+                            <td>'. to_currency($goods_receipt->total_goods_money, $currency->name) .'</td>
+                         </tr>
+                         <tr class="project-overview">
+                            <td class="bold">'. app_lang('value_of_inventory').'</td>
+                            <td>'. to_currency($goods_receipt->value_of_inventory, $currency->name) .'</td>
+                         </tr>
+                         <tr class="project-overview">
+                            <td class="bold">'. app_lang('total_money').'</td>
+                            <td>'. to_currency($goods_receipt->total_money, $currency->name) .'</td>
+                         </tr>
+                        </tbody>
+                  </table>';
+
+            if($goods_receipt_detail){
+                $payment_account = get_setting('acc_wh_stock_import_payment_account');
+                $deposit_to = get_setting('acc_wh_stock_import_deposit_to');
+
+                $html .= '<h4>'.app_lang('list_of_items').'</h4>';
+
+                foreach ($goods_receipt_detail as $value) {
+
+                    $this->db->where('id', $value['commodity_code']);
+                    $item = $this->db->get(get_db_prefix().'items')->row();
+
+                    $item_description = '';
+                    if(isset($item) && isset($item->commodity_code) && isset($item->description)){
+                       $item_description = $item->commodity_code.' - '.$item->description;
+                    }
+
+                    $item_id = 0;
+                    if(isset($item->id)){
+                        $item_id = $item->id;
+                    }
+
+                    if($item_id == 0){
+                        continue;
+                    }
+
+                    $list_item[] = $item_id;
+
+                    $this->db->where('rel_id', $id);
+                    $this->db->where('rel_type', $type);
+                    $this->db->where('item', $item_id);
+                    $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
+                    
+                    foreach ($account_history as $key => $val) {
+                        if($val['debit'] > 0){
+                            $debit = $val['account'];
+                        }
+
+                        if($val['credit'] > 0){
+                            $credit =  $val['account'];
+                        }
+                    }
+
+                    if($account_history){
+                        $html .= '
+                        <div class="div_content">
+                        <h5>'.$item_description.'</h5>
+                        <div class="row">
+                                '.form_hidden('item_amount['.$item_id.']', $value['goods_money']).'
+                              <div class="col-md-6"> '.
+                                render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$credit,array(),array(),'','',false) .'
+                              </div>
+                              <div class="col-md-6">
+                                '. render_select('deposit_to['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'deposit_to',$debit,array(),array(),'','',false).'
+                              </div>
+                          </div>
+                        </div>';
+                    }else{
+                        $item_automatic = $this->Accounting_model->get_item_automatic($item_id);
+
+                        if($item_automatic){
+                            $html .= '
+                        <div class="div_content">
+                            <h5>'.$item_description.'</h5>
+                            <div class="row">
+                            '.form_hidden('item_amount['.$item_id.']', $value['goods_money']).'
                               <div class="col-md-6"> '.
                                 render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$payment_account,array(),array(),'','',false) .'
                               </div>
@@ -2093,9 +1805,9 @@ class Accounting extends Security_Controller
 
                             $html .= '
                         <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($value['quantities'] * $value['unit_price']), $currency_symbol).')</h5>
+                            <h5>'.$item_description.'</h5>
                             <div class="row">
-                            '.form_hidden('item_amount['.$item_id.']', ($value['quantities'] * $value['unit_price'])).'
+                            '.form_hidden('item_amount['.$item_id.']', $value['goods_money']).'
                               <div class="col-md-6"> '.
                                 render_select('payment_account['.$item_id.']',$accounts,array('id','name', 'account_type_name'),'payment_account',$payment_account,array(),array(),'','',false) .'
                               </div>
@@ -2114,40 +1826,40 @@ class Accounting extends Security_Controller
         }elseif ($type == 'loss_adjustment') {
             $accounts = $this->Accounting_model->get_accounts();
 
-            $Warehouse_model = model('Warehouse\Models\Warehouse_model');
+            $this->load->model('warehouse/warehouse_model');
 
-            $loss_adjustment = $Warehouse_model->get_loss_adjustment($id);
-            $loss_adjustment_detail = $Warehouse_model->get_loss_adjustment_detailt_by_masterid($id);
+            $loss_adjustment = $this->warehouse_model->get_loss_adjustment($id);
+            $loss_adjustment_detail = $this->warehouse_model->get_loss_adjustment_detailt_by_masterid($id);
 
             $banking = $this->Accounting_model->get_transaction_banking($id);
 
             $status = '';
 
             if ((int) $loss_adjustment->status == 0) {
-                $status = '<span class="mt0 badge large bg-warning" >' . _l('draft') . '</span>';
+                $status = '<div class="btn btn-warning" >' . app_lang('draft') . '</div>';
             } elseif ((int) $loss_adjustment->status == 1) {
-                $status = '<span class="mt0 badge large bg-success" >' . _l('adjusted') . '</span>';
+                $status = '<div class="btn btn-success" >' . app_lang('Adjusted') . '</div>';
             } elseif((int) $loss_adjustment->status == -1){
 
-                $status = '<span class="mt0 badge large bg-danger" >' . _l('reject') . '</span>';
+                $status = '<div class="btn btn-danger" >' . app_lang('reject') . '</div>';
             }
 
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                         <tr class="project-overview">
-                            <td class="bold">'. _l('type').'</td>
-                            <td><a href="' . admin_url('warehouse/view_lost_adjustment/' . $loss_adjustment->id) . '" target="_blank">' . _l($loss_adjustment->type) . '</a></td>
+                            <td class="bold">'. app_lang('type').'</td>
+                            <td><a href="' . get_uri('warehouse/view_lost_adjustment/' . $loss_adjustment->id) . '" target="_blank">' . app_lang($loss_adjustment->type) . '</a></td>
                         </tr>
                         <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('_time').'</td>
-                            <td>'. _d($loss_adjustment->time)  .'</td>
+                            <td class="bold" width="30%">'. app_lang('_time').'</td>
+                            <td>'. format_to_date($loss_adjustment->time)  .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('status').'</td>
+                            <td class="bold">'. app_lang('status').'</td>
                             <td>'. $status .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('reason').'</td>
+                            <td class="bold">'. app_lang('reason').'</td>
                             <td>'. html_entity_decode($loss_adjustment->reason) .'</td>
                          </tr>
                         </tbody>
@@ -2161,7 +1873,7 @@ class Accounting extends Security_Controller
                 $increase_deposit_to = get_setting('acc_wh_increase_deposit_to');
 
 
-                $html .= '<h4>'._l('list_of_items').'</h4>';
+                $html .= '<h4>'.app_lang('list_of_items').'</h4>';
 
                 foreach ($loss_adjustment_detail as $value) {
                     if($value['current_number'] < $value['updates_number']){
@@ -2174,17 +1886,12 @@ class Accounting extends Security_Controller
                         $deposit_to = $decrease_deposit_to;
                     }
 
-                    $db_builder = $db->table(get_db_prefix().'items');
-                    $db_builder->where('id', $value['items']);
-                    $item = $db_builder->get()->getRow();
+                    $this->db->where('id', $value['items']);
+                    $item = $this->db->get(get_db_prefix().'items')->row();
 
                     $item_description = '';
-                    if($item){
-                        if($item->commodity_code){
-                           $item_description .= $item->commodity_code.' - ';
-                        }
-
-                        $item_description .= $item->title;
+                    if(isset($item) && isset($item->commodity_code) && isset($item->description)){
+                       $item_description = $item->commodity_code.' - '.$item->description;
                     }
 
                     $item_id = 0;
@@ -2197,14 +1904,11 @@ class Accounting extends Security_Controller
                     }
                     $list_item[] = $item_id;
 
-                    $db_builder = $db->table(get_db_prefix().'acc_account_history');
-                    $db_builder->where('rel_id', $id);
-                    $db_builder->where('rel_type', $type);
-                    $db_builder->where('item', $item_id);
-                    $account_history = $db_builder->get()->getResultArray();
-
-                    $debit = 0;
-                    $credit = 0;
+                    $this->db->where('rel_id', $id);
+                    $this->db->where('rel_type', $type);
+                    $this->db->where('item', $item_id);
+                    $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
+                    
                     foreach ($account_history as $key => $val) {
                         if($val['debit'] > 0){
                             $debit = $val['account'];
@@ -2217,32 +1921,30 @@ class Accounting extends Security_Controller
 
                     $price = 0;
                     if($value['lot_number'] != ''){
-                        $db_builder = $db->table(get_db_prefix().'goods_receipt_detail');
-                        $db_builder->where('lot_number', $value['lot_number']);
-                        $db_builder->where('expiry_date', $value['expiry_date']);
-                        $receipt_detail = $db_builder->get()->getRow();
+                        $this->db->where('lot_number', $value['lot_number']);
+                        $this->db->where('expiry_date', $value['expiry_date']);
+                        $receipt_detail = $this->db->get(get_db_prefix().'goods_receipt_detail')->row();
                         if($receipt_detail){
                             $price = $receipt_detail->unit_price;
                         }else{
-                            $db_builder->where('id' ,$item_id);
-                            $item = $db_builder->get(get_db_prefix().'items')->getRow();
+                            $this->db->where('id' ,$item_id);
+                            $item = $this->db->get(get_db_prefix().'items')->row();
                             if($item){
                                 $price = $item->purchase_price;
                             }
                         }
                     }else{
-                        $db_builder = $db->table(get_db_prefix().'items');
-                        $db_builder->where('id' ,$item_id);
-                        $item = $db_builder->get()->getRow();
+                        $this->db->where('id' ,$item_id);
+                        $item = $this->db->get(get_db_prefix().'items')->row();
                         if($item){
                             $price = $item->purchase_price;
                         }
                     }
 
-                    if($account_history && $debit != 0 && $credit != 0){
+                    if($account_history){
                         $html .= '
                         <div class="div_content">
-                        <h5>'.$item_description.'('.to_currency(($number * $price), $currency_symbol).')</h5>
+                        <h5>'.$item_description.'</h5>
                         <div class="row">
                                 '.form_hidden('item_amount['.$item_id.']', $number * $price).'
                               <div class="col-md-6"> '.
@@ -2259,7 +1961,7 @@ class Accounting extends Security_Controller
                         if($item_automatic){
                             $html .= '
                         <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($number * $price), $currency_symbol).')</h5>
+                            <h5>'.$item_description.'</h5>
                             <div class="row">
                             '.form_hidden('item_amount['.$item_id.']', $number * $price).'
                               <div class="col-md-6"> '.
@@ -2274,7 +1976,7 @@ class Accounting extends Security_Controller
 
                             $html .= '
                         <div class="div_content">
-                            <h5>'.$item_description.'('.to_currency(($number * $price), $currency_symbol).')</h5>
+                            <h5>'.$item_description.'</h5>
                             <div class="row">
                             '.form_hidden('item_amount['.$item_id.']', $number * $price).'
                               <div class="col-md-6"> '.
@@ -2305,28 +2007,28 @@ class Accounting extends Security_Controller
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                         <tr class="project-overview">
-                            <td class="bold">'. _l('commodity_code').'</td>
-                            <td><a href="' . admin_url('warehouse/view_commodity_detail/' . $opening_stock->id) . '" target="_blank">' . $opening_stock->commodity_code . '</a></td>
+                            <td class="bold">'. app_lang('commodity_code').'</td>
+                            <td><a href="' . get_uri('warehouse/view_commodity_detail/' . $opening_stock->id) . '" target="_blank">' . $opening_stock->commodity_code . '</a></td>
                         </tr>
                         <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('commodity_name').'</td>
+                            <td class="bold" width="30%">'. app_lang('commodity_name').'</td>
                             <td>'. $opening_stock->description .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('sku_code').'</td>
+                            <td class="bold">'. app_lang('sku_code').'</td>
                             <td>'. $opening_stock->sku_code .'</td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('opening_stock').'</td>
-                            <td>'. to_currency($opening_stock->opening_stock, $currency_symbol) .'</td>
+                            <td class="bold">'. app_lang('opening_stock').'</td>
+                            <td>'. to_currency($opening_stock->opening_stock, $currency->name) .'</td>
                          </tr>
                         </tbody>
                   </table><br>';
-            $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-            $db_builder->where('rel_id', $id);
-            $db_builder->where('rel_type', $type);
-            $db_builder->where('date >= "'.$date_financial_year.'"');
-            $account_history = $db_builder->get()->getResultArray();
+
+            $this->db->where('rel_id', $id);
+            $this->db->where('rel_type', $type);
+            $this->db->where('date >= "'.$date_financial_year.'"');
+            $account_history = $this->db->get(get_db_prefix(). 'acc_account_history')->result_array();
 
             foreach ($account_history as $key => $value) {
                 if($value['debit'] > 0){
@@ -2337,8 +2039,6 @@ class Accounting extends Security_Controller
                     $payment_account =  $value['account'];
                 }
             }
-
-            $amount = $opening_stock->opening_stock;
 
             $html .= '
                     <div class="row">
@@ -2353,354 +2053,61 @@ class Accounting extends Security_Controller
             $debit = 0;
             $credit = 0;
         }elseif($type == 'purchase_payment'){
-            $purchase_model = model('Purchase\Models\Purchase_model');
+            $this->load->model('purchase/purchase_model');
+            $payment = $this->purchase_model->get_payment_pur_invoice($id);
 
-            $currency = get_base_currency();
-
-            $payment = $purchase_model->get_payment_pur_invoice($id);
-
-            $invoice = $purchase_model->get_pur_invoice($payment->pur_invoice);
-
-            $base_currency = get_base_currency();
-            if($invoice->currency != ''){
-                $base_currency = $invoice->currency;
-            }
+            $invoice = $this->purchase_model->get_pur_invoice($payment->pur_invoice);
 
             $html = '<table class="table border table-striped no-margin">
                       <tbody>
                          <tr class="project-overview">
-                            <td class="bold" width="30%">'. _l('purchase_order').'</td>
-                            <td>'.'<a href="'.admin_url('purchase/purchase_order/'.$invoice->pur_order).'">'.get_pur_order_subject($invoice->pur_order).'</a>' .'</td>
+                            <td class="bold" width="30%">'. app_lang('purchase_order').'</td>
+                            <td>'.'<a href="'.get_uri('purchase/purchase_order/'.$invoice->pur_order).'">'.get_pur_order_subject($invoice->pur_order).'</a>' .'</td>
                             <td></td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('acc_amount').'</td>
-                            <td>'. to_currency($payment->amount, $base_currency) .'</td>
+                            <td class="bold">'. app_lang('acc_amount').'</td>
+                            <td>'. to_currency($payment->amount, $currency->name) .'</td>
                             <td></td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('date').'</td>
-                            <td>'. _d($payment->date) .'</td>
+                            <td class="bold">'. app_lang('expense_dt_table_heading_date').'</td>
+                            <td>'. format_to_date($payment->date) .'</td>
                             <td></td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('payment_mode').'</td>
+                            <td class="bold">'. app_lang('payment_modes').'</td>
                             <td>'. get_payment_mode_name_by_id($payment->paymentmode) .'</td>
                             <td></td>
                          </tr>
                          <tr class="project-overview">
-                            <td class="bold">'. _l('note').'</td>
+                            <td class="bold">'. app_lang('note').'</td>
                             <td colspan="2">'. html_entity_decode($payment->note) .'</td>
                          </tr>';
-            $_html = '';
-
             $amount = 1;
-
             
-
-            if($base_currency != $currency){
-                $convert_rate = acc_get_currency_rate($base_currency);
-
-                $html .=   '<tr class="project-overview">
-                                <td class="bold">'. _l('amount_after_convert').'</td>
-                                <td class="amount_after_convert">'.to_currency(round($payment->amount / $convert_rate, 4), $currency).'</td>
-                             </tr>';
-            }
-
+            
             $html .=   '</tbody>
                   </table>';
            
             $debit = get_setting('acc_pur_payment_deposit_to');
             $credit = get_setting('acc_pur_payment_payment_account');
+        }
+        $db = db_connect('default');
+        $db_builder = $db->table(get_db_prefix().'acc_account_history');
 
-            $db_builder = $db->table(get_db_prefix().'acc_account_history');
-            $db_builder->where('rel_id', $id);
-            $db_builder->where('rel_type', $type);
-            $db_builder->where('(tax = 0 or tax is null)');
-            $account_history = $db_builder->get()->getResultArray();
-
-            foreach ($account_history as $key => $value) {
-                if($value['debit'] > 0){
-                    $debit = $value['account'];
-                }
-
-                if($value['credit'] > 0){
-                    $credit =  $value['account'];
-                }
+        $db_builder->where('rel_id', $id);
+        $db_builder->where('rel_type', $type);
+        $db_builder->where('(tax = 0 or tax is null)');
+        $account_history = $db_builder->get()->getResultArray();
+        foreach ($account_history as $key => $value) {
+            if($value['debit'] > 0){
+                $debit = $value['account'];
             }
 
-            $html .= '<div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="payment_account" class="">'. app_lang('payment_account').'</label>
-                                '.form_dropdown("payment_account", $accounts_dropdown, array($credit ? $credit : ''), "class='select2 validate-hidden' id='payment_account' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="deposit_to" class="">'. app_lang('deposit_to').'</label>
-                            '.form_dropdown("deposit_to", $accounts_dropdown, array($debit ? $debit : ''), "class='select2 validate-hidden' id='deposit_to' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'").'
-                        </div>
-                    </div>
-                </div>';
-        }elseif ($type == 'manufacturing_order') {
-            $accounts = $this->Accounting_model->get_accounts();
-
-            $Manufacturing_model = model('Manufacturing\Models\Manufacturing_model');
-
-            $_manufacturing_order = $Manufacturing_model->get_manufacturing_order($id);
-            $manufacturing_order = $_manufacturing_order['manufacturing_order'];
-            $manufacturing_order_costing = $Manufacturing_model->get_manufacturing_order_costing($id);
-
-            $product_id = isset($manufacturing_order) ? $manufacturing_order->product_id : '';
-            $product_qty = isset($manufacturing_order) ? $manufacturing_order->product_qty : 1;
-            $unit_id = isset($manufacturing_order) ? $manufacturing_order->unit_id : '';
-            $manufacturing_order_code = isset($manufacturing_order) ? $manufacturing_order->manufacturing_order_code : '';
-            $staff_id = isset($manufacturing_order) ? $manufacturing_order->staff_id : '';
-            $bom_id = isset($manufacturing_order) ? $manufacturing_order->bom_id : '';
-            $routing_id = isset($manufacturing_order) ? $manufacturing_order->routing_id : '';
-            $components_warehouse_id = isset($manufacturing_order) ? $manufacturing_order->components_warehouse_id : '';
-            $finished_products_warehouse_id = isset($manufacturing_order) ? $manufacturing_order->finished_products_warehouse_id : '';
-            $date_deadline = isset($manufacturing_order) ? _dt($manufacturing_order->date_deadline) : '';
-            $date_plan_from = isset($manufacturing_order) ? _dt($manufacturing_order->date_plan_from) : '';
-            $routing_id_view = isset($manufacturing_order) ? mrp_get_routing_name($manufacturing_order->routing_id) : '';
-            $routing_id = isset($manufacturing_order) ? ($manufacturing_order->routing_id) : '';
-            $status = isset($manufacturing_order) ? ($manufacturing_order->status) : '';
-            $reference_purchase_request = isset($manufacturing_order) ? ($manufacturing_order->purchase_request_id) : '';
-
-            $components_warehouse_name='';
-            $finished_products_warehouse_name= mrp_get_warehouse_name($finished_products_warehouse_id);
-            if($components_warehouse_id != ''){
-                $components_warehouse_name .= mrp_get_warehouse_name($components_warehouse_id);
-            }else{
-                $components_warehouse_name .= _l('mrp_all');
+            if($value['credit'] > 0){
+                $credit =  $value['account'];
             }
-
-            $date_planned_start = '';
-            if(isset($manufacturing_order) && $manufacturing_order->date_planned_start != null && $manufacturing_order->date_planned_start != ''){
-
-                $date_planned_start = _dt($manufacturing_order->date_planned_start).' '._l('mrp_to').' '. _dt($manufacturing_order->date_planned_finished);
-            }
-
-            $html = '<div class="row">
-                        <div class="col-md-6 panel-padding" >
-                            <table class="table border table-striped table-margintop" >
-                                <tbody>
-                                    <tr class="project-overview">
-                                        <td class="bold">'. _l('manufacturing_order_code').'</td>
-                                        <td><a href="' . admin_url('manufacturing/view_manufacturing_order/' . $id) . '" target="_blank">' . $manufacturing_order->manufacturing_order_code . '</a></td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold td-width">'._l('product_label').'</td>
-                                        <td>'.mrp_get_product_name($product_id) .'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('unit_of_measure').'</td>
-                                        <td>'.mrp_get_unit_name($unit_id) .'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('product_qty').'</td>
-                                        <td>'.html_entity_decode($product_qty).'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('bill_of_material_label').'</td>
-                                        <td>'.mrp_get_product_name(mrp_get_bill_of_material($bom_id)).'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('routing_label').'</td>
-                                        <td>'.mrp_get_routing_name($routing_id).'</td>
-                                    </tr>
-                                    
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="col-md-6 panel-padding" >
-                            <table class="table table-striped table-margintop">
-                                <tbody>
-                                    <tr class="project-overview">
-                                        <td class="bold" width="40%">'._l('date_deadline').'</td>
-                                        <td>'.html_entity_decode($date_deadline).'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('date_plan_from').'</td>
-                                        <td>'.html_entity_decode($date_plan_from).'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('planned_date').'</td>
-                                        <td>'.html_entity_decode($date_planned_start).'</td>
-                                    </tr>
-                                    
-
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('responsible').'</td>
-                                        <td>'.html_entity_decode(get_staff_full_name($staff_id)).'</td>
-                                    </tr>
-                                    <tr class="project-overview">
-                                        <td class="bold">'._l('status').'</td>
-                                        <td><span class="label label-'. html_entity_decode($status).'" >'._l($status).'</span></td>
-                                    </tr>';
-
-                                    if($reference_purchase_request != ''){ 
-                                        $html .= '<tr class="project-overview">
-                                            <td class="bold">'._l('reference_purchase_request').'</td>
-                                            <td><a href="'.admin_url('purchase/view_pur_request/'.$reference_purchase_request) .'" target="_blank">'.mrp_purchase_request_code($reference_purchase_request).'</a></td>
-                                        </tr>';
-                                    }
-                $html .= '</tbody>
-                            </table>
-                        </div>
-                    </div>';
-
-            if($manufacturing_order_costing){
-                if($manufacturing_order_costing['total_material_cost'] > 0){
-                    $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-                    $db_builder->where('rel_id', $id);
-                    $db_builder->where('rel_type', $type);
-                    $db_builder->where('sub_type', 'material_cost');
-                    $account_history = $db_builder->get()->getResultArray();
-                    
-                    foreach ($account_history as $key => $val) {
-                        if($val['debit'] > 0){
-                            $debit = $val['account'];
-                        }
-
-                        if($val['credit'] > 0){
-                            $credit =  $val['account'];
-                        }
-                    }
-
-                    if($account_history){
-                        $html .= '
-                        <div class="div_content">
-                        <h5>'._l('total_material_cost').'('.app_format_money($manufacturing_order_costing['total_material_cost'], $currency_symbol).')</h5>
-                        <div class="row">
-                                '.form_hidden('material_cost', $manufacturing_order_costing['total_material_cost']).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account_material_cost',$accounts,array('id','name', 'account_type_name'),'payment_account',$credit,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to_material_cost',$accounts,array('id','name', 'account_type_name'),'deposit_to',$debit,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                    }else{
-                        $material_cost_payment_account = get_setting('acc_mrp_material_cost_payment_account');
-                        $material_cost_deposit_to = get_setting('acc_mrp_material_cost_deposit_to');
-
-                        $html .= '
-                        <div class="div_content">
-                            <h5>'._l('total_material_cost').'('.app_format_money($manufacturing_order_costing['total_material_cost'], $currency_symbol).')</h5>
-                            <div class="row">
-                                '.form_hidden('material_cost', $manufacturing_order_costing['total_material_cost']).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account_material_cost',$accounts,array('id','name', 'account_type_name'),'payment_account',$material_cost_payment_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to_material_cost',$accounts,array('id','name', 'account_type_name'),'deposit_to',$material_cost_deposit_to,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                    }
-                }
-
-                if($manufacturing_order_costing['total_labour_cost'] > 0){
-                    
-
-                    $db_builder = $db->table(get_db_prefix(). 'acc_account_history');
-                    $db_builder->where('rel_id', $id);
-                    $db_builder->where('rel_type', $type);
-                    $db_builder->where('sub_type', 'labour_cost');
-                    $account_history = $db_builder->get()->getResultArray();
-                    
-                    foreach ($account_history as $key => $val) {
-                        if($val['debit'] > 0){
-                            $debit = $val['account'];
-                        }
-
-                        if($val['credit'] > 0){
-                            $credit =  $val['account'];
-                        }
-                    }
-
-                    if($account_history){
-                        $html .= '
-                        <div class="div_content">
-                        <h5>'._l('total_labour_cost').'('.app_format_money($manufacturing_order_costing['total_labour_cost'], $currency_symbol).')</h5>
-                        <div class="row">
-                                '.form_hidden('labour_cost', $manufacturing_order_costing['total_labour_cost']).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account_labour_cost',$accounts,array('id','name', 'account_type_name'),'payment_account',$credit,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to_labour_cost',$accounts,array('id','name', 'account_type_name'),'deposit_to',$debit,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                    }else{
-                        $labour_cost_payment_account = get_setting('acc_mrp_labour_cost_payment_account');
-                        $labour_cost_deposit_to = get_setting('acc_mrp_labour_cost_deposit_to');
-
-                        $html .= '
-                        <div class="div_content">
-                            <h5>'._l('total_labour_cost').'('.app_format_money($manufacturing_order_costing['total_labour_cost'], $currency_symbol).')</h5>
-                            <div class="row">
-                                '.form_hidden('labour_cost', $manufacturing_order_costing['total_labour_cost']).'
-                              <div class="col-md-6"> '.
-                                render_select('payment_account_labour_cost',$accounts,array('id','name', 'account_type_name'),'payment_account',$labour_cost_payment_account,array(),array(),'','',false) .'
-                              </div>
-                              <div class="col-md-6">
-                                '. render_select('deposit_to_labour_cost',$accounts,array('id','name', 'account_type_name'),'deposit_to',$labour_cost_deposit_to,array(),array(),'','',false).'
-                              </div>
-                          </div>
-                        </div>';
-                    }
-                }
-            }
-
-            $debit = 0;
-            $credit = 0;
-        }elseif($type == 'fe_asset'){
-            $data_convert = $this->Accounting_model->get_fe_asset_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-            
-        }elseif($type == 'fe_license'){
-            $data_convert = $this->Accounting_model->get_fe_license_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-
-            $debit = get_setting('acc_fe_license_deposit_to');
-            $credit = get_setting('acc_fe_license_payment_account');
-        }elseif($type == 'fe_component'){
-            $data_convert = $this->Accounting_model->get_fe_component_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-
-            $debit = get_setting('acc_fe_component_deposit_to');
-            $credit = get_setting('acc_fe_component_payment_account');
-        }elseif($type == 'fe_consumable'){
-            $data_convert = $this->Accounting_model->get_fe_consumable_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-
-            $debit = get_setting('acc_fe_consumable_deposit_to');
-            $credit = get_setting('acc_fe_consumable_payment_account');
-        }elseif($type == 'fe_maintenance'){
-            $data_convert = $this->Accounting_model->get_fe_maintenance_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-
-            $debit = get_setting('acc_fe_maintenance_deposit_to');
-            $credit = get_setting('acc_fe_maintenance_payment_account');
-        }elseif($type == 'fe_depreciation'){
-            $data_convert = $this->Accounting_model->get_fe_depreciation_data_convert($id, $type);
-            $html = $data_convert['html'];
-            $amount = $data_convert['amount'];
-
-            $debit = get_setting('acc_fe_depreciation_deposit_to');
-            $credit = get_setting('acc_fe_depreciation_payment_account');
         }
 
         $accounts = $this->Accounting_model->get_accounts();
@@ -2718,10 +2125,9 @@ class Accounting extends Security_Controller
      * @return json 
      */
     public function convert(){
-        if (!acc_has_permission('acc_can_create_transaction')) {
-            show_404();
+        if (!has_permission('accounting_transaction', '', 'create')) {
+            access_denied('accounting');
         }
-
         $data = $this->request->getPost();
         $success = $this->Accounting_model->add_account_history($data);
 
@@ -2746,51 +2152,6 @@ class Accounting extends Security_Controller
             case 'expense':
                 $url = 'accounting/transaction?group=expenses';
                 break;
-            case 'purchase_order':
-                $url = 'accounting/transaction?group=purchase';
-                break;
-            case 'purchase_invoice':
-                $url = 'accounting/transaction?group=purchase';
-                break;
-            case 'purchase_payment':
-                $url = 'accounting/transaction?group=purchase';
-                break;
-            case 'stock_import':
-                $url = 'accounting/transaction?group=warehouse';
-                break;
-            case 'stock_export':
-                $url = 'accounting/transaction?group=warehouse';
-                break;
-            case 'loss_adjustment':
-                $url = 'accounting/transaction?group=warehouse';
-                break;
-            case 'opening_stock':
-                $url = 'accounting/transaction?group=warehouse';
-                break;
-            case 'fe_asset':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'fe_license':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'fe_component':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'fe_consumable':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'fe_maintenance':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'fe_depreciation':
-                $url = 'accounting/transaction?group=fixed_equipment';
-                break;
-            case 'manufacturing_order':
-                $url = 'accounting/transaction?group=manufacturing';
-                break;
-            case 'payslip':
-                $url = 'accounting/transaction?group=payslips';
-                break;
             default:
                 // code...
                 break;
@@ -2804,8 +2165,8 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function transfer(){
-        if (!acc_has_permission('acc_can_view_transfer')) {
-            show_404();
+        if (!has_permission('accounting_transfer', '', 'view')) {
+            access_denied('accounting');
         }
 
         //prepare groups dropdown list
@@ -2882,7 +2243,7 @@ class Accounting extends Security_Controller
             $join         = [];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['date']);
 
-            $output['data']  = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -2893,19 +2254,11 @@ class Accounting extends Security_Controller
 
                 $row[] = format_to_date($aRow['date']);
 
-                $edit = '';
-                if(acc_has_permission('acc_can_edit_transfer')){
-                    $edit = '<li role="presentation">' . modal_anchor(get_uri("accounting/transfer_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit'), array("title" => app_lang('edit'), "data-post-id" => $aRow['id'], "class" => "dropdown-item")) . '</li>';
-                }
+                $edit = '<li role="presentation">' . modal_anchor(get_uri("accounting/transfer_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit'), array("title" => app_lang('edit'), "data-post-id" => $aRow['id'], "class" => "dropdown-item")) . '</li>';
 
-                $delete = '';
-                if(acc_has_permission('acc_can_delete_transfer')){
-                    //show the delete menu if user has access to delete the tickets
-                    $delete = '<li role="presentation">' . js_anchor("<i data-feather='x' class='icon-16'></i>" . app_lang('delete'), array('title' => app_lang('delete'), "class" => "delete dropdown-item", "data-id" => $aRow['id'], "data-action-url" => get_uri("accounting/delete_transfer"), "data-action" => "delete-confirmation")) . '</li>';
-                }
+                //show the delete menu if user has access to delete the tickets
+                $delete = '<li role="presentation">' . js_anchor("<i data-feather='x' class='icon-16'></i>" . app_lang('delete'), array('title' => app_lang('delete'), "class" => "delete dropdown-item", "data-id" => $aRow['id'], "data-action-url" => get_uri("accounting/delete_transfer"), "data-action" => "delete-confirmation")) . '</li>';
 
-                $actions = '';
-                if(acc_has_permission('acc_can_edit_transfer') || acc_has_permission('acc_can_delete_transfer')){
                 $actions = '
                             <span class="dropdown inline-block">
                                 <button class="btn btn-default dropdown-toggle caret mt0 mb0" type="button" data-bs-toggle="dropdown" aria-expanded="true" data-bs-display="static">
@@ -2913,7 +2266,7 @@ class Accounting extends Security_Controller
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">' . $edit . $delete . '</ul>
                             </span>';
-                }
+
                 $row[] = $actions;
 
                 $output['data'][] = $row;
@@ -2930,11 +2283,9 @@ class Accounting extends Security_Controller
     public function add_transfer(){
         $data = $this->request->getPost();
         if($data['id'] == ''){
-
-            if (!acc_has_permission('acc_can_create_transfer')) {
-                show_404();
+            if (!has_permission('accounting_transfer', '', 'create')) {
+                access_denied('accounting');
             }
-
             $success = $this->Accounting_model->add_transfer($data);
             if ($success === 'close_the_book') {
                 $message = app_lang('has_closed_the_book');
@@ -2944,10 +2295,9 @@ class Accounting extends Security_Controller
                 $message = app_lang('transfer_failed');
             }
         }else{
-            if (!acc_has_permission('acc_can_edit_transfer')) {
-                show_404();
+            if (!has_permission('accounting_transfer', '', 'edit')) {
+                access_denied('accounting');
             }
-
             $id = $data['id'];
             unset($data['id']);
             $success = $this->Accounting_model->update_transfer($data, $id);
@@ -2966,10 +2316,9 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function journal_entry(){
-        if (!acc_has_permission('acc_can_view_journal_entry')) {
-            show_404();
+        if (!has_permission('accounting_journal_entry', '', 'view')) {
+            access_denied('accounting');
         }
-
         $data['title']         = app_lang('journal_entry');
         $data['accounts'] = $this->Accounting_model->get_accounts();
         $data['accounts_to_select'] = $this->Accounting_model->get_data_account_to_select();
@@ -3010,7 +2359,7 @@ class Accounting extends Security_Controller
             $join         = [];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['amount', 'description']);
 
-            $output['data']  = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -3025,16 +2374,12 @@ class Accounting extends Security_Controller
                 $row[] = to_currency($aRow['amount'], $currency_symbol);
 
                 $export_to_excel = '<li role="presentation"><a href="' . get_uri('accounting/journal_entry_export/' . $aRow['id']) . '" class="dropdown-item"><i data-feather="file-text" class="icon-16"></i> ' . app_lang('acc_export_excel') . '</a></li>';
-                $edit = '';
-                if(acc_has_permission('acc_can_edit_journal_entry')){
-                    $edit = '<li role="presentation"><a href="' . get_uri('accounting/new_journal_entry/' . $aRow['id']) . '" class="dropdown-item"><i data-feather="edit" class="icon-16"></i> ' . app_lang('edit') . '</a></li>';
-                }
 
-                $delete = '';
-                if(acc_has_permission('acc_can_delete_journal_entry')){
-                    //show the delete menu if user has access to delete the tickets
-                    $delete = '<li role="presentation">' . js_anchor("<i data-feather='x' class='icon-16'></i>" . app_lang('delete'), array('title' => app_lang('delete'), "class" => "delete dropdown-item", "data-id" => $aRow['id'], "data-action-url" => get_uri("accounting/delete_journal_entry"), "data-action" => "delete-confirmation")) . '</li>';
-                }
+
+                $edit = '<li role="presentation"><a href="' . get_uri('accounting/new_journal_entry/' . $aRow['id']) . '" class="dropdown-item"><i data-feather="edit" class="icon-16"></i> ' . app_lang('edit') . '</a></li>';
+
+                //show the delete menu if user has access to delete the tickets
+                $delete = '<li role="presentation">' . js_anchor("<i data-feather='x' class='icon-16'></i>" . app_lang('delete'), array('title' => app_lang('delete'), "class" => "delete dropdown-item", "data-id" => $aRow['id'], "data-action-url" => get_uri("accounting/delete_journal_entry"), "data-action" => "delete-confirmation")) . '</li>';
 
                 $actions = '
                             <span class="dropdown inline-block">
@@ -3059,15 +2404,11 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function new_journal_entry($id = ''){
-        if (!acc_has_permission('acc_can_edit_journal_entry') && !acc_has_permission('acc_can_create_journal_entry')) {
-            show_404();
-        }
-
         if ($this->request->getPost()) {
             $data                = $this->request->getPost();
             if($id == ''){
-                if (!acc_has_permission('acc_can_create_journal_entry')) {
-                    show_404();
+                if (!has_permission('accounting_journal_entry', '', 'create')) {
+                    access_denied('accounting_journal_entry');
                 }
 
                 $success = $this->Accounting_model->add_journal_entry($data);
@@ -3077,10 +2418,9 @@ class Accounting extends Security_Controller
                     $this->session->setFlashdata("success_message", sprintf(app_lang('added_successfully'), app_lang('journal_entry')));
                 }
             }else{
-                if (!acc_has_permission('acc_can_edit_journal_entry')) {
-                    show_404();
+                if (!has_permission('accounting_journal_entry', '', 'edit')) {
+                    access_denied('accounting_journal_entry');
                 }
-
                 $success = $this->Accounting_model->update_journal_entry($data, $id);
                 if ($success === 'close_the_book') {
                     $this->session->setFlashdata("error_message", app_lang('has_closed_the_book'));
@@ -3111,8 +2451,8 @@ class Accounting extends Security_Controller
      */
     public function delete_journal_entry()
     {
-        if (!acc_has_permission('acc_can_delete_journal_entry')) {
-            show_404();
+        if (!has_permission('accounting_journal_entry', '', 'delete')) {
+            access_denied('accounting_journal_entry');
         }
 
         $this->validate_submitted_data(array(
@@ -3135,10 +2475,9 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function report(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
+        if (!has_permission('accounting_report', '', 'view')) {
+            access_denied('accounting_report');
         }
-
         $data['title'] = app_lang('accounting_report');
 
         return $this->template->rander('Accounting\Views\report/manage', $data);
@@ -3149,10 +2488,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_balance_sheet(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('balance_sheet');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3165,10 +2500,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_balance_sheet_comparison(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('balance_sheet_comparison');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3183,10 +2514,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_balance_sheet_detail(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('balance_sheet_detail');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3199,10 +2526,6 @@ class Accounting extends Security_Controller
      * @return view 
      */
     public function rp_balance_sheet_summary(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('balance_sheet_summary');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3215,15 +2538,11 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_business_snapshot(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $this->load->model('currencies_model');
         $data['title'] = app_lang('business_snapshot');
         $data['currency'] = $this->currencies_model->get_base_currency();
         $data['data_report'] = $this->Accounting_model->get_data_balance_sheet_summary([]);
-        return $this->template->rander('Accounting\Views\report/includes/balance_sheet_summary', $data);
+        $this->load->view('report/includes/balance_sheet_summary', $data);
     }
 
     /**
@@ -3231,10 +2550,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_custom_summary_report(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('custom_summary_report');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3249,10 +2564,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_profit_and_loss_as_of_total_income(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('profit_and_loss_as_of_total_income');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3265,10 +2576,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_profit_and_loss_comparison(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('profit_and_loss_comparison');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3281,10 +2588,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_profit_and_loss_detail(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('profit_and_loss_detail');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3297,10 +2600,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_profit_and_loss_year_to_date_comparison(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('profit_and_loss_year_to_date_comparison');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3313,10 +2612,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_profit_and_loss(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('profit_and_loss');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3329,10 +2624,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_statement_of_cash_flows(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('statement_of_cash_flows');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3344,10 +2635,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_statement_of_changes_in_equity(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('statement_of_changes_in_equity');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3360,10 +2647,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_deposit_detail(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('deposit_detail');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3375,10 +2658,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_income_by_customer_summary(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('income_by_customer_summary');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3391,10 +2670,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_check_detail(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('cheque_detail');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3406,10 +2681,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_account_list(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('account_list');
         $data['from_date'] = date('Y-01-01');
         $data['to_date'] = date('Y-m-d');
@@ -3421,10 +2692,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_account_history(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('account_history');
         $data['account'] = $this->request->getGet('account');
         $data['from_date'] = date('Y-m-01');
@@ -3446,10 +2713,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_general_ledger(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('general_ledger');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3462,10 +2725,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_journal(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('journal');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3477,10 +2736,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_recent_transactions(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('recent_transactions');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3492,10 +2747,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_transaction_detail_by_account(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('transaction_detail_by_account');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3508,10 +2759,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_transaction_list_by_date(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('transaction_list_by_date');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3523,10 +2770,6 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function rp_trial_balance(){
-        if (!acc_has_permission('acc_can_view_report')) {
-            show_404();
-        }
-
         $data['title'] = app_lang('trial_balance');
         $data['from_date'] = date('Y-m-01');
         $data['to_date'] = date('Y-m-d');
@@ -3539,10 +2782,9 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function dashboard(){
-        if(!acc_has_permission('acc_can_view_dashboard')){
-            show_404();
+        if (!has_permission('accounting_dashboard', '', 'view')) {
+            access_denied('accounting_dashboard');
         }
-        
         $data['title'] = app_lang('dashboard');
         
         $data['currency'] = get_setting('default_currency');
@@ -3556,8 +2798,8 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function import_xlsx_banking() {
-        if(!acc_has_permission('acc_can_create_transaction')){
-            show_404();
+        if (!has_permission('accounting_transaction', '', 'create')) {
+            access_denied('accounting_transaction');
         }
 
         $this->load->model('staff_model');
@@ -3578,7 +2820,7 @@ class Accounting extends Security_Controller
         }
         $data['title'] = app_lang('import_excel');
 
-        return $this->template->rander('Accounting\Views\transaction/import_banking', $data);
+        $this->load->view('transaction/import_banking', $data);
     }
 
     /**
@@ -3790,8 +3032,8 @@ class Accounting extends Security_Controller
      */
     public function delete_transfer()
     {
-        if (!acc_has_permission('acc_can_delete_transfer')) {
-            show_404();
+        if (!has_permission('accounting_transfer', '', 'delete')) {
+            access_denied('accounting_transfer');
         }
 
         $this->validate_submitted_data(array(
@@ -3843,10 +3085,9 @@ class Accounting extends Security_Controller
      */
     public function delete_account($id)
     {
-        if (!acc_has_permission('acc_can_delete_account')) {
-            show_404();
+        if (!has_permission('accounting_chart_of_accounts', '', 'delete')) {
+            access_denied('accounting_chart_of_accounts');
         }
-
         $success = $this->Accounting_model->delete_account($id);
         $message = '';
         
@@ -3868,8 +3109,8 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function new_rule($id = ''){
-        if (!acc_has_permission('acc_can_create_setting') && !acc_has_permission('acc_can_edit_setting')) {
-            show_404();
+        if (!has_permission('accounting_rule', '', 'create') && !is_admin() ) {
+            access_denied('accounting_rule');
         }
 
         if ($this->request->getPost()) {
@@ -3905,14 +3146,13 @@ class Accounting extends Security_Controller
      * @param  integer $id
      * @return json
      */
-    public function delete_convert()
+    public function delete_convert($type)
     {
-        if (!acc_has_permission('acc_can_delete_transaction')) {
-            show_404();
+        if (!has_permission('accounting_transaction', '', 'delete')) {
+            access_denied('accounting_transaction');
         }
 
         $id = $this->request->getPost('id');
-        $type = $this->request->getPost('type');
 
         $success = $this->Accounting_model->delete_convert($id,$type);
 
@@ -3925,78 +3165,8 @@ class Accounting extends Security_Controller
             $this->session->setFlashdata("error_message", $message);
         }
 
-        $group = '';
-        switch ($type) {
-            case 'invoice':
-                $group = 'sales';
-                break;
-
-            case 'payment':
-                $group = 'sales';
-                break;
-
-            case 'expense':
-                $group = 'expenses';
-                break;
-
-            case 'purchase_order':
-                $group = 'purchase';
-                break;
-
-            case 'purchase_invoice':
-                $group = 'purchase';
-                break;
-
-            case 'purchase_payment':
-                $group = 'purchase';
-                break;
-
-            case 'stock_import':
-                $group = 'warehouse';
-                break;
-
-            case 'stock_export':
-                $group = 'warehouse';
-                break;
-
-            case 'loss_adjustment':
-                $group = 'warehouse';
-                break;
-
-            case 'opening_stock':
-                $group = 'warehouse';
-                break;
-
-            case 'fe_asset':
-                $group = 'fixed_equipment';
-                break;
-            case 'fe_license':
-                $group = 'fixed_equipment';
-                break;
-            case 'fe_component':
-                $group = 'fixed_equipment';
-                break;
-            case 'fe_consumable':
-                $group = 'fixed_equipment';
-                break;
-            case 'fe_maintenance':
-                $group = 'fixed_equipment';
-                break;
-            case 'fe_depreciation':
-                $group = 'fixed_equipment';
-                break;
-            case 'manufacturing_order':
-                $group = 'manufacturing';
-                break;
-            case 'payslip':
-                $group = 'payslips';
-                break;
-            default:
-                // code...
-                break;
-        }
-
-        app_redirect('accounting/transaction?group='.$group);
+        echo json_encode(array("success" => true, 'message' => $message));
+        die;
     }
 
     /**
@@ -4004,15 +3174,13 @@ class Accounting extends Security_Controller
      * @return view or redirect
      */
     public function reconcile(){
-        if (!acc_has_permission('acc_can_view_reconcile')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'view')) {
+            access_denied('accounting_reconcile');
         }
-
         if ($this->request->getPost()) {
-            if (!acc_has_permission('acc_can_create_reconcile')) {
-                show_404();
+            if (!has_permission('accounting_reconcile', '', 'create')) {
+                access_denied('accounting_reconcile');
             }
-
             $data                = $this->request->getPost();
             if($data['resume'] == 0){
                 unset($data['resume']);
@@ -4069,10 +3237,9 @@ class Accounting extends Security_Controller
      * @return view          
      */
     public function reconcile_account($account){
-        if (!acc_has_permission('acc_can_create_reconcile')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'create') && !is_admin() ) {
+            access_denied('accounting_reconcile');
         }
-
         $data['accounts'] = $this->Accounting_model->get_accounts();
         $data['account'] = $this->Accounting_model->get_accounts($account);
         $data['reconcile'] = $this->Accounting_model->get_reconcile_by_account($account);
@@ -4157,8 +3324,7 @@ class Accounting extends Security_Controller
                             'LEFT JOIN ' . get_db_prefix() . 'expenses ON ' . get_db_prefix() . 'expenses.id = ' . get_db_prefix() . 'acc_account_history.rel_id and ' . get_db_prefix() . 'acc_account_history.rel_type = "expense"'];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [ get_db_prefix() . 'expenses.client_id as expenses_customer', get_db_prefix() . 'expenses.expense_date as expenses_date', get_db_prefix() . 'invoices.client_id as payment_customer', get_db_prefix() . 'invoice_payments.payment_date as payment_date', get_db_prefix() . 'acc_journal_entries.journal_date as journal_date', get_db_prefix() . 'acc_transfers.date as transfer_date', 'date_format('.get_db_prefix() . 'acc_account_history.datecreated, \'%Y-%m-%d\') as history_date', 'reconcile','split']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -4221,8 +3387,8 @@ class Accounting extends Security_Controller
      */
     public function adjustment()
     {
-        if (!acc_has_permission('acc_can_create_reconcile')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'create')) {
+            access_denied('accounting');
         }
 
         if ($this->request->getPost()) {
@@ -4251,8 +3417,8 @@ class Accounting extends Security_Controller
      * @return view          
      */
     public function finish_reconcile_account(){
-        if (!acc_has_permission('acc_can_create_reconcile')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'create') && !is_admin() ) {
+            access_denied('accounting_reconcile');
         }
 
         if ($this->request->getPost()) {
@@ -4277,8 +3443,8 @@ class Accounting extends Security_Controller
      * @return redirect 
      */
     public function edit_reconcile(){
-        if (!acc_has_permission('acc_can_edit_reconcile')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'edit') && !is_admin() ) {
+            access_denied('accounting_reconcile');
         }
 
         if ($this->request->getPost()) {
@@ -4318,8 +3484,7 @@ class Accounting extends Security_Controller
             $join         = [];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['transaction']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -4330,17 +3495,17 @@ class Accounting extends Security_Controller
                 $row[] = app_lang($aRow['transaction']);
 
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="' . get_uri('accounting/new_rule/' . $aRow['id']) . '"><i data-feather="edit" class="icon-16"></i></a>';
                 }
 
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_rule/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
@@ -4354,8 +3519,8 @@ class Accounting extends Security_Controller
      */
     public function delete_rule($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting_setting');
         }
 
         $success = $this->Accounting_model->delete_rule($id);
@@ -4530,9 +3695,6 @@ class Accounting extends Security_Controller
             case 'profit_and_loss_budget_vs_actual':
                     $data['data_report'] = $this->Accounting_model->get_data_profit_and_loss_budget_vs_actual($data_filter);
                 break;
-            case 'customer_statement':
-                    $data['data_report'] = $this->Accounting_model->get_data_customer_statement($data_filter);
-                break;
             default:
                 break;
         }
@@ -4561,8 +3723,8 @@ class Accounting extends Security_Controller
      * update reset all data accounting module
      */
     public function reset_data(){
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete') && !is_admin() ) {
+            access_denied('accounting_setting');
         }
 
         $success = $this->Accounting_model->reset_data();
@@ -4575,8 +3737,8 @@ class Accounting extends Security_Controller
 
     /* Change status to account active or inactive / ajax */
     public function change_account_status($id, $status)
-    {   
-        if (acc_has_permission('acc_can_edit_account')) {
+    {
+        if (has_permission('accounting_chart_of_accounts', '', 'edit')) {
             $this->Accounting_model->change_account_status($id, $status);
         }
     }
@@ -4604,7 +3766,7 @@ class Accounting extends Security_Controller
                         ];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [get_db_prefix() . 'item_categories.title as group_name', 'inventory_asset_account', 'income_account', 'expense_account','item_id']);
 
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -4620,10 +3782,10 @@ class Accounting extends Security_Controller
                 $row[] = to_currency($aRow['rate'], $currency_symbol);
 
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_item_automatic(this); return false;" class="edit" data-id="'.$aRow['id'].'" data-inventory-asset-account="'.$aRow['inventory_asset_account'].'" data-income-account="'.$aRow['income_account'].'" data-expense-account="'.$aRow['expense_account'].'" data-item-id="'.$aRow['item_id'].'"><i data-feather="edit" class="icon-16"></i></a>';
                 }
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_item_automatic/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
@@ -4643,8 +3805,8 @@ class Accounting extends Security_Controller
     public function item_automatic(){
         $data = $this->request->getPost();
         if($data['id'] == ''){
-            if (!acc_has_permission('acc_can_create_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'create')) {
+                access_denied('accounting');
             }
             $success = $this->Accounting_model->add_item_automatic($data);
             if($success){
@@ -4655,8 +3817,8 @@ class Accounting extends Security_Controller
                 $this->session->setFlashdata("error_message", $message);
             }
         }else{
-            if (!acc_has_permission('acc_can_edit_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'edit')) {
+                access_denied('accounting');
             }
             $id = $data['id'];
             unset($data['id']);
@@ -4680,8 +3842,8 @@ class Accounting extends Security_Controller
      */
     public function delete_item_automatic($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting');
         }
 
         $success = $this->Accounting_model->delete_item_automatic($id);
@@ -4705,18 +3867,19 @@ class Accounting extends Security_Controller
         if ($this->request->getPost()) {
             $type    = $this->request->getPost('type');
             $ids       = $this->request->getPost('ids');
+
             $is_admin  = is_admin();
             if (is_array($ids)) {
                 if($type == 'payment'){
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_payment_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'payment')) {
                                     $total_deleted++;
                                 }
@@ -4726,13 +3889,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'invoice') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_invoice_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'invoice')) {
                                     $total_deleted++;
                                 }
@@ -4742,13 +3905,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'expense') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_expense_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'expense')) {
                                     $total_deleted++;
                                 }
@@ -4758,13 +3921,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'banking') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_delete') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->delete_banking($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'banking')) {
                                     $total_deleted++;
                                 }
@@ -4774,13 +3937,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'payslip') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_payslip_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'payslip')) {
                                     $total_deleted++;
                                 }
@@ -4790,13 +3953,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'purchase_order') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_purchase_order_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'purchase_order')) {
                                     $total_deleted++;
                                 }
@@ -4806,13 +3969,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'purchase_payment') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_purchase_payment_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'purchase_payment')) {
                                     $total_deleted++;
                                 }
@@ -4822,13 +3985,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'stock_import') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_stock_import_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'stock_import')) {
                                     $total_deleted++;
                                 }
@@ -4838,13 +4001,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'stock_export') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_stock_export_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'stock_export')) {
                                     $total_deleted++;
                                 }
@@ -4854,13 +4017,13 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'loss_adjustment') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_loss_adjustment_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'loss_adjustment')) {
                                     $total_deleted++;
                                 }
@@ -4870,206 +4033,14 @@ class Accounting extends Security_Controller
                 }elseif ($type == 'opening_stock') {
                     foreach ($ids as $id) {
                         if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'create')) {
                                 if ($this->Accounting_model->automatic_opening_stock_conversion($id)) {
                                     $total_deleted++;
                                 }
                             }
                         }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
+                            if (has_permission('accounting_transaction', '', 'delete')) {
                                 if ($this->Accounting_model->delete_convert($id, 'opening_stock')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'manufacturing_order') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_manufacturing_order_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'manufacturing_order')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'purchase_order_return') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_purchase_order_return_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'purchase_order_return')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'purchase_refund') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_purchase_refund_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'purchase_refund')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'purchase_invoice') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_purchase_invoice_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'purchase_invoice')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'omni_sales_return_order') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_omni_sales_return_order_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'sales_return_order')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'omni_sales_refund') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_omni_sales_refund_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'sales_refund')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_asset') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_fe_asset_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_asset')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_license') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_fe_license_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_license')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_component') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_fe_component_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_component')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_consumable') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_fe_consumable_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_consumable')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_maintenance') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) {
-                                if ($this->Accounting_model->automatic_fe_maintenance_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_maintenance')) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }
-                    }
-                }elseif ($type == 'fe_depreciation') {
-                    foreach ($ids as $id) {
-                        if ($this->request->getPost('mass_convert') === 'true') {
-                            if (acc_has_permission('acc_can_create_transaction')) { 
-                                if ($this->Accounting_model->automatic_fe_depreciation_conversion($id)) {
-                                    $total_deleted++;
-                                }
-                            }
-                        }elseif($this->request->getPost('mass_delete_convert') === 'true'){
-                            if (acc_has_permission('acc_can_delete_transaction')) {
-                                if ($this->Accounting_model->delete_convert($id, 'fe_depreciation')) {
                                     $total_deleted++;
                                 }
                             }
@@ -5077,8 +4048,6 @@ class Accounting extends Security_Controller
                     }
                 }
             }
-
-
             if ($this->request->getPost('mass_convert') === 'true') {
                 $message = sprintf(app_lang('total_converted'), $total_deleted);
                 $this->session->setFlashdata("success_message", $message);
@@ -5106,7 +4075,7 @@ class Accounting extends Security_Controller
             if (is_array($ids)) {
                 foreach ($ids as $id) {
                     if($this->request->getPost('mass_delete') === 'true'){
-                        if (acc_has_permission('acc_can_delete_journal_entry')) {
+                        if (has_permission('accounting_journal_entry', '', 'delete')) {
                             if ($this->Accounting_model->delete_journal_entry($id)) {
                                 $total_deleted++;
                             }
@@ -5134,7 +4103,7 @@ class Accounting extends Security_Controller
             if (is_array($ids)) {
                 foreach ($ids as $id) {
                     if($this->request->getPost('mass_delete') === 'true'){
-                        if (acc_has_permission('acc_can_delete_transfer')) {
+                        if (has_permission('accounting_transfer', '', 'delete')) {
                             if ($this->Accounting_model->delete_transfer($id)) {
                                 $total_deleted++;
                             }
@@ -5170,7 +4139,7 @@ class Accounting extends Security_Controller
             $join         = ['LEFT JOIN ' . get_db_prefix() . 'taxes ON ' . get_db_prefix() . 'taxes.id = ' . get_db_prefix() . 'acc_tax_mappings.tax_id'];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['tax_id', 'payment_account', 'deposit_to', 'expense_deposit_to', 'expense_payment_account']);
 
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -5183,10 +4152,10 @@ class Accounting extends Security_Controller
                 $row[] = $aRow['percentage'];
 
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_tax_mapping(this); return false;" class="edit" data-id="'.$aRow['id'].'" data-deposit-to="'.$aRow['deposit_to'].'" data-payment-account="'.$aRow['payment_account'].'" data-expense-deposit-to="'.$aRow['expense_deposit_to'].'" data-expense-payment-account="'.$aRow['expense_payment_account'].'" data-tax-id="'.$aRow['tax_id'].'"><i data-feather="edit" class="icon-16"></i></a>';
                 }
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_tax_mapping/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
@@ -5206,8 +4175,8 @@ class Accounting extends Security_Controller
     public function tax_mapping(){
         $data = $this->request->getPost();
         if($data['id'] == ''){
-            if (!acc_has_permission('acc_can_create_setting')) {
-                app_redirect('forbidden');
+            if (!has_permission('accounting_setting', '', 'create')) {
+                access_denied('accounting');
             }
             $success = $this->Accounting_model->add_tax_mapping($data);
             if($success){
@@ -5218,8 +4187,8 @@ class Accounting extends Security_Controller
                 $this->session->setFlashdata("error_message", $message);
             }
         }else{
-            if (!acc_has_permission('acc_can_edit_setting')) {
-                app_redirect('forbidden');
+            if (!has_permission('accounting_setting', '', 'edit')) {
+                access_denied('accounting');
             }
             $id = $data['id'];
             unset($data['id']);
@@ -5243,8 +4212,8 @@ class Accounting extends Security_Controller
      */
     public function delete_tax_mapping($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            app_redirect('forbidden');
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting');
         }
 
         $success = $this->Accounting_model->delete_tax_mapping($id);
@@ -5272,7 +4241,7 @@ class Accounting extends Security_Controller
             if (is_array($ids)) {
                 foreach ($ids as $id) {
                     if($this->request->getPost('mass_delete') === 'true'){
-                        if (acc_has_permission('acc_can_delete_account')) {
+                        if (has_permission('accounting_chart_of_accounts', '', 'delete')) {
                             $success = $this->Accounting_model->delete_account($id);
                             if ($success === 'have_transaction') {
                                 $message = app_lang('cannot_delete_transaction_already_exists');
@@ -5282,13 +4251,13 @@ class Accounting extends Security_Controller
                             } 
                         }
                     }elseif($this->request->getPost('mass_activate') === 'true'){
-                        if (acc_has_permission('acc_can_edit_account')) {
+                        if (has_permission('accounting_chart_of_accounts', '', 'edit')) {
                             if ($this->Accounting_model->change_account_status($id, 1)) {
                                 $total_deleted++;
                             }
                         }
                     }elseif($this->request->getPost('mass_deactivate') === 'true'){
-                        if (acc_has_permission('acc_can_edit_account')) {
+                        if (has_permission('accounting_chart_of_accounts', '', 'edit')) {
                             if ($this->Accounting_model->change_account_status($id, 0)) {
                                 $total_deleted++;
                             }
@@ -5326,7 +4295,7 @@ class Accounting extends Security_Controller
             $join         = ['LEFT JOIN ' . get_db_prefix() . 'expense_categories ON ' . get_db_prefix() . 'expense_categories.id = ' . get_db_prefix() . 'acc_expense_category_mappings.category_id'];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['category_id', 'payment_account', 'deposit_to']);
 
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -5342,11 +4311,11 @@ class Accounting extends Security_Controller
                 $row[] = $aRow['title'];
 
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_expense_category_mapping(this); return false;" class="edit" data-id="'.$aRow['id'].'" data-deposit-to="'.$aRow['deposit_to'].'" data-payment-account="'.$aRow['payment_account'].'" data-category-id="'.$aRow['category_id'].'"><i data-feather="edit" class="icon-16"></i></a>';
                 }
 
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_expense_category_mapping/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
@@ -5366,8 +4335,8 @@ class Accounting extends Security_Controller
     public function expense_category_mapping(){
         $data = $this->request->getPost();
         if($data['id'] == ''){
-            if (!acc_has_permission('acc_can_create_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'create')) {
+                access_denied('accounting');
             }
             $success = $this->Accounting_model->add_expense_category_mapping($data);
             if($success){
@@ -5378,8 +4347,8 @@ class Accounting extends Security_Controller
                 $this->session->setFlashdata("error_message", $message);
             }
         }else{
-            if (!acc_has_permission('acc_can_edit_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'edit')) {
+                access_denied('accounting');
             }
             $id = $data['id'];
             unset($data['id']);
@@ -5404,8 +4373,8 @@ class Accounting extends Security_Controller
      */
     public function delete_expense_category_mapping($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting');
         }
 
         $success = $this->Accounting_model->delete_expense_category_mapping($id);
@@ -5517,7 +4486,7 @@ class Accounting extends Security_Controller
             $join         = ['LEFT JOIN ' . get_db_prefix() . 'payment_methods ON ' . get_db_prefix() . 'payment_methods.id = ' . get_db_prefix() . 'acc_payment_mode_mappings.payment_mode_id'];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['payment_mode_id', 'payment_account', 'deposit_to',  'expense_payment_account', 'expense_deposit_to','description']);
 
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -5529,10 +4498,10 @@ class Accounting extends Security_Controller
                 $row[] = $aRow['description'];
 
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_payment_mode_mapping(this); return false;" class="edit" data-id="'.$aRow['id'].'" data-deposit-to="'.$aRow['deposit_to'].'" data-payment-account="'.$aRow['payment_account'].'" data-expense-deposit-to="'.$aRow['expense_deposit_to'].'" data-expense-payment-account="'.$aRow['expense_payment_account'].'" data-payment-mode-id="'.$aRow['payment_mode_id'].'"><i data-feather="edit" class="icon-16"></i></a>';
                 }
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_payment_mode_mapping/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
@@ -5552,8 +4521,8 @@ class Accounting extends Security_Controller
     public function payment_mode_mapping(){
         $data = $this->request->getPost();
         if($data['id'] == ''){
-            if (!acc_has_permission('acc_can_create_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'create')) {
+                access_denied('accounting');
             }
             $success = $this->Accounting_model->add_payment_mode_mapping($data);
             if($success){
@@ -5564,8 +4533,8 @@ class Accounting extends Security_Controller
                 $this->session->setFlashdata("error_message", $message);
             }
         }else{
-            if (!acc_has_permission('acc_can_edit_setting')) {
-                show_404();
+            if (!has_permission('accounting_setting', '', 'edit')) {
+                access_denied('accounting');
             }
             $id = $data['id'];
             unset($data['id']);
@@ -5590,8 +4559,8 @@ class Accounting extends Security_Controller
      */
     public function delete_payment_mode_mapping($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting');
         }
 
         $success = $this->Accounting_model->delete_payment_mode_mapping($id);
@@ -5609,7 +4578,7 @@ class Accounting extends Security_Controller
     /* Change status to payment mode mapping active or inactive / ajax */
     public function change_active_payment_mode_mapping($status)
     {
-        if (acc_has_permission('acc_can_edit_setting')) {
+        if (has_permission('accounting_setting', '', 'edit')) {
             $this->Accounting_model->change_active_payment_mode_mapping($status);
         }
     }
@@ -5617,7 +4586,7 @@ class Accounting extends Security_Controller
     /* Change status to expense category mapping active or inactive / ajax */
     public function change_active_expense_category_mapping($status)
     {
-        if (acc_has_permission('acc_can_edit_setting')) {
+        if (has_permission('accounting_setting', '', 'edit')) {
             $this->Accounting_model->change_active_expense_category_mapping($status);
         }
     }
@@ -5649,8 +4618,7 @@ class Accounting extends Security_Controller
             $join         = [];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['account_type_id']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -5661,17 +4629,17 @@ class Accounting extends Security_Controller
                 $row[] = $categoryOutput;
                 $row[] = isset($account_type_name[$aRow['account_type_id']]) ? $account_type_name[$aRow['account_type_id']] : '';
                 $options = "";
-                if (acc_has_permission('acc_can_edit_setting')) {
+                if (has_permission('accounting_setting', '', 'edit')) {
                     $options .= '<a href="#" onclick="edit_account_type_detail(' . $aRow['id'] . '); return false;" class="edit"><i data-feather="edit" class="icon-16"></i></a>';
                 }
 
-                if (acc_has_permission('acc_can_delete_setting')) {
+                if (has_permission('accounting_setting', '', 'delete')) {
                     $options .= '<a href="' . get_uri('accounting/delete_account_type_detail/' . $aRow['id']) . '" class="delete"><i data-feather="x" class="icon-16"></i></a>';
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
@@ -5686,16 +4654,16 @@ class Accounting extends Security_Controller
      */
     public function account_type_detail()
     {
-        if (!acc_has_permission('acc_can_edit_setting') && !acc_has_permission('acc_can_create_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !has_permission('accounting_setting', '', 'create')) {
+            access_denied('accounting');
         }
 
         if ($this->request->getPost()) {
             $data = $this->request->getPost();
             $message = '';
             if ($data['id'] == '') {
-                if (!acc_has_permission('acc_can_create_setting')) {
-                    show_404();
+                if (!has_permission('accounting_setting', '', 'create')) {
+                    access_denied('accounting');
                 }
                 $success = $this->Accounting_model->add_account_type_detail($data);
                 if ($success) {
@@ -5706,8 +4674,8 @@ class Accounting extends Security_Controller
                     $this->session->setFlashdata("error_message", $message);
                 }
             } else {
-                if (!acc_has_permission('acc_can_edit_setting')) {
-                    show_404();
+                if (!has_permission('accounting_setting', '', 'edit')) {
+                    access_denied('accounting');
                 }
                 $id = $data['id'];
                 unset($data['id']);
@@ -5732,8 +4700,8 @@ class Accounting extends Security_Controller
      */
     public function delete_account_type_detail($id)
     {
-        if (!acc_has_permission('acc_can_delete_setting')) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete')) {
+            access_denied('accounting_setting');
         }
         $success = $this->Accounting_model->delete_account_type_detail($id);
         $message = '';
@@ -5913,8 +4881,10 @@ class Accounting extends Security_Controller
     /* Change status to preferred payment method on or off / ajax */
     public function change_preferred_payment_method($id, $status)
     {
-        if (acc_has_permission('acc_can_edit_setting')) {
-            $this->Accounting_model->change_preferred_payment_method($id, $status);
+        if (has_permission('staff', '', 'edit')) {
+            if ($this->input->is_ajax_request()) {
+                $this->Accounting_model->change_preferred_payment_method($id, $status);
+            }
         }
     }
 
@@ -5924,145 +4894,163 @@ class Accounting extends Security_Controller
      */
     public function payslips_table()
     {
-        $acc_closing_date = '';
-        if(get_setting('acc_close_the_books') == 1){
-            $acc_closing_date = get_setting('acc_closing_date');
-        }
-        $select = [
-            '1',
-            'payslip_name',
-            'payslip_template_id',
-            'payslip_month',
-            'staff_id_created',
-            'date_created',
-            'payslip_status',
-            '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'hrp_payslips.id and ' . db_prefix() . 'acc_account_history.rel_type = "payslip") as count_account_historys',
-            'id',
-        ];
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
 
-        $where = [];
+            $currency = $this->currencies_model->get_base_currency();
+            $acc_closing_date = '';
+            if(get_setting('acc_close_the_books') == 1){
+                $acc_closing_date = get_setting('acc_closing_date');
+            }
+            $select = [
+                '1',
+                'payslip_name',
+                'payslip_template_id',
+                'payslip_month',
+                'staff_id_created',
+                'date_created',
+                'payslip_status',
+                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'hrp_payslips.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payslip") as count_account_historys',
+                'id',
+            ];
 
-        if ($this->request->getPost('status')) {
-            $status = $this->request->getPost('status');
-            $where_status = '';
-            foreach ($status as $key => $value) {
-                if($value == 'converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'hrp_payslips.id and ' . db_prefix() . 'acc_account_history.rel_type = "payslip") > 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'hrp_payslips.id and ' . db_prefix() . 'acc_account_history.rel_type = "payslip") > 0)';
+            $where = [];
+
+            if ($this->request->getPost('status')) {
+                $status = $this->request->getPost('status');
+                $where_status = '';
+                foreach ($status as $key => $value) {
+                    if($value == 'converted'){
+                        if($where_status != ''){
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'hrp_payslips.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payslip") > 0)';
+                        }else{
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'hrp_payslips.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payslip") > 0)';
+                        }
+                    }
+
+                    if($value == 'has_not_been_converted'){
+                        if($where_status != ''){
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'hrp_payslips.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payslip") = 0)';
+                        }else{
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'hrp_payslips.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "payslip") = 0)';
+                        }
                     }
                 }
 
-                if($value == 'has_not_been_converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'hrp_payslips.id and ' . db_prefix() . 'acc_account_history.rel_type = "payslip") = 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'hrp_payslips.id and ' . db_prefix() . 'acc_account_history.rel_type = "payslip") = 0)';
+                if($where_status != ''){
+                    array_push($where, 'AND ('. $where_status . ')');
+                }
+            }
+            
+            $from_date = '';
+            $to_date   = '';
+            if ($this->request->getPost('from_date')) {
+                $from_date = $this->request->getPost('from_date');
+                if (!$this->Accounting_model->check_format_date($from_date)) {
+                    $from_date = to_sql_date($from_date);
+                }
+            }
+
+            if ($this->request->getPost('to_date')) {
+                $to_date = $this->request->getPost('to_date');
+                if (!$this->Accounting_model->check_format_date($to_date)) {
+                    $to_date = to_sql_date($to_date);
+                }
+            }
+            if ($from_date != '' && $to_date != '') {
+                array_push($where, 'AND (' . get_db_prefix() . 'hrp_payslips.payslip_month >= "' . $from_date . '" and ' . get_db_prefix() . 'hrp_payslips.payslip_month <= "' . $to_date . '")');
+            } elseif ($from_date != '') {
+                array_push($where, 'AND (' . get_db_prefix() . 'hrp_payslips.payslip_month >= "' . $from_date . '")');
+            } elseif ($to_date != '') {
+                array_push($where, 'AND (' . get_db_prefix() . 'hrp_payslips.payslip_month <= "' . $to_date . '")');
+            }
+
+            $aColumns     = $select;
+            $sIndexColumn = 'id';
+            $sTable       = get_db_prefix() . 'hrp_payslips';
+            $join         = [
+            ];
+            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, []);
+
+            $output  = $result['output'];
+            $rResult = $result['rResult'];
+
+            foreach ($rResult as $aRow) {
+                $row   = [];
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
+                //load by manager
+                if(!is_admin() && !has_permission('hrp_payslip','','view')){
+                    //View own
+                    $code = '<a href="' . get_uri('hr_payroll/view_payslip_detail_v2/' . $aRow['id']) . '" target="_blank">' . $aRow['payslip_name'] . '</a>';
+                    $code .= '<div class="row-options">';
+                }else{
+                    //admin or view global
+                    $code = '<a href="' . get_uri('hr_payroll/view_payslip_detail/' . $aRow['id']) . '" target="_blank">' . $aRow['payslip_name'] . '</a>';
+                    $code .= '<div class="row-options">';
+                }
+
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['payslip_month'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $code .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="payslip-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="payslip">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $code .= '<a href="#" onclick="convert(this); return false;" id="payslip-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="payslip">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $code .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'payslip\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
                     }
                 }
-            }
 
-            if($where_status != ''){
-                array_push($where, 'AND ('. $where_status . ')');
-            }
-        }
-        
-        $from_date = '';
-        $to_date   = '';
-        if ($this->request->getPost('from_date')) {
-            $from_date = $this->request->getPost('from_date');
-            if (!$this->Accounting_model->check_format_date($from_date)) {
-                $from_date = to_sql_date($from_date);
-            }
-        }
+                $code .= '</div>';
 
-        if ($this->request->getPost('to_date')) {
-            $to_date = $this->request->getPost('to_date');
-            if (!$this->Accounting_model->check_format_date($to_date)) {
-                $to_date = to_sql_date($to_date);
-            }
-        }
-        if ($from_date != '' && $to_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'hrp_payslips.payslip_month >= "' . $from_date . '" and ' . db_prefix() . 'hrp_payslips.payslip_month <= "' . $to_date . '")');
-        } elseif ($from_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'hrp_payslips.payslip_month >= "' . $from_date . '")');
-        } elseif ($to_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'hrp_payslips.payslip_month <= "' . $to_date . '")');
-        }
+                $row[] = $code;
 
-        $aColumns     = $select;
-        $sIndexColumn = 'id';
-        $sTable       = db_prefix() . 'hrp_payslips';
-        $join         = [
-        ];
-        $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, []);
+                $row[] = get_payslip_template_name($aRow['payslip_template_id']);
 
-        $output  = $result['output'];
-        $rResult = $result['rResult'];
+                $row[] =  date('m-Y', strtotime($aRow['payslip_month']));
 
-        foreach ($rResult as $aRow) {
-            $row   = [];
-            $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-            //load by manager
-            if(!is_admin()){
-                //View own
-                $code = '<a href="' . admin_url('hr_payroll/view_payslip_detail_v2/' . $aRow['id']) . '" target="_blank">' . $aRow['payslip_name'] . '</a>';
-            }else{
-                //admin or view global
-                $code = '<a href="' . admin_url('hr_payroll/view_payslip_detail/' . $aRow['id']) . '" target="_blank">' . $aRow['payslip_name'] . '</a>';
-            }
+                $_data = '<a href="' . get_uri('staff/profile/' . $aRow['staff_id_created']) . '" target="_blank">' . staff_profile_image($aRow['staff_id_created'], [
+                'staff-profile-image-small',
+                ]) . '</a>';
+                $_data .= ' <a href="' . get_uri('staff/profile/' . $aRow['staff_id_created']) . '" target="_blank">' . get_staff_full_name($aRow['staff_id_created']) . '</a>';
 
-            $row[] = $code;
+                $row[] = $_data;
+                $row[] = _dt($aRow['date_created']);
 
-            $row[] = get_payslip_template_name($aRow['payslip_template_id']);
-
-            $row[] =  date('m-Y', strtotime($aRow['payslip_month']));
-
-            $_data = get_staff_full_name($aRow['staff_id_created']);
-
-            $row[] = $_data;
-            $row[] = _dt($aRow['date_created']);
-
-            if($aRow['payslip_status'] == 'payslip_closing'){
-                $row[] = ' <span class="mt0 badge large bg-success "> '._l($aRow['payslip_status']).' </span>';
-            }else{
-                $row[] = ' <span class="mt0 badge large bg-warning"> '._l($aRow['payslip_status']).' </span>';
-            }
-
-            $status_name = app_lang('has_not_been_converted');
-            $label_class = 'bg-secondary';
-
-            if ($aRow['count_account_historys'] > 0) {
-                $label_class = 'bg-success';
-                $status_name = app_lang('acc_converted');
-            } 
-
-            $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-            $options = '';
-            if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['payslip_month'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-
-
-                $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'payslip'));
-
-            }else{
-                if(acc_has_permission('acc_can_edit_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'payslip'));
+                if($aRow['payslip_status'] == 'payslip_closing'){
+                    $row[] = ' <span class="label label-success "> '.app_lang($aRow['payslip_status']).' </span>';
+                }else{
+                    $row[] = ' <span class="label label-primary"> '.app_lang($aRow['payslip_status']).' </span>';
                 }
 
-                if(acc_has_permission('acc_can_delete_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "payslip"));
+                $status_name = app_lang('has_not_been_converted');
+                $label_class = 'default';
+
+                if ($aRow['count_account_historys'] > 0) {
+                    $label_class = 'success';
+                    $status_name = app_lang('acc_converted');
+                } 
+                $row[] = '<span class="label label-' . $label_class . ' s-status payslip-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
+                $options = '';
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['payslip_month'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'payslip',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
+
+                $row[] =  $options;
+
+                $output['data'][] = $row;
             }
 
-            $row[] =  $options;
-
-            $output['aaData'][] = $row;
+            echo json_encode($output);
+            die();
         }
-
-        echo json_encode($output);
-        die();
     }
 
     /**
@@ -6071,8 +5059,10 @@ class Accounting extends Security_Controller
      */
     public function purchase_order_table()
     {
-        
-            $currency = get_base_currency();
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
             $acc_closing_date = '';
             if(get_setting('acc_close_the_books') == 1){
                 $acc_closing_date = get_setting('acc_closing_date');
@@ -6092,7 +5082,6 @@ class Accounting extends Security_Controller
             ];
 
             $where = [];
-            array_push($where, 'AND approve_status = 2');
 
             if ($this->request->getPost('status')) {
                 $status = $this->request->getPost('status');
@@ -6143,36 +5132,44 @@ class Accounting extends Security_Controller
                 array_push($where, 'AND (' . get_db_prefix() . 'pur_orders.order_date <= "' . $to_date . '")');
             }
 
-
             $aColumns     = $select;
             $sIndexColumn = 'id';
             $sTable       = get_db_prefix() . 'pur_orders';
             $join         = [
                 'LEFT JOIN '.get_db_prefix().'pur_vendor ON '.get_db_prefix().'pur_vendor.userid = '.get_db_prefix().'pur_orders.vendor',
-                'LEFT JOIN '.get_db_prefix().'team ON '.get_db_prefix().'team.id = '.get_db_prefix().'pur_orders.department',
+                'LEFT JOIN '.get_db_prefix().'departments ON '.get_db_prefix().'departments.departmentid = '.get_db_prefix().'pur_orders.department',
                 'LEFT JOIN '.get_db_prefix().'projects ON '.get_db_prefix().'projects.id = '.get_db_prefix().'pur_orders.project',
                 'LEFT JOIN '.get_db_prefix().'expenses ON '.get_db_prefix().'expenses.id = '.get_db_prefix().'pur_orders.expense_convert',
             ];
+            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['company','pur_order_number','expense_convert',get_db_prefix().'projects.name as project_name',get_db_prefix().'departments.name as department_name', get_db_prefix().'expenses.id as expense_id', get_db_prefix().'expenses.expense_name as expense_name']);
 
-            $result       = data_tables_init_acc($aColumns, $sIndexColumn, $sTable, $join, $where, ['company','pur_order_number','expense_convert',get_db_prefix().'projects.title as project_name',get_db_prefix().'team.title as department_name', get_db_prefix().'expenses.id as expense_id', get_db_prefix().'expenses.title as expense_name', 'currency'], '', [], $this->request->getPost());
-
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-                if($aRow['currency'] != ''){
-                    $currency = $aRow['currency'];
-                }
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
                 $numberOutput = '';
     
                 $numberOutput = '<a href="' . get_uri('purchase/purchase_order/' . $aRow['id']) . '"  onclick="init_pur_order(' . $aRow['id'] . '); return false;" >'.$aRow['pur_order_number']. '</a>';
                 
+                $numberOutput .= '<div class="row-options">';
 
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['order_date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $numberOutput .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="purchase-order-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="purchase_order">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $numberOutput .= '<a href="#" onclick="convert(this); return false;" id="purchase-order-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="purchase_order">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $numberOutput .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'purchase_order\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
+                }
+
+                $numberOutput .= '</div>';
 
                 $row[] = $numberOutput;
 
@@ -6180,31 +5177,33 @@ class Accounting extends Security_Controller
 
                 $row[] = '<a href="' . get_uri('purchase/vendor/' . $aRow['vendor']) . '" >' .  $aRow['company'] . '</a>';
 
-                $row[] = to_currency($aRow['subtotal'], $currency);
+                $row[] = to_currency($aRow['subtotal'], $currency->name);
 
-                $row[] = to_currency($aRow['total_tax'], $currency);
+                $row[] = to_currency($aRow['total_tax'], $currency->name);
 
-                $row[] = to_currency($aRow['total'], $currency);
+                $row[] = to_currency($aRow['total'], $currency->name);
 
                 $paid = $aRow['total'] - purorder_inv_left_to_pay($aRow['id']);
 
-                $progress = 0;
+                $percent = 0;
 
                 if($aRow['total'] > 0){
 
-                    $progress = ($paid / $aRow['total'] ) * 100;
+                    $percent = ($paid / $aRow['total'] ) * 100;
 
                 }
 
-                $class = "bg-primary";
-                if ($progress == 100) {
-                    $class = "progress-bar-success";
-                }
+                $row[] = '<div class="progress">
 
-                $row[] = "<div class='progress' title='$progress%'>
-                    <div  class='progress-bar $class' role='progressbar' aria-valuenow='$progress' aria-valuemin='0' aria-valuemax='100' style='width: $progress%'>
-                    </div>
-                </div>";
+                              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+
+                              aria-valuemin="0" aria-valuemax="100" style="width:'.round($percent).'%">
+
+                               ' .round($percent).' % 
+
+                              </div>
+
+                            </div>';
 
                 if($aRow['expense_convert'] == 0){
                     $row[] = '';
@@ -6217,344 +5216,33 @@ class Accounting extends Security_Controller
                 }
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
 
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status purchase_order-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['order_date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-
-
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_order'));
-
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_order'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "purchase_order"));
-                    }
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['order_date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'purchase_order',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
-        
-    }
-
-    /**
-     * purchase invoice table
-     * @return json
-     */
-    public function purchase_invoice_table()
-    {
-
-            $currency = get_base_currency();
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-            $select = [
-                '1',
-                'invoice_number',
-                get_db_prefix().'pur_invoices.vendor',
-                get_db_prefix().'pur_invoices.pur_order',
-                'invoice_date',
-                'subtotal',
-                'tax', 
-                'total',
-                'payment_status',
-                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoices.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_invoice") as count_account_historys',
-                get_db_prefix() .'pur_invoices.id as id',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoices.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_invoice") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoices.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_invoice") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoices.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_invoice") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoices.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_invoice") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . get_db_prefix() . 'pur_invoices.invoice_date >= "' . $from_date . '" and ' . get_db_prefix() . 'pur_invoices.invoice_date <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . get_db_prefix() . 'pur_invoices.invoice_date >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . get_db_prefix() . 'pur_invoices.invoice_date <= "' . $to_date . '")');
-            }
-
-            $select_purchase = '0 as count_purchases';
-            if(accounting_get_status_modules('Purchase')){
-                $select_purchase = '(select count(*) from ' . get_db_prefix() . 'pur_orders where ' . get_db_prefix() . 'pur_orders.id = ' . get_db_prefix() . 'pur_invoices.pur_order) as count_purchases';
-            }
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = get_db_prefix() . 'pur_invoices';
-            $join         = [
-
-            ];
-            $result       = data_tables_init_acc($aColumns, $sIndexColumn, $sTable, $join, $where, [get_db_prefix().'pur_invoices.id as id', 'invoice_number', 'currency', $select_purchase], '', [], $this->request->getPost());
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $base_currency = get_base_currency();
-                if($aRow['currency'] != ''){
-                    $base_currency = $aRow['currency'];
-                }
-
-                $row   = [];
-
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-                
-                $numberOutput = '';
-    
-                $numberOutput = '<a href="' . get_uri('purchase/purchase_invoice/' . $aRow['id']) . '" >'.$aRow['invoice_number']. '</a>';
-
-
-                $row[] = $numberOutput;
-                $row[] = '<a href="' . get_uri('purchase/vendor/' . $aRow[get_db_prefix().'pur_invoices.vendor']) . '" >' .  get_vendor_company_name($aRow[get_db_prefix().'pur_invoices.vendor']) . '</a>'; 
-
-
-                $row[] = '<a href="'.get_uri('purchase/view_pur_order/'.$aRow[get_db_prefix().'pur_invoices.pur_order']).'">'.get_pur_order_subject($aRow[ get_db_prefix().'pur_invoices.pur_order']).'</a>';
-
-                $row[] = _d($aRow['invoice_date']);
-               
-
-                $row[] = to_currency($aRow['subtotal'],$base_currency);
-                $row[] = to_currency($aRow['tax'],$base_currency);
-                $row[] = to_currency($aRow['total'],$base_currency);
-
-                $class = '';
-                if($aRow['payment_status'] == 'unpaid'){
-                    $class = 'bg-danger';
-                }elseif($aRow['payment_status'] == 'paid'){
-                    $class = 'bg-success';
-                }elseif ($aRow['payment_status'] == 'partially_paid') {
-                    $class = 'bg-warning';
-                }
-
-                $row[] = '<span class="mt0 badge large '.$class.' s-status invoice-status-3">'._l($aRow['payment_status']).'</span>';
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                if ($aRow['count_purchases'] == 0) {
-                    $row[] = '<span class="mt0 badge large ' . $label_class . ' purchase-invoice-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-                }else{
-                    $row[] = '';
-                }  
-                
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['invoice_date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date)) && $aRow['count_purchases'] == 0){
-                    if(acc_has_permission('acc_can_create_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_invoice'));
-                    }
-                }elseif($aRow['count_purchases'] == 0){
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_invoice'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "purchase_invoice"));
-                    }
-                }
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-        
-    }
-
-    /**
-     * { delete pur order modal }
-     *
-     */
-    public function delete_convert_modal(){
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
-
-        if($this->request->getPost('id')){
-            $data['type'] = $this->request->getPost('type');
-            
-            $data['id'] = $this->request->getPost('id');
-            return $this->template->view('Accounting\Views\transaction\delete_modal_form', $data);
-        } 
-    }
-
-    /**
-     * { delete pur order modal }
-     *
-     */
-    public function delete_convert_invoice_modal(){
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
-
-        if($this->request->getPost('id')){
-            $data['function'] = 'delete_convert_purchase_invoice';
-            $data['id'] = $this->request->getPost('id');
-            return $this->template->view('Accounting\Views\transaction\delete_modal_form', $data);
-        } 
-    }
-
-    /**
-     * { delete pur order modal }
-     *
-     */
-    public function delete_convert_payment_modal(){
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
-
-        if($this->request->getPost('id')){
-            $data['function'] = 'delete_convert_purchase_payment';
-            $data['id'] = $this->request->getPost('id');
-            return $this->template->view('Accounting\Views\transaction\delete_modal_form', $data);
-        } 
-    }
-
-    /**
-     * delete convert
-     * @param  integer $id
-     * @return json
-     */
-    public function delete_convert_purchase_payment()
-    {
-        $type = 'purchase_payment';
-        if (!acc_has_permission('acc_can_delete_transaction')) {
-            show_404();
         }
-
-        $id = $this->request->getPost('id');
-
-        $success = $this->Accounting_model->delete_convert($id,$type);
-
-        $message = sprintf(app_lang('problem_deleting'), app_lang('acc_convert'));
-
-        if ($success) {
-            $message = sprintf(app_lang('deleted'), app_lang('acc_convert'));
-            $this->session->setFlashdata("success_message", $message);
-        }else{
-            $this->session->setFlashdata("error_message", $message);
-        }
-
-        app_redirect('accounting/transaction?group=purchase');
-    }
-
-    /**
-     * delete convert
-     * @param  integer $id
-     * @return json
-     */
-    public function delete_convert_purchase_invoice()
-    {
-        $type = 'purchase_invoice';
-        if (!acc_has_permission('acc_can_delete_transaction')) {
-            show_404();
-        }
-
-        $id = $this->request->getPost('id');
-
-        $success = $this->Accounting_model->delete_convert($id,$type);
-
-        $message = sprintf(app_lang('problem_deleting'), app_lang('acc_convert'));
-
-        if ($success) {
-            $message = sprintf(app_lang('deleted'), app_lang('acc_convert'));
-            $this->session->setFlashdata("success_message", $message);
-        }else{
-            $this->session->setFlashdata("error_message", $message);
-        }
-
-        app_redirect('accounting/transaction?group=purchase');
-    }
-
-    /**
-     * delete convert
-     * @param  integer $id
-     * @return json
-     */
-    public function delete_convert_purchase_order()
-    {
-        $type = 'purchase_order';
-        if (!acc_has_permission('acc_can_delete_transaction')) {
-            show_404();
-        }
-
-        $id = $this->request->getPost('id');
-
-        $success = $this->Accounting_model->delete_convert($id,$type);
-
-        $message = sprintf(app_lang('problem_deleting'), app_lang('acc_convert'));
-
-        if ($success) {
-            $message = sprintf(app_lang('deleted'), app_lang('acc_convert'));
-            $this->session->setFlashdata("success_message", $message);
-        }else{
-            $this->session->setFlashdata("error_message", $message);
-        }
-
-        app_redirect('accounting/transaction?group=purchase');
     }
 
     /**
@@ -6563,6 +5251,10 @@ class Accounting extends Security_Controller
      */
     public function stock_import_table()
     {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
             $acc_closing_date = '';
             if(get_setting('acc_close_the_books') == 1){
                 $acc_closing_date = get_setting('acc_closing_date');
@@ -6576,12 +5268,11 @@ class Accounting extends Security_Controller
                 'value_of_inventory',
                 'total_money',
                 'approval',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_receipt.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_import") as count_account_historys',
+                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_receipt.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_import") as count_account_historys',
                 'id',
             ];
 
             $where = [];
-            array_push($where, 'AND approval = 1');
 
             if ($this->request->getPost('status')) {
                 $status = $this->request->getPost('status');
@@ -6589,17 +5280,17 @@ class Accounting extends Security_Controller
                 foreach ($status as $key => $value) {
                     if($value == 'converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_receipt.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_import") > 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_receipt.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_import") > 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_receipt.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_import") > 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_receipt.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_import") > 0)';
                         }
                     }
 
                     if($value == 'has_not_been_converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_receipt.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_import") = 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_receipt.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_import") = 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_receipt.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_import") = 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_receipt.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_import") = 0)';
                         }
                     }
                 }
@@ -6625,33 +5316,49 @@ class Accounting extends Security_Controller
                 }
             }
             if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_receipt.date_c >= "' . $from_date . '" and ' . db_prefix() . 'goods_receipt.date_c <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_receipt.date_c >= "' . $from_date . '" and ' . get_db_prefix() . 'goods_receipt.date_c <= "' . $to_date . '")');
             } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_receipt.date_c >= "' . $from_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_receipt.date_c >= "' . $from_date . '")');
             } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_receipt.date_c <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_receipt.date_c <= "' . $to_date . '")');
             }
 
             $aColumns     = $select;
             $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'goods_receipt';
+            $sTable       = get_db_prefix() . 'goods_receipt';
             $join         = [
             ];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['date_add','goods_receipt_code', 'supplier_code']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
-                $name = '<a href="' . admin_url('warehouse/goods_receipt_detail/' . $aRow['id'] ).'">' . $aRow['goods_receipt_code'] . '</a>';
+                $name = '<a href="' . get_uri('warehouse/edit_purchase/' . $aRow['id'] ).'">' . $aRow['goods_receipt_code'] . '</a>';
+
+                $name .= '<div class="row-options">';
+
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="stock-import-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="stock_import">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" id="stock-import-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="stock_import">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $name .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'stock_import\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
+                }
+                
+                $name .= '</div>';
 
                 $row[] = $name;
 
-                $row[] =  _d($aRow['date_c']);
+                $row[] =  format_to_date($aRow['date_c']);
 
                 $row[] = to_currency((float)$aRow['total_tax_money'],'');
 
@@ -6662,47 +5369,40 @@ class Accounting extends Security_Controller
                 $row[] = to_currency((float)$aRow['total_money'],'');
 
                 if($aRow['approval'] == 1){
-                    $row[] = '<span class="mt0 badge large bg-success"><span class="tag">'._l('approved').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'.app_lang('approved').'</span><span class="hide">, </span></span>&nbsp';
                 }elseif($aRow['approval'] == 0){
-                    $row[] = '<span class="mt0 badge large bg-secondary"><span class="tag">'._l('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'.app_lang('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
                 }elseif($aRow['approval'] == -1){
-                    $row[] = '<span class="mt0 badge large bg-danger"><span class="tag">'._l('reject').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'.app_lang('reject').'</span><span class="hide">, </span></span>&nbsp';
                 }
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status stock-import-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'stock_import'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'stock_import'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "stock_import"));
-                    }
-              
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'stock_import',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
+        }
     }
 
     /**
@@ -6710,8 +5410,11 @@ class Accounting extends Security_Controller
      * @return json
      */
     public function stock_export_table()
-    {   
-            $db = db_connect('default');
+    {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
             $acc_closing_date = '';
             if(get_setting('acc_close_the_books') == 1){
                 $acc_closing_date = get_setting('acc_closing_date');
@@ -6723,12 +5426,11 @@ class Accounting extends Security_Controller
                 'date_add',
                 'invoice_id',
                 'approval',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_delivery.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_export") as count_account_historys',
+                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_delivery.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_export") as count_account_historys',
                 'id',
             ];
 
             $where = [];
-            array_push($where, 'AND approval = 1');
 
             if ($this->request->getPost('status')) {
                 $status = $this->request->getPost('status');
@@ -6736,17 +5438,17 @@ class Accounting extends Security_Controller
                 foreach ($status as $key => $value) {
                     if($value == 'converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_delivery.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_export") > 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_delivery.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_export") > 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_delivery.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_export") > 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_delivery.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_export") > 0)';
                         }
                     }
 
                     if($value == 'has_not_been_converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_delivery.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_export") = 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_delivery.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_export") = 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'goods_delivery.id and ' . db_prefix() . 'acc_account_history.rel_type = "stock_export") = 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'goods_delivery.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "stock_export") = 0)';
                         }
                     }
                 }
@@ -6772,101 +5474,105 @@ class Accounting extends Security_Controller
                 }
             }
             if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_delivery.date_c >= "' . $from_date . '" and ' . db_prefix() . 'goods_delivery.date_c <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_delivery.date_c >= "' . $from_date . '" and ' . get_db_prefix() . 'goods_delivery.date_c <= "' . $to_date . '")');
             } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_delivery.date_c >= "' . $from_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_delivery.date_c >= "' . $from_date . '")');
             } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'goods_delivery.date_c <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'goods_delivery.date_c <= "' . $to_date . '")');
             }
 
             $aColumns     = $select;
             $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'goods_delivery';
+            $sTable       = get_db_prefix() . 'goods_delivery';
             $join         = [
             ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['date_add','date_c','goods_delivery_code','total_money', 'type_of_delivery']);
+            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['date_add','date_c','goods_delivery_code','total_money']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
-                $name = '<a href="' . get_uri('warehouse/view_delivery/' . $aRow['id'] ).'">' . $aRow['goods_delivery_code'] . '</a>';
+                $name = '<a href="' . get_uri('warehouse/edit_delivery/' . $aRow['id'] ).'">' . $aRow['goods_delivery_code'] . '</a>';
+
+                $name .= '<div class="row-options">';
+
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="stock-export-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="stock_export">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" id="stock-export-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="stock_export">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $name .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'stock_export\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
+                }
+
+                $name .= '</div>';
 
                 $row[] = $name;
 
                 $_data = '';
                 if($aRow['customer_code']){
-                    $db_builder = $db->table(get_db_prefix(). 'clients');
-                    $db_builder->where(get_db_prefix() . 'clients.id', $aRow['customer_code']);
-                    $client = $db_builder->get()->getRow();
+                    $this->db->where(get_db_prefix() . 'clients.userid', $aRow['customer_code']);
+                    $client = $this->db->get(get_db_prefix() . 'clients')->row();
                     if($client){
-                        $_data = $client->company_name;
+                        $_data = $client->company;
                     }
 
                 }
 
                 $row[] = $_data;
 
-                $row[] =  _d($aRow['date_c']);
+                $row[] =  format_to_date($aRow['date_c']);
 
                 $_data = '';
 
                 if($aRow['invoice_id']){
-                    $type_of_delivery='';
-                    if($aRow['type_of_delivery'] == 'partial'){
-                        $type_of_delivery .= '( <span class="text-danger">'._l($aRow['type_of_delivery']).'</span> )';
-                    }elseif($aRow['type_of_delivery'] == 'total'){
-                        $type_of_delivery .= '( <span class="text-success">'._l($aRow['type_of_delivery']).'</span> )';
-                    }
-
-                   $_data = get_invoice_id($aRow['invoice_id']).$type_of_delivery;
+                   $_data = get_invoice_id($aRow['invoice_id']).get_invoice_company_projecy($aRow['invoice_id']);
                 }
 
                 $row[] = $_data;
 
                 if($aRow['approval'] == 1){
-                    $row[] = '<span class="mt0 badge large bg-success"><span class="tag">'._l('approved').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab1"><span class="tag">'.app_lang('approved').'</span><span class="hide">, </span></span>&nbsp';
                 }elseif($aRow['approval'] == 0){
-                    $row[] = '<span class="mt0 badge large bg-secondary"><span class="tag">'._l('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab2"><span class="tag">'.app_lang('not_yet_approve').'</span><span class="hide">, </span></span>&nbsp';
                 }elseif($aRow['approval'] == -1){
-                    $row[] = '<span class="mt0 badge large bg-danger"><span class="tag">'._l('reject').'</span><span class="hide">, </span></span>&nbsp';
+                    $row[] = '<span class="label label-tag tag-id-1 label-tab3"><span class="tag">'.app_lang('reject').'</span><span class="hide">, </span></span>&nbsp';
                 }
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status stock-export-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'stock_export'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'stock_export'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "stock_export"));
-                    }
-
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_c'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'stock_export',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
+        }
     }
 
     /**
@@ -6875,6 +5581,11 @@ class Accounting extends Security_Controller
      */
     public function loss_adjustment_table()
     {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
+
             $time_filter = $this->request->getPost('time_filter');
             $date_create = $this->request->getPost('date_create');
             $type_filter = $this->request->getPost('type_filter');
@@ -6889,12 +5600,11 @@ class Accounting extends Security_Controller
                 'time',
                 'type',
                 'status',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'wh_loss_adjustment.id and ' . db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") as count_account_historys',
+                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'wh_loss_adjustment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") as count_account_historys',
                 'id',
             ];
 
             $where = [];
-            array_push($where, 'AND status = 1');
 
             if ($this->request->getPost('status')) {
                 $status = $this->request->getPost('status');
@@ -6902,17 +5612,17 @@ class Accounting extends Security_Controller
                 foreach ($status as $key => $value) {
                     if($value == 'converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'wh_loss_adjustment.id and ' . db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") > 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'wh_loss_adjustment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") > 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'wh_loss_adjustment.id and ' . db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") > 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'wh_loss_adjustment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") > 0)';
                         }
                     }
 
                     if($value == 'has_not_been_converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'wh_loss_adjustment.id and ' . db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") = 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'wh_loss_adjustment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") = 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'wh_loss_adjustment.id and ' . db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") = 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'wh_loss_adjustment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "loss_adjustment") = 0)';
                         }
                     }
                 }
@@ -6938,84 +5648,94 @@ class Accounting extends Security_Controller
                 }
             }
             if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'wh_loss_adjustment.time >= "' . $from_date . '" and ' . db_prefix() . 'wh_loss_adjustment.time <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'wh_loss_adjustment.date_create >= "' . $from_date . '" and ' . get_db_prefix() . 'wh_loss_adjustment.date_create <= "' . $to_date . '")');
             } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'wh_loss_adjustment.time >= "' . $from_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'wh_loss_adjustment.date_create >= "' . $from_date . '")');
             } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'wh_loss_adjustment.time <= "' . $to_date . '")');
+                array_push($where, 'AND (' . get_db_prefix() . 'wh_loss_adjustment.date_create <= "' . $to_date . '")');
             }
 
             $aColumns     = $select;
             $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'wh_loss_adjustment';
+            $sTable       = get_db_prefix() . 'wh_loss_adjustment';
             $join         = [
             ];
             $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, []);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
-                $name = _l($aRow['type']);
-               
+                $name = app_lang($aRow['type']);
+                $name .= '<div class="row-options">';
+
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_create'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="loss-adjustment-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="loss_adjustment">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $name .= '<a href="#" onclick="convert(this); return false;" id="loss-adjustment-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="loss_adjustment">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $name .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'loss_adjustment\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
+                }
+                $name .= '</div>';
                 $row[] = $name;
 
-                $row[] = _d($aRow['time']);
+                $row[] = _dt($aRow['time']);
 
                 $status = '';
                 if ((int) $aRow['status'] == 0) {
-                    $status = '<span class="mt0 badge large bg-warning" >' . _l('draft') . '</span>';
+                    $status = '<div class="btn btn-warning" >' . app_lang('draft') . '</div>';
                 } elseif ((int) $aRow['status'] == 1) {
-                    $status = '<span class="mt0 badge large bg-success" >' . _l('adjusted') . '</span>';
+                    $status = '<div class="btn btn-success" >' . app_lang('Adjusted') . '</div>';
                 } elseif((int) $aRow['status'] == -1){
 
-                    $status = '<span class="mt0 badge large bg-danger" >' . _l('reject') . '</span>';
+                    $status = '<div class="btn btn-danger" >' . app_lang('reject') . '</div>';
                 }
 
                 $row[] = $status;
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status stock-export-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['time'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'loss_adjustment'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'loss_adjustment'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "loss_adjustment"));
-                    }
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_create'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'loss_adjustment',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
+        }
     }
 
     /**
      * update payslip automatic conversion
      */
     public function update_payslip_automatic_conversion(){
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_payslip_automatic_conversion($data);
@@ -7023,7 +5743,7 @@ class Accounting extends Security_Controller
             $message = sprintf(app_lang('updated_successfully'), app_lang('setting'));
             $this->session->setFlashdata("success_message", $message);
         }
-        app_redirect(('accounting/setting?group=mapping_setup&tab=payslip'));
+        redirect(get_uri('accounting/setting?group=mapping_setup&tab=payslip'));
     }
 
     /**
@@ -7032,11 +5752,15 @@ class Accounting extends Security_Controller
      */
     public function opening_stock_table()
     {
+        if ($this->input->is_ajax_request()) {
             $acc_first_month_of_financial_year = get_setting('acc_first_month_of_financial_year');
 
             $date_financial_year = date('Y-m-d', strtotime($acc_first_month_of_financial_year . ' 01 '.date('Y')));
-            $Warehouse_model = model('Warehouse\Models\Warehouse_model');
 
+            $this->load->model('warehouse/warehouse_model');
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
             $acc_closing_date = '';
             if(get_setting('acc_close_the_books') == 1){
                 $acc_closing_date = get_setting('acc_closing_date');
@@ -7046,7 +5770,7 @@ class Accounting extends Security_Controller
                 'commodity_code',
                 'description',
                 'sku_code',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'items.id and ' . db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") as count_account_historys',
+                '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'items.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . get_db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") as count_account_historys',
                 'id',
             ];
 
@@ -7058,17 +5782,17 @@ class Accounting extends Security_Controller
                 foreach ($status as $key => $value) {
                     if($value == 'converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'items.id and ' . db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") > 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'items.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . get_db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") > 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'items.id and ' . db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") > 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'items.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . get_db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") > 0)';
                         }
                     }
 
                     if($value == 'has_not_been_converted'){
                         if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'items.id and ' . db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") = 0)';
+                            $where_status .= ' or ((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'items.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . get_db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") = 0)';
                         }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'items.id and ' . db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") = 0)';
+                            $where_status .= '((select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'items.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "opening_stock" and ' . get_db_prefix() . 'acc_account_history.date >= "'.$date_financial_year.'") = 0)';
                         }
                     }
                 }
@@ -7080,74 +5804,88 @@ class Accounting extends Security_Controller
             
             $aColumns     = $select;
             $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'items';
+            $sTable       = get_db_prefix() . 'items';
             $join         = [
             ];
 
             $result = $this->Accounting_model->get_opening_stock_data_tables($aColumns, $sIndexColumn, $sTable, $join, $where, []);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
-                $code = '<a href="' . admin_url('warehouse/view_commodity_detail/' . $aRow['id']) . '">' . $aRow['commodity_code'] . '</a>';
+                $code = '<a href="' . get_uri('warehouse/view_commodity_detail/' . $aRow['id']) . '">' . $aRow['commodity_code'] . '</a>';
+                $code .= '<div class="row-options">';
+
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && ($acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $code .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="opening-stock-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="opening_stock" data-amount="'.$aRow['opening_stock'].'">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $code .= '<a href="#" onclick="convert(this); return false;" id="opening-stock-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="opening_stock" data-amount="'.$aRow['opening_stock'].'">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $code .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'opening_stock\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
+                }
+
+                $code .= '</div>';
 
                 $row[] = $code;
 
-                $inventory = $Warehouse_model->check_inventory_min($aRow['id']);
+                $inventory = $this->warehouse_model->check_inventory_min($aRow['id']);
 
                 if ($inventory) {
-                    $row[] = '<a href="#" data-action-url="'.get_uri('items/view').'" data-title="' . $aRow['title'] . '" data-act="ajax-modal" data-post-id="' . $aRow['id'] . '"  >' . $aRow['title'] . '</a>';
+                    $row[] = '<a href="#" onclick="show_detail_item(this);return false;" data-name="' . $aRow['description'] . '"  data-commodity_id="' . $aRow['id'] . '"  >' . $aRow['description'] . '</a>';
                 } else {
-                    $row[] = '<a href="#" class="text-danger" data-action-url="'.get_uri('items/view').'" data-title="' . $aRow['title'] . '" data-act="ajax-modal" data-post-id="' . $aRow['id'] . '"  >' . $aRow['title'] . '</a>';
+
+                    $row[] = '<a href="#" class="text-danger"  onclick="show_detail_item(this);return false;" data-name="' . $aRow['description'] . '" data-warehouse_id="' . $aRow['warehouse_id'] . '" data-commodity_id="' . $aRow['id'] . '"  >' . $aRow['description'] . '</a>';
+                    
                 }
 
                 $row[] = '<span class="label label-tag tag-id-1"><span class="tag">' . $aRow['sku_code'] . '</span><span class="hide">, </span></span>&nbsp';
-                $row[] = to_currency($aRow['opening_stock'], '');
+                $row[] = to_currency($aRow['opening_stock'], $currency->name);
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status stock-export-status-' . $aRow['id'] . '">' . $status_name . '</span>';
+                
                 $options = '';
-
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && ($acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'opening_stock'));
-                }elseif($aRow['count_account_historys'] > 0){
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'opening_stock'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "opening_stock"));
-                    }
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && ($acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-type' => 'opening_stock',
+                        'data-amount' => $aRow['opening_stock'],
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
+        }
     }
 
     /**
      * update warehouse automatic conversion
      */
     public function update_warehouse_automatic_conversion(){
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_warehouse_automatic_conversion($data);
@@ -7155,8 +5893,7 @@ class Accounting extends Security_Controller
             $message = sprintf(app_lang('updated_successfully'), app_lang('setting'));
             $this->session->setFlashdata("success_message", $message);
         }
-
-        app_redirect('accounting/setting?group=mapping_setup&tab=warehouse');
+        redirect(get_uri('accounting/setting?group=mapping_setup&tab=warehouse'));
     }
     
     /**
@@ -7165,22 +5902,24 @@ class Accounting extends Security_Controller
      */
     public function purchase_payment_table()
     {
-            $currency = get_base_currency();
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('currencies_model');
+
+            $currency = $this->currencies_model->get_base_currency();
             $acc_closing_date = '';
             if(get_setting('acc_close_the_books') == 1){
                 $acc_closing_date = get_setting('acc_closing_date');
             }
             $select = [
-                '1',
+                '1', // bulk actions
                 get_db_prefix() . 'pur_invoice_payment.id as id',
                 'amount',
-                get_db_prefix() . 'payment_methods.title as name',
+                get_db_prefix() . 'payment_modes.name as name',
                 get_db_prefix() . 'pur_invoices.pur_order',
                 get_db_prefix() .'pur_invoice_payment.date as date',
                 '(select count(*) from ' . get_db_prefix() . 'acc_account_history where ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoice_payment.id and ' . get_db_prefix() . 'acc_account_history.rel_type = "purchase_payment") as count_account_historys'
             ];
             $where = [];
-            array_push($where, 'AND approval_status = 2');
             
             if ($this->request->getPost('status')) {
                 $status = $this->request->getPost('status');
@@ -7234,78 +5973,85 @@ class Accounting extends Security_Controller
             $aColumns     = $select;
             $sIndexColumn = 'id';
             $sTable       = get_db_prefix() . 'pur_invoice_payment';
-            $join         = ['LEFT JOIN ' . get_db_prefix() . 'payment_methods ON ' . get_db_prefix() . 'payment_methods.id = ' . get_db_prefix() . 'pur_invoice_payment.paymentmode',
+            $join         = ['LEFT JOIN ' . get_db_prefix() . 'payment_modes ON ' . get_db_prefix() . 'payment_modes.id = ' . get_db_prefix() . 'pur_invoice_payment.paymentmode',
                             'LEFT JOIN ' . get_db_prefix() . 'acc_account_history ON ' . get_db_prefix() . 'acc_account_history.rel_id = ' . get_db_prefix() . 'pur_invoice_payment.id and ' . get_db_prefix() . 'acc_account_history.rel_id = "purchase_payment"',
                             'LEFT JOIN ' . get_db_prefix() . 'pur_invoices ON ' . get_db_prefix() . 'pur_invoices.id = ' . get_db_prefix() . 'pur_invoice_payment.pur_invoice',
                         ];
 
-            $result       = data_tables_init_acc($aColumns, $sIndexColumn, $sTable, $join, $where, ['paymentmode', get_db_prefix() . 'pur_invoices.pur_order', db_prefix() . 'pur_invoices.currency as currency'], '', [], $this->request->getPost() );
+            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['paymentmode', get_db_prefix() . 'pur_invoices.pur_order']);
 
-            $output = $result['output'];
-            $output['data'] = [];
+            $output  = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
                 $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
+                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
                 $categoryOutput = format_to_date($aRow['date']);
 
-                $base_currency = get_base_currency();
-                if($aRow['currency'] != ''){
-                    $base_currency = $aRow['currency'];
+                $categoryOutput .= '<div class="row-options">';
+                if ($aRow['count_account_historys'] == 0) {
+                    if (has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))) {
+                        $categoryOutput .= '<a href="#" onclick="convert(this); return false;" class="text-success" id="purchase-payment-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="purchase_payment" data-amount="'.$aRow['amount'].'">' . app_lang('acc_convert') . '</a>';
+                    }
+                }else{
+                    if (has_permission('accounting_transaction', '', 'edit')) {
+                        $categoryOutput .= '<a href="#" onclick="convert(this); return false;" id="purchase-payment-id-'.$aRow['id'].'" data-id="'.$aRow['id'].'" data-type="purchase_payment" data-amount="'.$aRow['amount'].'">' . app_lang('edit') . '</a>';
+                    }
+                    if (has_permission('accounting_transaction', '', 'delete')) {
+                        $categoryOutput .= ' | <a href="#" onclick="delete_convert('.$aRow['id'].', \'purchase_payment\'); return false;" class="text-danger">' . app_lang('delete') . '</a>';
+                    }
                 }
-               
+
+
+
+                $categoryOutput .= '</div>';
                 $row[] = $categoryOutput;
 
-                $row[] = to_currency($aRow['amount'], $base_currency);
+                $row[] = to_currency($aRow['amount'], $currency->name);
 
                 $row[] = $aRow['name'];
 
-                $row[] = '<a href="'.get_uri('purchase/view_pur_order/'.$aRow[get_db_prefix().'pur_invoices.pur_order']).'">'.get_pur_order_subject($aRow[ get_db_prefix().'pur_invoices.pur_order']).'</a>';
+                $row[] = '<a href="'.get_uri('purchase/purchase_order/'.$aRow[get_db_prefix().'pur_invoices.pur_order']).'">'.get_pur_order_subject($aRow[ get_db_prefix().'pur_invoices.pur_order']).'</a>';
 
                 $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
+
+                $label_class = 'default';
 
                 if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
+                    $label_class = 'success';
                     $status_name = app_lang('acc_converted');
                 } 
 
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
+                $row[] = '<span class="label label-' . $label_class . ' s-status payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
 
                 $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_payment'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'purchase_payment'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "purchase_payment"));
-                    }
-
+                if($aRow['count_account_historys'] == 0 && has_permission('accounting_transaction', '', 'create') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
+                    $options = icon_btn('#', 'share', 'btn-success', [
+                        'title' => app_lang('acc_convert'),
+                        'data-id' =>$aRow['id'],
+                        'data-amount' => $aRow['amount'],
+                        'data-type' => 'purchase_payment',
+                        'onclick' => 'convert(this); return false;'
+                    ]);
                 }
 
                 $row[] =  $options;
 
-                $output['aaData'][] = $row;
+                $output['data'][] = $row;
             }
 
             echo json_encode($output);
             die();
-        
+        }
     }
 
     /**
      * update purchase automatic conversion
      */
     public function update_purchase_automatic_conversion(){
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_purchase_automatic_conversion($data);
@@ -7313,7 +6059,7 @@ class Accounting extends Security_Controller
             $message = sprintf(app_lang('updated_successfully'), app_lang('setting'));
             $this->session->setFlashdata("success_message", $message);
         }
-        app_redirect('accounting/setting?group=mapping_setup&tab=purchase');
+        redirect(get_uri('accounting/setting?group=mapping_setup&tab=purchase'));
     }
 
     /**
@@ -7325,8 +6071,8 @@ class Accounting extends Security_Controller
             $data = $this->request->getPost();
             $message = '';
 
-            if (!acc_has_permission('acc_can_edit_budget')) {
-                show_404();
+            if (!has_permission('accounting_budget', '', 'edit')) {
+                access_denied('accounting_budget');
             }
 
             $success = $this->Accounting_model->update_budget_detail($data);
@@ -7340,8 +6086,8 @@ class Accounting extends Security_Controller
             ]);
             die();
         }
-        if (!acc_has_permission('acc_can_view_budget')) {
-            show_404();
+        if (!has_permission('accounting_budget', '', 'view')) {
+            access_denied('budget');
         }
 
         $data['budgets'] = $this->Accounting_model->get_budgets();
@@ -7607,8 +6353,8 @@ class Accounting extends Security_Controller
      */
     public function delete_budget($id)
     {
-        if (!acc_has_permission('acc_can_delete_budget')) {
-            show_404();
+        if (!has_permission('accounting_budget', '', 'delete')) {
+            access_denied('accounting_budget');
         }
         $success = $this->Accounting_model->delete_budget($id);
         $message = '';
@@ -7626,8 +6372,8 @@ class Accounting extends Security_Controller
      * { accounts import }
      */
     public function accounts_import(){
-        if (!acc_has_permission('acc_can_create_account')) {
-            show_404();
+        if (!has_permission('accounting_chart_of_accounts', '', 'create')) {
+            access_denied('chart_of_accounts');
         }
 
         $this->load->model('staff_model');
@@ -7648,7 +6394,7 @@ class Accounting extends Security_Controller
         }
         $data['title'] = app_lang('import_excel');
 
-        return $this->template->rander('Accounting\Views\chart_of_accounts/import_excel', $data);
+        $this->load->view('chart_of_accounts/import_excel', $data);
     }
 
     /**
@@ -7901,8 +6647,8 @@ class Accounting extends Security_Controller
      * { budget import }
      */
     public function budget_import(){
-        if (!acc_has_permission('acc_can_create_budget')) {
-            show_404();
+        if (!has_permission('accounting_budget', '', 'create')) {
+            access_denied('accounting_budget');
         }
 
         $data['active_language'] = get_setting("user_" . $this->login_user->id . "_personal_language");
@@ -8523,8 +7269,8 @@ class Accounting extends Security_Controller
      * update reset all data account detail type
      */
     public function reset_account_detail_types(){
-        if (!acc_has_permission('acc_can_delete_setting') && !is_admin() ) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'delete') && !is_admin() ) {
+            access_denied('accounting_setting');
         }
 
         $success = $this->Accounting_model->reset_account_detail_types();
@@ -8655,21 +7401,17 @@ class Accounting extends Security_Controller
      */
     public function banking()
     {
-        if (!acc_has_permission('acc_can_view_banking')) {
-            show_404();
+        if (!has_permission('accounting_banking', '', 'view')) {
+            access_denied('banking');
         }
 
         $data          = [];
         $data['tab_2'] = $this->request->getGet('tab');
 
         $data['group'] = $this->request->getGet('group');
-        $data['tab'][] = 'bank_accounts';
         $data['tab'][] = 'banking_register';
         $data['tab'][] = 'posted_bank_transactions';
-        $data['tab'][] = 'plaid_new_transaction';
-        if (acc_has_permission('acc_can_create_banking') || acc_has_permission('acc_can_edit_banking')) {
-            $data['tab'][] = 'reconcile_bank_account';
-        }
+        $data['tab'][] = 'reconcile_bank_account';
       
         if ($data['group'] == '') {
             $data['group'] = 'banking_register';
@@ -8687,10 +7429,6 @@ class Accounting extends Security_Controller
         $data['bank_account_dropdown'] = json_encode($bank_accounts_dropdown);
 
         if($data['group'] == 'reconcile_bank_account'){
-            if (!acc_has_permission('acc_can_create_banking') && !acc_has_permission('acc_can_edit_banking')) {
-                show_404();
-            }
-
             $data['bank_account'] = $this->request->getGet('bank_account');
             if($data['bank_account'] != ''){
                 $data['account'] = $this->Accounting_model->get_accounts($data['bank_account']);
@@ -8701,8 +7439,8 @@ class Accounting extends Security_Controller
                 $data['account_adjust'] = $this->Accounting_model->get_account_id_by_number('2110-000');
             }else{
                 if ($this->request->getPost()) {
-                    if (!acc_has_permission('acc_can_create_banking')) {
-                        show_404();
+                    if (!has_permission('accounting_reconcile', '', 'create')) {
+                        access_denied('accounting_reconcile');
                     }
                     $data = $this->request->getPost();
                     if ($data['resume'] == 0) {
@@ -8749,31 +7487,6 @@ class Accounting extends Security_Controller
                 $data['accounts_to_select'] = $this->Accounting_model->get_data_account_to_select();
                 $data['hide_restored'] = $closing_date == false ? $hide_restored : 'hide';
             }
-        }elseif($data['group'] == 'bank_accounts'){
-            $data['account_types'] = $this->Accounting_model->get_account_types();
-            $data['accounts'] = $this->Accounting_model->get_accounts('', 'account_detail_type_id = 14');
-        }elseif($data['group'] == 'plaid_new_transaction'){
-
-            $data['last_updated'] = '';
-            if(isset($_GET['id'])){
-                $transactions = $this->Accounting_model->get_plaid_transaction($_GET['id']);
-                $data['transactions'] = $transactions;
-                $account_data = $this->Accounting_model->get_account_bank_data($_GET['id']);
-                $data['account_data'] = $account_data;
-                $refresh_data = $this->Accounting_model->get_last_refresh_data($_GET['id']);
-                $data['refresh_data'] = $refresh_data;
-                $data['last_updated'] = $this->Accounting_model->get_date_last_updated($_GET['id']);
-            }
-            $data['title'] = _l('acc_plaid_transaction');
-            $data['status'] = '';
-            if ($this->request->getGet('status')) {
-                $data['status'] = [$this->request->getGet('status')];
-            }
-
-
-            $data['bank_accounts'] = $this->Accounting_model->get_accounts('', ['account_detail_type_id' => 14]);
-            $data['accounts'] = $this->Accounting_model->get_accounts();
-            $data['account_to_select'] = $this->Accounting_model->get_data_account_to_select();
         }
 
         $data['_status'] = '';
@@ -8781,7 +7494,6 @@ class Accounting extends Security_Controller
             $data['_status'] = [$this->request->getGet('status')];
         }
 
-        $data['detail_types'] = $this->Accounting_model->get_account_type_details();
         $data['account_to_select'] = $this->Accounting_model->get_data_account_to_select();
         $data['currency_symbol'] = get_setting("currency_symbol");
         $data['title']        = app_lang($data['group']);
@@ -8873,7 +7585,6 @@ class Accounting extends Security_Controller
             $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['matched']);
 
             $output = $result['output'];
-            $output['data'] = [];
             $rResult = $result['rResult'];
             $balance = 0;
 
@@ -8919,7 +7630,7 @@ class Accounting extends Security_Controller
         $data['title'] = _l('acc_plaid_transaction');
         $data['status'] = '';
         if ($this->request->getGet('status')) {
-            $data['status'] = [$this->request->getGet('status')];
+            $data['status'] = [$this->input->get('status')];
         }
 
 
@@ -8957,8 +7668,8 @@ class Accounting extends Security_Controller
      * update plaid environment
      */
     public function update_plaid_environment() {
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
+        if (!has_permission('accounting_setting', '', 'edit') && !is_admin()) {
+            access_denied('accounting_setting');
         }
         $data = $this->request->getPost();
         $success = $this->Accounting_model->update_plaid_environment($data);
@@ -9076,7 +7787,6 @@ class Accounting extends Security_Controller
             $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['customer', 'rel_type', 'rel_id', 'account', 'vendor']);
 
             $output = $result['output'];
-            $output['data'] = [];
             $rResult = $result['rResult'];
 
             $balance = 0;
@@ -9172,7 +7882,7 @@ class Accounting extends Security_Controller
             $join = [];
             $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id']);
 
-            $output['data'] = [];
+            $output = $result['output'];
             $rResult = $result['rResult'];
 
             foreach ($rResult as $aRow) {
@@ -9403,7 +8113,6 @@ class Accounting extends Security_Controller
             $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [get_db_prefix() . 'acc_account_history.id as id', 'account', 'description', 'customer', 'rel_type', 'cleared']);
 
             $output = $result['output'];
-            $output['data'] = [];
             $rResult = $result['rResult'];
 
             $balance = 0;
@@ -9448,7 +8157,6 @@ class Accounting extends Security_Controller
                 }
 
                 $output['data'][] = $row;
-                $output['aaData'][] = $row;
             }
 
             echo json_encode($output);
@@ -9514,7 +8222,6 @@ class Accounting extends Security_Controller
             $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['description', 'datecreated', 'matched']);
 
             $output = $result['output'];
-            $output['data'] = [];
             $rResult = $result['rResult'];
 
             $balance = 0;
@@ -9551,7 +8258,6 @@ class Accounting extends Security_Controller
                 }
 
                 $output['data'][] = $row;
-                $output['aaData'][] = $row;
             }
 
             echo json_encode($output);
@@ -9727,8 +8433,8 @@ class Accounting extends Security_Controller
      *  @return view
      */
     public function bank_account_adjustment() {
-        if (!acc_has_permission('acc_can_create_banking')) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'create')) {
+            access_denied('accounting');
         }
         if ($this->request->getPost()) {
             $data = $this->request->getPost();
@@ -9754,8 +8460,8 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function finish_reconcile_bank_account() {
-        if (!acc_has_permission('acc_can_create_banking') && !is_admin()) {
-            show_404();
+        if (!has_permission('accounting_reconcile', '', 'create') && !is_admin()) {
+            access_denied('accounting_reconcile');
         }
 
         if ($this->request->getPost()) {
@@ -9882,7 +8588,7 @@ class Accounting extends Security_Controller
         }
 
         $data['currency'] = $this->currencies_model->get_base_currency();
-        return $this->template->rander('Accounting\Views\report/includes/bank_reconciliation_summary', $data);
+        $this->load->view('report/includes/bank_reconciliation_summary', $data);
     }
 
     /**
@@ -9915,7 +8621,7 @@ class Accounting extends Security_Controller
         }
 
         $data['currency'] = $this->currencies_model->get_base_currency();
-        return $this->template->rander('Accounting\Views\report/includes/bank_reconciliation_detail', $data);
+        $this->load->view('report/includes/bank_reconciliation_detail', $data);
     }
 
     /**
@@ -9943,10 +8649,6 @@ class Accounting extends Security_Controller
 
      }
 
-     /**
-      * update bank reconcile
-      * @return json
-      */
      public function update_bank_reconcile() {
             $data = $this->request->getGet();
 
@@ -9981,8 +8683,8 @@ class Accounting extends Security_Controller
      * @return view
      */
     public function import_xlsx_posted_bank_transactions() {
-        if (!acc_has_permission('acc_can_create_banking')) {
-            show_404();
+        if (!has_permission('accounting_transaction', '', 'create')) {
+            access_denied('accounting_transaction');
         }
 
         
@@ -10190,9 +8892,6 @@ class Accounting extends Security_Controller
         ]);
     }
 
-    /**
-     * update plaid status
-     */
     public function update_plaid_status(){
         if ($this->request->getPost()) { 
             $bank_id = $_POST['bank_id'];   
@@ -10214,11 +8913,6 @@ class Accounting extends Security_Controller
         }
     }
 
-    /**
-     * make adjusting transaction change
-     * @param  integer $id
-     * @return json  
-     */
     public function make_adjusting_transaction_change($id){
         $account_history = $this->Accounting_model->get_account_history($id);
         $withdrawal = 0;
@@ -10229,1788 +8923,5 @@ class Accounting extends Security_Controller
         }
 
         echo json_encode(['withdrawal' => $withdrawal, 'deposit' => $deposit]);
-    }
-
-    /**
-     * report customer statement
-     * @return view
-     */
-    public function rp_customer_statement(){
-        $data['title'] = app_lang('customer_statement');
-        $data['from_date'] = date('Y-m-01');
-        $data['to_date'] = date('Y-m-d');
-        $data['customers'] = $this->Clients_model->get_details(["is_lead" => 0, 'delete' => 0])->getResultArray();
-
-        $accounts_dropdown = [];
-        foreach ($data['customers'] as $customer) {
-            $customers_dropdown[$customer['id']] = $customer['company_name'];
-        }
-
-        $data['customers_dropdown'] = $customers_dropdown;
-
-        return $this->template->rander('Accounting\Views\report/includes/customer_statement', $data);
-    }
-
-    /**
-     * delete bank account
-     * @param  integer $id
-     * @return
-     */
-    public function delete_bank_account($id)
-    {
-        if (!acc_has_permission('acc_can_delete_banking')) {
-            show_404();
-        }
-        $success = $this->Accounting_model->delete_account($id);
-        $message = '';
-        
-        if ($success === 'have_transaction') {
-            $message = app_lang('cannot_delete_transaction_already_exists');
-            $this->session->setFlashdata("error_message", $message);
-        }elseif ($success) {
-            $message = sprintf(app_lang('deleted'), app_lang('acc_account'));
-            $this->session->setFlashdata("success_message", $message);
-        } else {
-            $message = app_lang('can_not_delete');
-            $this->session->setFlashdata("error_message", $message);
-        }
-        app_redirect('accounting/banking?group=bank_accounts');
-    }
-
-    /**
-     * registers
-     * @return [type] 
-     */
-    public function registers() {
-        if (!acc_has_permission('acc_can_view_register')) {
-            show_404();
-        }
-
-        $data['title'] = _l('registers');
-        $data['account_types'] = $this->Accounting_model->get_account_types();
-        $data['detail_types'] = $this->Accounting_model->get_account_type_details();
-        $data['accounts'] = $this->Accounting_model->get_accounts();
-
-        $data['accounts_non_pr'] = $this->Accounting_model->get_accounts_non_parent();
-
-        return $this->template->rander('Accounting\Views\registers/manage', $data);
-    }
-
-    /**
-     * registers table
-     * @return [type] 
-     */
-    public function registers_table() {
-
-        $acc_enable_account_numbers = get_setting('acc_enable_account_numbers');
-            $acc_show_account_numbers = get_setting('acc_show_account_numbers');
-
-            $accounts = $this->Accounting_model->get_accounts();
-            $account_types = $this->Accounting_model->get_account_types();
-            $detail_types = $this->Accounting_model->get_account_type_details();
-
-            $account_name = [];
-            $account_type_name = [];
-            $detail_type_name = [];
-
-            foreach ($accounts as $key => $value) {
-                $account_name[$value['id']] = $value['name'];
-            }
-
-            foreach ($account_types as $key => $value) {
-                $account_type_name[$value['id']] = $value['name'];
-            }
-
-            foreach ($detail_types as $key => $value) {
-                $detail_type_name[$value['id']] = $value['name'];
-            }
-
-            $array_history = [2,3,4,5,7,8,9,10];
-            
-            if($acc_enable_account_numbers == 1 && $acc_show_account_numbers == 1){
-                $select = [
-                    'id',
-                    'number',
-                    'name',
-                    'parent_account',
-                    'account_type_id',
-                    'account_detail_type_id',
-                    'balance',
-                    'key_name',
-                    'active',
-                ];
-            }else {
-                $select = [
-                    'id',
-                    'name',
-                    'parent_account',
-                    'account_type_id',
-                    'account_detail_type_id',
-                    'balance',
-                    'key_name',
-                    'active',
-                ];
-            }
-
-            $where = [];
-
-            $menu_type = '';
-            if ($this->request->getPost('menu_type')) {
-                $menu_type = $this->request->getPost('menu_type');
-
-                array_push($where, 'AND account_detail_type_id = "14"');
-            }else{
-                array_push($where, 'AND account_detail_type_id != "14"');
-            }
-
-            $accounting_method = get_setting('acc_accounting_method');
-
-            if($accounting_method == 'cash'){
-                $debit = '(SELECT sum(debit) as debit FROM '.get_db_prefix().'acc_account_history where (account = '.get_db_prefix().'acc_accounts.id or parent_account = '.get_db_prefix().'acc_accounts.id) AND (('.get_db_prefix().'acc_account_history.rel_type = "invoice" AND '.get_db_prefix().'acc_account_history.paid = 1) or rel_type != "invoice")) as debit';
-                $credit = '(SELECT sum(credit) as credit FROM '.get_db_prefix().'acc_account_history where (account = '.get_db_prefix().'acc_accounts.id or parent_account = '.get_db_prefix().'acc_accounts.id) AND (('.get_db_prefix().'acc_account_history.rel_type = "invoice" AND '.get_db_prefix().'acc_account_history.paid = 1) or rel_type != "invoice")) as credit';
-            }else{
-                $debit = '(SELECT sum(debit) as debit FROM '.get_db_prefix().'acc_account_history where (account = '.get_db_prefix().'acc_accounts.id or parent_account = '.get_db_prefix().'acc_accounts.id)) as debit';
-                $credit = '(SELECT sum(credit) as credit FROM '.get_db_prefix().'acc_account_history where (account = '.get_db_prefix().'acc_accounts.id or parent_account = '.get_db_prefix().'acc_accounts.id)) as credit';
-            }
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = get_db_prefix() . 'acc_accounts';
-            $join         = [];
-            $result       = $this->Accounting_model->get_account_data_tables($aColumns, $sIndexColumn, $sTable, $join, $where, ['number', 'description', 'balance_as_of', $debit, $credit, 'default_account']);
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-
-                $categoryOutput = '';
-                if(isset($aRow['level'])){
-                    for ($i=0; $i < $aRow['level']; $i++) { 
-                        $categoryOutput .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                    }
-                }
-                
-                if($acc_enable_account_numbers == 1 && $acc_show_account_numbers == 1 && $aRow['number'] != ''){
-                    $categoryOutput .= $aRow['number'] .' - ';
-                }
-
-                if($aRow['name'] == ''){
-                    $categoryOutput .= app_lang($aRow['key_name']);
-                }else{
-                    $categoryOutput .= $aRow['name'];
-                }
-
-                
-                $row[] = $categoryOutput;
-                if($aRow['parent_account'] != '' && $aRow['parent_account'] != 0){
-                    $row[] = (isset($account_name[$aRow['parent_account']]) ? $account_name[$aRow['parent_account']] : '');
-                }else{
-                    $row[] = '';
-                }
-                $row[] = isset($account_type_name[$aRow['account_type_id']]) ? $account_type_name[$aRow['account_type_id']] : '';
-                $row[] = isset($detail_type_name[$aRow['account_detail_type_id']]) ? $detail_type_name[$aRow['account_detail_type_id']] : '';
-                if($aRow['account_type_id'] == 11 || $aRow['account_type_id'] == 12 || $aRow['account_type_id'] == 8 || $aRow['account_type_id'] == 9 || $aRow['account_type_id'] == 10 || $aRow['account_type_id'] == 7){
-                    $row[] = to_decimal_format($aRow['credit'] - $aRow['debit']);
-                }else{
-                    $row[] = to_decimal_format($aRow['debit'] - $aRow['credit']);
-                }
-                $row[] = '';
-
-                $checked = '';
-                if ($aRow['active'] == 1) {
-                    $checked = 'checked';
-                }
-
-                $_data = '<div class="onoffswitch">
-                    <input type="checkbox" ' . '' . ' data-switch-url="' . get_uri() . 'accounting/change_account_status" name="onoffswitch" class="onoffswitch-checkbox form-check-input" id="c_' . $aRow['id'] . '" data-id="' . $aRow['id'] . '" ' . $checked . '>
-                    <label class="onoffswitch-label" for="c_' . $aRow['id'] . '"></label>
-                </div>';
-
-                // For exporting
-                $_data .= '<span class="hide">' . ($checked == 'checked' ? app_lang('is_active_export') : app_lang('is_not_active_export')) . '</span>';
-                $row[] = $_data;
-                
-                $options = "";
-
-                $options = '<a href="' . get_uri('accounting/user_register_view/' . $aRow['id']) . '" class="view"><i data-feather="eye" class="icon-16"></i></a>';
-
-                $row[] =  $options;
-
-                $output['data'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    /**
-     * user register view
-     * @return [type] 
-     */
-    public function user_register_view($account)
-    {
-        if (!acc_has_permission('acc_can_view_register')) {
-            show_404();
-        }
-        
-        $data = []; 
-        $account_name ='';
-        $account_name_none_html ='';
-
-        //get account name + account type name
-        $get_accounts = $this->Accounting_model->get_accounts($account);
-        $account_types = $this->Accounting_model->get_account_types();
-        $account_type_name = [];
-        foreach ($account_types as $key => $value) {
-            $account_type_name[$value['id']] = $value['name'];
-        }
-
-        if($get_accounts){
-            $account_name .= $get_accounts->name != '' ? $get_accounts->name : _l($get_accounts->key_name);
-            $account_name .= isset($account_type_name[$get_accounts->account_type_id]) ? ' (<small>'.$account_type_name[$get_accounts->account_type_id].'</small>)' : '';
-
-            $account_name_none_html .= $get_accounts->name != '' ? $get_accounts->name : _l($get_accounts->key_name);
-            $account_name_none_html .= isset($account_type_name[$get_accounts->account_type_id]) ? ' ( '.$account_type_name[$get_accounts->account_type_id].' )' : '';
-        }
-
-        $not_get_account=[$account];
-
-        $user_register_transaction_label = user_register_transaction_label($account);
-        $data['account'] = $account;
-        $data['payment_label'] = $user_register_transaction_label['payment_label'];
-        $data['deposit_label'] = $user_register_transaction_label['deposit_label'];
-        $data['company_name'] = get_setting('invoice_company_name');
-
-        $data['account_name'] = $account_name;
-        $data['accounts'] = $this->Accounting_model->get_accounts_for_hansometable();
-        $data['customers'] = $this->Accounting_model->get_vendor_for_hansometable();
-        $data['payee'] = $this->Accounting_model->get_payee_for_hansometable();
-        $result_data = $this->Accounting_model->get_account_history_by_company($account);
-        $data['ending_balance'] = $result_data['ending_balance'];
-        $data['transaction_details'] = $result_data['account_history'];
-        $data['from_date'] = $this->request->getGet('from_date');
-        $data['to_date'] = $this->request->getGet('to_date');
-
-        $data['title'] = $data['company_name'].' - '.$account_name_none_html;
-
-        return $this->template->rander('Accounting\Views\registers/add_edit_transaction', $data);
-    }
-
-    /**
-     * check user register transaction
-     * @return [type] 
-     */
-    public function check_user_register_transaction()
-    {
-        $data = $this->request->getPost();
-        $message = '';
-        $status = true;
-
-        if ($data['product_tabs'] != 'null') {
-            foreach (json_decode($data['product_tabs']) as $product_tab) {
-                if ( $product_tab[1] != '' ) {
-                    if($product_tab['5'] == '' && $product_tab['6'] == ''){
-                        $message = _l('acc_please_enter_the_decrease_or_increase');
-                        $status = false;
-
-                        break;
-                    }
-                }
-
-            }
-
-            echo json_encode([
-                'message' => $message,
-                'status' => $status,
-            ]);
-            die;
-        }
-    }
-
-
-    /**
-     * register add edit transaction
-     * @return [type] 
-     */
-    public function register_add_edit_transaction()
-    {
-        if (!acc_has_permission('acc_can_create_register') && !acc_has_permission('acc_can_edit_register') && !is_admin()) {
-            show_404();
-        }
-
-        if($this->request->getPost()){
-
-            $data = $this->request->getPost();
-
-            $success = $this->Accounting_model->register_add_edit_transaction($data);
-            if($success){
-                $status = true;
-            }else{
-                $status = false;
-            }
-
-            $result_data = $this->Accounting_model->get_account_history_by_company($data['account']);
-
-            echo json_encode([
-                'dataObject' => $result_data['account_history'],
-                'ending_balance' => $result_data['ending_balance'],
-                'status' => $status,
-            ]);
-            die;
-
-        }
-    }
-
-    /**
-     * transaction filter
-     * @return [type] 
-     */
-    public function transaction_filter()
-    {
-        if($this->request->getPost()){
-
-            $data = $this->request->getPost();
-
-            $from_date_querystring = '';
-            $to_date_querystring = '';
-            $number_querystring = '';
-            $payee_querystring = '';
-            $from_credit_querystring = '';
-            $to_credit_querystring = '';
-            $from_debit_querystring = '';
-            $to_debit_querystring = '';
-            $account_querystring = '';
-
-            $account = $data['account'];
-            $from_date_filter = $data['from_date_filter'];
-            $to_date_filter = $data['to_date_filter'];
-            $number_filter = $data['number_filter'];
-            $payee_filter = isset($data['payee_filter']) ? $data['payee_filter'] : '';
-            $from_credit_filter = $data['from_credit_filter'];
-            $to_credit_filter = $data['to_credit_filter'];
-            $from_debit_filter = $data['from_debit_filter'];
-            $to_debit_filter = $data['to_debit_filter'];
-            $account_filter = isset($data['account_filter']) ? $data['account_filter'] : '';
-
-            if($from_date_filter != ''){
-                $from_date_querystring = 'date >= "' . to_sql_date($from_date_filter) . '"';
-            }
-
-            if($to_date_filter != ''){
-                $to_date_querystring = 'date <= "' . to_sql_date($to_date_filter) . '"';
-            }
-
-            if($number_filter != ''){
-                $number_querystring = 'number = "' . $number_filter . '"';
-            }
-            
-            
-
-            if (isset($payee_filter) && $payee_filter != '') {
-                $temp = '';
-                $araylengh = count($payee_filter);
-                for ($i = 0; $i < $araylengh; $i++) {
-                    $temp = $temp . $payee_filter[$i];
-                    if ($i != $araylengh - 1) {
-                        $temp = $temp . ',';
-                    }
-                }
-                $payee_querystring = 'FIND_IN_SET(customer, "' . $temp . '")';
-            }
-
-            if($from_credit_filter != ''){
-                $from_credit_querystring = 'credit >= "' . $from_credit_filter . '"';
-            }
-
-            if($to_credit_filter != ''){
-                $to_credit_querystring = 'credit <= "' . $to_credit_filter . '"';
-            }
-
-            if($from_debit_filter != ''){
-                $from_debit_querystring = 'credit >= "' . $from_debit_filter . '"';
-            }
-
-            if($to_debit_filter != ''){
-                $to_debit_querystring = 'credit <= "' . $to_debit_filter . '"';
-            }
-
-            if (isset($account_filter) && $account_filter != '') {
-                $temp = '';
-                $araylengh = count($account_filter);
-                for ($i = 0; $i < $araylengh; $i++) {
-                    $temp = $temp . $account_filter[$i];
-                    if ($i != $araylengh - 1) {
-                        $temp = $temp . ',';
-                    }
-                }
-                $account_querystring = 'FIND_IN_SET(account, "' . $temp . '")';
-            }
-
-
-            $arrQuery = array($from_date_querystring, $to_date_querystring, $number_querystring, $payee_querystring, $from_credit_querystring, $to_credit_querystring, $from_debit_querystring, $to_debit_querystring, $account_querystring, );
-
-            $newquerystring = '';
-            foreach ($arrQuery as $string) {
-                if ($string != '') {
-                    $newquerystring = $newquerystring . $string . ' AND ';
-                }
-            }
-
-            $newquerystring = rtrim($newquerystring, "AND ");
-            if ($newquerystring == '') {
-                $newquerystring = [];
-            }
-
-            if(!is_array($newquerystring)){
-                $result_data = $this->Accounting_model->get_account_history_by_company($account, $newquerystring);
-            }else{
-                $result_data = $this->Accounting_model->get_account_history_by_company($account);
-            }
-
-            echo json_encode([
-                'dataObject' => $result_data['account_history'],
-                'ending_balance' => $result_data['ending_balance'],
-            ]);
-            die;
-
-        }
-    }
-
-    function transaction_stock_export_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\stock_export', $view_data);
-    }
-
-    function transaction_loss_adjustment_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\loss_adjustment', $view_data);
-    }
-
-    function transaction_opening_stock_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\opening_stock', $view_data);
-    }
-
-    /**
-     * manufacturing order table
-     * @return json
-     */
-    public function manufacturing_order_table()
-    {
-
-        $acc_closing_date = '';
-        if(get_setting('acc_close_the_books') == 1){
-            $acc_closing_date = get_setting('acc_closing_date');
-        }
-        $select = [
-            '1',
-            'manufacturing_order_code',
-            'product_id',
-            'bom_id',
-            'product_qty',
-            'unit_id',
-            'routing_id',
-            'status',
-            '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'mrp_manufacturing_orders.id and ' . db_prefix() . 'acc_account_history.rel_type = "manufacturing_order") as count_account_historys',
-            'id',
-        ];
-
-        $where = [];
-
-        if ($this->request->getPost('status')) {
-            $status = $this->request->getPost('status');
-            $where_status = '';
-            foreach ($status as $key => $value) {
-                if($value == 'converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'mrp_manufacturing_orders.id and ' . db_prefix() . 'acc_account_history.rel_type = "manufacturing_order") > 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'mrp_manufacturing_orders.id and ' . db_prefix() . 'acc_account_history.rel_type = "manufacturing_order") > 0)';
-                    }
-                }
-
-                if($value == 'has_not_been_converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'mrp_manufacturing_orders.id and ' . db_prefix() . 'acc_account_history.rel_type = "manufacturing_order") = 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'mrp_manufacturing_orders.id and ' . db_prefix() . 'acc_account_history.rel_type = "manufacturing_order") = 0)';
-                    }
-                }
-            }
-
-            if($where_status != ''){
-                array_push($where, 'AND ('. $where_status . ')');
-            }
-        }
-
-        $products_filter = $this->request->getPost('product');
-        $routing_filter = $this->request->getPost('routing');
-
-        if (isset($products_filter)) {
-            $where_products_ft = '';
-            foreach ($products_filter as $product_id) {
-                if ($product_id != '') {
-                    if ($where_products_ft == '') {
-                        $where_products_ft .= 'AND ('.db_prefix().'mrp_manufacturing_orders.product_id = "' . $product_id . '"';
-                    } else {
-                        $where_products_ft .= ' or '.db_prefix().'mrp_manufacturing_orders.product_id = "' . $product_id . '"';
-                    }
-                }
-            }
-            if ($where_products_ft != '') {
-                $where_products_ft .= ')';
-                array_push($where, $where_products_ft);
-            }
-        }
-
-        if (isset($routing_filter)) {
-            $where_routing_ft = '';
-            foreach ($routing_filter as $routing_id) {
-                if ($routing_id != '') {
-                    if ($where_routing_ft == '') {
-                        $where_routing_ft .= 'AND ('.db_prefix().'mrp_manufacturing_orders.routing_id = "' . $routing_id . '"';
-                    } else {
-                        $where_routing_ft .= ' or '.db_prefix().'mrp_manufacturing_orders.routing_id = "' . $routing_id . '"';
-                    }
-                }
-            }
-            if ($where_routing_ft != '') {
-                $where_routing_ft .= ')';
-                array_push($where, $where_routing_ft);
-            }
-        }
-
-        array_push($where, 'AND (status = "done")');
-
-
-        $aColumns     = $select;
-        $sIndexColumn = 'id';
-        $sTable       = db_prefix() . 'mrp_manufacturing_orders';
-        $join         = [
-        ];
-        $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['date_plan_from']);
-
-        $output  = $result['output'];
-        $rResult = $result['rResult'];
-
-        foreach ($rResult as $aRow) {
-            $row   = [];
-            $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-            $name = $aRow['manufacturing_order_code'];
-           
-            $row[] = $name;
-
-            $row[] = mrp_get_product_name($aRow['product_id']);
-            $row[] = mrp_get_bill_of_material_code($aRow['bom_id']).' '.mrp_get_product_name(mrp_get_bill_of_material($aRow['bom_id']));
-            $row[] = number_format($aRow['product_qty'], 2);
-            $row[] = mrp_get_unit_name($aRow['unit_id']);
-            $row[] = mrp_get_routing_name($aRow['routing_id']);
-            $row[] = ' <span class="label label-'.$aRow['status'].'" > '._l($aRow['status']).' </span>';
-
-            
-            $status_name = app_lang('has_not_been_converted');
-            $label_class = 'bg-secondary';
-
-            if ($aRow['count_account_historys'] > 0) {
-                $label_class = 'bg-success';
-                $status_name = app_lang('acc_converted');
-            } 
-
-            $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-            $options = '';
-            if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_plan_from'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'manufacturing_order'));
-            }else{
-                if(acc_has_permission('acc_can_edit_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'manufacturing_order'));
-                }
-
-                if(acc_has_permission('acc_can_delete_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "manufacturing_order"));
-                }
-          
-            }
-
-            $row[] =  $options;
-
-            $output['aaData'][] = $row;
-        }
-
-        echo json_encode($output);
-        die();
-    }
-
-    /**
-     * purchase order table
-     * @return json
-     */
-    public function fe_assets_table()
-    {
-        $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-        $currency_symbol = get_setting("currency_symbol");
-
-        $acc_closing_date = '';
-        if(get_setting('acc_close_the_books') == 1){
-            $acc_closing_date = get_setting('acc_closing_date');
-        }
-
-        $select = [
-            db_prefix().'fe_assets.id as id',
-            'assets_code',
-            'assets_name',
-            'series',
-            'asset_group',
-            'asset_location',
-            'model_id',
-            'date_buy',
-            'unit_price',
-            db_prefix().'fe_assets.depreciation',
-            'status',
-            '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_asset") as count_account_historys',
-        ];
-
-        $where = [];
-
-        if ($this->request->getPost('status')) {
-            $status = $this->request->getPost('status');
-            $where_status = '';
-            foreach ($status as $key => $value) {
-                if($value == 'converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_asset") > 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_asset") > 0)';
-                    }
-                }
-
-                if($value == 'has_not_been_converted'){
-                    if($where_status != ''){
-                        $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_asset") = 0)';
-                    }else{
-                        $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_asset") = 0)';
-                    }
-                }
-            }
-
-            if($where_status != ''){
-                array_push($where, 'AND ('. $where_status . ')');
-            }
-        }
-        
-        $from_date = '';
-        $to_date   = '';
-        if ($this->request->getPost('from_date')) {
-            $from_date = $this->request->getPost('from_date');
-            if (!$this->Accounting_model->check_format_date($from_date)) {
-                $from_date = to_sql_date($from_date);
-            }
-        }
-
-        if ($this->request->getPost('to_date')) {
-            $to_date = $this->request->getPost('to_date');
-            if (!$this->Accounting_model->check_format_date($to_date)) {
-                $to_date = to_sql_date($to_date);
-            }
-        }
-        if ($from_date != '' && $to_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '" and ' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-        } elseif ($from_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '")');
-        } elseif ($to_date != '') {
-            array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-        }
-
-        array_push($where, 'AND type = "asset"');
-        array_push($where, 'AND active = 1');
-
-        $aColumns     = $select;
-        $sIndexColumn = 'id';
-        $sTable       = db_prefix() . 'fe_assets';
-        $join         = [
-            'LEFT JOIN '.db_prefix().'fe_models ON '.db_prefix().'fe_models.id = '.db_prefix().'fe_assets.model_id'
-        ];
-        $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['model_name', db_prefix().'fe_models.model_no as model_no', 'checkin_out']);
-
-        $output  = $result['output'];
-        $rResult = $result['rResult'];
-
-        foreach ($rResult as $aRow) {
-            $row   = [];
-            $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-            $numberOutput = '';
-
-            $numberOutput = '<a href="' . admin_url('fixed_equipment/detail_asset/' . $aRow['id'] .'?tab=details').'">' . $aRow['series'] . '</a>';
-            
-            $row[] = $numberOutput;
-
-            $row[] = $aRow['assets_name'];  
-            $row[] = '<img class="img img-responsive staff-profile-image-small pull-left avatar-xs avatar me-1" src="'.fe_get_image_items($aRow['model_id'], 'models').'">'; 
-
-            $category_id = 0;
-            $manufacturer_id = 0;
-            if(is_numeric($aRow['model_id']) > 0){
-                $data_model = $Fixed_equipment_model->get_models($aRow['model_id']);
-                if($data_model){
-                    $category_id = $data_model->category;
-                    $manufacturer_id = $data_model->manufacturer;
-                }
-            }
-            $row[] = '<span class="text-nowrap">'.$aRow['model_name'].'</span>';  
-            $row[] = $aRow['model_no'];  
-
-            $category_name = '';
-            if(is_numeric($category_id) && $category_id > 0){
-                $data_cat = $Fixed_equipment_model->get_categories($category_id);
-                if($data_cat){
-                    $category_name = '<span class="text-nowrap">'.$data_cat->category_name.'</span>';  
-                }
-            }
-            $row[] = $category_name;  
-
-
-            $row[] = $aRow['date_buy'] != '' ? _d($aRow['date_buy']) : '';  
-            $row[] = $aRow['unit_price'] != '' ? to_currency($aRow['unit_price'], $currency_symbol) : ''; 
-
-            $status = '';
-            $status_name = '';
-            if(is_numeric($aRow['status']) && $aRow['status'] > 0){
-                $data_status = $Fixed_equipment_model->get_status_labels($aRow['status']);
-                if($data_status){
-                    $status = $data_status->status_type;
-                    if($aRow['checkin_out'] == 2 && $status == 'deployable'){
-                        $status = 'deployed';
-                    }
-                    $status_name = '<div class="row text-nowrap mleft5 mright5"><span style="color:'.$data_status->chart_color.'">'.$data_status->name.'</span><span class="mleft10 badge bg-primary">'._l('fe_'.$status).'</span></div>';
-                }
-            }
-            $row[] = $status_name;  
-
-
-            $status_name = app_lang('has_not_been_converted');
-            $label_class = 'bg-secondary';
-
-            if ($aRow['count_account_historys'] > 0) {
-                $label_class = 'bg-success';
-                $status_name = app_lang('acc_converted');
-            } 
-
-            $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-            $options = '';
-            if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_buy'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_asset'));
-            }else{
-                if(acc_has_permission('acc_can_edit_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_asset'));
-                }
-
-                if(acc_has_permission('acc_can_delete_transaction')){
-                    $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_asset"));
-                }
-          
-            }
-
-
-            $row[] =  $options;
-
-            $output['aaData'][] = $row;
-        }
-
-        echo json_encode($output);
-        die();
-    }
-
-
-    /**
-     * purchase order table
-     * @return json
-     */
-    public function fe_licenses_table()
-    {
-            $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-            $currency_symbol = get_setting("currency_symbol");
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-
-            $select = [
-                'id',
-                'assets_name',
-                'date_buy',
-                'product_key',
-                'manufacturer_id',
-                'licensed_to_name',
-                'licensed_to_email',
-                'expiration_date',
-                'manufacturer_id',  
-                'checkin_out',     
-                'status',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_license") as count_account_historys',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_license") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_license") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_license") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_license") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '" and ' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            }
-
-            array_push($where, 'AND type = "license"');
-            array_push($where, 'AND active = 1');
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'fe_assets';
-            $join         = [
-            ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id', 'unit_price', 'seats']);
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-                $numberOutput = '';
-    
-                $numberOutput = '<a href="' . admin_url('fixed_equipment/detail_licenses/' . $aRow['id'] .'?tab=details').'">' . $aRow['assets_name'] . '</a>';
-                
-                $row[] = $numberOutput;
-
-                $row[] = $aRow['product_key'];  
-
-                $row[] = _d($aRow['expiration_date']);  
-
-                $row[] = $aRow['licensed_to_email'];  
-
-                $row[] = $aRow['licensed_to_name'];  
-
-                $manufacturer_name = '';
-                if(is_numeric($aRow['manufacturer_id']) && $aRow['manufacturer_id'] > 0){
-                    $data_manufacturer = $Fixed_equipment_model->get_asset_manufacturers($aRow['manufacturer_id']);
-                    if($data_manufacturer){
-                        $manufacturer_name = $data_manufacturer->name;
-                    }
-                }
-                $row[] = $manufacturer_name;  
-                $total = 0;
-                $avail = 0;
-                $data_total = $Fixed_equipment_model->count_total_avail_seat($aRow['id']);
-                if($data_total){
-                    $total = $data_total->total;
-                    $avail = $data_total->avail;
-                }
-
-                $row[] = $total;
-
-                $row[] = $aRow['date_buy'] != '' ? _d($aRow['date_buy']) : '';  
-                $row[] = $aRow['unit_price'] != '' ? to_currency($aRow['unit_price'], $currency_symbol) : ''; 
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_buy'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_license'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_license'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_license"));
-                    }
-              
-                }
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    /**
-     * purchase order table
-     * @return json
-     */
-    public function fe_components_table()
-    {
-            $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-            $currency_symbol = get_setting("currency_symbol");
-
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-
-            $select = [
-                'id',
-                'assets_name',
-                'category_id',
-                'series',
-                'manufacturer_id',  
-                'asset_location',
-                'quantity',
-                'min_quantity',
-                'unit_price',
-                'order_number',
-                'date_buy',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_component") as count_account_historys',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_component") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_component") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_component") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_component") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '" and ' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            }
-
-            array_push($where, 'AND type = "component"');
-            array_push($where, 'AND active = 1');
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'fe_assets';
-            $join         = [
-            ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id', 'unit_price']);
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-                $avail = $aRow['quantity'] - $Fixed_equipment_model->count_checkin_component_by_parents($aRow['id']);
-                $min_quantity = $aRow['min_quantity'];  
-
-                $warning_class = '';
-                $warning_attribute = '';
-                if($avail < $min_quantity){
-                    $warning_class = 'text-danger bold';
-                    $warning_attribute = 'data-toggle="tooltip" data-placement="top" data-original-title="'._l('fe_the_quantity_has_reached_the_warning_level').'"';
-                }
-
-                $numberOutput = '';
-    
-                $numberOutput = '<a href="' . admin_url('fixed_equipment/detail_components/' . $aRow['id'] .'?tab=details').'">' . $aRow['assets_name'] . '</a>';
-                
-                $row[] = $numberOutput;
-
-                $row[] = $aRow['series'];  
-
-                $category_name = '';
-                if(is_numeric($aRow['category_id']) && $aRow['category_id'] > 0){
-                    $data_category = $Fixed_equipment_model->get_categories($aRow['category_id']);
-                    if($data_category){
-                        $category_name = $data_category->category_name;
-                    }
-                }
-                $row[] = '<span class="text-nowrap">'.$category_name.'</span>';  
-                $remain = 0;
-                $row[] = $aRow['quantity'];  
-                $row[] = '<span class="'.$warning_class.'" '.$warning_attribute.'>'.$avail.'</span>';  
-                $row[] = $min_quantity;  
-
-
-
-                $location_name = '';
-                if(is_numeric($aRow['asset_location']) && $aRow['asset_location'] > 0){
-                    $data_location = $Fixed_equipment_model->get_locations($aRow['asset_location']);
-                    if($data_location){
-                        $location_name = $data_location->location_name;
-                    }
-                }
-                $row[] = '<span class="text-nowrap">'.$location_name.'</span>';  
-                $row[] = $aRow['order_number'];  
-                $row[] = _d($aRow['date_buy']);  
-                $row[] = to_currency($aRow['unit_price'], $currency_symbol);  
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_buy'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_component'));
-                }else{
-
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_component'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_component"));
-                    }
-              
-                }
-
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    /**
-     * purchase order table
-     * @return json
-     */
-    public function fe_consumables_table()
-    {
-            $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-            $currency_symbol = get_setting("currency_symbol");
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-
-            $select = [
-                'id',
-                'assets_name',
-                'category_id',
-                'model_no',
-                'manufacturer_id',  
-                'asset_location',
-                'quantity',
-                'min_quantity',
-                'unit_price',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_consumable") as count_account_historys',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_consumable") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_consumable") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_consumable") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_assets.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_consumable") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '" and ' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_assets.date_buy <= "' . $to_date . '")');
-            }
-
-            array_push($where, 'AND type = "consumable"');
-            array_push($where, 'AND active = 1');
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'fe_assets';
-            $join         = [
-            ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id', 'unit_price', 'date_buy']);
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-                $avail = $aRow['quantity'] - $Fixed_equipment_model->count_checkin_component_by_parents($aRow['id']);
-                $min_quantity = $aRow['min_quantity'];  
-
-                $warning_class = '';
-                $warning_attribute = '';
-                if($avail < $min_quantity){
-                    $warning_class = 'text-danger bold';
-                    $warning_attribute = 'data-toggle="tooltip" data-placement="top" data-original-title="'._l('fe_the_quantity_has_reached_the_warning_level').'"';
-                }
-
-                $numberOutput = '';
-    
-                $numberOutput = '<a href="' . admin_url('fixed_equipment/detail_consumables/' . $aRow['id']).'">' . $aRow['assets_name'] . '</a>';
-                
-                $row[] = $numberOutput;
-
-                $row[] = '<img class="img img-responsive staff-profile-image-small pull-left avatar-xs avatar me-1" src="'.fe_get_image_items($aRow['id'], 'consumable').'">';  
-                    $category_name = '';
-                if(is_numeric($aRow['category_id']) && $aRow['category_id'] > 0){
-                    $data_category = $Fixed_equipment_model->get_categories($aRow['category_id']);
-                    if($data_category){
-                        $category_name = $data_category->category_name;
-                    }
-                }
-                $row[] = $category_name;  
-
-                $row[] = $aRow['model_no'];  
-
-                $manufacturer_name = '';
-                if(is_numeric($aRow['manufacturer_id']) && $aRow['manufacturer_id'] > 0){
-                    $data_manufacturer = $Fixed_equipment_model->get_asset_manufacturers($aRow['manufacturer_id']);
-                    if($data_manufacturer){
-                        $manufacturer_name = $data_manufacturer->name;
-                    }
-                }
-                $row[] = $manufacturer_name;  
-
-                $location_name = '';
-                if(is_numeric($aRow['asset_location']) && $aRow['asset_location'] > 0){
-                    $data_location = $Fixed_equipment_model->get_locations($aRow['asset_location']);
-                    if($data_location){
-                        $location_name = $data_location->location_name;
-                    }
-                }
-                $row[] = $location_name;  
-                $row[] = $aRow['quantity'];  
-                $row[] = $min_quantity;  
-                $row[] = '<span class="'.$warning_class.'" '.$warning_attribute.'>'.$avail.'</span>';  
-                $row[] = to_currency($aRow['unit_price'], $currency_symbol);  
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_buy'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_consumable'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_consumable'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_consumable"));
-                    }
-              
-                }
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    public function fe_maintenances_table()
-    {
-            $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-            $currency_symbol = get_setting("currency_symbol");
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-
-            $select = [
-                'id',
-                'asset_id',
-                'supplier_id',
-                'maintenance_type',
-                'title',
-                'start_date',
-                'completion_date',
-                'cost',
-                'notes',
-                'date_creator',
-                'warranty_improvement',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_asset_maintenances.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_maintenance") as count_account_historys',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_asset_maintenances.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_maintenance") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_asset_maintenances.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_maintenance") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_asset_maintenances.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_maintenance") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_asset_maintenances.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_maintenance") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_asset_maintenances.start_date >= "' . $from_date . '" and ' . db_prefix() . 'fe_asset_maintenances.start_date <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_asset_maintenances.start_date >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_asset_maintenances.start_date <= "' . $to_date . '")');
-            }
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'fe_asset_maintenances';
-            $join         = [
-            ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id']);
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-                $numberOutput = $Fixed_equipment_model->get_asset_name($aRow['asset_id']);
-                
-                $row[] = $numberOutput;
-
-                $serial = '';
-                $data_asset = $Fixed_equipment_model->get_assets($aRow['asset_id']);
-                if($data_asset){
-                    $serial = $data_asset->series;
-                }
-
-                $row[] = '<span class="text-nowrap">'.$serial.'</span>';  
-                $data_location_asset = $Fixed_equipment_model->get_asset_location_info($aRow['asset_id']);
-                $row[] = '<span class="text-nowrap">'.$data_location_asset->curent_location.'</span>';  
-                $row[] = _l('fe_'.$aRow['maintenance_type']);  
-                $row[] = '<span class="text-nowrap">'.$aRow['title'].'</span>';  
-                $row[] = '<span class="text-nowrap">'._d($aRow['start_date']).'</span>';  
-                $row[] = '<span class="text-nowrap">'._d($aRow['completion_date']).'</span>';   
-                $row[] = $aRow['notes']; 
-                $warranty = ''; 
-                $row[] = $warranty;  
-                $row[] = to_currency($aRow['cost'], $currency_symbol);  
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date_buy'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_maintenance'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_maintenance'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_maintenance"));
-                    }
-              
-                }
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    public function fe_depreciations_table()
-    {
-            $currency_symbol = get_setting("currency_symbol");
-            $Fixed_equipment_model = model('Fixed_equipment\Models\Fixed_equipment_model');
-
-            $acc_closing_date = '';
-            if(get_setting('acc_close_the_books') == 1){
-                $acc_closing_date = get_setting('acc_closing_date');
-            }
-
-            $select = [
-                'id',
-                'item_id',
-                'item_id',
-                'value',
-                'date',
-                '(select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_depreciation_items.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_depreciation") as count_account_historys',
-                'id',
-            ];
-
-            $where = [];
-
-            if ($this->request->getPost('status')) {
-                $status = $this->request->getPost('status');
-                $where_status = '';
-                foreach ($status as $key => $value) {
-                    if($value == 'converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_depreciation_items.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_depreciation") > 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_depreciation_items.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_depreciation") > 0)';
-                        }
-                    }
-
-                    if($value == 'has_not_been_converted'){
-                        if($where_status != ''){
-                            $where_status .= ' or ((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_depreciation_items.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_depreciation") = 0)';
-                        }else{
-                            $where_status .= '((select count(*) from ' . db_prefix() . 'acc_account_history where ' . db_prefix() . 'acc_account_history.rel_id = ' . db_prefix() . 'fe_depreciation_items.id and ' . db_prefix() . 'acc_account_history.rel_type = "fe_depreciation") = 0)';
-                        }
-                    }
-                }
-
-                if($where_status != ''){
-                    array_push($where, 'AND ('. $where_status . ')');
-                }
-            }
-            
-            $from_date = '';
-            $to_date   = '';
-            if ($this->request->getPost('from_date')) {
-                $from_date = $this->request->getPost('from_date');
-                if (!$this->Accounting_model->check_format_date($from_date)) {
-                    $from_date = to_sql_date($from_date);
-                }
-            }
-
-            if ($this->request->getPost('to_date')) {
-                $to_date = $this->request->getPost('to_date');
-                if (!$this->Accounting_model->check_format_date($to_date)) {
-                    $to_date = to_sql_date($to_date);
-                }
-            }
-            if ($from_date != '' && $to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_depreciation_items.date >= "' . $from_date . '" and ' . db_prefix() . 'fe_depreciation_items.date <= "' . $to_date . '")');
-            } elseif ($from_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_depreciation_items.date >= "' . $from_date . '")');
-            } elseif ($to_date != '') {
-                array_push($where, 'AND (' . db_prefix() . 'fe_depreciation_items.date <= "' . $to_date . '")');
-            }
-
-            $aColumns     = $select;
-            $sIndexColumn = 'id';
-            $sTable       = db_prefix() . 'fe_depreciation_items';
-            $join         = [
-            ];
-            $result       = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id']);
-
-            $output = $result['output'];
-            $output['data'] = [];
-            $rResult = $result['rResult'];
-
-            foreach ($rResult as $aRow) {
-                $row   = [];
-                $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '" class="form-check-input"><label></label></div>';
-
-                 $serial = '';
-                $data_asset = $Fixed_equipment_model->get_assets($aRow['item_id']);
-                if($data_asset){
-                    $serial = $data_asset->series;
-                }
-                
-                $row[] = '<span class="text-nowrap">'.$serial.'</span>';  
-                
-                $numberOutput = $Fixed_equipment_model->get_asset_name($aRow['item_id']);
-                
-                $row[] = $numberOutput;
-                
-                $row[] = to_currency($aRow['value'], $currency_symbol);  
-                $row[] = _d($aRow['date']);  
-
-                $status_name = app_lang('has_not_been_converted');
-                $label_class = 'bg-secondary';
-
-                if ($aRow['count_account_historys'] > 0) {
-                    $label_class = 'bg-success';
-                    $status_name = app_lang('acc_converted');
-                } 
-
-                $row[] = '<span class="mt0 badge large ' . $label_class . ' payment-status-' . $aRow['id'] . '">' . $status_name . '</span>';
-
-                $options = '';
-                if($aRow['count_account_historys'] == 0 && acc_has_permission('acc_can_create_transaction') && (($acc_closing_date != '' && strtotime($acc_closing_date) <= strtotime($aRow['date'])) || $acc_closing_date == '' || strtotime(date('Y-m-d')) <= strtotime($acc_closing_date))){
-                    $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('acc_convert'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_depreciation'));
-                }else{
-                    if(acc_has_permission('acc_can_edit_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/convert_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $aRow['id'], "data-post-type" => 'fe_depreciation'));
-                    }
-
-                    if(acc_has_permission('acc_can_delete_transaction')){
-                        $options .= modal_anchor(get_uri("accounting/delete_convert_modal"), "<i data-feather='x' class='icon-16'></i> ", array("title" => app_lang('delete'). "?", "data-post-id" => $aRow['id'], "data-post-type" => "fe_depreciation"));
-                    }
-                }
-
-                $row[] =  $options;
-
-                $output['aaData'][] = $row;
-            }
-
-            echo json_encode($output);
-            die();
-    }
-
-    function transaction_fe_licenses_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\fe_licenses', $view_data);
-    }
-
-    function transaction_fe_components_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\fe_components', $view_data);
-    }
-
-    function transaction_fe_consumables_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\fe_consumables', $view_data);
-    }
-
-    function transaction_fe_maintenances_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\fe_maintenances', $view_data);
-    }
-
-    function transaction_fe_depreciations_list() {
-
-        $view_data  = [];
-        return $this->template->view('Accounting\Views\transaction\fe_depreciations', $view_data);
-    }
-    
-
-    /**
-     * update manufacturing automatic conversion
-     */
-    public function update_manufacturing_automatic_conversion(){
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
-        }
-        $data = $this->request->getPost();
-        $success = $this->Accounting_model->update_manufacturing_automatic_conversion($data);
-        if($success == true){
-            $message = sprintf(app_lang('updated_successfully'), app_lang('setting'));
-            $this->session->setFlashdata("success_message", $message);
-        }
-
-        app_redirect('accounting/setting?group=mapping_setup&tab=manufacturing');
-    }
-
-    /**
-     * update fixed equipment automatic conversion
-     */
-    public function update_fixed_equipment_automatic_conversion(){
-        if (!acc_has_permission('acc_can_edit_setting') && !is_admin()) {
-            show_404();
-        }
-        $data = $this->request->getPost();
-        $success = $this->Accounting_model->update_fixed_equipment_automatic_conversion($data);
-        if($success == true){
-            $message = sprintf(app_lang('updated_successfully'), app_lang('setting'));
-            $this->session->setFlashdata("success_message", $message);
-        }
-
-        app_redirect('accounting/setting?group=mapping_setup&tab=fixed_equipment');
-    }
-
-    /**
-     * { permissions }
-     */
-    public function permissions($role_id){
-        if ($role_id) {
-
-            validate_numeric_value($role_id);
-            $view_data['model_info'] = $this->Roles_model->get_one($role_id);
-
-            $permissions = unserialize($view_data['model_info']->plugins_permissions);
-
-            if (!isset($permissions["accounting"]) ) {
-                $permissions["accounting"] = array();
-            }
-
-            //dashboard
-            $view_data["acc_can_view_dashboard"] = get_array_value($permissions["accounting"], "acc_can_view_dashboard");
-
-            //banking
-            $view_data["acc_can_view_banking"] = get_array_value($permissions["accounting"], "acc_can_view_banking");
-            $view_data["acc_can_create_banking"] = get_array_value($permissions["accounting"], "acc_can_create_banking");
-            $view_data["acc_can_edit_banking"] = get_array_value($permissions["accounting"], "acc_can_edit_banking");
-            $view_data["acc_can_delete_banking"] = get_array_value($permissions["accounting"], "acc_can_delete_banking");
-
-            //transaction
-            $view_data["acc_can_view_transaction"] = get_array_value($permissions["accounting"], "acc_can_view_transaction");
-            $view_data["acc_can_create_transaction"] = get_array_value($permissions["accounting"], "acc_can_create_transaction");
-            $view_data["acc_can_edit_transaction"] = get_array_value($permissions["accounting"], "acc_can_edit_transaction");
-            $view_data["acc_can_delete_transaction"] = get_array_value($permissions["accounting"], "acc_can_delete_transaction");
-
-            //register
-            $view_data["acc_can_view_register"] = get_array_value($permissions["accounting"], "acc_can_view_register");
-            $view_data["acc_can_create_register"] = get_array_value($permissions["accounting"], "acc_can_create_register");
-            $view_data["acc_can_edit_register"] = get_array_value($permissions["accounting"], "acc_can_edit_register");
-            $view_data["acc_can_delete_register"] = get_array_value($permissions["accounting"], "acc_can_delete_register");
-
-            //journal_entry
-            $view_data["acc_can_view_journal_entry"] = get_array_value($permissions["accounting"], "acc_can_view_journal_entry");
-            $view_data["acc_can_create_journal_entry"] = get_array_value($permissions["accounting"], "acc_can_create_journal_entry");
-            $view_data["acc_can_edit_journal_entry"] = get_array_value($permissions["accounting"], "acc_can_edit_journal_entry");
-            $view_data["acc_can_delete_journal_entry"] = get_array_value($permissions["accounting"], "acc_can_delete_journal_entry");
-
-            //transfer
-            $view_data["acc_can_view_transfer"] = get_array_value($permissions["accounting"], "acc_can_view_transfer");
-            $view_data["acc_can_create_transfer"] = get_array_value($permissions["accounting"], "acc_can_create_transfer");
-            $view_data["acc_can_edit_transfer"] = get_array_value($permissions["accounting"], "acc_can_edit_transfer");
-            $view_data["acc_can_delete_transfer"] = get_array_value($permissions["accounting"], "acc_can_delete_transfer");
-
-            //account
-            $view_data["acc_can_view_account"] = get_array_value($permissions["accounting"], "acc_can_view_account");
-            $view_data["acc_can_create_account"] = get_array_value($permissions["accounting"], "acc_can_create_account");
-            $view_data["acc_can_edit_account"] = get_array_value($permissions["accounting"], "acc_can_edit_account");
-            $view_data["acc_can_delete_account"] = get_array_value($permissions["accounting"], "acc_can_delete_account");
-
-            //reconcile
-            $view_data["acc_can_view_reconcile"] = get_array_value($permissions["accounting"], "acc_can_view_reconcile");
-            $view_data["acc_can_create_reconcile"] = get_array_value($permissions["accounting"], "acc_can_create_reconcile");
-            $view_data["acc_can_edit_reconcile"] = get_array_value($permissions["accounting"], "acc_can_edit_reconcile");
-            $view_data["acc_can_delete_reconcile"] = get_array_value($permissions["accounting"], "acc_can_delete_reconcile");
-
-            //budget
-            $view_data["acc_can_view_budget"] = get_array_value($permissions["accounting"], "acc_can_view_budget");
-            $view_data["acc_can_create_budget"] = get_array_value($permissions["accounting"], "acc_can_create_budget");
-            $view_data["acc_can_edit_budget"] = get_array_value($permissions["accounting"], "acc_can_edit_budget");
-            $view_data["acc_can_delete_budget"] = get_array_value($permissions["accounting"], "acc_can_delete_budget");
-
-            //report
-            $view_data["acc_can_view_report"] = get_array_value($permissions["accounting"], "acc_can_view_report");
-
-            //setting
-            $view_data["acc_can_view_setting"] = get_array_value($permissions["accounting"], "acc_can_view_setting");
-            $view_data["acc_can_create_setting"] = get_array_value($permissions["accounting"], "acc_can_create_setting");
-            $view_data["acc_can_edit_setting"] = get_array_value($permissions["accounting"], "acc_can_edit_setting");
-            $view_data["acc_can_delete_setting"] = get_array_value($permissions["accounting"], "acc_can_delete_setting");
-
-            $view_data['permissions'] = $permissions["accounting"];
-
-            return $this->template->view("Accounting\Views\setting\permission_form", $view_data);
-        }
-    }
-
-    /**
-     * { role list data }
-     */
-    public function role_list_data(){
-        $list_data = $this->Roles_model->get_details()->getResult();
-        $result = array();
-        foreach ($list_data as $data) {
-            $result[] = $this->_make_role_row($data);
-        }
-        echo json_encode(array("data" => $result));
-    }
-
-    /**
-     * Makes a role row.
-     *
-     * @param        $data   The data
-     *
-     * @return       ( row data )
-     */
-    public function _make_role_row($data){
-        return array("<a href='#' data-id='$data->id' class='role-row link'>" . $data->title . "</a>",
-                "<a class='edit'><i data-feather='sliders' class='icon-16'></i></a>" 
-            );
-    }
-
-    /**
-     * Saves permissions.
-     */
-    public function save_permissions(){
-
-        $id = $this->request->getPost('id');
-        $data = $this->request->getPost();
-        unset($data['id']);
-
-        $success = $this->Accounting_model->update_permission($data, $id);
-        if($success){
-            $this->session->setFlashdata('success_message', app_lang('updated_successfully'));
-        }
-        app_redirect('accounting/setting?group=permissions');
     }
 }

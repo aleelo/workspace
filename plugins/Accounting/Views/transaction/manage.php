@@ -1,7 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <?php echo form_hidden('site_url', get_uri()); ?>
     <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class=" p-2">
             <ul class="nav nav-tabs vertical settings d-block" role="tablist">
               <div class="clearfix settings-anchor" data-bs-toggle="collapse" data-bs-target="#settings-tab-transaction">
@@ -24,7 +24,7 @@
           
         </ul>
       </div>
-      <div class="col-md-10">
+      <div class="col-md-9">
         <?php
             echo view($tabs['view']);
         ?>

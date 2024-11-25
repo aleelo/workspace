@@ -1,7 +1,8 @@
 <?php
-
 $db = db_connect('default');
 $dbprefix = get_db_prefix();
+
+
 
 /**
  * Add setting
@@ -1186,56 +1187,3 @@ add_setting('acc_plaid_client_id', '');
 add_setting('acc_live_secret', '');
 add_setting('acc_sandbox_secret', '');
 add_setting('acc_plaid_environment', 'sandbox');
-
-
-if (!$db->fieldExists('number' ,$dbprefix . 'acc_account_history')) {
-  $db->query('ALTER TABLE `' . $dbprefix . 'acc_account_history`
-    ADD COLUMN `number` VARCHAR(45) NULL;');
-}
-
-add_setting('acc_pur_invoice_automatic_conversion', 1);
-add_setting('acc_pur_invoice_payment_account', 13);
-add_setting('acc_pur_invoice_deposit_to', 80);
-
-
-add_setting('acc_mrp_manufacturing_order_automatic_conversion', 1);
-add_setting('acc_mrp_material_cost_payment_account', 13);
-add_setting('acc_mrp_material_cost_deposit_to', 45);
-add_setting('acc_mrp_labour_cost_payment_account', 13);
-add_setting('acc_mrp_labour_cost_deposit_to', 18);
-
-add_setting('acc_fe_asset_automatic_conversion', 1);
-add_setting('acc_fe_asset_payment_account', 13);
-add_setting('acc_fe_asset_deposit_to', 1);
-
-add_setting('acc_fe_license_automatic_conversion', 1);
-add_setting('acc_fe_license_payment_account', 13);
-add_setting('acc_fe_license_deposit_to', 1);
-
-add_setting('acc_fe_consumable_automatic_conversion', 1);
-add_setting('acc_fe_consumable_payment_account', 13);
-add_setting('acc_fe_consumable_deposit_to', 1);
-
-add_setting('acc_fe_component_automatic_conversion', 1);
-add_setting('acc_fe_component_payment_account', 13);
-add_setting('acc_fe_component_deposit_to', 1);
-
-add_setting('acc_fe_maintenance_automatic_conversion', 1);
-add_setting('acc_fe_maintenance_payment_account', 13);
-add_setting('acc_fe_maintenance_deposit_to', 1);
-
-add_setting('acc_fe_depreciation_automatic_conversion', 1);
-add_setting('acc_fe_depreciation_payment_account', 13);
-add_setting('acc_fe_depreciation_deposit_to', 1);
-
-if (!$db->fieldExists('sub_type' ,get_db_prefix() . 'acc_account_history')) {
-  $db->query('ALTER TABLE `' . get_db_prefix() . 'acc_account_history`
-    ADD COLUMN `sub_type` VARCHAR(45) NULL;');
-}
-
-// update permission
-if (!$db->fieldExists("plugins_permissions" ,$dbprefix . "roles")) { 
-  $db->query("ALTER TABLE `" . $dbprefix . "roles`
-    ADD COLUMN `plugins_permissions` LONGTEXT NULL
-;");
-}

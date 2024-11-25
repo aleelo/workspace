@@ -88,11 +88,9 @@
             $('.divInfo').removeClass('hide');
             $('.divResume').addClass('hide');
 
-            appAlert.success(response.message);
-
+            alert_float('success', response.message);
           }else{
-            appAlert.error(response.message);
-
+            alert_float('warning', response.message);
           }
 
 
@@ -162,9 +160,9 @@
 
     $.get(admin_url+'accounting/update_bank_reconcile', data, function (response) {
           if(response.success == true || response.success == 'true'){
-            appAlert.success(response.message);
+            alert_float('success', response.message);
           }else{
-            appAlert.error(response.message);
+            alert_float('warning', response.message);
           }
           $('.edit_reconcile').removeClass('hide');
           $('.update_reconcile').addClass('hide');

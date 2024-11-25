@@ -1,5 +1,7 @@
 
+<div id="page-content" class="page-wrapper clearfix general-form">
     <?php echo form_hidden('site_url', get_uri()); ?>
+    <div class="card">
         <div class="card-body">
 
 
@@ -27,13 +29,14 @@
 
                 <div class="col-md-6">
 
-                    <?php if(isset($account_data) && $account_data != NULL && $account_data[0]['plaid_status'] == 0 && acc_has_permission('acc_can_edit_banking')) {?>
+                    <?php if(isset($account_data) && $account_data != NULL && $account_data[0]['plaid_status'] == 0) {?>
 
                       <button type="button" class="btn btn-info btn-submit text-white" id="linkButton"><i data-feather="settings" class="icon-16"></i> <?php echo _l('verify_bank_account'); ?></button>
 
                     <?php } ?>
 
-                    <?php if(isset($account_data) && $account_data != NULL && $account_data[0]['plaid_status'] == 1 && acc_has_permission('acc_can_delete_banking')) {?>
+                    <?php if(isset($account_data) && $account_data != NULL && $account_data[0]['plaid_status'] == 1) {?>
+
                       <button type="button" id="delete_button" class="btn btn-warning text-white btn-submit" onclick="updatePlaidStatus()"><i data-feather="x-circle" class="icon-16"></i> <?php echo _l('delete_verification'); ?></button>
 
                     <?php } ?>
@@ -60,7 +63,7 @@
                 </div>
             </div>
 
-            <h4>Import Transactions</h4>            
+            <h4 style="">Import Transactions</h4>            
             <br>
             <div class="row">
                 <div class="col-md-3">
@@ -72,7 +75,7 @@
                     
                 </div>
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-info btn-submit text-white <?php if(!acc_has_permission('acc_can_create_banking')){echo 'hide';} ?>" id="import_button" onclick="submitForm()"><i data-feather="download" class="icon-16"></i> <?php echo _l('import_new_transaction'); ?></button>
+                    <button type="submit" class="btn btn-info btn-submit text-white" id="import_button" onclick="submitForm()"><i data-feather="download" class="icon-16"></i> <?php echo _l('import_new_transaction'); ?></button>
                 </div>
             </div>
             <div class="row">
@@ -91,6 +94,7 @@
                 <table class="table table-banking">
                   <thead>
                     <th><?php echo _l('invoice_payments_table_date_heading'); ?></th>
+                    <!-- <th><?php echo _l('check_#'); ?></th> -->
                     <th><?php echo _l('payee'); ?></th>
                     <th><?php echo _l('description'); ?></th>
                     <th><?php echo _l('withdrawals'); ?></th>
@@ -108,7 +112,9 @@
 
     </div>
 
+  </div>
 
+</div>
 
  
 

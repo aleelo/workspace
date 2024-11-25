@@ -150,17 +150,16 @@ function adjustment_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success === 'close_the_book') {
-          appAlert.error(response.message);
-
+          alert_float('warning', response.message);
           $('#adjustment-modal').find('button[type="submit"]').prop('disabled', false);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
           $('#reconcile-account-form').submit();
         }else{
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#adjustment-modal').modal('hide');
     }).fail(function(error) {
-          appAlert.error(JSON.parse(error.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;

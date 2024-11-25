@@ -150,8 +150,7 @@ function edit_account(id) {
       $('#account-modal').modal('show');
 
       $('select[name="account_type_id"]').val(response.account_type_id).change();
-
-
+      $('select[name="account_detail_type_id"]').val(response.account_detail_type_id);
       if(response.parent_account != 0){
         $('select[name="parent_account"]').val(response.parent_account).change();
       }else{
@@ -162,8 +161,6 @@ function edit_account(id) {
       $('input[name="id"]').val(id);
       $('input[name="balance"]').val(response.balance);
       $('input[name="balance_as_of"]').val(response.balance_as_of);
-
-      $('select[name="account_detail_type_id"]').val(response.account_detail_type_id).select2();
 
       $('textarea[name="description"]').val(response.description);
       if(response.balance > 0){
@@ -195,15 +192,15 @@ function account_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          	alert_float('success', response.message);
 
 	 		    init_account_table();
         }else{
-            appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#account-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(error.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;

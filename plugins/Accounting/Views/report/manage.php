@@ -160,11 +160,6 @@
               <p class="hide"><?php echo app_lang('product_service_list_note'); ?></p>
             </div>
             <div class="col-md-6">
-              <a href="<?php echo get_uri('accounting/rp_customer_statement'); ?>" class=""><h4 class="no-margin"><?php echo app_lang('customer_statement'); ?></h4></a>
-              <p class=""><?php echo app_lang('customer_statement_note'); ?></p>
-              
-            </div>
-            <div class="col-md-6">
               <a href="<?php echo get_uri('accounting/rp_sales_by_customer_detail'); ?>" class="hide"><h4 class="no-margin"><?php echo app_lang('sales_by_customer_detail'); ?></h4></a>
               <p class="hide"><?php echo app_lang('sales_by_customer_detail_note'); ?></p>
               <a href="<?php echo get_uri('accounting/rp_sales_by_customer_summary'); ?>" class="hide"><h4 class="no-margin"><?php echo app_lang('sales_by_customer_summary'); ?></h4></a>

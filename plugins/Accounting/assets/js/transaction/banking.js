@@ -26,23 +26,23 @@ var id, type, amount;
 	},convert_form_handler);
 
     $('input[name="mass_convert"]').on('change', function() {
-        if($('input[name="mass_convert"]').is(':checked') == true){
-          $('input[name="mass_delete_convert"]').prop( "checked", false );
+        if($('#mass_convert').is(':checked') == true){
+          $('#mass_delete_convert').prop( "checked", false );
           $('#mass_delete').prop( "checked", false );
         }
       });
 
       $('input[name="mass_delete_convert"]').on('change', function() {
-        if($('input[name="mass_delete_convert"]').is(':checked') == true){
-          $('input[name="mass_convert"]').prop( "checked", false );
+        if($('#mass_delete_convert').is(':checked') == true){
+          $('#mass_convert').prop( "checked", false );
           $('#mass_delete').prop( "checked", false );
         }
       });
 
       $('input[name="mass_delete"]').on('change', function() {
         if($('#mass_delete').is(':checked') == true){
-          $('input[name="mass_convert"]').prop( "checked", false );
-          $('input[name="mass_delete_convert"]').prop( "checked", false );
+          $('#mass_convert').prop( "checked", false );
+          $('#mass_delete_convert').prop( "checked", false );
         }
       });
 })(jQuery);
@@ -94,10 +94,10 @@ function delete_convert(id,type) {
       requestGet(url).done(function(response){
           response = JSON.parse(response);
           if (response.success === true || response.success == 'true') { 
-            appAlert.success(response.message);
+            alert_float('success', response.message); 
             init_banking_table();
           }else{
-            appAlert.error(response.message);
+            alert_float('danger', response.message); 
           }
       });
     }
@@ -122,16 +122,14 @@ function convert_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-            appAlert.success(response.message);
-
+            alert_float('success', response.message);
             init_banking_table();
         }else{
-            appAlert.error(response.message);
-
+          alert_float('danger', response.message);
         }
         $('#convert-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(error.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;
@@ -144,9 +142,9 @@ function bulk_action(event) {
         var ids = [],
             data = {};
             data.type = 'banking';
-            data.mass_convert = $('input[name="mass_convert"]').prop('checked');
+            data.mass_convert = $('#mass_convert').prop('checked');
             data.mass_delete = $('#mass_delete').prop('checked');
-            data.mass_delete_convert = $('input[name="mass_delete_convert"]').prop('checked');
+            data.mass_delete_convert = $('#mass_delete_convert').prop('checked');
 
         var rows = $($('#banking_bulk_actions').attr('data-table')).find('tbody tr');
 

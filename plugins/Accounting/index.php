@@ -12,7 +12,7 @@ defined('PLUGINPATH') or exit('No direct script access allowed');
 use App\Controllers\Security_Controller;
 
 if(!defined('ACCOUNTING_REVISION')){
-    define('ACCOUNTING_REVISION', 1004);    
+    define('ACCOUNTING_REVISION', 1);    
 }
 if(!defined('ACCOUTING_EXPORT_XLSX')){
     define('ACCOUTING_EXPORT_XLSX', 'plugins/Accounting/uploads/export_xlsx/');    
@@ -31,95 +31,66 @@ app_hooks()->add_filter('app_filter_staff_left_menu', function ($sidebar_menu) {
     $ci = new Security_Controller(false);
     $permissions = $ci->login_user->permissions;
 
-    if ($ci->login_user->is_admin || acc_has_permission('acc_can_view_dashboard') || acc_has_permission('acc_can_view_banking') || acc_has_permission('acc_can_view_transaction') || acc_has_permission('acc_can_view_register') || acc_has_permission('acc_can_view_journal_entry') || acc_has_permission('acc_can_view_transfer') || acc_has_permission('acc_can_view_account') || acc_has_permission('acc_can_view_reconcile') || acc_has_permission('acc_can_view_budget') || acc_has_permission('acc_can_view_report') || acc_has_permission('acc_can_view_setting')) {
+    if ($ci->login_user->is_admin || get_array_value($permissions, "accounting")) {
+        $accounting_submenu["accounting_dashboard"] = array(
+            "name" => "dashboard", 
+            "url" => "accounting/dashboard", 
+            "class" => "home"
+        );
 
-        if(acc_has_permission('acc_can_view_dashboard')){
-            $accounting_submenu["accounting_dashboard"] = array(
-                "name" => "dashboard", 
-                "url" => "accounting/dashboard", 
-                "class" => "home"
-            );
-        }
+        $accounting_submenu["accounting_banking"] = array(
+            "name" => "banking", 
+            "url" => "accounting/banking?group=banking_register", 
+            "class" => "repeat"
+        );
 
-        if(acc_has_permission('acc_can_view_banking')){
-            $accounting_submenu["accounting_banking"] = array(
-                "name" => "banking", 
-                "url" => "accounting/banking?group=bank_accounts", 
-                "class" => "repeat"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_transaction')){
-            $accounting_submenu["accounting_transaction"] = array(
-                "name" => "transaction", 
-                "url" => "accounting/transaction?group=sales", 
-                "class" => "repeat"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_register')){
-            $accounting_submenu["accounting_registers"] = array(
-                "name" => "registers", 
-                "url" => "accounting/registers", 
-                "class" => "list"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_journal_entry')){
-            $accounting_submenu["accounting_journal_entry"] = array(
-                "name" => "journal_entry", 
-                "url" => "accounting/journal_entry", 
-                "class" => "repeat"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_transfer')){
-            $accounting_submenu["accounting_transfer"] = array(
-                "name" => "transfer", 
-                "url" => "accounting/transfer", 
-                "class" => "home"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_account')){
-            $accounting_submenu["accounting_chart_of_accounts"] = array(
-                "name" => "chart_of_accounts", 
-                "url" => "accounting/chart_of_accounts", 
-                "class" => "home"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_reconcile')){
-            $accounting_submenu["accounting_reconcile"] = array(
-                "name" => "reconcile", 
-                "url" => "accounting/reconcile", 
-                "class" => "home"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_budget')){
-            $accounting_submenu["accounting_budget"] = array(
-                "name" => "budget", 
-                "url" => "accounting/budget", 
-                "class" => "home"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_report')){
-            $accounting_submenu["accounting_reports"] = array(
-                "name" => "reports", 
-                "url" => "accounting/report", 
-                "class" => "home"
-            );
-        }
-        
-        if(acc_has_permission('acc_can_view_setting')){
-            $accounting_submenu["accounting_setting"] = array(
-                "name" => "setting", 
-                "url" => "accounting/setting?group=general", 
-                "class" => "home"
-            );
-        }
+        $accounting_submenu["accounting_transaction"] = array(
+            "name" => "transaction", 
+            "url" => "accounting/transaction?group=sales", 
+            "class" => "repeat"
+        );
+
+        $accounting_submenu["accounting_journal_entry"] = array(
+            "name" => "journal_entry", 
+            "url" => "accounting/journal_entry", 
+            "class" => "repeat"
+        );
+
+        $accounting_submenu["accounting_transfer"] = array(
+            "name" => "transfer", 
+            "url" => "accounting/transfer", 
+            "class" => "home"
+        );
+
+        $accounting_submenu["accounting_chart_of_accounts"] = array(
+            "name" => "chart_of_accounts", 
+            "url" => "accounting/chart_of_accounts", 
+            "class" => "home"
+        );
+
+        $accounting_submenu["accounting_reconcile"] = array(
+            "name" => "reconcile", 
+            "url" => "accounting/reconcile", 
+            "class" => "home"
+        );
+
+        $accounting_submenu["accounting_budget"] = array(
+            "name" => "budget", 
+            "url" => "accounting/budget", 
+            "class" => "home"
+        );
+
+        $accounting_submenu["accounting_reports"] = array(
+            "name" => "reports", 
+            "url" => "accounting/report", 
+            "class" => "home"
+        );
+
+        $accounting_submenu["accounting_setting"] = array(
+            "name" => "setting", 
+            "url" => "accounting/setting?group=general", 
+            "class" => "home"
+        );
 
         $sidebar_menu["accounting"] = array(
             "name" => "als_accounting",
@@ -156,6 +127,7 @@ register_update_hook("Accounting", function () {
 register_uninstallation_hook("Accounting", function () {    
     require_once __DIR__ . '/uninstall.php';
 });
+
 app_hooks()->add_action('app_hook_accounting_init', function (){
     require_once __DIR__ .'/lib/gtsslib.php';
     $lic_accounting = new AccountingLic();
@@ -170,6 +142,7 @@ app_hooks()->add_action('app_hook_uninstall_plugin_Accounting', function (){
     $lic_accounting = new AccountingLic();
     $lic_accounting->deactivate_license();    
 });
+
 
 /**
  * init add head component
@@ -233,11 +206,11 @@ app_hooks()->add_action('app_hook_head_extension', function(){
     echo '<script src="' . base_url('plugins/Accounting/assets/js/setting/new_rule.js') . '?v=' . ACCOUNTING_REVISION . '"></script>';
   }
 
-  if (!(strpos($viewuri, 'index.php/accounting/banking?group=plaid_new_transaction') === false)) {
+  if (!(strpos($viewuri, 'index.php/accounting/plaid_bank_new_transactions') === false)) {
         echo '<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>';
     }
     
-  if (!(strpos($viewuri, 'index.php/accounting/new_journal_entry') === false) || !(strpos($viewuri, 'index.php/accounting/user_register_view') === false)) {
+  if (!(strpos($viewuri, 'index.php/accounting/new_journal_entry') === false)) {
     echo '<script src="' . base_url('plugins/Accounting/assets/plugins/handsontable/chosen.jquery.js') . '"></script>';
     echo '<script src="' . base_url('plugins/Accounting/assets/plugins/handsontable/handsontable-chosen-editor.js') . '"></script>';
   }
@@ -265,36 +238,7 @@ app_hooks()->add_action('app_hook_head_extension', function(){
   }
 });
 
-app_hooks()->add_action("app_hook_data_update", function($data){
-    $Accounting_model = model("Accounting\Models\Accounting_model");
-    switch ($data['table']) {
-        case get_db_prefix().'invoice_items':
-                highlight_string("<?php\n" . var_export('2', true) . ";\n?>"); 
-        
-                if (get_setting('acc_invoice_automatic_conversion') == 1) {
-                    $Accounting_model->automatic_invoice_conversion('', $data['id']);
-                }
-            break;
-        case get_db_prefix().'invoice_payments':
-                if (get_setting('acc_payment_automatic_conversion') == 1) {
-                    $Accounting_model->automatic_payment_conversion($data['id']);
-                }
-            break;
-        case get_db_prefix().'expenses':
-                if (get_setting('acc_expense_automatic_conversion') == 1) {
-                    
-                    $Accounting_model->automatic_expense_conversion($data['id']);
-                }
-            break;
-        default:
-            // code...
-            break;
-    }
-
-    return $data;
-});
-
-app_hooks()->add_action("app_hook_data_insert", function($data){
+app_hooks()->add_action("app_hook_data_update", function(){
     $Accounting_model = model("Accounting\Models\Accounting_model");
     switch ($data['table']) {
         case get_db_prefix().'invoice_items':
@@ -320,7 +264,33 @@ app_hooks()->add_action("app_hook_data_insert", function($data){
     return $data;
 });
 
-app_hooks()->add_action("app_hook_data_delete", function($data){
+app_hooks()->add_action("app_hook_data_insert", function(){
+    $Accounting_model = model("Accounting\Models\Accounting_model");
+    switch ($data['table']) {
+        case get_db_prefix().'invoice_items':
+                if (get_setting('acc_invoice_automatic_conversion') == 1) {
+                    $Accounting_model->automatic_invoice_conversion('', $data['id']);
+                }
+            break;
+        case get_db_prefix().'invoice_payments':
+                if (get_setting('acc_payment_automatic_conversion') == 1) {
+                    $Accounting_model->automatic_payment_conversion($data['id']);
+                }
+            break;
+        case get_db_prefix().'expenses':
+                if (get_setting('acc_expense_automatic_conversion') == 1) {
+                    $Accounting_model->automatic_expense_conversion($data['id']);
+                }
+            break;
+        default:
+            // code...
+            break;
+    }
+
+    return $data;
+});
+
+app_hooks()->add_action("app_hook_data_delete", function(){
     $Accounting_model = model("Accounting\Models\Accounting_model");
     switch ($data['table']) {
         case get_db_prefix().'invoices':
@@ -337,9 +307,6 @@ app_hooks()->add_action("app_hook_data_delete", function($data){
         case get_db_prefix().'expenses':
                 $Accounting_model->delete_convert($data['id'], 'expense');
             break;
-        case get_db_prefix().'items':
-                $Accounting_model->delete_convert($data['id'], 'opening_stock');
-            break;
         default:
             // code...
             break;
@@ -348,584 +315,42 @@ app_hooks()->add_action("app_hook_data_delete", function($data){
     return $data;
 });
 
-/**
- * { after add purchase order action }
- */
-app_hooks()->add_action('after_purchase_order_add', function($id){
-
-    if ($id) {
-        if (get_setting('acc_pur_order_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_order_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after update purchase order action }
- */
-app_hooks()->add_action('after_pur_order_updated', function($id){
-    if ($id) {
-        if (get_setting('acc_pur_order_automatic_conversion') == 1) {            
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_order_conversion($id);
-        }
-
+app_hooks()->add_action("app_hook_role_permissions_extension", function(){
+    $ci = new Security_Controller(false);
+    $access_accounting = get_array_value($permissions, "accounting");
+    if (is_null($access_accounting)) {
+        $access_accounting = "";
     }
 
-    return $id;
+    echo '<li>
+        <span data-feather="key" class="icon-14 ml-20"></span>
+        <h5>'. app_lang("can_access_accountings").'</h5>
+        <div>'.
+            form_radio(array(
+                "id" => "accounting_no",
+                "name" => "accounting_permission",
+                "value" => "",
+                "class" => "form-check-input"
+                    ), $access_accounting, ($access_accounting === "") ? true : false)
+            .'<label for="accounting_no">'. app_lang("no").' </label>
+        </div>
+        <div>
+            '. form_radio(array(
+                "id" => "accounting_yes",
+                "name" => "accounting_permission",
+                "value" => "all",
+                "class" => "form-check-input"
+                    ), $access_accounting, ($access_accounting === "all") ? true : false).'
+            <label for="accounting_yes">'. app_lang("yes").'</label>
+        </div>
+    </li>';
 });
 
+app_hooks()->add_filter("app_filter_role_permissions_save_data", function(){
+    $accounting = $data['accounting_permission'];
 
-/**
- * { after update purchase order action }
- */
-app_hooks()->add_action('after_purchase_order_approve', function($id){
-    if ($id) {
-        if (get_setting('acc_pur_order_automatic_conversion') == 1) {            
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_order_conversion($id);
-        }
+    $permissions = array_merge($permissions, ['accounting' => $accounting]);
 
-    }
-
-    return $id;
+    return $permissions;
 });
 
-/**
- * { before delete PO action }
- */
-app_hooks()->add_action('before_pur_order_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-
-        $Accounting_model->delete_convert($id, 'purchase_order');
-    }
-    return $id;
-});
-
-/**
- * { after payment purchase invoice }
- */
-app_hooks()->add_action('after_payment_pur_invoice_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_pur_payment_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_payment_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after payment purchase invoice }
- */
-app_hooks()->add_action('after_purchase_payment_approve', function($id){ 
-    if ($id) {
-        if (get_setting('acc_pur_payment_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_payment_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-
-/**
- * { after delete payment of purchase invoice }
- */
-app_hooks()->add_action('after_payment_pur_invoice_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-
-        $Accounting_model->delete_convert($id, 'purchase_payment');
-    }
-    return $id;
-});
-
-/**
- * { after purchase invoice added action }
- */
-app_hooks()->add_action('after_pur_invoice_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_pur_invoice_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_invoice_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after purchase invoice updated action }
- */
-app_hooks()->add_action('after_pur_invoice_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_pur_invoice_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_purchase_invoice_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after delete payment of purchase invoice }
- */
-app_hooks()->add_action('after_pur_invoice_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-
-        $Accounting_model->delete_convert($id, 'purchase_invoice');
-    }
-    return $id;
-});
-
-// inventory
-/**
- * { after goods receipt added action }
- */
-app_hooks()->add_action('after_wh_goods_receipt_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_import_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_import_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt added action }
- */
-app_hooks()->add_action('after_wh_goods_receipt_approve', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_import_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_import_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-
-/**
- * { after goods receipt updated action }
- */
-app_hooks()->add_action('after_wh_goods_receipt_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_import_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_import_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt delete action }
- */
-app_hooks()->add_action('before_goods_receipt_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'stock_import');
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt added action }
- */
-app_hooks()->add_action('after_wh_goods_delivery_approve', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_export_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt added action }
- */
-app_hooks()->add_action('after_wh_goods_delivery_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_export_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt updated action }
- */
-app_hooks()->add_action('after_wh_goods_delivery_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_stock_export_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after goods receipt delete action }
- */
-app_hooks()->add_action('before_goods_delivery_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'stock_export');
-    }
-    return $id;
-});
-
-
-/**
- * { after loss adjustment added action }
- */
-app_hooks()->add_action('after_wh_loss_adjustment_approve', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_loss_adjustment_conversion($id);
-        }
-
-    }
-    return $id;
-});
-/**
- * { after loss adjustment added action }
- */
-app_hooks()->add_action('after_wh_loss_adjustment_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_loss_adjustment_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after loss adjustment updated action }
- */
-app_hooks()->add_action('after_wh_loss_adjustment_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_wh_stock_export_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_loss_adjustment_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after loss adjustment delete action }
- */
-app_hooks()->add_action('before_loss_adjustment_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'loss_adjustment');
-    }
-    return $id;
-});
-
-/**
- * { before item delete action }
- */
-app_hooks()->add_action('delete_item_on_woocommerce', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'opening_stock');
-    }
-    return $id;
-});
-
-// fixed equipment
-
-/**
- * { after asset added action }
- */
-app_hooks()->add_action('after_fe_asset_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_asset_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_asset_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after asset updated action }
- */
-app_hooks()->add_action('after_fe_asset_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_asset_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_asset_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after asset updated action }
- */
-app_hooks()->add_action('after_fe_asset_updated_v2', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_asset_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_asset_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-
-/**
- * { after asset delete action }
- */
-app_hooks()->add_action('after_fe_asset_deleted', function($id){ 
-    if ($id) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->delete_convert($id, 'fe_asset');
-            $Accounting_model->delete_convert($id, 'fe_component');
-            $Accounting_model->delete_convert($id, 'fe_consumable');
-
-    }
-    return $id;
-});
-
-
-/**
- * { after license added action }
- */
-app_hooks()->add_action('after_fe_license_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_license_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_license_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after license updated action }
- */
-app_hooks()->add_action('after_fe_license_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_license_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_license_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after license delete action }
- */
-app_hooks()->add_action('after_fe_license_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'fe_license');
-    }
-    return $id;
-});
-
-/**
- * { after consumable added action }
- */
-app_hooks()->add_action('after_fe_consumable_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_consumable_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_consumable_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after consumable updated action }
- */
-app_hooks()->add_action('after_fe_consumable_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_consumable_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_consumable_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after component added action }
- */
-app_hooks()->add_action('after_fe_component_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_component_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_component_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after component updated action }
- */
-app_hooks()->add_action('after_fe_component_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_component_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_component_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-
-/**
- * { after maintenance added action }
- */
-app_hooks()->add_action('after_fe_maintenance_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_maintenance_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_maintenance_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after maintenance updated action }
- */
-app_hooks()->add_action('after_fe_maintenance_updated', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_maintenance_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_maintenance_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after maintenance delete action }
- */
-app_hooks()->add_action('after_fe_maintenance_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'fe_maintenance');
-    }
-    return $id;
-});
-
-
-// manufacturing
-
-/**
- * { after manufacturing order status changed action }
- */
-app_hooks()->add_action('manufacturing_order_status_changed', function($data){ 
-    if(isset($data['data']['status'])){
-        if ($data['data']['status'] == 'done') {
-            if (get_setting('acc_mrp_manufacturing_order_automatic_conversion') == 1) {
-                $Accounting_model = model("Accounting\Models\Accounting_model");
-
-                $Accounting_model->automatic_manufacturing_order_conversion($data['id']);
-            }
-        }else{
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->delete_convert($data['id'], 'manufacturing_order');
-        }
-    }
-    return $data;
-});
-
-/**
- * { after manufacturing order delete action }
- */
-app_hooks()->add_action('after_manufacturing_order_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'manufacturing_order');
-    }
-    return $id;
-});
-
-
-// payslip
-
-/**
- * { before payslip delete action }
- */
-app_hooks()->add_action('before_payslip_deleted', function($id){ 
-    if ($id) {
-        $Accounting_model = model("Accounting\Models\Accounting_model");
-        $Accounting_model->delete_convert($id, 'payslip');
-    }
-    return $id;
-});
-
-/**
- * { after depreciation added action }
- */
-app_hooks()->add_action('after_fe_depreciation_added', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_depreciation_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_depreciation_conversion($id);
-        }
-
-    }
-    return $id;
-});
-
-/**
- * { after depreciation added action }
- */
-app_hooks()->add_action('after_fe_depreciation_added_v2', function($id){ 
-    if ($id) {
-        if (get_setting('acc_fe_depreciation_automatic_conversion') == 1) {
-            $Accounting_model = model("Accounting\Models\Accounting_model");
-            $Accounting_model->automatic_fe_depreciation_conversion($id);
-        }
-
-    }
-    return $id;
-});

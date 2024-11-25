@@ -73,15 +73,15 @@ function account_type_detail_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-        appAlert.success(response.message);
+          	alert_float('success', response.message);
 
 	 		    init_account_type_details_table();
         }else{
-        appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#account-type-detail-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(error.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;

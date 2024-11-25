@@ -1,5 +1,5 @@
 <div>
-	<a href="<?php echo get_uri('accounting/new_rule'); ?>" class="btn btn-default mbot15 <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>"><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?></a>
+	<a href="<?php echo get_uri('accounting/new_rule'); ?>" class="btn btn-default mbot15"><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?></a>
 </div>
 <div class="row">
 	<div class="col-md-12">

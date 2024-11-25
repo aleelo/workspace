@@ -119,75 +119,11 @@ $(document).ready(function () {
       }
   });
 
-  $('input[name="acc_pur_invoice_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_pur_invoice_automatic_conversion"]').is(':checked') == true){
-        $('#div_pur_invoice_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_pur_invoice_automatic_conversion').addClass('hide');
-      }
-  });
-
   $('input[name="acc_pur_payment_automatic_conversion"]').on('change', function() {
       if($('input[name="acc_pur_payment_automatic_conversion"]').is(':checked') == true){
         $('#div_pur_payment_automatic_conversion').removeClass('hide');
       }else{
         $('#div_pur_payment_automatic_conversion').addClass('hide');
-      }
-  });
-
-  $('input[name="acc_mrp_manufacturing_order_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_mrp_manufacturing_order_automatic_conversion"]').is(':checked') == true){
-        $('#div_mrp_manufacturing_order_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_mrp_manufacturing_order_automatic_conversion').addClass('hide');
-      }
-  });
-
-  $('input[name="acc_fe_asset_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_asset_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_asset_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_asset_automatic_conversion').addClass('hide');
-      }
-  });
-
-   $('input[name="acc_fe_license_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_license_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_license_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_license_automatic_conversion').addClass('hide');
-      }
-  });
-
-    $('input[name="acc_fe_component_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_component_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_component_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_component_automatic_conversion').addClass('hide');
-      }
-  });
-
-     $('input[name="acc_fe_consumable_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_consumable_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_consumable_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_consumable_automatic_conversion').addClass('hide');
-      }
-  });
-
-      $('input[name="acc_fe_maintenance_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_maintenance_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_maintenance_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_maintenance_automatic_conversion').addClass('hide');
-      }
-  });
-
-       $('input[name="acc_fe_depreciation_automatic_conversion"]').on('change', function() {
-      if($('input[name="acc_fe_depreciation_automatic_conversion"]').is(':checked') == true){
-        $('#div_fe_depreciation_automatic_conversion').removeClass('hide');
-      }else{
-        $('#div_fe_depreciation_automatic_conversion').addClass('hide');
       }
   });
 
@@ -333,18 +269,17 @@ function item_automatic_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success == 'close_the_book' || $.isNumeric(response.success)) {
-          appAlert.error(response.message);
-
+          alert_float('warning', response.message);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          alert_float('success', response.message);
           init_item_automatic_table();
         }else {
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#item-automatic-modal').modal('hide');
         $('#edit-item-automatic-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(response.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;
@@ -403,18 +338,17 @@ function tax_mapping_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success == 'close_the_book' || $.isNumeric(response.success)) {
-          appAlert.error(response.message);
-
+          alert_float('warning', response.message);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          alert_float('success', response.message);
           init_tax_mapping_table();
         }else {
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#tax-mapping-modal').modal('hide');
         $('#edit-tax-mapping-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(response.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;
@@ -470,18 +404,17 @@ function expense_category_mapping_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success == 'close_the_book' || $.isNumeric(response.success)) {
-          appAlert.error(response.message);
-
+          alert_float('warning', response.message);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          alert_float('success', response.message);
           init_expense_category_mapping_table();
         }else {
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#expense-category-mapping-modal').modal('hide');
         $('#edit-expense-category-mapping-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(response.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;
@@ -538,18 +471,17 @@ function payment_mode_mapping_form_handler(form) {
     }).done(function(response) {
         response = JSON.parse(response);
         if (response.success == 'close_the_book' || $.isNumeric(response.success)) {
-          appAlert.error(response.message);
-
+          alert_float('warning', response.message);
         }else if (response.success === true || response.success == 'true' || $.isNumeric(response.success)) {
-          appAlert.success(response.message);
+          alert_float('success', response.message);
           init_payment_mode_mapping_table();
         }else {
-          appAlert.error(response.message);
+          alert_float('danger', response.message);
         }
         $('#payment-mode-mapping-modal').modal('hide');
         $('#edit-payment-mode-mapping-modal').modal('hide');
     }).fail(function(error) {
-        appAlert.error(JSON.parse(response.mesage));
+        alert_float('danger', JSON.parse(error.mesage));
     });
 
     return false;

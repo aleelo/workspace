@@ -217,7 +217,7 @@
 <hr>
 <div class="row">
   <div class="col-md-12">
-    <button type="submit" class="btn btn-info pull-right text-white <?php if(!acc_has_permission('acc_can_edit_setting')){echo 'hide';} ?>"><i data-feather="check-circle" class="icon-16"></i> <?php echo app_lang('submit'); ?></button>
+    <button type="submit" class="btn btn-info pull-right text-white"><i data-feather="check-circle" class="icon-16"></i> <?php echo app_lang('submit'); ?></button>
   </div>
 </div>
 <?php echo form_close(); ?>
@@ -228,7 +228,7 @@
 </div>
   <h4 class="no-margin font-bold"><?php echo app_lang('item_mapping_setup'); ?></h4>
 <hr>
-<a href="#" onclick="add_item_automatic(); return false;" class="btn btn-default mr-4 button-margin-r-b <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>" title="<?php echo app_lang('add') ?> "><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
+<a href="#" onclick="add_item_automatic(); return false;" class="btn btn-default mr-4 button-margin-r-b" title="<?php echo app_lang('add') ?> "><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
 </a>
 <hr>
 <table class="table table-item-automatic">
@@ -253,7 +253,7 @@
   </div>
 </div>
 <hr>
-<a href="#" onclick="add_payment_mode_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>" title="<?php echo app_lang('add') ?> "><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
+<a href="#" onclick="add_payment_mode_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b" title="<?php echo app_lang('add') ?> "><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
 </a>
 <hr>
 <table class="table table-payment-mode-mapping">
@@ -278,7 +278,7 @@
   </div>
 </div>
 <hr>
-<a href="#" onclick="add_expense_category_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>" title="<?php echo app_lang('add') ?> ">
+<a href="#" onclick="add_expense_category_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b" title="<?php echo app_lang('add') ?> ">
   <i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
 </a>
 <hr>
@@ -292,7 +292,7 @@
 </div>
   <h4 class="no-margin font-bold"><?php echo app_lang('tax_mapping_setup'); ?></h4>
 <hr>
-<a href="#" onclick="add_tax_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>" title="<?php echo app_lang('add') ?> ">
+<a href="#" onclick="add_tax_mapping(); return false;" class="btn btn-default mr-4 button-margin-r-b" title="<?php echo app_lang('add') ?> ">
   <i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?>
 </a>
 <hr>

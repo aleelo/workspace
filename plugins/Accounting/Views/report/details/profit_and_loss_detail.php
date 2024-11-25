@@ -42,7 +42,7 @@
           <td></td>
         </tr>
         <tr class="tr_header">
-          <td class="text-bold"><?php echo app_lang('date'); ?></td>
+          <td class="text-bold"><?php echo app_lang('invoice_payments_table_date_heading'); ?></td>
           <td class="text-bold"><?php echo app_lang('transaction_type'); ?></td>
           <td class="text-bold"><?php echo app_lang('description'); ?></td>
           <td class="text-bold"><?php echo app_lang('split'); ?></td>

@@ -1,13 +1,13 @@
  <?php echo form_open(get_uri('accounting/reset_account_detail_types')); ?>
-<div class="row mbot10 <?php if(!acc_has_permission('acc_can_delete_setting')){echo 'hide';} ?>">
+<div class="row mbot10">
     <div class="col-md-12">
       <button type="submit" class="btn btn-info _delete text-white"><i data-feather="refresh-ccw" class="icon-16"></i> <?php echo app_lang('reset_account_detail_types'); ?></button> <label class="text-danger"><?php echo app_lang('accounting_reset_account_detail_types_button_tooltip'); ?></label>
   </div>
 </div>
-<hr class=" <?php if(!acc_has_permission('acc_can_delete_setting')){echo 'hide';} ?>">
+<hr>
 <?php echo form_close(); ?>
 <div>
-	<a href="#" class="btn btn-default add-new-account-type-detail mbot15 <?php if(!acc_has_permission('acc_can_create_setting')){echo 'hide';} ?>"><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?></a>
+	<a href="#" class="btn btn-default add-new-account-type-detail mbot15"><i data-feather="plus-circle" class="icon-16"></i> <?php echo app_lang('add'); ?></a>
 </div>
 <div class="row">
 	<div class="col-md-12">

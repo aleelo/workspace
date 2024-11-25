@@ -66,15 +66,14 @@ function uploadfilecsv(){
           $( "#file_upload_response" ).append( '<a href="'+site_url +response.filename+'" class="btn btn-warning"  ><?php echo _l('download_file_error') ?></a>' );
         }
         if(response.total_rows < 1){
-            appAlert.error(response.message);
+          alert_float('warning', response.message);
         }
         
         $('button[id="uploadfile"]').prop('disabled', false);
 
       });
     }else if($("#file_csv").val() == ''){
-      appAlert.error("<?php echo _l('_please_select_a_file') ?>");
-
+      alert_float('warning', "<?php echo _l('_please_select_a_file') ?>");
       $('button[id="uploadfile"]').prop('disabled', false);
     }
 }

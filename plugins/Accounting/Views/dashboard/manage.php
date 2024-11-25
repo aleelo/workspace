@@ -19,33 +19,49 @@
           </div>
 
           <div class="btn-group pull-right mleft4 btn-with-tooltip-group _filter_data" data-toggle="tooltip" data-title="<?php echo app_lang('filter_by'); ?>">
-            <span class="dropdown inline-block">
-              <button id="btn_filter" class="btn btn-default dropdown-toggle caret mt0 mb0" type="button" data-bs-toggle="dropdown" aria-expanded="true" data-bs-display="static">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btn_filter">
               <i class="fa fa-filter" aria-hidden="true"></i> <?php echo app_lang('last_30_days'); ?>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" role="menu">
-                <li role="presentation">
-                  <a href="#" data-cview="last_30_days" onclick="dashboard_custom_view('last_30_days','<?php echo app_lang("last_30_days"); ?>','last_30_days'); return false;" class="dropdown-item"><?php echo app_lang('last_30_days'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="this_month" onclick="dashboard_custom_view('this_month','<?php echo app_lang("this_month"); ?>','this_month'); return false;" class="dropdown-item"><?php echo app_lang('this_month'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="this_quarter" onclick="dashboard_custom_view('this_quarter','<?php echo app_lang("this_quarter"); ?>','this_quarter'); return false;" class="dropdown-item"><?php echo app_lang('this_quarter'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="this_year" onclick="dashboard_custom_view('this_year','<?php echo app_lang("this_year"); ?>','this_year'); return false;" class="dropdown-item"><?php echo app_lang('this_year'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="last_month" onclick="dashboard_custom_view('last_month','<?php echo app_lang("last_month"); ?>','last_month'); return false;" class="dropdown-item"><?php echo app_lang('last_month'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="last_quarter" onclick="dashboard_custom_view('last_quarter','<?php echo app_lang("last_quarter"); ?>','last_quarter'); return false;" class="dropdown-item"><?php echo app_lang('last_quarter'); ?></a>
-                </li>
-                <li role="presentation">
-                  <a href="#" data-cview="last_year" onclick="dashboard_custom_view('last_year','<?php echo app_lang("last_year"); ?>','last_year'); return false;" class="dropdown-item"><?php echo app_lang('last_year'); ?></a>
-                </li>
-                <li class="presentation"><hr></li>
+            </button>
+            <ul class="dropdown-menu width300">
+              <li class="filter-group active" data-filter-group="group-date">
+                  <a href="#" data-cview="last_30_days" onclick="dashboard_custom_view('last_30_days','<?php echo app_lang("last_30_days"); ?>','last_30_days'); return false;">
+                      <?php echo app_lang('last_30_days'); ?>
+                  </a>
+              </li>
+                <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="this_month" onclick="dashboard_custom_view('this_month','<?php echo app_lang("this_month"); ?>','this_month'); return false;">
+                      <?php echo app_lang('this_month'); ?>
+                  </a>
+              </li>
+              <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="this_quarter" onclick="dashboard_custom_view('this_quarter','<?php echo app_lang("this_quarter"); ?>','this_quarter'); return false;">
+                      <?php echo app_lang('this_quarter'); ?>
+                  </a>
+              </li>
+              <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="this_year" onclick="dashboard_custom_view('this_year','<?php echo app_lang("this_year"); ?>','this_year'); return false;">
+                      <?php echo app_lang('this_year'); ?>
+                  </a>
+              </li>
+              <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="last_month" onclick="dashboard_custom_view('last_month','<?php echo app_lang("last_month"); ?>','last_month'); return false;">
+                      <?php echo app_lang('last_month'); ?>
+                  </a>
+              </li>
+              <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="last_quarter" onclick="dashboard_custom_view('last_quarter','<?php echo app_lang("last_quarter"); ?>','last_quarter'); return false;">
+                      <?php echo app_lang('last_quarter'); ?>
+                  </a>
+              </li>
+              <li class="filter-group" data-filter-group="group-date">
+                  <a href="#" data-cview="last_year" onclick="dashboard_custom_view('last_year','<?php echo app_lang("last_year"); ?>','last_year'); return false;">
+                      <?php echo app_lang('last_year'); ?>
+                  </a>
+              </li>
+              <div class="clearfix"></div>
+              <li class="divider"></li>
+              <li class="dropdown-submenu pull-left filter-group" data-filter-group="group-date">
+                 <a href="#" tabindex="-1"><?php echo app_lang('financial_year'); ?></a>
                  <?php $current_year = date('Y');
                     $y0 = (int)$current_year;
                     $y1 = (int)$current_year - 1;
@@ -53,23 +69,25 @@
                     $y3 = (int)$current_year - 3;
                     $y4 = (int)$current_year - 4;
                  ?>
-                <li role="presentation" data-filter-group="group-date">
-                    <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y0); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y0); ?>','<?php echo app_lang("financial_year").': '.$y0; ?>','financial_year_<?php echo html_entity_decode($y0); ?>'); return false;" class="dropdown-item"><?php echo html_entity_decode($y0); ?></a>
-                </li>
-                <li role="presentation" data-filter-group="group-date">
-                    <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y1); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y1); ?>','<?php echo app_lang("financial_year").': '.$y1; ?>','financial_year_<?php echo html_entity_decode($y1); ?>'); return false;" class="dropdown-item"><?php echo html_entity_decode($y1); ?></a>
-                </li>
-                <li role="presentation" data-filter-group="group-date">
-                    <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y2); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y2); ?>','<?php echo app_lang("financial_year").': '.$y2; ?>','financial_year_<?php echo html_entity_decode($y2); ?>'); return false;" class="dropdown-item"><?php echo html_entity_decode($y2); ?></a>
-                </li>
-                <li role="presentation" data-filter-group="group-date">
-                    <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y3); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y3); ?>','<?php echo app_lang("financial_year").': '.$y3; ?>','financial_year_<?php echo html_entity_decode($y3); ?>'); return false;" class="dropdown-item"><?php echo html_entity_decode($y3); ?></a>
-                </li>
-                <li role="presentation" data-filter-group="group-date">
-                    <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y4); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y4); ?>','<?php echo app_lang("financial_year").': '.$y4; ?>','financial_year_<?php echo html_entity_decode($y4); ?>'); return false;" class="dropdown-item"><?php echo html_entity_decode($y4); ?></a>
-                </li>
-              </ul>
-            </span>
+                 <ul class="dropdown-menu dropdown-menu-left">
+                  <li class="filter-group" data-filter-group="group-date">
+                      <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y0); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y0); ?>','<?php echo app_lang("financial_year").': '.$y0; ?>','financial_year_<?php echo html_entity_decode($y0); ?>'); return false;"><?php echo html_entity_decode($y0); ?></a>
+                  </li>
+                  <li class="filter-group" data-filter-group="group-date">
+                      <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y1); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y1); ?>','<?php echo app_lang("financial_year").': '.$y1; ?>','financial_year_<?php echo html_entity_decode($y1); ?>'); return false;"><?php echo html_entity_decode($y1); ?></a>
+                  </li>
+                  <li class="filter-group" data-filter-group="group-date">
+                      <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y2); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y2); ?>','<?php echo app_lang("financial_year").': '.$y2; ?>','financial_year_<?php echo html_entity_decode($y2); ?>'); return false;"><?php echo html_entity_decode($y2); ?></a>
+                  </li>
+                  <li class="filter-group" data-filter-group="group-date">
+                      <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y3); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y3); ?>','<?php echo app_lang("financial_year").': '.$y3; ?>','financial_year_<?php echo html_entity_decode($y3); ?>'); return false;"><?php echo html_entity_decode($y3); ?></a>
+                  </li>
+                  <li class="filter-group" data-filter-group="group-date">
+                      <a href="#" data-cview="financial_year_<?php echo html_entity_decode($y4); ?>" onclick="dashboard_custom_view('financial_year_<?php echo html_entity_decode($y4); ?>','<?php echo app_lang("financial_year").': '.$y4; ?>','financial_year_<?php echo html_entity_decode($y4); ?>'); return false;"><?php echo html_entity_decode($y4); ?></a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
           </div>
         </div>

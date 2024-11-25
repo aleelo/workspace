@@ -19,10 +19,6 @@
                 }
             }
         });
-        
-        $("button[type=submit]").click(function () {
-            $(this).trigger("submit");
-        });
 
         $("#transfer-form .select2").select2();
         setDatePicker("#date");

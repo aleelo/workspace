@@ -118,7 +118,6 @@ $(document).ready(function () {
     commodity_type_value = commodity_type;
 
     $('.journal-entry-form-submiter').on('click', function() {
-      
 	    $('input[name="journal_entry"]').val(JSON.stringify(commodity_type_value.getData()));
     	var journal_entry = JSON.parse($('input[name="journal_entry"]').val());
       var total_debit = 0, total_credit = 0;
@@ -141,7 +140,7 @@ $(document).ready(function () {
 	    		alert('<?php echo app_lang('you_must_fill_out_at_least_two_detail_lines'); ?>');
 	    	}
 	    }else{
-          alert('<?php echo app_lang('please_balance_debits_and_credits'); ?>');
+            alert('<?php echo app_lang('please_balance_debits_and_credits'); ?>');
 	    }
 	});
 })(jQuery);

@@ -7,7 +7,28 @@
             <?php echo form_hidden('id', $id); ?>
             <?php echo form_hidden('type', $type); ?>
             <?php echo form_hidden('amount', $amount); ?>
-            
+            <hr>
+            <?php if($type != 'invoice'){ ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="payment_account" class=""><?php echo app_lang('payment_account'); ?></label>
+                            <?php
+                            echo form_dropdown("payment_account", $accounts_dropdown, array($credit ? $credit : ''), "class='select2 validate-hidden' id='payment_account' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+
+                            ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="deposit_to" class=""><?php echo app_lang('deposit_to'); ?></label>
+                        <?php
+                            echo form_dropdown("deposit_to", $accounts_dropdown, array($debit ? $debit : ''), "class='select2 validate-hidden' id='deposit_to' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                            ?>
+                    </div>
+                </div>
+            </div>  
+            <?php } ?>
         </div>
     </div>
 

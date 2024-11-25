@@ -20,7 +20,7 @@
 	<?php echo render_input('acc_sandbox_secret', 'sandbox', $sandbox_secret); ?>
 	<hr>
 	<div class="col-md-12">
-	  <?php if(acc_has_permission('acc_can_edit_setting')){ ?>
+	  <?php if(has_permission('accounting_setting', '', 'edit')){ ?>
 	  <button type="submit" class="btn btn-info text-white pull-right"><i data-feather="check-circle" class="icon-16"></i> <?php echo _l('submit'); ?></button>
 	<?php } ?>
 	</div>

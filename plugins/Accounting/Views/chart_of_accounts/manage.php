@@ -4,16 +4,15 @@
         <div class="page-title clearfix">
             <h1><?php echo html_entity_decode($title); ?></h1>
             <div class="title-button-group">
-                <a href="#" class="btn btn-default add-new-account mbot15 <?php if(!acc_has_permission('acc_can_create_account')){echo 'hide';} ?>"><i data-feather="plus-circle" class="icon-16"></i> <?php echo _l('add'); ?></a>
+                <a href="#" class="btn btn-default add-new-account mbot15 <?php if(!has_permission('accounting_chart_of_accounts', '', 'create')){echo 'hide';} ?>"><i data-feather="plus-circle" class="icon-16"></i> <?php echo _l('add'); ?></a>
                 
               </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-accounts" id="accounts-table">
-                
-              </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-accounts" id="accounts-table">
+            
+          </table>
         </div>
     </div>
 </div>
@@ -84,19 +83,19 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
-            <?php if(acc_has_permission('acc_can_edit_account')){ ?>
+            <?php if(has_permission('accounting_chart_of_accounts','','edit')){ ?>
                <div class="checkbox checkbox-info">
                   <input type="checkbox" name="mass_activate" id="mass_activate">
                   <label for="mass_activate"><?php echo _l('mass_activate'); ?></label>
                </div>
             <?php } ?>
-            <?php if(acc_has_permission('acc_can_edit_account')){ ?>
+            <?php if(has_permission('accounting_chart_of_accounts','','edit')){ ?>
                <div class="checkbox checkbox-info">
                   <input type="checkbox" name="mass_deactivate" id="mass_deactivate">
                   <label for="mass_deactivate"><?php echo _l('mass_deactivate'); ?></label>
                </div>
             <?php } ?>
-            <?php if(acc_has_permission('acc_can_detele_account')){ ?>
+            <?php if(has_permission('accounting_chart_of_accounts','','detele')){ ?>
                <div class="checkbox checkbox-danger">
                   <input type="checkbox" name="mass_delete" id="mass_delete">
                   <label for="mass_delete"><?php echo _l('mass_delete'); ?></label>
