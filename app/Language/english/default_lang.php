@@ -77,6 +77,10 @@ $lang["-----------"] = "_________________________";
 $lang["solutions"] = "Aleelo Solutions";
 
 
+//Clients
+$lang["clients_list"] = "Clients List";
+$lang["clients_info"] = "Clients Info";
+
 //Companies
 $lang["company"] = "Company";
 $lang["company_list"] = "Company List";

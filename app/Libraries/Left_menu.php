@@ -68,7 +68,7 @@ class Left_menu {
             }
 
             if ($this->ci->login_user->is_admin || $access_client) {
-                $sidebar_menu["client"] = array("name" => "client", "url" => "clients", "class" => "pie-chart");
+                $sidebar_menu["clients"] = array("name" => "clients", "url" => "clients", "class" => "pie-chart");
             }
             
             if ($this->ci->login_user->is_admin || $access_client) {
