@@ -45,6 +45,7 @@ class App_Controller extends Controller {
     public $Purchase_Order_Items_model;
     public $Suppliers_model;
     public $Company_model;
+    public $Screen_size_model;
 
     public $Cardholders_model;
     public $Archives_model;
@@ -222,6 +223,7 @@ class App_Controller extends Controller {
             'Social_links_model',
             'Notification_settings_model',
             'Notifications_model',
+            'Screen_size_model',
             'Custom_fields_model',
             'Estimate_forms_model',
             'Estimate_requests_model',

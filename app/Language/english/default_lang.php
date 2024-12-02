@@ -959,6 +959,12 @@ $lang["file_comment_reply"] = "File comment reply   ";
 $lang["customer_feedback_reply"] = "Customer feedback reply";
 $lang["project_date"] = "Project Date";
 
+/* Screen Size */
+$lang["screen_size"] = "Screen Size";
+$lang["add_size"] = "Add Size";
+$lang["edit_size"] = "Edit Size";
+$lang["delete_size"] = "Delete Size";
+
 /* expense */
 $lang["add_category"] = "Add category";
 $lang["edit_category"] = "Edit category";

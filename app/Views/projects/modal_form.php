@@ -116,7 +116,7 @@
                 <label for="supervisor_id" class="col-md-3"><?php echo 'Supervisor'; ?></label>
                 <div class=" col-md-9">
                     <?php
-                    $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
+                    // $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
                     echo form_dropdown(array(
                         "id" => "supervisor_id",
                         "name" => "supervisor_id",
@@ -159,14 +159,14 @@
                 <label for="screen_size_id" class="col-md-3"><?php echo 'Screen Size'; ?></label>
                 <div class=" col-md-9">
                     <?php
-                    $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
+                    // $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
                     echo form_dropdown(array(
                         "id" => "screen_size_id",
                         "name" => "screen_size_id",
                         "class" => "form-control select2",
                         "placeholder" => 'Screen Size',
                         "autocomplete" => "off"
-                    ),$Training_Type,[$model_info->screen_size_id]);
+                    ),$screen_sizes,[$model_info->screen_size_id]);
                     ?>
                 </div>
             </div>

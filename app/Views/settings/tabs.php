@@ -118,6 +118,7 @@ if (get_setting("module_lead") == "1") {
 
 // Form Setups
 
+$settings_menu["form_setup"][] = array("name" => "screen_size", "url" => "screen_size");
 $settings_menu["form_setup"][] = array("name" => "bank_names", "url" => "bank_names");
 $settings_menu["form_setup"][] = array("name" => "merchant_types", "url" => "merchant_types");
 $settings_menu["form_setup"][] = array("name" => "field_of_study", "url" => "field_of_study");
