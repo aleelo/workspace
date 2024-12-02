@@ -472,7 +472,7 @@
     }
 
       // Initially hide all sections
-      function hideAllSectionsDeliveryMode() {
+    function hideAllSectionsDeliveryMode() {
         $('#platform_section').hide();
     }
 

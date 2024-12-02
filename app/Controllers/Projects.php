@@ -234,6 +234,7 @@ class Projects extends Security_Controller {
             }
         }
 
+        $view_data['employees'] = array("" => " -- Choose Supervisor -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
 
         $view_data["client_id"] = $client_id;
         $view_data['model_info'] = $this->Projects_model->get_one($project_id);

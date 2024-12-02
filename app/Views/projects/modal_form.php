@@ -5,6 +5,8 @@
         <input type="hidden" name="estimate_id" value="<?php echo $model_info->estimate_id; ?>" />
         <input type="hidden" name="order_id" value="<?php echo $model_info->order_id; ?>" />
 
+        <!----------------------------------------- Company ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="department_id" class=" col-md-3"><?php echo 'Company'; ?></label>
@@ -22,6 +24,8 @@
                 </div>
             </div>
         </div> 
+
+        <!----------------------------------------- Title ------------------------------------>
 
         <div class="form-group">
             <div class="row">
@@ -42,6 +46,8 @@
                 </div> 
             </div>
         </div>
+
+        <!----------------------------------------- Project Type ------------------------------------>
 
         <?php if ($client_id || $login_user->user_type == "client") { ?>
             <input type="hidden" name="project_type" value="client_project" />
@@ -81,6 +87,8 @@
             
         <?php } ?>
 
+        <!----------------------------------------- Description ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="description" class=" col-md-3"><?php echo app_lang('description'); ?></label>
@@ -99,6 +107,73 @@
                 </div>
             </div>
         </div>
+
+        <!----------------------------------------- Supervisor ------------------------------------>
+
+        <div class="form-group" id="supervisor_section">
+            <div class="row">
+                
+                <label for="supervisor_id" class="col-md-3"><?php echo 'Supervisor'; ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
+                    echo form_dropdown(array(
+                        "id" => "supervisor_id",
+                        "name" => "supervisor_id",
+                        "class" => "form-control select2",
+                        "placeholder" => 'Supervisor',
+                        "autocomplete" => "off"
+                    ),$employees,[$model_info->supervisor_id]);
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------------------- Location ------------------------------------>
+
+        <div class="form-group" id="location_section">
+            <div class="row">
+                <label for="location" class="col-md-3"><?php echo app_lang('location'); ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "location",
+                        "name" => "location",
+                        "value" => $model_info->location,
+                        "class" => "form-control",
+                        "placeholder" => app_lang('location'),
+                        "autofocus" => true,
+                        // "data-rule-required" => true,
+                        // "data-msg-required" => app_lang("field_required"),
+                    ));
+                    ?>
+                </div> 
+            </div>
+        </div>
+
+        <!----------------------------------------- Screen Size ------------------------------------>
+
+        <div class="form-group" id="screen_size_section">
+            <div class="row">
+                
+                <label for="screen_size_id" class="col-md-3"><?php echo 'Screen Size'; ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
+                    echo form_dropdown(array(
+                        "id" => "screen_size_id",
+                        "name" => "screen_size_id",
+                        "class" => "form-control select2",
+                        "placeholder" => 'Screen Size',
+                        "autocomplete" => "off"
+                    ),$Training_Type,[$model_info->screen_size_id]);
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------------------- Start Date ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="start_date" class=" col-md-3"><?php echo app_lang('start_date'); ?></label>
@@ -116,6 +191,9 @@
                 </div>
             </div>
         </div>
+
+        <!----------------------------------------- Deadline ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="deadline" class=" col-md-3"><?php echo app_lang('deadline'); ?></label>
@@ -134,6 +212,28 @@
             </div>
         </div>
 
+        <!----------------------------------------- Project Date ------------------------------------>
+
+        <div class="form-group" id="project_date_section">
+            <div class="row">
+                <label for="project_date" class=" col-md-3"><?php echo app_lang('project_date'); ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "project_date",
+                        "name" => "project_date",
+                        "value" => is_date_exists($model_info->project_date) ? $model_info->project_date : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('project_date'),
+                        "autocomplete" => "off"
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------------------- Price ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="price" class=" col-md-3"><?php echo app_lang('price'); ?></label>
@@ -151,6 +251,8 @@
             </div>
         </div>
 
+        <!----------------------------------------- Labels ------------------------------------>
+
         <div class="form-group">
             <div class="row">
                 <label for="project_labels" class=" col-md-3"><?php echo app_lang('labels'); ?></label>
@@ -167,6 +269,8 @@
                 </div>
             </div>
         </div>
+
+        <!----------------------------------------- Status ------------------------------------>
 
         <?php if ($model_info->id) { ?>
             <div class="form-group">
@@ -241,7 +345,7 @@
         }, 200);
         $("#project-form .select2").select2();
 
-        setDatePicker("#start_date, #deadline");
+        setDatePicker("#start_date, #deadline, #project_date");
 
         $("#project_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
 
@@ -274,6 +378,56 @@
         setTimeout(function () {
             validateClientDropdown();
         });
+
+// ------------------------------- Aleelo Pixel ----------------------------------------------------------------------------------------------- //
+
+
+        function resetOtherDropdowns(excludeSection) {
+        var sections = ['#supervisor_section','#location_section','#screen_size_section','#project_date_section'];
+        
+        // Remove the excluded section from the list
+        sections = sections.filter(function (item) {
+            return item !== excludeSection;
+        });
+
+        // Loop through each section and reset the values
+        sections.forEach(function (section) {
+            $(section + ' select').val(null).trigger('change'); // Clear selection
+        });
+    }
+
+        // Initially hide all sections
+        function hideAllSections() {
+            $('#supervisor_section').hide();
+            $('#location_section').hide();
+            $('#screen_size_section').hide();
+            $('#project_date_section').hide();
+        }
+
+        // Call this function whenever the "Meeting With" dropdown changes
+        $('#department_id').on('change', function () {
+            var department_id = $(this).val();
+
+            // Hide all sections first
+            hideAllSections();
+
+            // Show the appropriate section(s) based on the selected meeting_with value and reset others
+            switch (department_id) {
+                case '1':
+                    $('#supervisor_section').show();
+                    $('#location_section').show();
+                    $('#screen_size_section').show();
+                    $('#project_date_section').show();
+                    resetOtherDropdowns('#supervisor_section','#location_section','#screen_size_section','#project_date_section');
+                    break;
+                default:
+                    hideAllSections(); // If no valid selection is made, hide all sections and reset all dropdowns
+                    resetOtherDropdowns(null);
+            }
+        });
+
+        // Trigger change on page load to set the correct visibility based on any pre-selected value
+        $('#department_id').trigger('change');
 
     });
 </script>    
