@@ -17,11 +17,18 @@ class Projects_model extends Crud_model {
         $clients_table = $this->db->prefixTable('clients');
         $tasks_table = $this->db->prefixTable('tasks');
         $project_status_table = $this->db->prefixTable('project_status');
+        $departments_table = $this->db->prefixTable('departments');
+
         $where = "";
 
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
             $where .= " AND $projects_table.id=$id";
+        }
+
+        $department_id = $this->_get_clean_value($options, "department_id");
+        if ($department_id) {
+            $where .= " AND $projects_table.department_id=$department_id";
         }
 
         $client_id = $this->_get_clean_value($options, "client_id");
@@ -101,12 +108,14 @@ class Projects_model extends Crud_model {
 
         $this->db->query('SET SQL_BIG_SELECTS=1');
 
-        $sql = "SELECT $projects_table.*, $clients_table.company_name, $clients_table.currency_symbol,  total_points_table.total_points, completed_points_table.completed_points, $project_status_table.key_name AS status_key_name, $project_status_table.title_language_key, $project_status_table.title AS status_title,  $project_status_table.icon AS status_icon, $select_labels_data_query $select_custom_fieds
+        $sql = "SELECT $projects_table.*, $clients_table.company_name, $clients_table.currency_symbol,  total_points_table.total_points, completed_points_table.completed_points, $project_status_table.key_name AS status_key_name, $project_status_table.title_language_key, $project_status_table.title AS status_title,  $project_status_table.icon AS status_icon, $select_labels_data_query $select_custom_fieds,
+        $departments_table.nameSo as company_nm
         FROM $projects_table
         LEFT JOIN $clients_table ON $clients_table.id= $projects_table.client_id
         LEFT JOIN (SELECT project_id, SUM(points) AS total_points FROM $tasks_table WHERE deleted=0 GROUP BY project_id) AS  total_points_table ON total_points_table.project_id= $projects_table.id
         LEFT JOIN (SELECT project_id, SUM(points) AS completed_points FROM $tasks_table WHERE deleted=0 AND status_id=3 GROUP BY project_id) AS  completed_points_table ON completed_points_table.project_id= $projects_table.id
         LEFT JOIN $project_status_table ON $projects_table.status_id = $project_status_table.id 
+        LEFT JOIN $departments_table ON $departments_table.id = $projects_table.department_id 
         $extra_join   
         $join_custom_fieds    
         WHERE $projects_table.deleted=0 $where $extra_where $custom_fields_where

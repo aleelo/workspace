@@ -46,7 +46,10 @@
                     options: <?php echo view("project_status/project_status_dropdown", array("project_statuses" => $project_statuses, "selected_status_id" => $selected_status_id, "selected_status_key" => "open")); ?>
                 }
             ],
-            filterDropdown: [{name: "project_label", class: "w200", options: <?php echo $project_labels_dropdown; ?>}, <?php echo $custom_field_filters; ?>],
+            filterDropdown: [
+                {name: "department_id", class: "w200", options: <?php echo $departments_dropdown; ?>},
+                {name: "project_label", class: "w200", options: <?php echo $project_labels_dropdown; ?>}, 
+                <?php echo $custom_field_filters; ?>],
             rangeDatepicker: [{startDate: {name: "start_date_from", value: ""}, endDate: {name: "start_date_to", value: ""}, showClearButton: true, label: "<?php echo app_lang('start_date'); ?>", ranges: ['this_month', 'last_month', 'this_year', 'last_year', 'next_7_days', 'next_month']}],
             singleDatepicker: [{name: "deadline", defaultText: "<?php echo app_lang('deadline') ?>",
                     options: [
@@ -58,6 +61,7 @@
                     ]}],
             columns: [
                 {title: '<?php echo app_lang("id") ?>', "class": "all w50"},
+                {title: '<?php echo "Company Name" ?>', "class": "all"},
                 {title: '<?php echo app_lang("title") ?>', "class": "all"},
                 {title: '<?php echo app_lang("client") ?>', "class": "w10p"},
                 {visible: optionVisibility, title: '<?php echo app_lang("price") ?>', "class": "w10p"},

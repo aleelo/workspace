@@ -187,7 +187,7 @@ class Projects extends Security_Controller {
     /* load project view */
 
     function index() {
-        
+
         app_redirect("projects/all_projects");
     }
 
@@ -203,6 +203,8 @@ class Projects extends Security_Controller {
 
         $view_data["selected_status_id"] = $status_id;
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
+        $view_data['departments_dropdown'] = $this->get_departments_for_table_emp();
+        // $view_data['departments_dropdown'] = array("" => " -- All Companies -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
 
         if ($this->login_user->user_type === "staff") {
             $view_data["can_edit_projects"] = $this->can_edit_projects();
@@ -751,6 +753,7 @@ class Projects extends Security_Controller {
             "start_date_from" => $this->request->getPost("start_date_from"),
             "start_date_to" => $this->request->getPost("start_date_to"),
             "deadline" => $this->request->getPost('deadline'),
+            'department_id' => $this->request->getPost("department_id"),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("projects", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
@@ -892,6 +895,7 @@ class Projects extends Security_Controller {
 
         $row_data = array(
             anchor(get_uri("projects/view/" . $data->id), $data->id),
+            $data->company_nm,
             $title,
             $client_name,
             $price,
