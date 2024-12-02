@@ -87,6 +87,26 @@
             
         <?php } ?>
 
+         <!----------------------------------------- Project Name ------------------------------------>
+
+         <!-- <div class="form-group" id="project_name_section">
+            <div class="row">
+                <label for="project_name" class=" col-md-3"><?php //echo app_lang('project_name'); ?></label>
+                <div class=" col-md-9">
+                    <?php
+                    // echo form_input(array(
+                    //     "id" => "project_name",
+                    //     "name" => "project_name",
+                    //     "value" => $model_info->project_name,
+                    //     "class" => "form-control",
+                    //     "placeholder" => app_lang('project_name'),
+                    //     "autofocus" => true,
+                    // ));
+                    ?>
+                </div> 
+            </div>
+        </div> -->
+
         <!----------------------------------------- Description ------------------------------------>
 
         <div class="form-group">
@@ -159,7 +179,6 @@
                 <label for="screen_size_id" class="col-md-3"><?php echo 'Screen Size'; ?></label>
                 <div class=" col-md-9">
                     <?php
-                    // $Training_Type = [''=>' -- ','4 * 3 meter'=>'4 * 3 meter','9 * 2 meter'=>'9 * 2 meter','Others'=>'Others'];
                     echo form_dropdown(array(
                         "id" => "screen_size_id",
                         "name" => "screen_size_id",
@@ -383,7 +402,7 @@
 
 
         function resetOtherDropdowns(excludeSection) {
-        var sections = ['#supervisor_section','#location_section','#screen_size_section','#project_date_section'];
+        var sections = ['#supervisor_section','#location_section','#screen_size_section','#project_date_section','#project_name_section'];
         
         // Remove the excluded section from the list
         sections = sections.filter(function (item) {
@@ -402,6 +421,7 @@
             $('#location_section').hide();
             $('#screen_size_section').hide();
             $('#project_date_section').hide();
+            $('#project_name_section').hide();
         }
 
         // Call this function whenever the "Meeting With" dropdown changes
@@ -418,7 +438,8 @@
                     $('#location_section').show();
                     $('#screen_size_section').show();
                     $('#project_date_section').show();
-                    resetOtherDropdowns('#supervisor_section','#location_section','#screen_size_section','#project_date_section');
+                    $('#project_name_section').show();
+                    resetOtherDropdowns('#supervisor_section','#location_section','#screen_size_section','#project_date_section','project_name_section');
                     break;
                 default:
                     hideAllSections(); // If no valid selection is made, hide all sections and reset all dropdowns

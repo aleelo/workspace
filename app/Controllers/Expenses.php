@@ -155,6 +155,9 @@ class Expenses extends Security_Controller {
             "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
         );
 
+        $data["created_at"] = get_current_utc_time();
+        $data["created_by"] = $this->login_user->id;
+
         $expense_info = $this->Expenses_model->get_one($id);
 
         //is editing? update the files if required
@@ -347,14 +350,16 @@ class Expenses extends Security_Controller {
         $row_data = array(
             $data->expense_date,
             modal_anchor(get_uri("expenses/expense_details"), format_to_date($data->expense_date, false), array("title" => app_lang("expense_details"), "data-post-id" => $data->id, "data-modal-lg" => "1")),
-            $data->category_title,
+            $data->created_by,
             $data->title,
             $description,
-            $files_link . $file_download_link,
+            // $files_link . $file_download_link,
+            $data->category_title,
             to_currency($data->amount),
-            to_currency($tax),
-            to_currency($tax2),
-            to_currency($data->amount + $tax + $tax2)
+            $data->status,
+            // to_currency($tax),
+            // to_currency($tax2),
+            // to_currency($data->amount + $tax + $tax2)
         );
 
         foreach ($custom_fields as $field) {

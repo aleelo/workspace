@@ -150,115 +150,116 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <div class="row">
-                    <label for="tax_id" class=" col-md-3"><?php echo app_lang('tax'); ?></label>
+                    <label for="tax_id" class=" col-md-3"><?php// echo app_lang('tax'); ?></label>
                     <div class="col-md-9">
                         <?php
-                        echo form_dropdown("tax_id", $taxes_dropdown, array($model_info->tax_id), "class='select2'");
+                       // echo form_dropdown("tax_id", $taxes_dropdown, array($model_info->tax_id), "class='select2'");
                         ?>
                     </div>
                 </div>
-            </div>
-
+            </div> -->
+<!-- 
             <div class="form-group">
                 <div class="row">
-                    <label for="tax_id" class=" col-md-3"><?php echo app_lang('second_tax'); ?></label>
+                    <label for="tax_id" class=" col-md-3"><?php// echo app_lang('second_tax'); ?></label>
                     <div class="col-md-9">
                         <?php
-                        echo form_dropdown("tax_id2", $taxes_dropdown, array($model_info->tax_id2), "class='select2'");
+                       // echo form_dropdown("tax_id2", $taxes_dropdown, array($model_info->tax_id2), "class='select2'");
                         ?>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <div class="row">
-                    <label for="expense_recurring" class=" col-md-3"><?php echo app_lang('recurring'); ?>  <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('cron_job_required'); ?>"><i data-feather="help-circle" class="icon-16"></i></span></label>
+                    <label for="expense_recurring" class=" col-md-3"><?php// echo app_lang('recurring'); ?>  <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('cron_job_required'); ?>"><i data-feather="help-circle" class="icon-16"></i></span></label>
                     <div class=" col-md-9">
                         <?php
-                        echo form_checkbox("recurring", "1", $model_info->recurring ? true : false, "id='expense_recurring' class='form-check-input'");
+                       // echo form_checkbox("recurring", "1", $model_info->recurring ? true : false, "id='expense_recurring' class='form-check-input'");
                         ?>                       
                     </div>
                 </div>
-            </div>
-            <div id="recurring_fields" class="<?php if (!$model_info->recurring) echo "hide"; ?>"> 
+            </div> -->
+
+            <!-- <div id="recurring_fields" class="<?php //if (!$model_info->recurring) echo "hide"; ?>"> 
                 <div class="form-group">
                     <div class="row">
-                        <label for="repeat_every" class=" col-md-3"><?php echo app_lang('repeat_every'); ?></label>
+                        <label for="repeat_every" class=" col-md-3"><?php //echo app_lang('repeat_every'); ?></label>
                         <div class="col-md-4">
                             <?php
-                            echo form_input(array(
-                                "id" => "repeat_every",
-                                "name" => "repeat_every",
-                                "type" => "number",
-                                "value" => $model_info->repeat_every ? $model_info->repeat_every : 1,
-                                "min" => 1,
-                                "class" => "form-control recurring_element",
-                                "placeholder" => app_lang('repeat_every'),
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required")
-                            ));
+                            // echo form_input(array(
+                            //     "id" => "repeat_every",
+                            //     "name" => "repeat_every",
+                            //     "type" => "number",
+                            //     "value" => $model_info->repeat_every ? $model_info->repeat_every : 1,
+                            //     "min" => 1,
+                            //     "class" => "form-control recurring_element",
+                            //     "placeholder" => app_lang('repeat_every'),
+                            //     "data-rule-required" => true,
+                            //     "data-msg-required" => app_lang("field_required")
+                            // ));
                             ?>
                         </div>
                         <div class="col-md-5">
                             <?php
-                            echo form_dropdown(
-                                    "repeat_type", array(
-                                "days" => app_lang("interval_days"),
-                                "weeks" => app_lang("interval_weeks"),
-                                "months" => app_lang("interval_months"),
-                                "years" => app_lang("interval_years"),
-                                    ), $model_info->repeat_type ? $model_info->repeat_type : "months", "class='select2 recurring_element' id='repeat_type'"
-                            );
+                            // echo form_dropdown(
+                            //         "repeat_type", array(
+                            //     "days" => app_lang("interval_days"),
+                            //     "weeks" => app_lang("interval_weeks"),
+                            //     "months" => app_lang("interval_months"),
+                            //     "years" => app_lang("interval_years"),
+                            //         ), $model_info->repeat_type ? $model_info->repeat_type : "months", "class='select2 recurring_element' id='repeat_type'"
+                            // );
                             ?>
                         </div>
                     </div>    
-                </div>    
+                </div>     -->
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <div class="row">
-                        <label for="no_of_cycles" class=" col-md-3"><?php echo app_lang('cycles'); ?></label>
+                        <label for="no_of_cycles" class=" col-md-3"><?php //echo app_lang('cycles'); ?></label>
                         <div class="col-md-4">
                             <?php
-                            echo form_input(array(
-                                "id" => "no_of_cycles",
-                                "name" => "no_of_cycles",
-                                "type" => "number",
-                                "min" => 1,
-                                "value" => $model_info->no_of_cycles ? $model_info->no_of_cycles : "",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('cycles')
-                            ));
+                            // echo form_input(array(
+                            //     "id" => "no_of_cycles",
+                            //     "name" => "no_of_cycles",
+                            //     "type" => "number",
+                            //     "min" => 1,
+                            //     "value" => $model_info->no_of_cycles ? $model_info->no_of_cycles : "",
+                            //     "class" => "form-control",
+                            //     "placeholder" => app_lang('cycles')
+                            // ));
                             ?>
                         </div>
                         <div class="col-md-5 mt5">
-                            <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('recurring_cycle_instructions'); ?>"><i data-feather="help-circle" class="icon-16"></i></span>
+                            <span class="help" data-bs-toggle="tooltip" title="<?php //echo app_lang('recurring_cycle_instructions'); ?>"><i data-feather="help-circle" class="icon-16"></i></span>
                         </div>
                     </div>
-                </div>  
+                </div>   -->
 
 
 
-                <div class = "form-group hide" id = "next_recurring_date_container" >
+                <!-- <div class = "form-group hide" id = "next_recurring_date_container" >
                     <div class="row">
-                        <label for = "next_recurring_date" class = " col-md-3"><?php echo app_lang('next_recurring_date'); ?>  </label>
+                        <label for = "next_recurring_date" class = " col-md-3"><?php //echo app_lang('next_recurring_date'); ?>  </label>
                         <div class=" col-md-9">
                             <?php
-                            echo form_input(array(
-                                "id" => "next_recurring_date",
-                                "name" => "next_recurring_date",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('next_recurring_date'),
-                                "autocomplete" => "off",
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            ));
+                            // echo form_input(array(
+                            //     "id" => "next_recurring_date",
+                            //     "name" => "next_recurring_date",
+                            //     "class" => "form-control",
+                            //     "placeholder" => app_lang('next_recurring_date'),
+                            //     "autocomplete" => "off",
+                            //     "data-rule-required" => true,
+                            //     "data-msg-required" => app_lang("field_required"),
+                            // ));
                             ?>
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>  -->
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?> 
 
