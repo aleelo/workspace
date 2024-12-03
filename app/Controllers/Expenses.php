@@ -264,6 +264,54 @@ class Expenses extends Security_Controller {
         return $this->_make_row($data, $custom_fields);
     }
 
+    private function _prepare_appointment_info($data) {
+        $style = '';
+        $current_date = date('Y-m-d'); // Get the current date in 'Y-m-d' format
+    
+        // Check if the appointment date is set and if it is in the past
+        if (isset($data->date) && $data->date < $current_date) {
+            // Add (expired) to the status, if not already appended
+            if (!str_contains($data->status, "(expired)")) {
+                $data->status .= " (expired)";
+            }
+        }
+
+        if (str_contains($data->status, "approved")) {
+            $status_meta = "#08976d"; // Green for approved
+        } else if (str_contains($data->status, "active")) {
+            // $status_class = "btn-dark"; // Dark background for active
+            $status_meta = "#6690f4";
+        } else if (str_contains($data->status, "rejected")) {
+            $status_meta = "#fc0758"; // Red for rejected
+        }
+    
+        // Assign the appropriate class based on the status
+        if (isset($data->status)) {
+            if (str_contains($data->status, "approved")) {
+                $status_class = ""; // Green for approved
+                $style = "background-color:#08976d";
+            } else if (str_contains($data->status, "active")) {
+                $status_class = "btn-dark"; // Dark background for active
+                $style = "background-color:#6690f4";
+            } else if (str_contains($data->status, "rejected")) {
+                $status_class = "bg-danger"; // Red for rejected
+                $style = "background-color:#fc0758;";
+            }
+    
+            // Apply the orange color if the status includes (expired)
+            if (str_contains($data->status, "(expired)")) {
+                $status_class = "badge bg-orange"; // Orange for expired
+                $style = "background-color:orange;";
+            }
+    
+            // Add status and title meta information
+            $data->status_meta = "<span style='$style' class='badge $status_class'>" . app_lang($data->status) . "</span>";
+            $data->title_meta = "<span style='$style' class='badge $status_class'>" . $data->title . "</span>";
+        }
+    
+        return $data;
+    }
+
     //prepare a row of expnese list
     private function _make_row($data, $custom_fields) {
 
