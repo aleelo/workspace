@@ -777,6 +777,8 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
+    
+
     /* list of projcts, prepared for datatable  */
 
     function projects_list_data_of_team_member($team_member_id = 0) {
@@ -851,6 +853,8 @@ class Projects extends Security_Controller {
 
     private function _make_row($data, $custom_fields) {
 
+        $meta_info = $this->_prepare_project_info($data);
+
         $progress = $data->total_points ? round(($data->completed_points / $data->total_points) * 100) : 0;
 
         $class = "bg-primary";
@@ -911,7 +915,7 @@ class Projects extends Security_Controller {
             $data->deadline,
             $dateline,
             $progress_bar,
-            $data->title_language_key ? app_lang($data->title_language_key) : $data->status_title
+            $data->title_language_key ? app_lang($data->title_language_key) : $meta_info->status_meta
         );
 
         foreach ($custom_fields as $field) {
@@ -922,6 +926,35 @@ class Projects extends Security_Controller {
         $row_data[] = $optoins;
 
         return $row_data;
+    }
+
+    private function _prepare_project_info($data) {
+        // Initialize variables
+        $style = '';
+        $status_class = '';
+    
+        // Assign the appropriate class and inline style based on the status_title
+        if (isset($data->status_title)) {
+            // print_r($data->status_title);die;
+            if ($data->status_title === "Completed") {
+                $status_class = "badge-success"; // Green for "paid"
+                $style = "background-color: #08976d; color: white;";
+            } elseif ($data->status_title === "Open") {
+                $status_class = "badge-info"; // Blue for "unpaid"
+                $style = "background-color: #6690f4; color: white;";
+            } elseif ($data->status_title === "Canceled") {
+                $status_class = "badge-danger"; // Red for "rejected"
+                $style = "background-color: #fc0758; color: white;";
+            } elseif ($data->status_title === "Hold") {
+                $status_class = "badge-warning"; // Yellow for "hold"
+                $style = "background-color: #f4c542; color: black;";
+            }
+    
+            // Add status meta information with inline style and class
+            $data->status_meta = "<span class='badge $status_class' style='$style'>" . $data->status_title . "</span>";
+        }
+    
+        return $data;
     }
 
     /* load project details view */
