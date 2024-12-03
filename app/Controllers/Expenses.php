@@ -147,6 +147,7 @@ class Expenses extends Security_Controller {
             "client_id" => $this->request->getPost('expense_client_id') ? $this->request->getPost('expense_client_id') : 0,
             "project_id" => $this->request->getPost('expense_project_id'),
             "user_id" => $this->request->getPost('expense_user_id'),
+            "status" => $this->request->getPost('status'),
             "tax_id" => $this->request->getPost('tax_id') ? $this->request->getPost('tax_id') : 0,
             "tax_id2" => $this->request->getPost('tax_id2') ? $this->request->getPost('tax_id2') : 0,
             "recurring" => $recurring,
@@ -264,56 +265,12 @@ class Expenses extends Security_Controller {
         return $this->_make_row($data, $custom_fields);
     }
 
-    private function _prepare_appointment_info($data) {
-        $style = '';
-        $current_date = date('Y-m-d'); // Get the current date in 'Y-m-d' format
-    
-        // Check if the appointment date is set and if it is in the past
-        if (isset($data->date) && $data->date < $current_date) {
-            // Add (expired) to the status, if not already appended
-            if (!str_contains($data->status, "(expired)")) {
-                $data->status .= " (expired)";
-            }
-        }
-
-        if (str_contains($data->status, "approved")) {
-            $status_meta = "#08976d"; // Green for approved
-        } else if (str_contains($data->status, "active")) {
-            // $status_class = "btn-dark"; // Dark background for active
-            $status_meta = "#6690f4";
-        } else if (str_contains($data->status, "rejected")) {
-            $status_meta = "#fc0758"; // Red for rejected
-        }
-    
-        // Assign the appropriate class based on the status
-        if (isset($data->status)) {
-            if (str_contains($data->status, "approved")) {
-                $status_class = ""; // Green for approved
-                $style = "background-color:#08976d";
-            } else if (str_contains($data->status, "active")) {
-                $status_class = "btn-dark"; // Dark background for active
-                $style = "background-color:#6690f4";
-            } else if (str_contains($data->status, "rejected")) {
-                $status_class = "bg-danger"; // Red for rejected
-                $style = "background-color:#fc0758;";
-            }
-    
-            // Apply the orange color if the status includes (expired)
-            if (str_contains($data->status, "(expired)")) {
-                $status_class = "badge bg-orange"; // Orange for expired
-                $style = "background-color:orange;";
-            }
-    
-            // Add status and title meta information
-            $data->status_meta = "<span style='$style' class='badge $status_class'>" . app_lang($data->status) . "</span>";
-            $data->title_meta = "<span style='$style' class='badge $status_class'>" . $data->title . "</span>";
-        }
-    
-        return $data;
-    }
+   
 
     //prepare a row of expnese list
     private function _make_row($data, $custom_fields) {
+
+        $meta_info = $this->_prepare_expense_info($data);
 
         $description = $data->description;
         if ($data->linked_client_name) {
@@ -404,7 +361,7 @@ class Expenses extends Security_Controller {
             // $files_link . $file_download_link,
             $data->category_title,
             to_currency($data->amount),
-            $data->status,
+            $meta_info->status_meta,
             // to_currency($tax),
             // to_currency($tax2),
             // to_currency($data->amount + $tax + $tax2)
@@ -420,6 +377,33 @@ class Expenses extends Security_Controller {
 
         return $row_data;
     }
+
+    private function _prepare_expense_info($data) {
+        // Initialize variables
+        $style = '';
+        $status_class = '';
+    
+        // Assign the appropriate class and inline style based on the status
+        if (isset($data->status)) {
+            if ($data->status === "paid") {
+                $status_class = "badge-success"; // Green for "paid"
+                $style = "background-color: #08976d; color: white;";
+            } elseif ($data->status === "unpaid") {
+                $status_class = "badge-info"; // Blue for "unpaid"
+                $style = "background-color: #6690f4; color: white;";
+            } elseif ($data->status === "rejected") {
+                $status_class = "badge-danger"; // Red for "rejected"
+                $style = "background-color: #fc0758; color: white;";
+            }
+    
+            // Add status meta information with inline style and class
+            $data->status_meta = "<span class='badge $status_class' style='$style'>" . app_lang($data->status) . "</span>";
+        }
+    
+        return $data;
+    }
+    
+    
 
     function file_preview($id = "", $key = "") {
         if ($id) {

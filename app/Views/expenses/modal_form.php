@@ -150,6 +150,25 @@
                 </div>
             </div>
 
+            <?php if ($model_info->id) { ?>
+            <div class="form-group">
+                <div class="row">
+                    <label for="status" class=" col-md-3"><?php echo app_lang('status'); ?></label>
+                    <div class="col-md-9">
+                        <?php
+                        $statuses = ['unpaid'=>'Unpaid','paid'=>'Paid','rejected'=>'Rejected'];
+                        echo form_dropdown(array(
+                            "id" => "status",
+                            "name" => "status",
+                            "class" => "form-control select2",
+                            "placeholder" => 'Status',
+                            "autocomplete" => "off"
+                        ),$statuses,[$model_info->status]);
+                        ?>
+                </div>
+            </div>
+        <?php } ?>
+
             <!-- <div class="form-group">
                 <div class="row">
                     <label for="tax_id" class=" col-md-3"><?php// echo app_lang('tax'); ?></label>

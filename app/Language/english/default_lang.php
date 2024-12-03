@@ -964,6 +964,8 @@ $lang["screen_size"] = "Screen Size";
 $lang["add_size"] = "Add Size";
 $lang["edit_size"] = "Edit Size";
 $lang["delete_size"] = "Delete Size";
+$lang["paid"] = "Paid";
+$lang["unpaid"] = "Unpaid";
 
 /* expense */
 $lang["add_category"] = "Add category";
