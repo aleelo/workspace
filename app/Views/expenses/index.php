@@ -59,11 +59,10 @@
             {title: '<?php echo "Created by" ?>'},
             {title: '<?php echo app_lang("title") ?>', "class": "all"},
             {title: '<?php echo app_lang("description") ?>'},
-            // {title: '<?php //echo app_lang("files") ?>'},
             {title: '<?php echo app_lang("category") ?>'},
             {title: '<?php echo app_lang("amount") ?>', "class": "text-right"},
             {title: '<?php echo app_lang("status") ?>', "class": "text-center"}
-<?php echo $custom_field_headers; ?>,
+            <?php echo $custom_field_headers; ?>,
             {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: combineCustomFieldsColumns([1, 2, 3, 4, 6, 7, 8, 9], '<?php echo $custom_field_headers; ?>'),

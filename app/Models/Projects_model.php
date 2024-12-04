@@ -120,6 +120,8 @@ class Projects_model extends Crud_model {
         $join_custom_fieds    
         WHERE $projects_table.deleted=0 $where $extra_where $custom_fields_where
         ORDER BY $projects_table.start_date DESC";
+
+        // print_r($sql);die;
         return $this->db->query($sql);
     }
 
