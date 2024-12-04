@@ -105,6 +105,7 @@ if (!function_exists("make_project_tabs_data")) {
 
                             if ($show_expense_info) {
                                 $project_tabs["expenses"] = "projects/expenses/" . $project_info->id;
+                                // print_r($project_info->id);die;
                             }
 
                             if ($show_contract_info && $project_info->project_type === "client_project") {

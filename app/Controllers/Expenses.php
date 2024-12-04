@@ -136,8 +136,6 @@ class Expenses extends Security_Controller {
         $repeat_every = $this->request->getPost('repeat_every');
         $repeat_type = $this->request->getPost('repeat_type');
         $no_of_cycles = $this->request->getPost('no_of_cycles');
-        $status = $this->request->getPost('status');
-
 
         $data = array(
             "expense_date" => $expense_date,
@@ -149,7 +147,7 @@ class Expenses extends Security_Controller {
             "client_id" => $this->request->getPost('expense_client_id') ? $this->request->getPost('expense_client_id') : 0,
             "project_id" => $this->request->getPost('expense_project_id'),
             "user_id" => $this->request->getPost('expense_user_id'),
-            "status" => $status ? $status : "unpaid",
+            "status" => $this->request->getPost('status'),
             "tax_id" => $this->request->getPost('tax_id') ? $this->request->getPost('tax_id') : 0,
             "tax_id2" => $this->request->getPost('tax_id2') ? $this->request->getPost('tax_id2') : 0,
             "recurring" => $recurring,
@@ -246,6 +244,8 @@ class Expenses extends Security_Controller {
         $category_id = $this->request->getPost('category_id');
         $project_id = $this->request->getPost('project_id');
         $user_id = $this->request->getPost('user_id');
+
+        // print_r($project_id);die;
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 

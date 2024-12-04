@@ -720,6 +720,7 @@ public function charts()
             "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
+
         // var_dump($this->request->getPost("department_id"));
         // var_dump($options);
         // die();

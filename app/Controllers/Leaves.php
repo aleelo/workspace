@@ -1488,6 +1488,9 @@ class Leaves extends Security_Controller {
         $end_date = $this->request->getPost('end_date');
         $applicant_id = $this->request->getPost('applicant_id');
 
+        // print_r($applicant_id);die;
+
+
         $options = array(
             "start_date" => $start_date, 
             "end_date" => $end_date, 

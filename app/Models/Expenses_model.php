@@ -38,6 +38,7 @@ class Expenses_model extends Crud_model {
         $project_id = $this->_get_clean_value($options, "project_id");
         if ($project_id) {
             $where .= " AND $expenses_table.project_id=$project_id";
+            // print_r($project_id);die;
         }
 
         $user_id = $this->_get_clean_value($options, "user_id");
@@ -81,6 +82,9 @@ class Expenses_model extends Crud_model {
         LEFT JOIN (SELECT $taxes_table.* FROM $taxes_table) AS tax_table2 ON tax_table2.id = $expenses_table.tax_id2
             $join_custom_fields
         WHERE $expenses_table.deleted=0 $where $custom_fields_where";
+
+        // print_r($sql);die;
+
         return $this->db->query($sql);
     }
 

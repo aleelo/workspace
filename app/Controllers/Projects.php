@@ -963,6 +963,8 @@ class Projects extends Security_Controller {
         
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
+
+        // print_r($project_id);die;
         
         $view_data = $this->_get_project_info_data($project_id);
 
@@ -2903,7 +2905,9 @@ class Projects extends Security_Controller {
     function expenses($project_id) {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
+        
         if ($project_id) {
+            // print_r($project_id);die;
             $view_data['project_id'] = $project_id;
 
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);

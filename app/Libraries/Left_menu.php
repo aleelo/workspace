@@ -125,7 +125,12 @@ class Left_menu {
             }
 
             
-        
+            $sidebar_menu["items"] = array("name" => "items", "url" => "", "class" => "layers");
+            $sidebar_menu["items_list"] = array("name" => "items_list", "url" => "items_list", "class" => "layers");
+            $sidebar_menu["assigning_items"] = array("name" => "assigning_items", "url" => "assigning_items", "class" => "layers");
+            $sidebar_menu["items_broking"] = array("name" => "items_broking", "url" => "items_broking", "class" => "layers");
+            $sidebar_menu["check_playback_items"] = array("name" => "check_playback_items", "url" => "check_playback_items", "class" => "layers");
+
             $sidebar_menu["archives"] = array("name" => "archives", "url" => "archives", "class" => "layers");
             
 
