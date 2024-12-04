@@ -119,6 +119,9 @@ class App_Controller extends Controller {
     public $Appointments_model;
     public $Compliance_model;
     public $Training_funders_model;
+    public $Items_list_model;
+    public $Assigning_items_model;
+    public $Items_broking_model;
     
     public $eDeclaration_10k_Model;
     public $PassengerDetails_model;
@@ -182,6 +185,8 @@ class App_Controller extends Controller {
             'Templates_model',
             'Visitors_model',
             'Fuel_Receive_model',
+            'Assigning_items_model',
+            'Items_broking_model',
             'Fuel_Order_model',
             'Fuel_Request_model',
             'Cardholders_model',
@@ -210,6 +215,7 @@ class App_Controller extends Controller {
             'Ticket_comments_model',
             'Items_model',
             'Invoices_model',
+            'Items_list_model',
             'Invoice_items_model',
             'Invoice_payments_model',
             'Payment_methods_model',
