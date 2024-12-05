@@ -57,20 +57,20 @@
 
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/tasks/" . $client_info->id); ?>" data-bs-target="#client-tasks"><?php echo app_lang('tasks'); ?></a></li>
 
-                    <!-- <?php if ($show_invoice_info) { ?>
+                    <?php if ($show_invoice_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/invoices/" . $client_info->id); ?>" data-bs-target="#client-invoices"> <?php echo app_lang('invoices'); ?></a></li>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/payments/" . $client_info->id); ?>" data-bs-target="#client-payments"> <?php echo app_lang('payments'); ?></a></li>
-                    <?php } ?> -->
+                    <?php } ?>
 
                     <?php if ($show_estimate_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/estimates/" . $client_info->id); ?>" data-bs-target="#client-estimates"> <?php echo app_lang('estimates'); ?></a></li>
                     <?php } ?>
 
-                    <!-- <?php if ($show_order_info) { ?>
+                    <?php if ($show_order_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/orders/" . $client_info->id); ?>" data-bs-target="#client-orders"> <?php echo app_lang('orders'); ?></a></li>
-                    <?php } ?> -->
+                    <?php } ?>
 
-                    <!-- <?php if ($show_estimate_request_info) { ?>
+                    <?php if ($show_estimate_request_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/estimate_requests/" . $client_info->id); ?>" data-bs-target="#client-estimate-requests"> <?php echo app_lang('estimate_requests'); ?></a></li>
                     <?php } ?>
                     <?php if ($show_contract_info) { ?>
@@ -78,7 +78,7 @@
                     <?php } ?>
                     <?php if ($show_proposal_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/proposals/" . $client_info->id); ?>" data-bs-target="#client-proposals"> <?php echo app_lang('proposals'); ?></a></li>
-                    <?php } ?> -->
+                    <?php } ?>
 
                     <?php if ($show_ticket_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/tickets/" . $client_info->id); ?>" data-bs-target="#client-tickets"> <?php echo app_lang('tickets'); ?></a></li>
@@ -88,13 +88,13 @@
                     <?php } ?>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/files/" . $client_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li>
 
-                    <!-- <?php if ($show_event_info) { ?>
+                    <?php if ($show_event_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/events/" . $client_info->id); ?>" data-bs-target="#client-events"> <?php echo app_lang('events'); ?></a></li>
                     <?php } ?>
 
                     <?php if ($show_expense_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/expenses/" . $client_info->id); ?>" data-bs-target="#client-expenses"> <?php echo app_lang('expenses'); ?></a></li>
-                    <?php } ?> -->
+                    <?php } ?>
 
                     <?php
                     $hook_tabs = array();
