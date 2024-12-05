@@ -96,25 +96,19 @@ class Assigning_items extends Security_Controller {
     
     function save() {
         
-        $Deparment_id = $this->request->getPost('id');
-        // $this->_validate_client_manage_access($Deparment_id);
+        $assign_item_id = $this->request->getPost('id');
+        // $this->_validate_client_manage_access($assign_item_id);
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
 
-        $section_name_so = $this->request->getPost('department_name_so');
 
         $data = array(
-            "nameSo" => $section_name_so,
-            "short_name_SO" => $this->request->getPost('short_name_so'),
-            "nameEn" => $this->request->getPost('department_name_en'), // ? 'TRUE' : 'FALSE',
-            "short_name_EN" => $this->request->getPost('short_name_en'),
-            "email" => $this->request->getPost('department_email'),
-            "dep_head_id" => $this->request->getPost('department_head'),
-            "secretary_id" => $this->request->getPost('secretary'),
-            "remarks" => $this->request->getPost('section_remarks'),
+            "item_id" => $this->request->getPost('item_id'),
+            "quantity" => $this->request->getPost('quantity'),
+            "screen_size_id" => $this->request->getPost('screen_size_id'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -122,30 +116,14 @@ class Assigning_items extends Security_Controller {
         }
 
 
-        if (!$Deparment_id) {
+        if (!$assign_item_id) {
             $data["created_at"] = get_current_utc_time();
         }
-
-
-        // if ($this->login_user->is_admin) {
-        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
-
-        //     //check if the currency is editable
-        //     if ($Deparment_id) {
-        //         $client_info = $this->Clients_model->get_one($Deparment_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Deparment_id)) {
-        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-        //             exit();
-        //         }
-        //     }
-        // }
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$Deparment_id) {
+        } else if (!$assign_item_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
@@ -153,17 +131,17 @@ class Assigning_items extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $Deparment_id)) {
+        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $assign_item_id)) {
         //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
         //     exit();
         // }
 
-        $save_id = $this->Assigning_items_model->ci_save($data, $Deparment_id);
+        $save_id = $this->Assigning_items_model->ci_save($data, $assign_item_id);
      
 
         if ($save_id) {
 
-            if(!$Deparment_id){
+            if(!$assign_item_id){
                     
                 $options = array('id'=>$save_id);
 
@@ -178,7 +156,7 @@ class Assigning_items extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("Deparment_id" => $save_id);
+                $ticket_data = array("assign_item_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
@@ -303,23 +281,9 @@ class Assigning_items extends Security_Controller {
 
         $row_data = array($data->id,
 
-            anchor(get_uri("assigning_items/view/" . $data->id), $data->nameSo),
-            // $data->short_name_SO,
-            // $data->nameEn,
-            // $data->short_name_EN,
-            // $data->email,
-            // $data->DeptHead,
-            // $data->secretary,
-            // $data->remarks,
-            
-
-            // $data->primary_contact ? $primary_contact : "",
-            // $group_list,
-            // $client_labels,
-            // to_decimal_format($data->total_projects),
-            // to_currency($data->invoice_value, $data->currency_symbol),
-            // to_currency($data->payment_received, $data->currency_symbol),
-            // to_currency($due, $data->currency_symbol)
+            $data->item_name,
+            $data->quantity,
+            $data->screen_size,
             
         );
 
@@ -2037,7 +2001,7 @@ class Assigning_items extends Security_Controller {
         }
     }
 
-    function departments_list() {
+    function assigning_items_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2051,7 +2015,7 @@ class Assigning_items extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("assigning_items/departments_list", $view_data);
+        return $this->template->view("assigning_items/assigning_items_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {

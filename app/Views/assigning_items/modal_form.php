@@ -2,7 +2,7 @@
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id; ?>" />
-        <?php echo view("assigning_items/department_form_fields"); ?>
+        <?php echo view("assigning_items/assigning_items_form_fields"); ?>
 
     </div>
 </div>

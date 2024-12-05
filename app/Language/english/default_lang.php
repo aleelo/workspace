@@ -965,6 +965,7 @@ $lang["assigning_items"] = "Assigning Items";
 $lang["items_broking"] = "Items Broking";
 $lang["check_playback_items"] = "Check Playback Items";
 $lang["add_item"] = "Add Item";
+$lang["assign_item"] = "Assign item";
 
 /* Screen Size */
 $lang["screen_size"] = "Screen Size";

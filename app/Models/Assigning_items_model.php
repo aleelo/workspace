@@ -7,12 +7,14 @@ class Assigning_items_model extends Crud_model {
     protected $table = null;
 
     function __construct() {
-        $this->table = 'departments';
+        $this->table = 'assigning_items';
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $departments_table = $this->db->prefixTable('departments');
+        $assigning_items_table = $this->db->prefixTable('assigning_items');
+        $items_list_table = $this->db->prefixTable('items_list');
+        $screen_size_table = $this->db->prefixTable('screen_size');
 
         $projects_table = $this->db->prefixTable('projects');
         $users_table = $this->db->prefixTable('users');
@@ -29,7 +31,7 @@ class Assigning_items_model extends Crud_model {
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
-            $where .= " AND $departments_table.id=$id";
+            $where .= " AND $assigning_items_table.id=$id";
         }
 
         $custom_field_type = "clients";
@@ -37,63 +39,63 @@ class Assigning_items_model extends Crud_model {
         $leads_only = $this->_get_clean_value($options, "leads_only");
         if ($leads_only) {
             $custom_field_type = "leads";
-            $where .= " AND $departments_table.is_lead=1";
+            $where .= " AND $assigning_items_table.is_lead=1";
         }
 
         $status = $this->_get_clean_value($options, "status");
         if ($status) {
-            $where .= " AND $departments_table.lead_status_id='$status'";
+            $where .= " AND $assigning_items_table.lead_status_id='$status'";
         }
 
         $source = $this->_get_clean_value($options, "source");
         if ($source) {
-            $where .= " AND $departments_table.lead_source_id='$source'";
+            $where .= " AND $assigning_items_table.lead_source_id='$source'";
         }
 
         $owner_id = $this->_get_clean_value($options, "owner_id");
         if ($owner_id) {
-            $where .= " AND $departments_table.owner_id=$owner_id";
+            $where .= " AND $assigning_items_table.owner_id=$owner_id";
         }
 
         $created_by = $this->_get_clean_value($options, "created_by");
         if ($created_by) {
-            $where .= " AND $departments_table.created_by=$created_by";
+            $where .= " AND $assigning_items_table.created_by=$created_by";
         }
 
         $show_own_clients_only_user_id = $this->_get_clean_value($options, "show_own_clients_only_user_id");
         if ($show_own_clients_only_user_id) {
-            $where .= " AND $departments_table.dep_head_id=$show_own_clients_only_user_id";
+            $where .= " AND $assigning_items_table.dep_head_id=$show_own_clients_only_user_id";
         }
 
 
         $quick_filter = $this->_get_clean_value($options, "quick_filter");
         if ($quick_filter) {
-            $where .= $this->make_quick_filter_query($quick_filter, $departments_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
+            $where .= $this->make_quick_filter_query($quick_filter, $assigning_items_table, $projects_table, $invoices_table, $invoice_payments_table, $estimates_table, $estimate_requests_table, $tickets_table, $orders_table, $proposals_table);
         }
 
         $start_date = $this->_get_clean_value($options, "start_date");
         if ($start_date) {
-            $where .= " AND DATE($departments_table.created_date)>='$start_date'";
+            $where .= " AND DATE($assigning_items_table.created_date)>='$start_date'";
         }
         $end_date = $this->_get_clean_value($options, "end_date");
         if ($end_date) {
-            $where .= " AND DATE($departments_table.created_date)<='$end_date'";
+            $where .= " AND DATE($assigning_items_table.created_date)<='$end_date'";
         }
 
         $label_id = $this->_get_clean_value($options, "label_id");
         if ($label_id) {
-            $where .= " AND (FIND_IN_SET('$label_id', $departments_table.labels)) ";
+            $where .= " AND (FIND_IN_SET('$label_id', $assigning_items_table.labels)) ";
         }
 
         $select_labels_data_query = $this->get_labels_data_query();
 
         $client_groups = $this->_get_clean_value($options, "client_groups");
-        $where .= $this->prepare_allowed_client_groups_query($departments_table, $client_groups);
+        $where .= $this->prepare_allowed_client_groups_query($assigning_items_table, $client_groups);
 
         //prepare custom fild binding query
         $custom_fields = get_array_value($options, "custom_fields");
         $custom_field_filter = get_array_value($options, "custom_field_filter");
-        $custom_field_query_info = $this->prepare_custom_field_query_string($custom_field_type, $custom_fields, $departments_table, $custom_field_filter);
+        $custom_field_query_info = $this->prepare_custom_field_query_string($custom_field_type, $custom_fields, $assigning_items_table, $custom_field_filter);
         $select_custom_fieds = get_array_value($custom_field_query_info, "select_string");
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
@@ -110,15 +112,15 @@ class Assigning_items_model extends Crud_model {
 
 
         $available_order_by_list = array(
-            "id" => $departments_table . ".id",
-            "nameSo" => $departments_table . ".nameSo",
-            "short_name_SO" => $departments_table . ".short_name_SO",
-            "nameEn" => $departments_table . ".nameEn",
-            "short_name_EN" => $departments_table . ".short_name_EN",
-            "email" => $departments_table . ".email",
+            "id" => $assigning_items_table . ".id",
+            "nameSo" => $assigning_items_table . ".nameSo",
+            "short_name_SO" => $assigning_items_table . ".short_name_SO",
+            "nameEn" => $assigning_items_table . ".nameEn",
+            "short_name_EN" => $assigning_items_table . ".short_name_EN",
+            "email" => $assigning_items_table . ".email",
             "DeptHead" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
             "secretary" => "CONCAT(sec.first_name,' ',sec.last_name)",
-            "remarks" => $departments_table . ".remarks",
+            "remarks" => $assigning_items_table . ".remarks",
             "status" => "lead_status_title",
             "primary_contact" => "primary_contact",
             "client_groups" => "client_groups"
@@ -140,37 +142,35 @@ class Assigning_items_model extends Crud_model {
             $labels_table = $this->db->prefixTable("labels");
 
             $where .= " AND (";
-            $where .= " $departments_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.email LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " $assigning_items_table.id LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.email LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT(sec.first_name,' ',sec.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $departments_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $departments_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $assigning_items_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
             if ($leads_only) {
                 $where .= " OR $lead_status_table.title LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= $this->get_custom_field_search_query($departments_table, "leads", $search_by);
+                $where .= $this->get_custom_field_search_query($assigning_items_table, "leads", $search_by);
             } else {
-                $where .= $this->get_custom_field_search_query($departments_table, "clients", $search_by);
+                $where .= $this->get_custom_field_search_query($assigning_items_table, "clients", $search_by);
             }
 
             $where .= " )";
         }
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $departments_table.*, 
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as DeptHead,
-        CONCAT(sec.first_name,' ',sec.last_name) as secretary
-        FROM $departments_table
-        LEFT JOIN $users_table ON $users_table.id = $departments_table.dep_head_id
-        LEFT JOIN $users_table as sec ON sec.id = $departments_table.secretary_id
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $assigning_items_table.*, $screen_size_table.screen_size, $items_list_table.item_name
+        FROM $assigning_items_table
+        LEFT JOIN $screen_size_table ON $screen_size_table.id = $assigning_items_table.screen_size_id
+        LEFT JOIN $items_list_table ON $items_list_table.id = $assigning_items_table.item_id
         $join_custom_fieds               
-        WHERE $departments_table.deleted=0 $where $custom_fields_where  
+        WHERE $assigning_items_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";
 
         // print_r($sql);die;
