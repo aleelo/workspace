@@ -1,11 +1,11 @@
-<?php echo form_open(get_uri("departments/save_file"), array("id" => "file-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("assigning_items/save_file"), array("id" => "file-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
         <?php
         echo view("includes/multi_file_uploader", array(
-            "upload_url" => get_uri("departments/upload_file"),
-            "validation_url" => get_uri("departments/validate_file"),
+            "upload_url" => get_uri("assigning_items/upload_file"),
+            "validation_url" => get_uri("assigning_items/validate_file"),
         ));
         ?>
     </div>

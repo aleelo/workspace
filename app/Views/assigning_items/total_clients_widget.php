@@ -1,4 +1,4 @@
-<a href="<?php echo get_uri("departments/index/clients_list#all_clients"); ?>" class="white-link">
+<a href="<?php echo get_uri("assigning_items/index/clients_list#all_clients"); ?>" class="white-link">
     <div class="card  dashboard-icon-widget">
         <div class="card-body">
             <div class="widget-icon bg-primary">

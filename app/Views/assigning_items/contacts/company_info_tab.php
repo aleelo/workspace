@@ -1,5 +1,5 @@
 <div class="tab-content">
-    <?php echo form_open(get_uri("departments/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
+    <?php echo form_open(get_uri("assigning_items/save"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
             
@@ -7,7 +7,7 @@
            
         </div>
         <div class="card-body">
-            <?php echo view("departments/department_form_fields"); ?>
+            <?php echo view("assigning_items/department_form_fields"); ?>
         </div>
             <div class="card-footer rounded-bottom">
                 <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>

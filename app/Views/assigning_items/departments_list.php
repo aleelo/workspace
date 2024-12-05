@@ -18,7 +18,7 @@
     // }
 
     var ignoreSavedFilter = false;
-    var quick_filters_dropdown = <?php echo view("departments/quick_filters_dropdown"); ?>;
+    var quick_filters_dropdown = <?php echo view("assigning_items/quick_filters_dropdown"); ?>;
     if (window.selectedClientQuickFilter){
     var filterIndex = quick_filters_dropdown.findIndex(x => x.id === window.selectedClientQuickFilter);
     if ([filterIndex] > - 1){
@@ -29,7 +29,7 @@
     }
 
     $(selector).appTable({
-    source: '<?php echo_uri("departments/list_data") ?>',
+    source: '<?php echo_uri("assigning_items/list_data") ?>',
             serverSide: true,
             smartFilterIdentity: "all_clients_list", //a to z and _ only. should be unique to avoid conflicts
             ignoreSavedFilter: ignoreSavedFilter,

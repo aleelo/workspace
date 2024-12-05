@@ -28,7 +28,7 @@ if ($tab == "projects") {
     if ($view_type == "client_dashboard") {
         $link = get_uri('projects/index');
     } else {
-        $link = get_uri('departments/view/' . $department_info->id . '/projects');
+        $link = get_uri('assigning_items/view/' . $department_info->id . '/projects');
     }
 } else if ($tab == "total_invoiced") {
     $card = "bg-primary";
@@ -39,7 +39,7 @@ if ($tab == "projects") {
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoices/index');
     } else {
-        $link = get_uri('departments/view/' . $department_info->id . '/invoices');
+        $link = get_uri('assigning_items/view/' . $department_info->id . '/invoices');
     }
 } else if ($tab == "payments") {
     $card = "bg-success";
@@ -50,7 +50,7 @@ if ($tab == "projects") {
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoice_payments/index');
     } else {
-        $link = get_uri('departments/view/' . $department_info->id . '/payments');
+        $link = get_uri('assigning_items/view/' . $department_info->id . '/payments');
     }
 } else if ($tab == "due") {
     $card = "bg-coral";
@@ -61,7 +61,7 @@ if ($tab == "projects") {
     if ($view_type == "client_dashboard") {
         $link = get_uri('invoices/index');
     } else {
-        $link = get_uri('departments/view/' . $department_info->id . '/invoices');
+        $link = get_uri('assigning_items/view/' . $department_info->id . '/invoices');
     }
 }
 ?>
