@@ -13,7 +13,7 @@
                 "class" => "form-department_head select2",
                 "placeholder" => 'Item Name',
                 "autocomplete" => "off"
-            ),$department_heads,[$model_info->item_id]);
+            ),$Screen_Sizes,[$model_info->item_id]);
             ?>
         </div>
     </div>
@@ -38,7 +38,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="screen_size_id" class=" <?php echo $label_column; ?>"><?php echo 'Screen size'; ?></label>
+        <label for="screen_size_id" class=" <?php echo $label_column; ?>"><?php echo 'Screen Size'; ?></label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown(array(
@@ -47,7 +47,7 @@
                 "class" => "form-department_head select2",
                 "placeholder" => 'Screen Size',
                 "autocomplete" => "off"
-            ),$department_heads,[$model_info->screen_size_id]);
+            ),$Items_Lists,[$model_info->screen_size_id]);
             ?>
         </div>
     </div>

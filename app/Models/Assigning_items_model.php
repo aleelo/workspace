@@ -113,16 +113,10 @@ class Assigning_items_model extends Crud_model {
 
         $available_order_by_list = array(
             "id" => $assigning_items_table . ".id",
-            "nameSo" => $assigning_items_table . ".nameSo",
-            "short_name_SO" => $assigning_items_table . ".short_name_SO",
-            "nameEn" => $assigning_items_table . ".nameEn",
-            "short_name_EN" => $assigning_items_table . ".short_name_EN",
-            "email" => $assigning_items_table . ".email",
-            "DeptHead" => "CONCAT($users_table.first_name, ' ', $users_table.last_name)",
-            "secretary" => "CONCAT(sec.first_name,' ',sec.last_name)",
-            "remarks" => $assigning_items_table . ".remarks",
-            "status" => "lead_status_title",
-            "primary_contact" => "primary_contact",
+            "item_name" => $items_list_table . ".item_name",
+            "quantity" => $assigning_items_table . ".quantity",
+            "screen_size" => $screen_size_table . ".screen_size",
+            // "secretary" => "CONCAT(sec.first_name,' ',sec.last_name)",
             "client_groups" => "client_groups"
         );
 
@@ -143,15 +137,10 @@ class Assigning_items_model extends Crud_model {
 
             $where .= " AND (";
             $where .= " $assigning_items_table.id LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.short_name_SO LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.nameEn LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.short_name_EN LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.email LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.nameSo LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR CONCAT(sec.first_name,' ',sec.last_name) LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $assigning_items_table.remarks LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $screen_size_table.screen_size LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $items_list_table.item_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $assigning_items_table.quantity LIKE '%$search_by%' ESCAPE '!' ";
+            // $where .= " OR CONCAT(sec.first_name,' ',sec.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $assigning_items_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
 
             if ($leads_only) {
@@ -174,7 +163,6 @@ class Assigning_items_model extends Crud_model {
         $order $limit_offset";
 
         // print_r($sql);die;
-
 
         $raw_query = $this->db->query($sql);
 

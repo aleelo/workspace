@@ -70,8 +70,8 @@ class Assigning_items extends Security_Controller {
         $view_data['model_info'] = $this->Assigning_items_model->get_one($Deparment_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
-        $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
-        $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['Screen_Sizes'] = array("" => " -- Choose Screen Size -- ") + $this->Screen_size_model->get_dropdown_list(array("screen_size"), "id");
+        $view_data['Items_Lists'] = array("" => " -- Choose item Name -- ") + $this->Items_list_model->get_dropdown_list(array("item_name"), "id");
 
 
         $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
@@ -224,8 +224,6 @@ class Assigning_items extends Security_Controller {
         echo json_encode($result);
     }
 
-    /* return a row of client list  table */
-
     private function _row_data($id) {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("clients", $this->login_user->is_admin, $this->login_user->user_type);
         $options = array(
@@ -239,45 +237,6 @@ class Assigning_items extends Security_Controller {
     /* prepare a row of client list table */
 
     private function _make_row($data, $custom_fields) {
-
-
-        // $image_url = get_avatar($data->contact_avatar);
-
-        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-
-        // $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
-
-        // $group_list = "";
-        // if ($data->client_groups) {
-        //     $groups = explode(",", $data->client_groups);
-        //     foreach ($groups as $group) {
-        //         if ($group) {
-        //             $group_list .= "<li>" . $group . "</li>";
-        //         }
-        //     }
-        // }
-
-        // if ($group_list) {
-        //     $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
-        // }
-
-        // // $client_labels = make_labels_view_data($data->labels_list, true);
-
-        // $due = 0;
-        // if ($data->invoice_value) {
-        //     $due = ignor_minor_value($data->invoice_value - $data->payment_received);
-        // }
-
-        // $owner = "-";
-        // if ($data->created_by) {
-        //     // $owner_image_url = get_avatar($data->owner_avatar);
-        //     // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-        //     // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-        //     $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
-        //     // $data->user; //
-
-        // }
-
 
         $row_data = array($data->id,
 

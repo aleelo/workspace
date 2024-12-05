@@ -2,8 +2,6 @@
     <div class="clearfix grid-button">
         <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("assigning_items/assigning_items_list/"); ?>" data-bs-target="#clients_list"><?php echo 'Assigning Items List'; ?></a></li>
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("assigning_items/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
             <div class="tab-title clearfix no-border">
                 <div class="title-button-group">
                     <?php
