@@ -1,15 +1,15 @@
-<?php echo form_open(get_uri("departments/save"), array("id" => "client-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("items_list/save"), array("id" => "client-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id; ?>" />
-        <?php echo view("departments/department_form_fields"); ?>
+        <?php echo view("items_list/items_list_form_fields"); ?>
 
     </div>
 </div>
 
 <div class="modal-footer">
     <div id="link-of-add-contact-modal" class="hide">
-        <?php echo modal_anchor(get_uri("departments/add_new_contact_modal_form"), "", array()); ?>
+        <?php echo modal_anchor(get_uri("items_list/add_new_contact_modal_form"), "", array()); ?>
     </div>
 
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>

@@ -13,7 +13,7 @@
                     <div class="row">
                         <label for="export_my_data" class=" col-md-2"><?php echo app_lang('export_my_data'); ?></label>
                         <div class=" col-md-10">
-                            <?php echo anchor(get_uri("departments/export_my_data/"), app_lang("export"), array("class" => "btn btn-primary", "title" => app_lang('export_my_data'))); ?>
+                            <?php echo anchor(get_uri("items_list/export_my_data/"), app_lang("export"), array("class" => "btn btn-primary", "title" => app_lang('export_my_data'))); ?>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                                 <button class="btn btn-danger" disabled="true"><?php echo app_lang("applied"); ?></button>
                                 <?php
                             } else {
-                                echo anchor(get_uri("departments/request_my_account_removal/"), app_lang("apply"), array("class" => "btn btn-danger", "title" => app_lang('i_want_to_remove_my_account')));
+                                echo anchor(get_uri("items_list/request_my_account_removal/"), app_lang("apply"), array("class" => "btn btn-danger", "title" => app_lang('i_want_to_remove_my_account')));
                             }
                             ?>
                         </div>

@@ -18,7 +18,7 @@
     // }
 
     var ignoreSavedFilter = false;
-    var quick_filters_dropdown = <?php echo view("departments/quick_filters_dropdown"); ?>;
+    var quick_filters_dropdown = <?php echo view("items_list/quick_filters_dropdown"); ?>;
     if (window.selectedClientQuickFilter){
     var filterIndex = quick_filters_dropdown.findIndex(x => x.id === window.selectedClientQuickFilter);
     if ([filterIndex] > - 1){
@@ -29,7 +29,7 @@
     }
 
     $(selector).appTable({
-    source: '<?php echo_uri("departments/list_data") ?>',
+    source: '<?php echo_uri("items_list/list_data") ?>',
             serverSide: true,
             smartFilterIdentity: "all_clients_list", //a to z and _ only. should be unique to avoid conflicts
             ignoreSavedFilter: ignoreSavedFilter,
@@ -44,14 +44,11 @@
             ],
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("company_name") ?>", "class": "all", order_by: "nameSo"}
-            // {title: "<?php echo app_lang("shot_name_so") ?>", order_by: "short_name_SO"},
-            // {title: "<?php echo app_lang("department_name_en") ?>", order_by: "nameEn"},
-            // {title: "<?php echo app_lang("short_name_en") ?>", order_by: "short_name_EN"},
-            // {title: "<?php echo app_lang("department_email") ?>", order_by: "email"},
-            // {title: "<?php echo app_lang("department_head") ?>", order_by: "DeptHead"},
-            // {title: "<?php echo app_lang("secretary") ?>", order_by: "secretary"},
-            // {title: "<?php echo app_lang("remarks") ?>", order_by: "remarks"}
+            {title: "<?php echo "Item Name" ?>", "class": "all", order_by: "item_name"},
+            {title: "<?php echo "Description" ?>", "class": "all", order_by: "description"},
+            {title: "<?php echo "Quantity" ?>", "class": "all", order_by: "quantity"},
+            {title: "<?php echo "Model" ?>", "class": "all", order_by: "model"},
+            {title: "<?php echo "Created at" ?>", "class": "all", order_by: "created_at"}
 
             
 <?php echo $custom_field_headers; ?>,

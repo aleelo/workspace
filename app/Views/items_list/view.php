@@ -8,9 +8,9 @@
                         <span id="star-mark">
                             <?php
                             if ($is_starred) {
-                                echo view('departments/star/starred', array("client_id" => $department_info->id));
+                                echo view('items_list/star/starred', array("client_id" => $department_info->id));
                             } else {
-                                echo view('departments/star/not_starred', array("client_id" => $department_info->id));
+                                echo view('items_list/star/not_starred', array("client_id" => $department_info->id));
                             }
                             ?>
                         </span>
@@ -43,13 +43,13 @@
                 </div>
 
                 <div>
-                    <?php// echo view("departments/info_widgets/index"); ?>
+                    <?php// echo view("items_list/info_widgets/index"); ?>
                 </div>
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/company_info_tab/" . $department_info->id); ?>" data-bs-target="#departments-info"> <?php echo app_lang('department_info'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("departments/department_employee/" . $department_info->id); ?>" data-bs-target="#department-employee-list"> <?php echo app_lang('employee_list'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("items_list/company_info_tab/" . $department_info->id); ?>" data-bs-target="#departments-info"> <?php echo app_lang('department_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("items_list/department_employee/" . $department_info->id); ?>" data-bs-target="#department-employee-list"> <?php echo app_lang('employee_list'); ?></a></li>
 
                     <?php
                     $hook_tabs = array();
