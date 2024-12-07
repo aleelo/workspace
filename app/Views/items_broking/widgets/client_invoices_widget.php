@@ -22,7 +22,7 @@ if ($total_clients) {
 }
 ?>
 
-<a class="client-widget-link" data-filter="<?php echo $link; ?>" href="<?php echo get_uri("departments/index/clients_list#$link"); ?>">
+<a class="client-widget-link" data-filter="<?php echo $link; ?>" href="<?php echo get_uri("Items_broking/index/clients_list#$link"); ?>">
     <div class="card">
         <div class="card-body p20">
             <div class="widget-title p0 text-default">

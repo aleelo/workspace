@@ -42,7 +42,7 @@ class Items_broking extends Security_Controller {
 
         
 
-        return $this->template->rander("departments/index", $view_data);
+        return $this->template->rander("Items_broking/index", $view_data);
     }
 
   
@@ -67,7 +67,7 @@ class Items_broking extends Security_Controller {
 
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
-        $view_data['model_info'] = $this->Departments_model->get_one($Deparment_id);
+        $view_data['model_info'] = $this->Items_broking_model->get_one($Deparment_id);
         $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
 
         $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
@@ -87,7 +87,7 @@ class Items_broking extends Security_Controller {
         //get custom fields
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $Deparment_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('departments/modal_form', $view_data);
+        return $this->template->view('Items_broking/modal_form', $view_data);
     }
 
    
@@ -158,7 +158,7 @@ class Items_broking extends Security_Controller {
         //     exit();
         // }
 
-        $save_id = $this->Departments_model->ci_save($data, $Deparment_id);
+        $save_id = $this->Items_broking_model->ci_save($data, $Deparment_id);
      
 
         if ($save_id) {
@@ -167,7 +167,7 @@ class Items_broking extends Security_Controller {
                     
                 $options = array('id'=>$save_id);
 
-                $partner = $this->Departments_model->get_details($options)->getRow();
+                $partner = $this->Items_broking_model->get_details($options)->getRow();
 
                 $user_info = $this->db->query("SELECT u.*,j.job_title_so,j.department_id FROM rise_users u left join rise_team_member_job_info j on u.id=j.user_id where u.id = $partner?->created_by")->getRow();
 
@@ -198,7 +198,7 @@ class Items_broking extends Security_Controller {
             "id" => "required|numeric"
         ));
 
-        if ($this->Departments_model->delete($id)) {
+        if ($this->Items_broking_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -226,7 +226,7 @@ class Items_broking extends Security_Controller {
 
         $all_options = append_server_side_filtering_commmon_params($options);
 
-        $result = $this->Departments_model->get_details($all_options);
+        $result = $this->Items_broking_model->get_details($all_options);
 
         //by this, we can handel the server side or client side from the app table prams.
         if (get_array_value($all_options, "server_side")) {
@@ -254,7 +254,7 @@ class Items_broking extends Security_Controller {
             "id" => $id,
             "custom_fields" => $custom_fields
         );
-        $data = $this->Departments_model->get_details($options)->getRow();
+        $data = $this->Items_broking_model->get_details($options)->getRow();
         return $this->_make_row($data, $custom_fields);
     }
 
@@ -303,7 +303,7 @@ class Items_broking extends Security_Controller {
 
         $row_data = array($data->id,
 
-            anchor(get_uri("departments/view/" . $data->id), $data->nameSo),
+            anchor(get_uri("Items_broking/view/" . $data->id), $data->nameSo),
             // $data->short_name_SO,
             // $data->nameEn,
             // $data->short_name_EN,
@@ -328,8 +328,8 @@ class Items_broking extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = modal_anchor(get_uri("departments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_department'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_department'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("departments/delete"), "data-action" => "delete-confirmation"));
+        $row_data[] = modal_anchor(get_uri("Items_broking/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_department'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_department'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("Items_broking/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
@@ -347,7 +347,7 @@ class Items_broking extends Security_Controller {
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("team_members", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("team_members", $this->login_user->is_admin, $this->login_user->user_type);
 
-        return $this->template->rander("departments/department_employee", $view_data);
+        return $this->template->rander("Items_broking/department_employee", $view_data);
     }
 
     private function access_only_admin_or_member_creator()
@@ -388,7 +388,7 @@ class Items_broking extends Security_Controller {
 
         if ($Deparment_id) {
             $options = array("id" => $Deparment_id);
-            $department_info = $this->Departments_model->get_details($options)->getRow();
+            $department_info = $this->Items_broking_model->get_details($options)->getRow();
             if ($department_info && !$department_info->is_lead) {
 
                 $view_data = $this->make_access_permissions_view_data();
@@ -410,7 +410,7 @@ class Items_broking extends Security_Controller {
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
-                return $this->template->rander("departments/view", $view_data);
+                return $this->template->rander("Items_broking/view", $view_data);
             } else {
                 show_404();
             }
@@ -427,17 +427,17 @@ class Items_broking extends Security_Controller {
 
             if ($type === "add") {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "add");
-                return $this->template->view('departments/star/starred', $view_data);
+                return $this->template->view('Items_broking/star/starred', $view_data);
             } else {
                 $this->Clients_model->add_remove_star($client_id, $this->login_user->id, $type = "remove");
-                return $this->template->view('departments/star/not_starred', $view_data);
+                return $this->template->view('Items_broking/star/not_starred', $view_data);
             }
         }
     }
 
     function show_my_starred_clients() {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id, $this->allowed_client_groups)->getResult();
-        return $this->template->view('departments/star/clients_list', $view_data);
+        return $this->template->view('Items_broking/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
@@ -451,7 +451,7 @@ class Items_broking extends Security_Controller {
 
         $view_data['client_id'] = clean_data($client_id);
         $view_data['project_statuses'] = $this->Project_status_model->get_details()->getResult();
-        return $this->template->view("departments/projects/index", $view_data);
+        return $this->template->view("Items_broking/projects/index", $view_data);
     }
 
     /* load payments tab  */
@@ -462,7 +462,7 @@ class Items_broking extends Security_Controller {
         if ($client_id) {
             $view_data["client_info"] = $this->Clients_model->get_one($client_id);
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("departments/payments/index", $view_data);
+            return $this->template->view("Items_broking/payments/index", $view_data);
         }
     }
 
@@ -479,7 +479,7 @@ class Items_broking extends Security_Controller {
 
             $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
-            return $this->template->view("departments/tickets/index", $view_data);
+            return $this->template->view("Items_broking/tickets/index", $view_data);
         }
     }
 
@@ -504,7 +504,7 @@ class Items_broking extends Security_Controller {
             );
             $view_data['types_dropdown'] = json_encode($type_suggestions);
 
-            return $this->template->view("departments/invoices/index", $view_data);
+            return $this->template->view("Items_broking/invoices/index", $view_data);
         }
     }
 
@@ -520,7 +520,7 @@ class Items_broking extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("estimates", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("estimates", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("departments/estimates/estimates", $view_data);
+            return $this->template->view("Items_broking/estimates/estimates", $view_data);
         }
     }
 
@@ -536,7 +536,7 @@ class Items_broking extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("orders", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("orders", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("departments/orders/orders", $view_data);
+            return $this->template->view("Items_broking/orders/orders", $view_data);
         }
     }
 
@@ -547,7 +547,7 @@ class Items_broking extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("departments/estimates/estimate_requests", $view_data);
+            return $this->template->view("Items_broking/estimates/estimate_requests", $view_data);
         }
     }
 
@@ -558,7 +558,7 @@ class Items_broking extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
-            return $this->template->view("departments/notes/index", $view_data);
+            return $this->template->view("Items_broking/notes/index", $view_data);
         }
     }
 
@@ -591,9 +591,9 @@ class Items_broking extends Security_Controller {
 
         if ($view_type == "page_view") {
             $view_data['page_view'] = true;
-            return $this->template->rander("departments/files/index", $view_data);
+            return $this->template->rander("Items_broking/files/index", $view_data);
         } else {
-            return $this->template->view("departments/files/index", $view_data);
+            return $this->template->view("Items_broking/files/index", $view_data);
         }
     }
 
@@ -607,7 +607,7 @@ class Items_broking extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data['client_id'] = $client_id;
-        return $this->template->view('departments/files/modal_form', $view_data);
+        return $this->template->view('Items_broking/files/modal_form', $view_data);
     }
 
     /* save file data and move temp file to parmanent file directory */
@@ -688,7 +688,7 @@ class Items_broking extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("departments/view_file/" . $data->id)));
+                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("Items_broking/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -696,10 +696,10 @@ class Items_broking extends Security_Controller {
             $description .= "</div>";
         }
 
-        $options = anchor(get_uri("departments/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
+        $options = anchor(get_uri("Items_broking/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
 
         if ($this->login_user->user_type == "staff") {
-            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("departments/delete_file"), "data-action" => "delete-confirmation"));
+            $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("Items_broking/delete_file"), "data-action" => "delete-confirmation"));
         }
 
 
@@ -737,7 +737,7 @@ class Items_broking extends Security_Controller {
 
             $view_data["file_info"] = $file_info;
             $view_data['file_id'] = clean_data($file_id);
-            return $this->template->view("departments/files/view", $view_data);
+            return $this->template->view("Items_broking/files/view", $view_data);
         } else {
             show_404();
         }
@@ -810,7 +810,7 @@ class Items_broking extends Security_Controller {
             $view_data['show_cotact_info'] = true;
             $view_data['show_social_links'] = true;
             $view_data['social_link'] = $this->Social_links_model->get_one($contact_id);
-            return $this->template->rander("departments/contacts/view", $view_data);
+            return $this->template->rander("Items_broking/contacts/view", $view_data);
         } else {
             show_404();
         }
@@ -837,7 +837,7 @@ class Items_broking extends Security_Controller {
 
         $view_data["hidden_topbar_menus_dropdown"] = $this->get_hidden_topbar_menus_dropdown();
 
-        return $this->template->view("departments/contacts/my_preferences", $view_data);
+        return $this->template->view("Items_broking/contacts/my_preferences", $view_data);
     }
 
     function save_my_preferences() {
@@ -910,7 +910,7 @@ class Items_broking extends Security_Controller {
 
         $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-        return $this->template->view("departments/contacts/index", $view_data);
+        return $this->template->view("Items_broking/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -926,7 +926,7 @@ class Items_broking extends Security_Controller {
         $this->_validate_client_manage_access($view_data['model_info']->Deparment_id);
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
-        return $this->template->view('departments/contacts/modal_form', $view_data);
+        return $this->template->view('Items_broking/contacts/modal_form', $view_data);
     }
 
     /* load contact's general info tab view */
@@ -942,7 +942,7 @@ class Items_broking extends Security_Controller {
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients($view_data['model_info']->client_id);
-            return $this->template->view('departments/contacts/contact_general_info_tab', $view_data);
+            return $this->template->view('Items_broking/contacts/contact_general_info_tab', $view_data);
         }
     }
 
@@ -952,7 +952,7 @@ class Items_broking extends Security_Controller {
         if ($Deparment_id) {
             // $this->_validate_client_view_access($Deparment_id);
 
-            $view_data['model_info'] = $this->Departments_model->get_one($Deparment_id);
+            $view_data['model_info'] = $this->Items_broking_model->get_one($Deparment_id);
             $view_data['groups_dropdown'] = $this->_get_groups_dropdown_select2_data();
 
             $view_data['Bank_names_dropdown'] = $this->get_bank_name_dropdown();
@@ -982,7 +982,7 @@ class Items_broking extends Security_Controller {
             $view_data["currency_dropdown"] = $this->_get_currency_dropdown_select2_data();
             $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
 
-            return $this->template->view('departments/contacts/company_info_tab', $view_data);
+            return $this->template->view('Items_broking/contacts/company_info_tab', $view_data);
         }
     }
 
@@ -1053,7 +1053,7 @@ class Items_broking extends Security_Controller {
 
         //by default, the first contact of a client is the primary contact
         //check existing primary contact. if not found then set the first contact = primary contact
-        $primary_contact = $this->Departments_model->get_primary_contact($Deparment_id);
+        $primary_contact = $this->Items_broking_model->get_primary_contact($Deparment_id);
         if (!$primary_contact) {
             $user_data['is_primary_contact'] = 1;
         }
@@ -1355,7 +1355,7 @@ class Items_broking extends Security_Controller {
             $removal_request_pending = "<span class='bg-danger badge'>" . app_lang("removal_request_pending") . "</span>";
         }
 
-        $contact_link = anchor(get_uri("departments/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
+        $contact_link = anchor(get_uri("Items_broking/contact_profile/" . $data->id), $full_name . $primary_contact) . $removal_request_pending;
         if ($this->login_user->user_type === "client") {
             $contact_link = $full_name; //don't show clickable link to client
         }
@@ -1365,7 +1365,7 @@ class Items_broking extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("departments/view/" . $data->Deparment_id), $client_info->company_name),
+            anchor(get_uri("Items_broking/view/" . $data->Deparment_id), $client_info->company_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
@@ -1377,7 +1377,7 @@ class Items_broking extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("departments/delete_contact"), "data-action" => "delete"));
+        $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("Items_broking/delete_contact"), "data-action" => "delete"));
 
         return $row_data;
     }
@@ -1397,7 +1397,7 @@ class Items_broking extends Security_Controller {
         $this->_validate_client_manage_access($client_id);
 
         $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-        return $this->template->view('departments/contacts/invitation_modal', $view_data);
+        return $this->template->view('Items_broking/contacts/invitation_modal', $view_data);
     }
 
     //send a team member invitation to an email address
@@ -1455,7 +1455,7 @@ class Items_broking extends Security_Controller {
     function users() {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
-            return $this->template->rander("departments/contacts/users", $view_data);
+            return $this->template->rander("Items_broking/contacts/users", $view_data);
         }
     }
 
@@ -1472,7 +1472,7 @@ class Items_broking extends Security_Controller {
     function import_clients_modal_form() {
         $this->_validate_client_manage_access();
 
-        return $this->template->view("departments/import_clients_modal_form");
+        return $this->template->view("Items_broking/import_clients_modal_form");
     }
 
     private function _prepare_client_data($data_row, $allowed_headers) {
@@ -1908,7 +1908,7 @@ class Items_broking extends Security_Controller {
 
     function gdpr() {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
-        return $this->template->view("departments/contacts/gdpr", $view_data);
+        return $this->template->view("Items_broking/contacts/gdpr", $view_data);
     }
 
     function export_my_data() {
@@ -2002,7 +2002,7 @@ class Items_broking extends Security_Controller {
             log_notification("client_contact_requested_account_removal", array("client_id" => $client_id), $user_id);
 
             $this->session->setFlashdata("success_message", app_lang("estimate_submission_message"));
-            app_redirect("departments/contact_profile/$user_id/gdpr");
+            app_redirect("Items_broking/contact_profile/$user_id/gdpr");
         }
     }
 
@@ -2019,7 +2019,7 @@ class Items_broking extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("expenses", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("expenses", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("departments/expenses/index", $view_data);
+            return $this->template->view("Items_broking/expenses/index", $view_data);
         }
     }
 
@@ -2033,7 +2033,7 @@ class Items_broking extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("departments/contracts/contracts", $view_data);
+            return $this->template->view("Items_broking/contracts/contracts", $view_data);
         }
     }
 
@@ -2051,7 +2051,7 @@ class Items_broking extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("departments/departments_list", $view_data);
+        return $this->template->view("Items_broking/departments_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {
@@ -2092,7 +2092,7 @@ class Items_broking extends Security_Controller {
             $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("proposals", $this->login_user->is_admin, $this->login_user->user_type);
             $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("proposals", $this->login_user->is_admin, $this->login_user->user_type);
 
-            return $this->template->view("departments/proposals/proposals", $view_data);
+            return $this->template->view("Items_broking/proposals/proposals", $view_data);
         }
     }
 
@@ -2129,7 +2129,7 @@ class Items_broking extends Security_Controller {
         $view_data["can_create_task"] = $this->can_edit_clients();
 
         $view_data['client_id'] = clean_data($client_id);
-        return $this->template->view("departments/tasks/index", $view_data);
+        return $this->template->view("Items_broking/tasks/index", $view_data);
     }
 }
 

@@ -6,7 +6,7 @@
             $icon = "briefcase";
 
             $title = "<i data-feather='$icon' class='icon-16 mr10'></i> " . $client->company_name;
-            echo anchor(get_uri("departments/view/" . $client->id), $title, array("class" => "dropdown-item text-wrap"));
+            echo anchor(get_uri("Items_broking/view/" . $client->id), $title, array("class" => "dropdown-item text-wrap"));
         }
     } else {
         ?>

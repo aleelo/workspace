@@ -1,7 +1,7 @@
 <div class="tab-content">
     <?php
     $user_id = $login_user->id;
-    echo form_open(get_uri("departments/save_my_preferences/"), array("id" => "my-preferences-form", "class" => "general-form dashed-row white", "role" => "form"));
+    echo form_open(get_uri("Items_broking/save_my_preferences/"), array("id" => "my-preferences-form", "class" => "general-form dashed-row white", "role" => "form"));
     ?>
     <div class="card">
         <div class=" card-header">
@@ -132,7 +132,7 @@
                                 ), $disable_keyboard_shortcuts, "class='select2 mini'"
                         );
 
-                        echo modal_anchor(get_uri("departments/keyboard_shortcut_modal_form"), "<i data-feather='info' class='icon-16'></i>", array("class" => "btn btn-default keyboard-shortcut-info-icon", "title" => app_lang('keyboard_shortcuts_info'), "data-post-user_id" => $login_user->id));
+                        echo modal_anchor(get_uri("Items_broking/keyboard_shortcut_modal_form"), "<i data-feather='info' class='icon-16'></i>", array("class" => "btn btn-default keyboard-shortcut-info-icon", "title" => app_lang('keyboard_shortcuts_info'), "data-post-user_id" => $login_user->id));
                         ?>
                     </div>
                 </div>

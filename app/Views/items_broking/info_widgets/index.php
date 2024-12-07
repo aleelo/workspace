@@ -2,22 +2,22 @@
     <?php if ($show_invoice_info) { ?>
         <?php if (!in_array("projects", $hidden_menu) && $show_project_info) { ?>
             <div class="col-md-3 col-sm-6 widget-container">
-                <?php echo view("departments/info_widgets/tab", array("tab" => "projects")); ?>
+                <?php echo view("Items_broking/info_widgets/tab", array("tab" => "projects")); ?>
             </div>
         <?php } ?>
 
         <?php if (!in_array("invoices", $hidden_menu)) { ?>
             <div class="col-md-3 col-sm-6  widget-container">
-                <?php echo view("departments/info_widgets/tab", array("tab" => "total_invoiced")); ?>
+                <?php echo view("Items_broking/info_widgets/tab", array("tab" => "total_invoiced")); ?>
             </div>
         <?php } ?>
 
         <?php if (!in_array("payments", $hidden_menu) && !in_array("invoices", $hidden_menu)) { ?>
             <div class="col-md-3 col-sm-6  widget-container">
-                <?php echo view("departments/info_widgets/tab", array("tab" => "payments")); ?>
+                <?php echo view("Items_broking/info_widgets/tab", array("tab" => "payments")); ?>
             </div>
             <div class="col-md-3 col-sm-6  widget-container">
-                <?php echo view("departments/info_widgets/tab", array("tab" => "due")); ?>
+                <?php echo view("Items_broking/info_widgets/tab", array("tab" => "due")); ?>
             </div>
         <?php } ?>
 
