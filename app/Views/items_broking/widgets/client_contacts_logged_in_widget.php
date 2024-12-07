@@ -16,7 +16,7 @@ if ($widget_type == "logged_in_today") {
 }
 ?>
 
-<a class="contact-widget-link" data-filter="<?php echo $filter; ?>" href="<?php echo get_uri("Items_broking/index/clients_list#$filter"); ?>">
+<a class="contact-widget-link" data-filter="<?php echo $filter; ?>" href="<?php echo get_uri("items_broking/index/clients_list#$filter"); ?>">
     <div class="card dashboard-icon-widget">
         <div class="card-body">
             <div class="widget-icon <?php echo $card; ?>">

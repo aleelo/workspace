@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("Items_broking/send_invitation"), array("id" => "invitation-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("items_broking/send_invitation"), array("id" => "invitation-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <br />

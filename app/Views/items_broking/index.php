@@ -1,20 +1,20 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("Items_broking/departments_list/"); ?>" data-bs-target="#clients_list"><?php echo app_lang('company_list'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("items_broking/departments_list/"); ?>" data-bs-target="#clients_list"><?php echo app_lang('company_list'); ?></a></li>
             <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
-            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("Items_broking/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
+            <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("items_broking/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
             <div class="tab-title clearfix no-border">
                 <div class="title-button-group">
                     <?php
-                        echo modal_anchor(get_uri("Items_broking/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_company'), array("class" => "btn btn-default", "title" => app_lang('add_company')));
+                        echo modal_anchor(get_uri("items_broking/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_company'), array("class" => "btn btn-default", "title" => app_lang('add_company')));
                     ?>
                 </div>
             </div>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade" id="overview">
-                <?php echo view("Items_broking/overview/index"); ?>
+                <?php echo view("items_broking/overview/index"); ?>
             </div>
 
             <div role="tabpanel" class="tab-pane fade" id="clients_list"></div>
