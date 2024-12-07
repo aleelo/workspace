@@ -233,64 +233,11 @@ class Items_broking extends Security_Controller {
 
     private function _make_row($data, $custom_fields) {
 
-
-        // $image_url = get_avatar($data->contact_avatar);
-
-        // $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-
-        // $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
-
-        // $group_list = "";
-        // if ($data->client_groups) {
-        //     $groups = explode(",", $data->client_groups);
-        //     foreach ($groups as $group) {
-        //         if ($group) {
-        //             $group_list .= "<li>" . $group . "</li>";
-        //         }
-        //     }
-        // }
-
-        // if ($group_list) {
-        //     $group_list = "<ul class='pl15'>" . $group_list . "</ul>";
-        // }
-
-        // // $client_labels = make_labels_view_data($data->labels_list, true);
-
-        // $due = 0;
-        // if ($data->invoice_value) {
-        //     $due = ignor_minor_value($data->invoice_value - $data->payment_received);
-        // }
-
-        // $owner = "-";
-        // if ($data->created_by) {
-        //     // $owner_image_url = get_avatar($data->owner_avatar);
-        //     // $owner_user = "<span class='avatar avatar-xs mr10'><img src='$owner_image_url' alt='...'></span> $data->user";
-        //     // $owner = get_team_member_profile_link($data->created_by, $owner_user);
-        //     $owner = $this->db->query("select * from rise_users where id = $data->created_by")->getRow();
-        //     // $data->user; //
-
-        // }
-
-
         $row_data = array($data->id,
 
-            // anchor(get_uri("items_broking/view/" . $data->id), $data->nameSo),
             $data->item_name,
             $data->broken,
             $data->description,
-            // $data->email,
-            // $data->DeptHead,
-            // $data->secretary,
-            // $data->remarks,
-            
-
-            // $data->primary_contact ? $primary_contact : "",
-            // $group_list,
-            // $client_labels,
-            // to_decimal_format($data->total_projects),
-            // to_currency($data->invoice_value, $data->currency_symbol),
-            // to_currency($data->payment_received, $data->currency_symbol),
-            // to_currency($due, $data->currency_symbol)
             
         );
 

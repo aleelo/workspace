@@ -7,7 +7,7 @@
             <div class="tab-title clearfix no-border">
                 <div class="title-button-group">
                     <?php
-                        echo modal_anchor(get_uri("items_broking/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_company'), array("class" => "btn btn-default", "title" => app_lang('add_company')));
+                        echo modal_anchor(get_uri("items_broking/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item_broking'), array("class" => "btn btn-default", "title" => app_lang('add_item_broking')));
                     ?>
                 </div>
             </div>
