@@ -13,6 +13,7 @@ class Items_broking_model extends Crud_model {
 
     function get_details($options = array()) {
         $items_broking_table = $this->db->prefixTable('items_broking');
+        $items_list_table = $this->db->prefixTable('items_list');
 
         $projects_table = $this->db->prefixTable('projects');
         $users_table = $this->db->prefixTable('users');
@@ -163,12 +164,9 @@ class Items_broking_model extends Crud_model {
         }
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $items_broking_table.*, 
-        CONCAT($users_table.first_name,' ',$users_table.last_name) as DeptHead,
-        CONCAT(sec.first_name,' ',sec.last_name) as secretary
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $items_broking_table.*, $items_list_table.item_name
         FROM $items_broking_table
-        LEFT JOIN $users_table ON $users_table.id = $items_broking_table.dep_head_id
-        LEFT JOIN $users_table as sec ON sec.id = $items_broking_table.secretary_id
+        LEFT JOIN $items_list_table ON $items_list_table.id = $items_broking_table.item_id
         $join_custom_fieds               
         WHERE $items_broking_table.deleted=0 $where $custom_fields_where  
         $order $limit_offset";

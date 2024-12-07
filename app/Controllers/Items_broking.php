@@ -27,7 +27,7 @@ class Items_broking extends Security_Controller {
 
     function index($tab = "") {
 
-        $this->check_module_availability("module_department");
+        // $this->check_module_availability("module_department");
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();
@@ -72,6 +72,7 @@ class Items_broking extends Security_Controller {
 
         $view_data['department_heads'] = array("" => " -- Choose Department Head -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
         $view_data['secretary'] = array("" => " -- Choose Secretary -- ") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id");
+        $view_data['Items_Lists'] = array("" => " -- Choose item Name -- ") + $this->Items_list_model->get_dropdown_list(array("item_name"), "id");
 
 
         $view_data['label_suggestions'] = $this->make_labels_dropdown("client", $view_data['model_info']->labels);
@@ -104,17 +105,11 @@ class Items_broking extends Security_Controller {
             "id" => "numeric",
         ));
 
-        $section_name_so = $this->request->getPost('department_name_so');
 
         $data = array(
-            "nameSo" => $section_name_so,
-            "short_name_SO" => $this->request->getPost('short_name_so'),
-            "nameEn" => $this->request->getPost('department_name_en'), // ? 'TRUE' : 'FALSE',
-            "short_name_EN" => $this->request->getPost('short_name_en'),
-            "email" => $this->request->getPost('department_email'),
-            "dep_head_id" => $this->request->getPost('department_head'),
-            "secretary_id" => $this->request->getPost('secretary'),
-            "remarks" => $this->request->getPost('section_remarks'),
+            "item_id" => $this->request->getPost('item_id'),
+            "broken" => $this->request->getPost('broken'),
+            "description" => $this->request->getPost('description'),
         );
 
         if ($this->login_user->user_type === "staff") {
@@ -303,10 +298,10 @@ class Items_broking extends Security_Controller {
 
         $row_data = array($data->id,
 
-            anchor(get_uri("items_broking/view/" . $data->id), $data->nameSo),
-            // $data->short_name_SO,
-            // $data->nameEn,
-            // $data->short_name_EN,
+            // anchor(get_uri("items_broking/view/" . $data->id), $data->nameSo),
+            $data->item_name,
+            $data->broken,
+            $data->description,
             // $data->email,
             // $data->DeptHead,
             // $data->secretary,
@@ -2037,7 +2032,7 @@ class Items_broking extends Security_Controller {
         }
     }
 
-    function departments_list() {
+    function items_broking_list() {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -2051,7 +2046,7 @@ class Items_broking extends Security_Controller {
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("client", "", true));
 
-        return $this->template->view("items_broking/departments_list", $view_data);
+        return $this->template->view("items_broking/items_broking_list", $view_data);
     }
 
     private function make_access_permissions_view_data() {

@@ -2,6 +2,7 @@
 <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
 <input type="hidden" name="view" value="<?php echo isset($view) ? $view : ""; ?>" />
 
+
 <div class="form-group">
     <div class="row">
         <label for="item_id" class=" <?php echo $label_column; ?>"><?php echo 'Item Name'; ?></label>
@@ -21,42 +22,40 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="quantity" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Quantity'; ?></label>
+        <label for="broken" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Broken'; ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
-                "id" => "quantity",
-                "name" => "quantity",
-                "value" => $model_info->quantity,
+                "id" => "broken",
+                "name" => "broken",
+                "value" => $model_info->broken,
                 "class" => "form-control company_name_input_section",
-                "placeholder" => 'Quantity',
+                "placeholder" => 'Broken',
             ));
             ?>
         </div>
     </div>
-</div>
+</div> 
 
 <div class="form-group">
     <div class="row">
-        <label for="screen_size_id" class=" <?php echo $label_column; ?>"><?php echo 'Screen Size'; ?></label>
-        <div class=" col-md-9">
+        <label for="description" class="<?php echo $label_column; ?> company_name_section"><?php echo 'Description'; ?></label>
+        <div class="<?php echo $field_column; ?>">
             <?php
-            echo form_dropdown(array(
-                "id" => "screen_size_id",
-                "name" => "screen_size_id",
-                "class" => "form-department_head select2",
-                "placeholder" => 'Screen Size',
-                "autocomplete" => "off"
-            ),$Screen_Sizes,[$model_info->screen_size_id]);
+            echo form_input(array(
+                "id" => "description",
+                "name" => "description",
+                "value" => $model_info->description,
+                "class" => "form-control company_name_input_section",
+                "placeholder" => 'Description',
+            ));
             ?>
         </div>
     </div>
-</div>
+</div> 
 
 
 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => $label_column, "field_column" => $field_column)); ?> 
-
-
 
 <script type="text/javascript">
     var k=1;

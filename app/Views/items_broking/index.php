@@ -1,7 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("items_broking/departments_list/"); ?>" data-bs-target="#clients_list"><?php echo app_lang('company_list'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("items_broking/items_broking_list/"); ?>" data-bs-target="#items_broking_list"><?php echo 'Items Broking List'; ?></a></li>
             <!-- <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#overview"><?php echo app_lang('overview'); ?></a></li> -->
             <!-- <li><a role="presentation" data-bs-toggle="tab" href="<?php //echo_uri("items_broking/contacts/"); ?>" data-bs-target="#contacts"><?php// echo app_lang('contacts'); ?></a></li> -->
             <div class="tab-title clearfix no-border">
@@ -17,7 +17,7 @@
                 <?php echo view("items_broking/overview/index"); ?>
             </div>
 
-            <div role="tabpanel" class="tab-pane fade" id="clients_list"></div>
+            <div role="tabpanel" class="tab-pane fade" id="items_broking_list"></div>
             <div role="tabpanel" class="tab-pane fade" id="contacts"></div>
         </div>
     </div>
@@ -27,8 +27,8 @@
     $(document).ready(function () {
         setTimeout(function () {
             var tab = "<?php echo $tab; ?>";
-            if (tab === "clients_list" || tab === "clients_list-has_open_projects") {
-                $("[data-bs-target='#clients_list']").trigger("click");
+            if (tab === "items_broking_list" || tab === "items_broking_list-has_open_projects") {
+                $("[data-bs-target='#items_broking_list']").trigger("click");
 
                 window.selectedClientQuickFilter = window.location.hash.substring(1);
             } else if (tab === "contacts") {
