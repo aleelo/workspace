@@ -97,14 +97,12 @@ class Items_broking extends Security_Controller {
     
     function save() {
         
-        $Deparment_id = $this->request->getPost('id');
-        // $this->_validate_client_manage_access($Deparment_id);
+        $item_broking_id = $this->request->getPost('id');
         
         /* Validation Imput */
         $this->validate_submitted_data(array(
             "id" => "numeric",
         ));
-
 
         $data = array(
             "item_id" => $this->request->getPost('item_id'),
@@ -117,48 +115,26 @@ class Items_broking extends Security_Controller {
         }
 
 
-        if (!$Deparment_id) {
+        if (!$item_broking_id) {
             $data["created_at"] = get_current_utc_time();
         }
-
-
-        // if ($this->login_user->is_admin) {
-        //     $data["currency_symbol"] = $this->request->getPost('currency_symbol') ? $this->request->getPost('currency_symbol') : "";
-        //     $data["currency"] = $this->request->getPost('currency') ? $this->request->getPost('currency') : "";
-        //     $data["disable_online_payment"] = $this->request->getPost('disable_online_payment') ? $this->request->getPost('disable_online_payment') : 0;
-
-        //     //check if the currency is editable
-        //     if ($Deparment_id) {
-        //         $client_info = $this->Clients_model->get_one($Deparment_id);
-        //         if ($client_info->currency !== $data["currency"] && !$this->Clients_model->is_currency_editable($Deparment_id)) {
-        //             echo json_encode(array("success" => false, 'message' => app_lang('client_currency_not_editable_message')));
-        //             exit();
-        //         }
-        //     }
-        // }
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client") === "all") {
             //user has access to change created by
             $data["created_by"] = $this->request->getPost('created_by') ? $this->request->getPost('created_by') : $this->login_user->id;
-        } else if (!$Deparment_id) {
+        } else if (!$item_broking_id) {
             //the user hasn't permission to change created by but s/he can create new client
             $data["created_by"] = $this->login_user->id;
         }
 
         $data = clean_data($data);
 
-        //check duplicate company name, if found then show an error message
-        // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($data["company_name"], $Deparment_id)) {
-        //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name")));
-        //     exit();
-        // }
-
-        $save_id = $this->Items_broking_model->ci_save($data, $Deparment_id);
+        $save_id = $this->Items_broking_model->ci_save($data, $item_broking_id);
      
 
         if ($save_id) {
 
-            if(!$Deparment_id){
+            if(!$item_broking_id){
                     
                 $options = array('id'=>$save_id);
 
@@ -173,7 +149,7 @@ class Items_broking extends Security_Controller {
             //save client id on the ticket if any ticket id exists
             $ticket_id = $this->request->getPost('ticket_id');
             if ($ticket_id) {
-                $ticket_data = array("Deparment_id" => $save_id);
+                $ticket_data = array("item_broking_id" => $save_id);
                 $this->Tickets_model->ci_save($ticket_data, $ticket_id);
             }
 
