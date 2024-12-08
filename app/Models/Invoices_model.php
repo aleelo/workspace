@@ -157,6 +157,9 @@ class Invoices_model extends Crud_model {
         LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
         $join_custom_fieds
         WHERE $invoices_table.deleted=0 $where $custom_fields_where";
+
+        // print_r($sql);die($sql);
+
         return $this->db->query($sql);
     }
 

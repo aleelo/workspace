@@ -50,8 +50,12 @@ class Dashboard extends Security_Controller {
     }
 
     private function _check_widgets_permissions() {
-        if ($this->login_user->user_type === "staff" && $this->show_staff_on_staff) {
+
+        $role = $this->get_user_role();
+        if ($this->login_user->user_type === "staff" && $this->login_user->is_admin && $this->show_staff_on_staff) {
             $widgets = $this->_check_widgets_for_staffs();
+        }elseif($this->login_user->user_type === "staff" && $role === 'Employee' && $this->show_staff_on_staff) {
+            $widgets = $this->_check_widgets_for_staffs_employee();
         } else {
             $widgets = $this->_check_widgets_for_clients();
         }
@@ -67,6 +71,181 @@ class Dashboard extends Security_Controller {
         }
 
         return $widgets;
+    }
+
+    private function _check_widgets_for_staffs_employee() {
+        //check which widgets are viewable to current logged in user
+        $widget = array();
+
+        $show_attendance = get_setting("module_attendance");
+        $show_invoice = get_setting("module_invoice");
+        $show_expense = get_setting("module_expense");
+        $show_ticket = get_setting("module_ticket");
+        $show_events = get_setting("module_event");
+        $show_message = get_setting("module_message");
+        $show_leave = get_setting("module_leave");
+        $show_announcement = get_setting("module_announcement");
+        $show_estimate = get_setting("module_estimate");
+        $show_timesheet = get_setting("module_project_timesheet");
+        $show_lead = get_setting("module_lead");
+
+        $access_expense = $this->get_access_info("expense");
+        $access_invoice = $this->get_access_info("invoice");
+        $access_ticket = $this->get_access_info("ticket");
+        $access_timecards = $this->get_access_info("attendance");
+        $access_timesheets = $this->get_access_info("timesheet_manage_permission");
+        $access_client = $this->get_access_info("client");
+        $access_leads = $this->get_access_info("lead");
+        $access_estiamtes = $this->get_access_info("estiamte");
+
+        $widget["new_posts"] = get_setting("module_timeline");
+
+        if ($show_attendance) {
+            $widget["clock_in_out"] = true;
+            $widget["timecard_statistics"] = true;
+        }
+
+        if ($show_events) {
+            $widget["events_today"] = true;
+            $widget["events"] = true;
+        }
+
+        if (get_setting("module_todo")) {
+            $widget["todo_list"] = true;
+        }
+
+        //check module availability and access permission to show any widget
+
+        if ($show_invoice && $show_expense && $access_expense->access_type === "all" && $this->can_view_invoices()) {
+            $widget["income_vs_expenses"] = true;
+            $widget["total_due"] = true;
+        }
+
+        if ($show_invoice && $this->can_view_invoices()) {
+            $widget["invoice_statistics"] = false;
+        }
+
+        if ($show_ticket && $access_ticket->access_type) {
+            $widget["ticket_status"] = true;
+        }
+
+        if ($show_attendance && ($access_timecards->access_type === "all" || $access_timecards->allowed_members)) {
+            $widget["clock_status"] = true;
+            $widget["members_clocked_in"] = true;
+            $widget["members_clocked_out"] = true;
+        }
+
+        if ($show_ticket && ($this->login_user->is_admin || $access_ticket->access_type)) {
+            $widget["new_tickets"] = true;
+            $widget["open_tickets"] = true;
+            $widget["closed_tickets"] = true;
+            $widget["open_tickets_list"] = true;
+        }
+
+        if ($this->can_view_team_members_list()) {
+            $widget["all_team_members"] = true;
+        }
+
+        if ($this->can_view_team_members_list() && $show_attendance && ($access_timecards->access_type === "all" || $access_timecards->allowed_members)) {
+            $widget["clocked_in_team_members"] = true;
+            $widget["clocked_out_team_members"] = true;
+        }
+
+        if ($this->can_view_team_members_list()) {
+            $widget["latest_online_team_members"] = true;
+        }
+
+        if ($this->login_user->is_admin || $access_client->access_type) {
+            $widget["latest_online_client_contacts"] = true;
+        }
+
+        if ($show_invoice && $this->can_view_invoices()) {
+            $widget["total_invoices"] = true;
+            $widget["total_payments"] = true;
+            $widget["draft_invoices_value"] = true;
+            $widget["invoice_overview"] = true;
+        }
+
+        if ($show_expense && $show_invoice && $this->can_view_invoices()) {
+            $widget["total_due"] = true;
+        }
+
+        if ($show_timesheet && $this->login_user->is_admin) {
+            $widget["all_timesheets_statistics"] = true;
+        }
+
+        if ($show_leave) {
+            $widget["pending_leave_approval"] = true;
+        }
+
+        if ($this->can_manage_all_projects() && !$this->has_all_projects_restricted_role()) {
+            $widget["open_projects"] = false;
+            $widget["completed_projects"] = false;
+        }
+
+        if (get_setting("module_attendance") == "1" && ($this->login_user->is_admin || $access_timecards->access_type)) {
+            $widget["total_hours_worked"] = true;
+        }
+
+        if (get_setting("module_project_timesheet") == "1" && ($this->login_user->is_admin || ($access_timesheets->access_type && !$this->has_all_projects_restricted_role()))) {
+            $widget["total_project_hours"] = true;
+        }
+
+        if ($this->login_user->is_admin || (get_array_value($this->login_user->permissions, "can_manage_all_projects") === "1" && !$this->has_all_projects_restricted_role())) {
+            $widget["active_members_on_projects"] = true;
+        }
+
+        if ($show_invoice && $this->can_view_invoices()) {
+            $widget["draft_invoices"] = true;
+        }
+
+        if ($this->login_user->is_admin || $access_client->access_type) {
+            $widget["total_clients"] = true;
+            $widget["total_contacts"] = true;
+        }
+
+        if ($show_lead && ($this->login_user->is_admin || $access_leads->access_type)) {
+            $widget["total_leads"] = true;
+            $widget["leads_overview"] = true;
+        }
+
+        if ($show_estimate && ($this->login_user->is_admin || $access_estiamtes->access_type)) {
+            $widget["estimate_sent_statistics"] = true;
+        }
+
+        if ($this->can_view_team_members_list() && $show_attendance && ($access_timecards->access_type === "all" || $access_timecards->allowed_members) && $show_leave) {
+            $widget["team_members_overview"] = true;
+        }
+        
+        $widget["team_members_agegroup_education_widget"] = false;
+        $widget["team_members_by_department_widget"] = false;
+
+        if (can_access_reminders_module()) {
+            $widget["next_reminder"] = true;
+        }
+
+        if (!$this->has_all_projects_restricted_role()) {
+            $widget["my_timesheet_statistics"] = get_setting("module_project_timesheet");
+            $widget["open_projects_list"] = true;
+            $widget["project_timeline"] = true;
+            $widget["starred_projects"] = true;
+            $widget["my_tasks_list"] = true;
+            $widget["my_open_tasks"] = true;
+            $widget["task_status"] = true;
+            $widget["all_tasks_kanban"] = true;
+            $widget["projects_overview"] = true;
+            $widget["all_tasks_overview"] = true;
+            $widget["my_tasks_overview"] = true;
+        }
+
+        if ($show_announcement) {
+            $widget["last_announcement"] = true;
+        }
+
+        //universal widgets
+        $widget["sticky_note"] = true;
+
+        return $widget;
     }
 
     private function _check_widgets_for_staffs() {
