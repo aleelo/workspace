@@ -1072,21 +1072,22 @@
                         <hr class="mt-0"/> 
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <div class="row">
                             <label for="bank_name" class=" col-md-3"><?php echo 'Bank Name'; ?></label>
                             <div class=" col-md-9">
                             <?php
-                            echo form_dropdown(array( 
-                                        'id'=> "bank_id",
-                                        'name'=> "bank_id",
-                                        'class' => "form-control select2",
-                                        'placeholder' => 'Bank Name',
-                                        'autocomplete'=> "off",
-                                    ),$bank_names_dropdown); ?>
+                            // echo form_dropdown(array( 
+                            //             'id'=> "bank_id",
+                            //             'name'=> "bank_id",
+                            //             'class' => "form-control select2",
+                            //             'placeholder' => 'Bank Name',
+                            //             'autocomplete'=> "off",
+                            //         ),$bank_names_dropdown); 
+                                    ?>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <div class="row">

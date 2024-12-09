@@ -149,7 +149,7 @@ class Team_members extends Security_Controller
             "id" => $id,
         );
 
-        $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
+        // $view_data['bank_names_dropdown'] = array("" => " - ") + $this->Bank_names_model->get_dropdown_list(array("bank_name"), "id");
 
         $view_data['model_info'] = $this->Users_model->get_details($options)->getRow();
         // $view_data['departments'] = array("" => " -- Choose Department -- ") + $this->Departments_model->get_dropdown_list(array("nameSo"), "id");
