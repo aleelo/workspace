@@ -44,11 +44,11 @@
             ],
             columns: [
             {title: "<?php echo app_lang("id") ?>", "class": "text-center w50 all", order_by: "id"},
-            {title: "<?php echo app_lang("payer_name") ?>", "class": "all", order_by: "company_name"},
-            {title: "<?php echo app_lang("Registration_no") ?>", order_by: "Reg_NO"},
+            {title: "<?php echo "Client Name" ?>", "class": "all", order_by: "company_name"},
+            {title: "<?php echo "Reg. No" ?>", order_by: "Reg_NO"},
             {title: "<?php echo app_lang("start_date") ?>", order_by: "Start_Date"},
             {title: "<?php echo app_lang("end_date") ?>", order_by: "End_Date"},
-            {title: "<?php echo app_lang("payer_size") ?>", order_by: "payer_size"},
+            {title: "<?php echo app_lang("size") ?>", order_by: "payer_size"},
             {title: "<?php echo app_lang("contact_name") ?>", order_by: "Contact_Name"},
             {title: "<?php echo app_lang("created_by") ?>", order_by: "created_by"},
             {title: "<?php echo app_lang("status") ?>", order_by: "Status"}
