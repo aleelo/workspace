@@ -137,6 +137,9 @@ class Expenses extends Security_Controller {
         $repeat_type = $this->request->getPost('repeat_type');
         $no_of_cycles = $this->request->getPost('no_of_cycles');
 
+        $status =  $this->request->getPost('status');
+
+
         $data = array(
             "expense_date" => $expense_date,
             "title" => $this->request->getPost('title'),
@@ -147,7 +150,7 @@ class Expenses extends Security_Controller {
             "client_id" => $this->request->getPost('expense_client_id') ? $this->request->getPost('expense_client_id') : 0,
             "project_id" => $this->request->getPost('expense_project_id'),
             "user_id" => $this->request->getPost('expense_user_id'),
-            "status" => $this->request->getPost('status'),
+            "status" => $status ? $status : "unpaid",
             "tax_id" => $this->request->getPost('tax_id') ? $this->request->getPost('tax_id') : 0,
             "tax_id2" => $this->request->getPost('tax_id2') ? $this->request->getPost('tax_id2') : 0,
             "recurring" => $recurring,
