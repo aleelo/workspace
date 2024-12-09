@@ -376,7 +376,7 @@ class Users_model extends Crud_model {
             WHERE $users_table.deleted=0 $where $custom_fields_where
             $order $limit_offset";
            
-            print_r($sql); die();
+            // print_r($sql); die();
         
             $raw_query = $this->db->query($sql);
 
