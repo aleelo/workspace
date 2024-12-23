@@ -81,6 +81,13 @@ $lang["solutions"] = "Aleelo Solutions";
 $lang["clients_list"] = "Clients List";
 $lang["clients_info"] = "Clients Info";
 
+//Accounting
+$lang["accounting_dashboard"] = "Dashboard";
+$lang["accounting_reports"] = "Reports";
+$lang["accounting_setting"] = "Settings";
+
+
+
 //Companies
 $lang["company"] = "Company";
 $lang["company_list"] = "Company List";
