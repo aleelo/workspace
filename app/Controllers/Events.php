@@ -903,7 +903,7 @@ class Events extends Security_Controller {
     }
 
     function reminders_list_data($type = "", $reminder_context = "", $reminder_context_id = 0) {
-        $this->can_create_reminders();
+        // $this->can_create_reminders();
 
         $options = array(
             "user_id" => $this->login_user->id,

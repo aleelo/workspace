@@ -1632,19 +1632,19 @@ class Tasks extends Security_Controller {
         }
 
         $model_info = $this->Tasks_model->get_details(array("id" => $task_id))->getRow();
-        if (!$model_info || !$model_info->id) {
-            show_404();
-        }
+        // if (!$model_info || !$model_info->id) {
+        //     show_404();
+        // }
 
-        $this->init_project_settings($model_info->project_id);
+        // $this->init_project_settings($model_info->project_id);
 
-        if (!$this->can_view_tasks("", 0, $model_info)) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_view_tasks("", 0, $model_info)) {
+        //     app_redirect("forbidden");
+        // }
 
-        if ($model_info->context == "project" && $this->has_all_projects_restricted_role()) {
-            app_redirect("forbidden");
-        }
+        // if ($model_info->context == "project" && $this->has_all_projects_restricted_role()) {
+        //     app_redirect("forbidden");
+        // }
 
         $context_id_key = $model_info->context . "_id";
 

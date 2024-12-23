@@ -171,12 +171,12 @@ if ($total_sub_tasks) {
                         <?php echo view("projects/comments/pinned_comments"); ?>
                     </div>
 
-                    <?php if (can_access_reminders_module()) { ?>
+                    <!-- <?php //if (can_access_reminders_module()) { ?>
                         <div class="col-md-12 mb15" id="task-reminders">
-                            <div class="mb15"><strong><?php echo app_lang("reminders") . " (" . app_lang('private') . ")" . ": "; ?> </strong></div>
-                            <?php echo view("reminders/reminders_view_data", array("task_id" => $model_info->id, "hide_form" => true, "reminder_view_type" => "task")); ?>
+                            <div class="mb15"><strong><?php //echo app_lang("reminders") . " (" . app_lang('private') . ")" . ": "; ?> </strong></div>
+                            <?php //echo view("reminders/reminders_view_data", array("task_id" => $model_info->id, "hide_form" => true, "reminder_view_type" => "task")); ?>
                         </div>
-                    <?php } ?>
+                    <?php //} ?> -->
 
                     <?php app_hooks()->do_action('app_hook_task_view_right_panel_extension'); ?>
                 </div>
